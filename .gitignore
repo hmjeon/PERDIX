@@ -15,7 +15,6 @@
 
 # Fortran module files
 *.mod
-*.smod
 
 # Compiled Static libraries
 *.lai
@@ -25,5 +24,16 @@
 
 # Executables
 *.exe
+!DNAcs/Library/sleep.exe
+!DNAcs/Library/meshconv.exe
 *.out
 *.app
+DNAcs/Debug
+DNAcs/Release
+DNAcs/x64
+*.u2d
+DNAcs/Output
+.vs
+*.11
+*.101
+fort.*
