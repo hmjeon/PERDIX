@@ -40,7 +40,7 @@ module Exam_OpenGeo
     private Exam_OpenGeo_Comp_XYZ
 
     contains
-    
+
 ! ---------------------------------------------------------------------------------------
 
 ! Example of retagular plate geometry with the uniform mesh of quadrilaterals
@@ -58,7 +58,7 @@ subroutine Exam_OpenGeo_Plate_Uniform_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "53_Plate_Uniform_Quad"//&
+    prob.name_file = "1_Plate_Uniform_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -76,7 +76,7 @@ subroutine Exam_OpenGeo_Plate_Uniform_Quad(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
 
-    n         = 3
+    n         = 2
     x_width   = 1.0d0           ! x length
     y_width   = 1.0d0           ! y length
     n_i_point = n + 1           ! # of points in x-direction

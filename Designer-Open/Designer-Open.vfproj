@@ -70,14 +70,7 @@
 		<File RelativePath=".\Sources\6_SeqDesign.f90"/>
 		<File RelativePath=".\Sources\7_Output.f90"/></Filter>
 		<Filter Name="Input">
-		<File RelativePath=".\Sources\Exam_1_Platonic.f90"/>
-		<File RelativePath=".\Sources\Exam_2_Archimedean.f90"/>
-		<File RelativePath=".\Sources\Exam_3_Johnson.f90"/>
-		<File RelativePath=".\Sources\Exam_4_Catalan.f90"/>
-		<File RelativePath=".\Sources\Exam_5_Miscellaneous.f90"/>
-		<File RelativePath=".\Sources\Exam_6_Asymmetric.f90"/>
-		<File RelativePath=".\Sources\Exam_7_OpenGeo.f90"/>
-		<File RelativePath=".\Sources\Exam_8_Prism.f90"/>
+		<File RelativePath=".\Sources\Exam_OpenGeo.f90"/>
 		<File RelativePath=".\Sources\Importer.f90"/></Filter>
 		<Filter Name="Output">
 		<File RelativePath=".\Sources\Chimera.f90"/>

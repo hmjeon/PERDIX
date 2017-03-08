@@ -77,14 +77,14 @@ subroutine ModGeo_Modification(prob, geom, bound)
     ! Set neighbor point and line on each line
     ! --------------------------------------------------
     ! Set neighbor point
-    call ModGeo_Set_Neighbor_Point(prob, geom, bound)
+    call ModGeo_Set_Neighbor_Point(prob, geom)
 
     ! Set neighbor line
     call ModGeo_Set_Neighbor_Line(prob, geom, bound)
 
     ! Write check geometry
     call ModGeo_Chimera_Check_Geometry(prob, geom)
-
+stop
     ! Set arm junction data in the whole structure
     call ModGeo_Set_Junction_Data(geom, bound)
 
@@ -128,99 +128,38 @@ end subroutine ModGeo_Modification
 ! Set neighbor lines on each line
 ! For closed geometry, the number of neighbor faces is always two
 ! For open geometry, the number of neighbor faces at the boundary is always one
-subroutine ModGeo_Set_Neighbor_Point(prob, geom, bound)
+subroutine ModGeo_Set_Neighbor_Point(prob, geom)
     type(ProbType),  intent(in)    :: prob
     type(GeomType),  intent(inout) :: geom
-    type(BoundType), intent(inout) :: bound
 
-    integer :: point_ref, point_her, point1_com, point2_com
-    integer :: i, j, k, m, n, l, nei_face(2), nei_point(2,2)
+    integer :: i, nei_face(2), nei_poi(2,2)
 
-    ! nei_point(a, b), geom.iniL(i).neiP(a, b)
+    ! nei_poi(a, b), geom.iniL(i).neiP(a, b)
     ! a - indicates point number
     ! b - indicates left and right (1 - left, 2 - right)
 
-    ! Find neighbor faces and points
+    ! For total number of lines
     do i = 1, geom.n_iniL
 
-        ! Initialize neighbor face and point data
-        nei_face(1:2)     = -1
-        nei_point(1, 1:2) = -1
-        nei_point(2, 1:2) = -1
+        ! Initialize neighbor face and point
+        nei_face(1:2)   = -1
+        nei_poi(1, 1:2) = -1
+        nei_poi(2, 1:2) = -1
 
-        ! Find neighbor face corresponding to line
+        ! Find neighbor face sharing with the i th line
         nei_face(1:2) = ModGeo_Find_Neighbor_Face(geom, i)
 
-        ! Set nighboring face, 1 - left, 2 - right
+        ! Set nighbor face, 1 - positive(left), 2 - negative(right)
         geom.iniL(i).neiF(1) = nei_face(1)
         geom.iniL(i).neiF(2) = nei_face(2)
 
-        ! Determine closed or open geometry and find neighbor point
-        if(nei_face(1) /= -1 .and. nei_face(2) /= -1) then
+        ! Find neighbor point from the neighbor face
+        nei_poi(:,:) = ModGeo_Find_Neighbor_Point(geom, i, nei_face)
 
-            ! For closed line, find neighbor point from face
-            nei_point(:,:) = ModGeo_Find_Neighbor_Point(geom, i, nei_face)
-
-            ! Update
-            geom.iniL(i).neiP(1, 1:2) = nei_point(1, 1:2)
-            geom.iniL(i).neiP(2, 1:2) = nei_point(2, 1:2)
-        else
-
-            ! Open line
-            if(prob.type_geo == "closed") then
-                write(0, "(a$)"), "Error - Neighbor connection was wrong"
-                write(0, "(a)"),  "ModGeo_Set_Neighbor_Point"
-                stop
-            end if
-
-            if(nei_face(1) == -1 .and. nei_face(2) /= -1 ) then
-
-                nei_point(:,:) = ModGeo_Find_Neighbor_Point_Boundary(geom, i, nei_face(2))
-
-                ! Update
-                geom.iniL(i).neiP(1, 1:2) = nei_point(1, 1:2)
-                geom.iniL(i).neiP(2, 1:2) = nei_point(2, 1:2)
-
-            else if( nei_face(2) == -1 .and. nei_face(1) /= -1) then
-
-                nei_point(:,:) = ModGeo_Find_Neighbor_Point_Boundary(geom, i, nei_face(1))
-
-                ! Update
-                geom.iniL(i).neiP(1, 1:2) = nei_point(1, 1:2)
-                geom.iniL(i).neiP(2, 1:2) = nei_point(2, 1:2)
-
-            end if
-        end if
+        ! Update
+        geom.iniL(i).neiP(1, 1:2) = nei_poi(1, 1:2)
+        geom.iniL(i).neiP(2, 1:2) = nei_poi(2, 1:2)
     end do
-
-    if(prob.type_geo == "open") then
-        do i = 1, geom.n_iniL
-            do m = 1, 2
-                do n = 1, 2
-                    if(geom.iniL(i).neiP(m, n) == -1) then
-
-                        ! Reference point
-                        point_ref = geom.iniL(i).poi(m)
-
-                        do l = 1, bound.outer(point_ref).n_newP
-                            point_her = bound.outer(point_ref).newP(l, 2)
-                            if(point_her == geom.iniL(i).neiP(m, mod(n, 2) + 1)) then
-                                geom.iniL(i).neiP(m, n) = bound.outer(point_ref).newP(l, 1)
-                            end if
-                        end do
-                    end if
-                end do
-            end do
-        end do
-
-        do i = 1, geom.n_iniP
-            if(bound.outer(i).typeP == 1) then
-                deallocate(bound.outer(i).neiP)
-                deallocate(bound.outer(i).newP)
-            end if
-        end do
-        deallocate(bound.outer)
-    end if
 
     ! Print progress
     do i = 0, 11, 11
@@ -235,142 +174,144 @@ subroutine ModGeo_Set_Neighbor_Point(prob, geom, bound)
         write(11, "(a,   i4 )"), ", right : ",             geom.iniL(i).neiP(2, 2)
     end do
     write(0, "(a)"); write(11, "(a)")
+stop
 end subroutine ModGeo_Set_Neighbor_Point
 
 ! ---------------------------------------------------------------------------------------
 
-! Find neighbor face corresponding to line
-! Last updated on Thursday 25 Feb 2016 by Hyungmin
+! Find faces sharing with the current line
+! Last updated on Wed 08 Mar 2017 by Hyungmin
 function ModGeo_Find_Neighbor_Face(geom, line) result(nei_face)
     type(GeomType), intent(in) :: geom
     integer,        intent(in) :: line
     
-    integer :: nei_face(2), point_1, point_2, point_a, point_b
-    integer :: i, j, k, count
+    integer :: nei_face(2), poi_1, poi_2, poi_a, poi_b
+    integer :: i, j
 
-    ! nei_face(2) : array for face ID corresponding to id_line
-    ! count : closed geometry always has two faces
-    count   = 0
-    point_1 = geom.iniL(line).poi(1)
-    point_2 = geom.iniL(line).poi(2)
+    ! nei_face(1:2) : face ID sharing with current line
+    nei_face(1) = -1
+    nei_face(2) = -1
 
-    ! Loop for whole faces
+    poi_1 = geom.iniL(line).poi(1)
+    poi_2 = geom.iniL(line).poi(2)
+
+    ! For the total number of faces
     do i = 1, geom.n_face
         do j = 1, geom.face(i).n_poi
-            do k = 1, geom.face(i).n_poi
 
-                ! Point by face loop j and k
-                point_a = geom.face(i).poi(j)
-                point_b = geom.face(i).poi(k)
+            ! Set face orientation
+            if(j /= geom.face(i).n_poi) then
+                poi_a = geom.face(i).poi(j)
+                poi_b = geom.face(i).poi(j + 1)
+            else
+                poi_a = geom.face(i).poi(j)
+                poi_b = geom.face(i).poi(1)
+            end if
 
-                ! If both point_1 and point_2
-                if(point_a == point_1 .and. point_b == point_2) then
+            ! If poi_12 and poi_ab are the same direction
+            if(poi_a == poi_1 .and. poi_b == poi_2) then
+                nei_face(1) = i
+            end if
 
-                    ! Increase the number of faces
-                    count = count + 1
-
-                    if(count == 1) nei_face(1) = i
-                    if(count == 2) nei_face(2) = i
-                end if
-            end do
+            ! If poi_12 and poi_ab are the different direction
+            if(poi_b == poi_1 .and. poi_a == poi_2) then
+                nei_face(2) = i
+            end if
         end do
     end do
-
-    ! Check face mesh
-    if(nei_face(1) == nei_face(2)) then
-        write(0, "(a$)"), "Error - The connection was wrong : "
-        write(0, "(a)"),  "ModGeo_Find_Neighbor_Face"
-        stop
-    end if
-
-    if(count == 0 .or. count > 2) then
-        write(0, "(a$)"), "Error - This is not surface mesh : "
-        write(0, "(a )"), "ModGeo_Find_Neighbor_Face"
-        stop
-    end if
 end function ModGeo_Find_Neighbor_Face
 
 ! ---------------------------------------------------------------------------------------
 
-! Find neighbor point from face
-function ModGeo_Find_Neighbor_Point(geom, line, face) result(nei_point)
+! Find neighbor points from the face sharing the line
+! Last updated on Wed 08 Mar 2017 by Hyungmin
+function ModGeo_Find_Neighbor_Point(geom, line, face) result(nei_poi)
     type(GeomType), intent(in) :: geom
     integer,        intent(in) :: line
     integer,        intent(in) :: face(2)
 
-    integer :: nei_point(2,2), i, j, point_1, point_2, num_face, max_point
-    integer :: point_a, point_b, point_first, point_last
+    integer :: nei_poi(2,2), i, j, poi_1, poi_2, num_face, npoi_face
+    integer :: poi_a, poi_b, poi_first, poi_last
 
-    point_1 = geom.iniL(line).poi(1)
-    point_2 = geom.iniL(line).poi(2)
+    ! Points from the line connectivities
+    poi_1 = geom.iniL(line).poi(1)
+    poi_2 = geom.iniL(line).poi(2)
 
+    ! Initialize the return value before calculating
+    nei_poi(1, 1:2) = -1
+    nei_poi(2, 1:2) = -1
+
+    ! Check the number of faces sharing line
     do i = 1, 2
 
-        num_face  = face(i)
-        max_point = geom.face(num_face).n_poi
+        ! Check whether it is boundary or not
+        if(face(i) /= -1) then
+            num_face  = face(i)
+            npoi_face = geom.face(num_face).n_poi
+        else
+            cycle
+        end if
 
-        do j = 1, max_point - 1
+        do j = 1, npoi_face - 1
 
-            point_first = geom.face(num_face).poi(1)
-            point_last  = geom.face(num_face).poi(max_point)
-            point_a     = geom.face(num_face).poi(j)
-            point_b     = geom.face(num_face).poi(j + 1)
+            poi_first = geom.face(num_face).poi(1)
+            poi_last  = geom.face(num_face).poi(npoi_face)
+            poi_a     = geom.face(num_face).poi(j)
+            poi_b     = geom.face(num_face).poi(j + 1)
 
             ! If direction of line and face are the same
-            if(point_1 == point_a .and. point_2 == point_b) then
+            if(poi_1 == poi_a .and. poi_2 == poi_b) then
 
                 ! Next line is left
-                if(j + 1 == max_point) then
-                    nei_point(2, 1) = point_first
+                if(j + 1 == npoi_face) then
+                    nei_poi(2, 1) = poi_first
                 else
-                    nei_point(2, 1) = geom.face(num_face).poi(j + 2)
+                    nei_poi(2, 1) = geom.face(num_face).poi(j + 2)
                 end if
 
                 ! Previous line is left
                 if(j == 1) then
-                    nei_point(1, 1) = point_last
+                    nei_poi(1, 1) = poi_last
                 else
-                    nei_point(1, 1) = geom.face(num_face).poi(j - 1)
+                    nei_poi(1, 1) = geom.face(num_face).poi(j - 1)
                 end if
-
-            else if(point_2 == point_first .and. point_1 == point_last) then
+            else if(poi_2 == poi_first .and. poi_1 == poi_last) then
 
                 ! At point 2, next line is left
-                nei_point(2, 1) = geom.face(num_face).poi(2)
+                nei_poi(2, 1) = geom.face(num_face).poi(2)
 
                 ! At point 1, previous line is left
-                nei_point(1, 1) = geom.face(num_face).poi(max_point - 1)
-
+                nei_poi(1, 1) = geom.face(num_face).poi(npoi_face - 1)
             end if
 
             ! If direction of line and face are the opposite
-            if(point_2 == point_a .and. point_1 == point_b) then
+            if(poi_2 == poi_a .and. poi_1 == poi_b) then
 
                 ! Previous line is right
                 if(j == 1) then
-                    nei_point(2, 2) = point_last
+                    nei_poi(2, 2) = poi_last
                 else
-                    nei_point(2, 2) = geom.face(num_face).poi(j - 1)
+                    nei_poi(2, 2) = geom.face(num_face).poi(j - 1)
                 end if
 
                 ! Next line is left
-                if(j + 1 == max_point) then
-                    nei_point(1, 2) = point_first
+                if(j + 1 == npoi_face) then
+                    nei_poi(1, 2) = poi_first
                 else
-                    nei_point(1, 2) = geom.face(num_face).poi(j + 2)
+                    nei_poi(1, 2) = geom.face(num_face).poi(j + 2)
                 end if
-
-            else if(point_1 == point_first .and. point_2 == point_last) then
+            else if(poi_1 == poi_first .and. poi_2 == poi_last) then
 
                 ! At point 2, previous line is right
-                nei_point(2, 2) = geom.face(num_face).poi(max_point - 1)
+                nei_poi(2, 2) = geom.face(num_face).poi(npoi_face - 1)
 
                 ! At point 1, next line is right
-                nei_point(1, 2) = geom.face(num_face).poi(2)
-
+                nei_poi(1, 2) = geom.face(num_face).poi(2)
             end if
         end do
     end do
+
+    write(0, "(7i)"), line, poi_1, poi_2, nei_poi(1, 1:2), nei_poi(2, 1:2)
 end function ModGeo_Find_Neighbor_Point
 
 ! ---------------------------------------------------------------------------------------

@@ -16,14 +16,7 @@ module Input
 
     use Importer
 
-    use Exam_Platonic
-    use Exam_Archi
-    use Exam_Catalan
-    use Exam_Johnson
-    use Exam_Miscellaneous
-    use Exam_Asymmetric
     use Exam_OpenGeo
-    use Exam_Prism
 
     use Section
 
@@ -758,72 +751,25 @@ end subroutine Input_Set_Command
 ! Last updated on Wednesday 24 Feb 2016 by Hyungmin
 subroutine Input_Print_Problem
     write(0, "(a)")
-    write(0, "(a)"), "       +=====================================================================================+"
-    write(0, "(a)"), "       |                                                                                     |"
-    write(0, "(a)"), "       |              DNAcs - DNA Nanostructure with Arbitrary Cross-Section                 |"
-    write(0, "(a)"), "       |                               Programmed by Hyungmin Jun (hyeongminjeon@gmail.com)  |"
-    write(0, "(a)"), "       |                                                                                     |"
-    write(0, "(a)"), "       +=====================================================================================+"
+    write(0, "(a)"), "   +=====================================================================================+"
+    write(0, "(a)"), "   |                                                                                     |"
+    write(0, "(a)"), "   |     Designer-6HB by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017    |"
+    write(0, "(a)"), "   |                                                                                     |"
+    write(0, "(a)"), "   +=====================================================================================+"
     write(0, "(a)")
-    write(0, "(a)"), "   A. First input - Geometry discretized by surface mesh [# of different edge length, problem size nomalized by Tetrahedron]"
+    write(0, "(a)"), "   A. First input - Geometry discretized by surface mesh"
+    write(0, "(a)"), "   ====================================================="
     write(0, "(a)")
-    write(0, "(a)"), "      I - Pre-defined geometries: Platonic solids"
-    write(0, "(a)"), "          ---------------------------------------"
-    write(0, "(a)"), "        *1. Tetrahedron[1, 1],   *2. *Cube[1, 2],   *3. Octahedron[1, 2],   4. Dodecahedron[1, 5],   5. Icosahedron[1, 5]"
+    write(0, "(a)"), "      I - Pre-defined geometries: Open surface mesh"
+    write(0, "(a)"), "          -----------------------------------------"
     write(0, "(a)")
-    write(0, "(a)"), "     II - Pre-defined geometries: Archimedean solids"
-    write(0, "(a)"), "          ------------------------------------------"
-    write(0, "(a)"), "         6. Cubeoctahedron[1, 5],             7. Icosidodecahedron[1, 12],        8. Rhombicuboctahedron[1, 10]"
-    write(0, "(a)"), "         9. Snub Cube[1, 11],                10. Truncated Cube[1, 8],           11. Truncated Cuboctahedron[1, 14]"
-    write(0, "(a)"), "        12. Truncated Dodecahedron[1, 21],   13. Truncated Icosahedron[1, 16],   14. Truncated Octahedron[1, 7]"
-    write(0, "(a)"), "        15. Truncated Tetrahedron[1, 4]"
+    write(0, "(a)"), "         1. Plate Uniform Quad,                   2. Plate Distorted Quad"
+    write(0, "(a)"), "         3. Plate Uniform Tri,                    4. Plate Distorted Tri"
+    write(0, "(a)"), "         5. Circular Plate Quad,                  6. Circular Plate Tri"
+    write(0, "(a)"), "         7. Annular Plate Quad,                   8. Annular Plate Tri"
+    write(0, "(a)"), "         9. Hyperbolic Paraboloid Quad,          10. Hyperbolic Paraboloid Tri"
     write(0, "(a)")
-    write(0, "(a)"), "    III - Pre-defined geometries: Johnson solids"
-    write(0, "(a)"), "          --------------------------------------"
-    write(0, "(a)"), "        16. Gyroelongated Pentagonal Pyramid (J11)[1, 4],     *17. Triangular Bipyramid (J12)[2, 2]"
-    write(0, "(a)"), "       *18. Pentagonal Bipyramid (J13)[2, 3],                  19. Gyroelongated Square Bipyramid (J17)[2, 4]"
-    write(0, "(a)"), "        20. Square Gyrobicupola (J29)[2, 6],                   21. Pentagonal Orthocupolarotunda (J32)[2, 10]"
-    write(0, "(a)"), "        22. Pentagonal Orthobirotunda (J34)[1, 12],            23. Elongated Pentagonal Gyrobicupola (J39)[1, 13]"
-    write(0, "(a)"), "        24  Elongated Pentagonal Gyrobirotunda (J43)[1, 17],   25. Gyroelongated Square Bicupola (J45)[1, 10]"
-    write(0, "(a)")
-    write(0, "(a)"), "     IV - Pre-defined geometries: Catalan solids"
-    write(0, "(a)"), "          --------------------------------------"
-    write(0, "(a)"), "        26. Rhombic Dodecahedron[1, 4],           27. Rhombic Triacontahedron[1, 10],   28. Deltoidal Icositetrahedron[2, 9]"
-    write(0, "(a)"), "        29. Pentagonal Icositetrahedron[2, 12],   30. Triakis Octahedron[2, 7],         31. Disdyakis Dodecahedron[3, 16]"
-    write(0, "(a)"), "        32. Triakis Icosahedron[2, 18],           33. Pentakis Dodecahedron[2, 16],     34. Tetrakis Hexahedron[2, 7]"
-    write(0, "(a)"), "        35. Triakis Tetrahedron[2, 4]"
-    write(0, "(a)")
-    write(0, "(a)"), "      V - Pre-defined geometries: Miscellaneous polyhedra"
-    write(0, "(a)"), "          -----------------------------------------------"
-    write(0, "(a)"), "        36. Heptagonal Bipyramid[2, 7],       37. Enneagonal Trapezohedron[2, 26],   38. Small Stell Dodecahedron[2, 26]"
-    write(0, "(a)"), "       #39. Rhombic Hexecontahedron[2, 23],   40. Goldberg dk5dgD[2, 38],           *41. Double Helix[15, 54]"
-    write(0, "(a)"), "        42. Nested Cube[3, 12],              *43. Nested Octahedron[3, 16],         *44. Torus[10, 90]"
-    write(0, "(a)"), "        45. Double Torus[X, 32]"
-    write(0, "(a)")
-    write(0, "(a)"), "       VI - Pre-defined geometries: Asymmetric and non-convex objects"
-    write(0, "(a)"), "            ---------------------------------------------------------"
-    write(0, "(a)"), "        46. Ball[7, 31],      47. Nickedtorus[33, 144],   48. Helix[23, 108],   49. Rod[6, 91],   50. Stickman[35, 91]"
-    write(0, "(a)"), "        51. Bottle[51, 95],   52. Bunny[212, 218]"
-    write(0, "(a)")
-    write(0, "(a)"), "      VII - Pre-defined geometries: Ect"
-    write(0, "(a)"), "            ---------------------------"
-    write(0, "(a)"), "        53. Truncated Icosidodecahedron[1, 30],  54. Rhombicosidodecahedron[1, 20],     55. Snub Dodecahedron[1, 25]"
-    write(0, "(a)"), "        56. Disdyakis Triacontahedron[3, 43],    57. Deltoidal Hexecontahedron[2, 25],  58. Pentagonal Hexecontahedron[2, 32]"
-    write(0, "(a)"), "       *59. Asym Tetra I[63-63-63-73-52-42],    *60. Asym Tetra II[63-63-63-63-52-42], *61. Asym Tetra III[63-63-63-63-63-42]"
-    write(0, "(a)"), "        62. Pentagonal Pyramid(J2)               63. Elongated Square Bipyramid(J15)"
-    write(0, "(a)")
-    write(0, "(a)"), "     VIII - Pre-defined geometries: Prism"
-    write(0, "(a)"), "            ---------------------------"
-    write(0, "(a)"), "        64. Triangular Prism,                    65. Pentagonal Prism,                  66. Hexagonal Prism"
-    write(0, "(a)")
-    !write(0, "(a)"), "      VII - Pre-defined geometries: Open surface mesh - under construction"
-    !write(0, "(a)"), "        53. Plate Uniform Quad,     54. Plate Distorted Quad,           55. Plate Uniform Tri,     56. Plate Distorted Tri"
-    !write(0, "(a)"), "        57. Circular Plate Quad,    58. Circular Plate Tri,             59. Annular Plate Quad"
-    !write(0, "(a)"), "        60. Annular Plate Tri,      61. Hyperbolic Paraboloid Quad,     62. Hyperbolic Paraboloid Tri"
-    !write(0, "(a)")
-    write(0, "(a)"), "       ======================================================================================= "
-    write(0, "(a)")
-    write(0, "(a)"), "       100. Input from file (*.ply, *.geo, *.stl, *.wrl)"
+    write(0, "(a)"), "      0. Input from file (*.PLY)"
     write(0, "(a)")
     write(0, "(a)"), "   Select the number [Enter] : "
 end subroutine Input_Print_Problem
@@ -835,77 +781,18 @@ end subroutine Input_Print_Problem
 subroutine Input_Print_Section
     write(0, "(a)")
     write(0, "(a)"), "   B. Second input - Pre-defined cross-sections"
+    write(0, "(a)"), "   ============================================"
     write(0, "(a)")
-    write(0, "(a)"), "    - : crossover, = reference axis"
-    write(0, "(a)")
-    write(0, "(a)"), "    [Section defined on honeycomb lattice]"
-    write(0, "(a)"), "     ================="
-    write(0, "(a)")
-    write(0, "(a)")
-    write(0, "(a)"), "             [sec ID]                  [sec ID] "
-    write(0, "(a)"), "      1.                   2.  @ @      4 3     "
-    write(0, "(a)"), "        =@ @=  =0 1=          @   @    5   2    "
-    write(0, "(a)"), "                              =@ @=    =0 1=    "
-    write(0, "(a)"), "                                                "
-    write(0, "(a)"), "                               [type 1, CW]     "
-    write(0, "(a)"), "         [1 by 2]              [1 honeycomb]    "
-    write(0, "(a)")
-    write(0, "(a)")
-    write(0, "(a)"), "                [sec ID]                [sec ID]                [sec ID]"
-    write(0, "(a)"), "      3.  @-@      5 4        4.  @-@      5 4        5.  @-@      4 3  "
-    write(0, "(a)"), "        =@   @=  =0   3=        =@   @=  =0   3=        =@   @=  =5   2="
-    write(0, "(a)"), "          @-@      1 2            @-@      1 2            @-@      0 1  "
-    write(0, "(a)"), "                                                                        "
-    write(0, "(a)"), "         [type 2, CW]            [type 3, CCW]           [type 3, CW]   "
-    write(0, "(a)"), "         [1 honeycomb]           [1 honeycomb]           [1 honeycomb]  "
-    write(0, "(a)")
+    write(0, "(a)"), "              [sec ID]                [sec ID]                 [sec ID]"
+    write(0, "(a)"), "      1.                   2.  @ @      4 3         3.  @-@      5-4   "
+    write(0, "(a)"), "        =@ @=  =0 1=          @   @    5   2          =@   @=  =0   3= "
+    write(0, "(a)"), "                              =@ @=    =0 1=            @-@      1-2   "
+    write(0, "(a)"), "                                                                       "
+    write(0, "(a)"), "                              [bottom origin]         [middle origin]  "
+    write(0, "(a)"), "         [DX tile]             [1 honeycomb]           [1 honeycomb]   "
     write(0, "(a)")
     write(0, "(a)"), "   Select the number [Enter] : "
 end subroutine Input_Print_Section
-
-! ---------------------------------------------------------------------------------------
-
-! Print pre-defined cross-sections
-! Last updated on Thuesday 22 Mar 2016 by Hyungmin
-subroutine Input_Print_Section_Old
-    write(0, "(a)")
-    write(0, "(a)"), "   B. Second input - Pre-defined cross-sections"
-    write(0, "(a)")
-    write(0, "(a)"), "    - : crossover, = reference axis"
-    write(0, "(a)")
-    write(0, "(a)"), "    [Section defined on square lattice]"
-    write(0, "(a)"), "     =============="
-    write(0, "(a)")
-    write(0, "(a)"), "      1.   @-@     2.   @ @     3.   @-@     4. =@ @-@ @=   5.  @-@ @-@    6.  @ @-@ @ "
-    write(0, "(a)"), "          =@ @=         @-@          @ @                       =@ @-@ @=       @-@ @-@ "
-    write(0, "(a)"), "                       =@ @=         @-@                                      =@ @-@ @="
-    write(0, "(a)"), "                                    =@ @=                                              "
-    write(0, "(a)"), "        [2 by 2]     [3 by 2]     [4 by 2]      [1 by 4]       [2 by 4]       [3 by 4] "
-    write(0, "(a)")
-    write(0, "(a)"), "      7.  @-@ @-@      8. =@ @-@ @-@ @=     9.  @-@ @-@ @-@      10.  @ @-@ @-@ @ "
-    write(0, "(a)"), "          @ @-@ @                              =@ @-@ @-@ @=          @-@ @-@ @-@ "
-    write(0, "(a)"), "          @-@ @-@                                                    =@ @-@ @-@ @="
-    write(0, "(a)"), "         =@ @-@ @=                                                                "
-    write(0, "(a)"), "          [4 by 4]          [1 by 6]             [2 by 6]               [3 by 6]  "
-    write(0, "(a)")
-    write(0, "(a)"), "     11. @-@ @-@ @-@   12.  @ @-@ @   13.  @-@ @-@   14.    @ @     15.    @ @    "
-    write(0, "(a)"), "         @ @-@ @-@ @        @     @        @     @       =@ @-@ @=       @-@ @-@  "
-    write(0, "(a)"), "         @-@ @-@ @-@       =@ @-@ @=       @     @          @ @         =@ @-@ @= "
-    write(0, "(a)"), "        =@ @-@ @-@ @=                     =@ @-@ @=                        @ @    "
-    write(0, "(a)"), "          [4 by 6]        [3-4 hole]     [4-4 hole]     [3-4 cross]    [4-4 cross]"
-    write(0, "(a)")
-    write(0, "(a)"), "    [Section defined on honeycomb lattice]"
-    write(0, "(a)"), "     ================="
-    write(0, "(a)"), "                           [sec ID]             [sec ID]                                                        "
-    write(0, "(a)"), "     16.       17.  @-@       5 4     18.  @ @     4 3    19.  @-@   @-@     20.     @-@        21.  @-@   @-@  "
-    write(0, "(a)"), "        =@ @=     =@   @=   =0   3=       @   @   5   2      =@   @-@   @=        @-@   @-@         @   @-@   @ "
-    write(0, "(a)"), "                    @-@       1 2         =@ @=   =0 1=        @-@   @-@        =@   @-@   @=        @-@   @-@  "
-    write(0, "(a)"), "                                                                                  @-@   @-@        =@   @-@   @="
-    write(0, "(a)"), "                  [type 1, const]         [type 2, mod]                              @-@             @-@   @-@  "
-    write(0, "(a)"), "      [1 by 2]     [1 honeycomb]          [1 honeycomb]      [2 honeycomb]      [4 honeycomb]      [5 honeycomb]"
-    write(0, "(a)")
-    write(0, "(a)"), "   Select the number [Enter] : "
-end subroutine Input_Print_Section_Old
 
 ! ---------------------------------------------------------------------------------------
 
@@ -938,19 +825,15 @@ subroutine Input_Print_Num_BP_Edge(prob)
     else
         write(0, "(a)")
         write(0, "(a)"), "   C. Third input - Pre-defined minimum edge length"
+        write(0, "(a)"), "   ================================================"
         write(0, "(a)")
         write(0, "(a)"), "   [Honeycomb lattice]"
         write(0, "(a)")
-        write(0, "(a)"), "       1.  31 BPs :  3 turn ->  3 [turn] * 10.5 [BPs/turn] =  31.5 [10.71 nm]"
-        write(0, "(a)"), "    *  2.  42 BPs :  4 turn ->  4 [turn] * 10.5 [BPs/turn] =  42.0 [14.28 nm]"
-        write(0, "(a)"), "       3.  52 BPs :  5 turn ->  5 [turn] * 10.5 [BPs/turn] =  52.5 [17.85 nm]"
-        write(0, "(a)"), "    *  4.  63 BPs :  6 turn ->  6 [turn] * 10.5 [BPs/turn] =  63.0 [21.42 nm]"
-        write(0, "(a)"), "       5.  73 BPs :  7 turn ->  7 [turn] * 10.5 [BPs/turn] =  73.5 [24.99 nm]"
-        write(0, "(a)"), "    *  6.  84 BPs :  8 turn ->  8 [turn] * 10.5 [BPs/turn] =  84.0 [28.56 nm]"
-        write(0, "(a)"), "       7.  94 BPs :  9 turn ->  9 [turn] * 10.5 [BPs/turn] =  94.5 [32.13 nm]"
-        write(0, "(a)"), "    *  8. 105 BPs : 10 turn -> 10 [turn] * 10.5 [BPs/turn] = 105.0 [35.70 nm]"
-        write(0, "(a)"), "       9. 115 BPs : 11 turn -> 11 [turn] * 10.5 [BPs/turn] = 115.5 [39.27 nm]"
-        write(0, "(a)"), "    * 10. 126 BPs : 12 turn -> 12 [turn] * 10.5 [BPs/turn] = 126.0 [42.84 nm]"
+        write(0, "(a)"), "      1.  42 bp = 2 turn * 21 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
+        write(0, "(a)"), "      2.  63 bp = 3 turn * 21 bp/turn ->  63 bp * 0.34nm/bp = 21.42nm"
+        write(0, "(a)"), "      3.  84 bp = 4 turn * 21 bp/turn ->  84 bp * 0.34nm/bp = 28.56nm"
+        write(0, "(a)"), "      4. 105 bp = 5 turn * 21 bp/turn -> 105 bp * 0.34nm/bp = 35.70nm"
+        write(0, "(a)"), "      5. 126 bp = 6 turn * 21 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
         write(0, "(a)")
     end if
 
@@ -1067,99 +950,17 @@ subroutine Input_Select_Problem(prob, geom)
     ! Select problem
     select case (prob.sel_prob)
 
-        ! Pre-defined geometries: Platonic solids
-        case (1);  call Exam_Platonic_Tetrahedron  (prob, geom)
-        case (2);  call Exam_Platonic_Cube         (prob, geom)
-        case (3);  call Exam_Platonic_Octahedron   (prob, geom)
-        case (4);  call Exam_Platonic_Dodecahedron (prob, geom)
-        case (5);  call Exam_Platonic_Icosahedron  (prob, geom)
-
-        ! Pre-defined geometries: Archimedean solids
-        case (6);  call Exam_Archi_Cubeoctahedron          (prob, geom)
-        case (7);  call Exam_Archi_Icosidodecahedron       (prob, geom)
-        case (8);  call Exam_Archi_Rhombicuboctahedron     (prob, geom)
-        case (9);  call Exam_Archi_Snub_Cube               (prob, geom)
-        case (10); call Exam_Archi_Truncated_Cube          (prob, geom)
-        case (11); call Exam_Archi_Truncated_Cuboctahedron (prob, geom)
-        case (12); call Exam_Archi_Truncated_Dodecahedron  (prob, geom)
-        case (13); call Exam_Archi_Truncated_Icosahedron   (prob, geom)
-        case (14); call Exam_Archi_Truncated_Octahedron    (prob, geom)
-        case (15); call Exam_Archi_Truncated_Tetrahedron   (prob, geom)
-
-        ! Pre-defined geometries: Johnson solids
-        case (16); call Exam_Johnson_Gyroelongated_Pentagonal_Pyramid_J11   (prob, geom)
-        case (17); call Exam_Johnson_Triangular_Bipyramid_J12               (prob, geom)
-        case (18); call Exam_Johnson_Pentagonal_Bipyramid_J13               (prob, geom)
-        case (19); call Exam_Johnson_Gyroelongated_Square_Bipyramid_J17     (prob, geom)
-        case (20); call Exam_Johnson_Square_Gyrobicupola_J29                (prob, geom)
-        case (21); call Exam_Johnson_Pentagonal_Orthocupolarotunda_J32      (prob, geom)
-        case (22); call Exam_Johnson_Pentagonal_Orthobirotunda_J34          (prob, geom)
-        case (23); call Exam_Johnson_Elongated_Pentagonal_Gyrobicupola_J39  (prob, geom)
-        case (24); call Exam_Johnson_Elongated_Pentagonal_Gyrobirotunda_J43 (prob, geom)
-        case (25); call Exam_Johnson_Gyroelongated_Square_Bicupola_J45      (prob, geom)
-
-        ! Pre-defined geometries: Catalan solids
-        case (26); call Exam_Catalan_Rhombic_Dodecahedron        (prob, geom)
-        case (27); call Exam_Catalan_Rhombic_Triacontahedron     (prob, geom)
-        case (28); call Exam_Catalan_Deltoidal_Icositetrahedron  (prob, geom)
-        case (29); call Exam_Catalan_Pentagonal_Icositetrahedron (prob, geom)
-        case (30); call Exam_Catalan_Triakis_Octahedron          (prob, geom)
-        case (31); call Exam_Catalan_Disdyakis_Dodecahedron      (prob, geom)
-        case (32); call Exam_Catalan_Triakis_Icosahedron         (prob, geom)
-        case (33); call Exam_Catalan_Pentakis_Dodecahedron       (prob, geom)
-        case (34); call Exam_Catalan_Tetrakis_Hexahedron         (prob, geom)
-        case (35); call Exam_Catalan_Triakis_Tetrahedron         (prob, geom)
-
-        ! Pre-defined geometries: Miscellaneous polyhedra
-        case (36); call Exam_Miscellaneous_Heptagonal_Bipyramid     (prob, geom)
-        case (37); call Exam_Miscellaneous_Enneagonal_Trapezohedron (prob, geom)
-        case (38); call Exam_Miscellaneous_Small_Stell_Dodecahedron (prob, geom)
-        case (39); call Exam_Miscellaneous_Rhombic_Hexecontahedron  (prob, geom)
-        case (40); call Exam_Miscellaneous_Goldberg_Dk5dgD          (prob, geom)
-        case (41); call Exam_Miscellaneous_Double_Helix             (prob, geom)
-        case (42); call Exam_Miscellaneous_Nested_Cube              (prob, geom)
-        case (43); call Exam_Miscellaneous_Nested_Octahedron        (prob, geom)
-        case (44); call Exam_Miscellaneous_Torus                    (prob, geom)
-        case (45); call Exam_Miscellaneous_Double_Torus             (prob, geom)
-
-        ! Pre-defined geometries: Asymmetric and non-convex objects
-        case (46); call Exam_Asymmetric_Ball        (prob, geom)
-        case (47); call Exam_Asymmetric_Nickedtorus (prob, geom)
-        case (48); call Exam_Asymmetric_Helix       (prob, geom)
-        case (49); call Exam_Asymmetric_Rod         (prob, geom)
-        case (50); call Exam_Asymmetric_Stickman    (prob, geom)
-        case (51); call Exam_Asymmetric_Bottle      (prob, geom)
-        case (52); call Exam_Asymmetric_Bunny       (prob, geom)
-
-        ! Pre-defined geometries: Ect (3 Asymmetric tetrahedrons, 3 Archimedean solids, 3 Catalan solids)
-        case (53); call Exam_Archi_Truncated_Icosidodecahedron      (prob, geom)
-        case (54); call Exam_Archi_Rhombicosidodecahedron           (prob, geom)
-        case (55); call Exam_Archi_Snub_Dodecahedron                (prob, geom)
-        case (56); call Exam_Catalan_Disdyakis_Triacontahedron      (prob, geom)
-        case (57); call Exam_Catalan_Deltoidal_Hexecontahedron      (prob, geom)
-        case (58); call Exam_Catalan_Pentagonal_Hexecontahedron     (prob, geom)
-        case (59); call Exam_Asym_Tetra_I_63_73_52_42               (prob, geom)
-        case (60); call Exam_Asym_Tetra_II_63_52_42                 (prob, geom)
-        case (61); call Exam_Asym_Tetra_III_63_42                   (prob, geom)
-        case (62); call Exam_Johnson_Pentagonal_Pyramid_J2          (prob, geom)
-        case (63); call Exam_Johnson_Elongated_Square_Bipyramid_J15 (prob, geom)
-
-        ! Pre-defined geometries: prism
-        case (64); call Exam_Prism_Triangular_Prism     (prob, geom)
-        case (65); call Exam_Prism_Pentagonal_Prism     (prob, geom)
-        case (66); call Exam_Prism_hexagonal_Prism      (prob, geom)
-
-        ! Primitive examples 7 - open geometry
-        !case (53); call Exam_OpenGeo_Plate_Uniform_Quad         (prob, geom)
-        !case (54); call Exam_OpenGeo_Plate_Distorted_Quad       (prob, geom)
-        !case (55); call Exam_OpenGeo_Plate_Uniform_Tri          (prob, geom)
-        !case (56); call Exam_OpenGeo_Plate_Distorted_Tri        (prob, geom)
-        !case (57); call Exam_OpenGeo_Circular_Plate_Quad        (prob, geom)
-        !case (58); call Exam_OpenGeo_Circular_Plate_Tri         (prob, geom)
-        !case (59); call Exam_OpenGeo_Annular_Plate_Quad         (prob, geom)
-        !case (60); call Exam_OpenGeo_Annular_Plate_Tri          (prob, geom)
-        !case (61); call Exam_OpenGeo_Hyperbolic_Paraboloid_Quad (prob, geom)
-        !case (62); call Exam_OpenGeo_Hyperbolic_Paraboloid_Tri  (prob, geom)
+        ! Primitive examples - open geometry
+        case ( 1); call Exam_OpenGeo_Plate_Uniform_Quad         (prob, geom)
+        case ( 2); call Exam_OpenGeo_Plate_Distorted_Quad       (prob, geom)
+        case ( 3); call Exam_OpenGeo_Plate_Uniform_Tri          (prob, geom)
+        case ( 4); call Exam_OpenGeo_Plate_Distorted_Tri        (prob, geom)
+        case ( 5); call Exam_OpenGeo_Circular_Plate_Quad        (prob, geom)
+        case ( 6); call Exam_OpenGeo_Circular_Plate_Tri         (prob, geom)
+        case ( 7); call Exam_OpenGeo_Annular_Plate_Quad         (prob, geom)
+        case ( 8); call Exam_OpenGeo_Annular_Plate_Tri          (prob, geom)
+        case ( 9); call Exam_OpenGeo_Hyperbolic_Paraboloid_Quad (prob, geom)
+        case (10); call Exam_OpenGeo_Hyperbolic_Paraboloid_Tri  (prob, geom)
 
         case default
             write(0, "(a$)"), "Error - Not defined problem : "
