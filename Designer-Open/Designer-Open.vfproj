@@ -70,7 +70,9 @@
 		<File RelativePath=".\Sources\6_SeqDesign.f90"/>
 		<File RelativePath=".\Sources\7_Output.f90"/></Filter>
 		<Filter Name="Input">
-		<File RelativePath=".\Sources\Exam_OpenGeo.f90"/>
+		<File RelativePath=".\Sources\Exam_2D_Open.f90"/>
+		<File RelativePath=".\Sources\Exam_3D_Open.f90"/>
+		<File RelativePath=".\Sources\Exam_Platonic.f90"/>
 		<File RelativePath=".\Sources\Importer.f90"/></Filter>
 		<Filter Name="Output">
 		<File RelativePath=".\Sources\Chimera.f90"/>

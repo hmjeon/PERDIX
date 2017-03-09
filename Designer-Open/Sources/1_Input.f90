@@ -17,6 +17,8 @@ module Input
     use Importer
 
     use Exam_OpenGeo
+    use Exam_3D_Open
+    use Exam_Platonic
 
     use Section
 
@@ -760,14 +762,19 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "   A. First input - Geometry discretized by surface mesh"
     write(0, "(a)"), "   ====================================================="
     write(0, "(a)")
-    write(0, "(a)"), "      I - Pre-defined geometries: Open surface mesh"
-    write(0, "(a)"), "          -----------------------------------------"
+    write(0, "(a)"), "      I - 2D open geometries"
+    write(0, "(a)"), "      ----------------------"
     write(0, "(a)")
     write(0, "(a)"), "         1. Plate Uniform Quad,                   2. Plate Distorted Quad"
     write(0, "(a)"), "         3. Plate Uniform Tri,                    4. Plate Distorted Tri"
     write(0, "(a)"), "         5. Circular Plate Quad,                  6. Circular Plate Tri"
     write(0, "(a)"), "         7. Annular Plate Quad,                   8. Annular Plate Tri"
     write(0, "(a)"), "         9. Hyperbolic Paraboloid Quad,          10. Hyperbolic Paraboloid Tri"
+    write(0, "(a)")
+    write(0, "(a)"), "     II - 3D open geometries"
+    write(0, "(a)"), "     -----------------------"
+    write(0, "(a)")
+    write(0, "(a)"), "         100. Tetrahedron"
     write(0, "(a)")
     write(0, "(a)"), "      0. Input from file (*.PLY)"
     write(0, "(a)")
@@ -961,6 +968,8 @@ subroutine Input_Select_Problem(prob, geom)
         case ( 8); call Exam_OpenGeo_Annular_Plate_Tri          (prob, geom)
         case ( 9); call Exam_OpenGeo_Hyperbolic_Paraboloid_Quad (prob, geom)
         case (10); call Exam_OpenGeo_Hyperbolic_Paraboloid_Tri  (prob, geom)
+        case (11); call Exam_Open_End_Cylinder(prob, geom)
+        case (99); call Exam_Platonic_Tetrahedron (prob, geom)
 
         case default
             write(0, "(a$)"), "Error - Not defined problem : "
