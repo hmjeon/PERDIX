@@ -12,7 +12,7 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-module Exam_OpenGeo
+module Exam_2D_Open
 
     use Data_Prob
     use Data_Geom
@@ -1373,4 +1373,4 @@ end function Exam_OpenGeo_Comp_XYZ
 
 ! ---------------------------------------------------------------------------------------
 
-end module Exam_OpenGeo
+end module Exam_2D_Open

@@ -16,7 +16,7 @@ module Input
 
     use Importer
 
-    use Exam_OpenGeo
+    use Exam_2D_Open
     use Exam_3D_Open
     use Exam_Platonic
 
@@ -765,14 +765,15 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "      I - 2D open geometries"
     write(0, "(a)"), "      ----------------------"
     write(0, "(a)")
-    write(0, "(a)"), "         1. Plate Uniform Quad,                   2. Plate Distorted Quad"
-    write(0, "(a)"), "         3. Plate Uniform Tri,                    4. Plate Distorted Tri"
-    write(0, "(a)"), "         5. Circular Plate Quad,                  6. Circular Plate Tri"
-    write(0, "(a)"), "         7. Annular Plate Quad,                   8. Annular Plate Tri"
-    write(0, "(a)"), "         9. Hyperbolic Paraboloid Quad,          10. Hyperbolic Paraboloid Tri"
+    write(0, "(a)"), "         1. Plate with uniform quad mesh,         2. Plate with uniform tri mesh"
+    write(0, "(a)"), "         3. Plate with distorted quad mesh,       4. Plate with distorted tri mesh"
+    write(0, "(a)"), "         5. Circular plate with quad mesh,        6. Circular plate with tri mesh"
+    write(0, "(a)"), "         7. Annular plate with quad mesh,         8. Annular plate with tri mesh"
+    write(0, "(a)"), "         9. Hyperbolic Paraboloid with quad,     10. Hyperbolic Paraboloid with tri mesh"
     write(0, "(a)")
     write(0, "(a)"), "     II - 3D open geometries"
     write(0, "(a)"), "     -----------------------"
+    write(0, "(a)"), "        11. Open end cylinder with quad mesh,    12. Open end cylinder with tri mesh"
     write(0, "(a)")
     write(0, "(a)"), "         100. Tetrahedron"
     write(0, "(a)")
