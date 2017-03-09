@@ -156,7 +156,7 @@ subroutine Exam_OpenGeo_Plate_Distorted_Quad(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
 
-    n         = 3
+    n         = 2
     distort   = 1
     x_width   = 1.0d0           ! x length
     y_width   = 1.0d0           ! y length
@@ -266,7 +266,7 @@ subroutine Exam_OpenGeo_Plate_Uniform_Tri(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
 
-    n         = 3
+    n         = 2
     pattern   = "\"
     x_width   = 1.0d0           ! x length
     y_width   = 1.0d0           ! y length
@@ -372,7 +372,7 @@ subroutine Exam_OpenGeo_Plate_Distorted_Tri(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
 
-    n         = 3
+    n         = 2
     pattern   = "\"
     distort   = 3
     x_width   = 1.0d0           ! x length
@@ -508,7 +508,7 @@ subroutine Exam_OpenGeo_Circular_Plate_Quad(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
 
-    n           = 3
+    n           = 2
     geom.n_iniP = (n + 1)*(n + 1 ) + n*(n + 1) + n*n
     geom.n_face = 3*n*n
 

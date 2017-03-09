@@ -83,10 +83,10 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
 
     ! Write cylindrial model with orientation
     call Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, "cyl1")
-
+stop
     ! Write cylindrial model, cylinder 1
     call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cyl1")
-
+stop
     ! Modify junction to fill hole or avoid crash depending on vertex design
     call Basepair_Modify_Junction(geom, bound, mesh)
 

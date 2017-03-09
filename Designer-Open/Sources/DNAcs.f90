@@ -1,88 +1,93 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!               Designer-Open - DNA Nanostructure with Arbitrary Cross-section
+!       Designer-Open - Automated sequence design for 2D/3D open DNA nanostructure
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
 !                                                            First programed : 2015/04/21
-!                                                            Last  modified  : 2016/10/18
+!                                                            Last  modified  : 2017/03/09
+!
+! Comments: The program 
+!
+! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
+!
+! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
+! M.I.T. hereby makes following copyrightable material available to the
+! public under GNU General Public License, version 2 (GPL-2.0). A copy of
+! this license is available at https://opensource.org/licenses/GPL-2.0
 !
 ! ---------------------------------------------------------------------------------------
 !
-!       - Program Environments
-!           * Language : Fortran 90/95
-!           * Compiler : Intel¢ç Parallel Studio XE 2016 Update 3 Composer Edition
-!           * IDE      : Visual studio 2015
-!           * OS       : Windows 7 64 bits with 24G RAM
-!           * Github   : https://github.com/hmjeon/DNAcs.git
+! Program Environments
+!  * Language : Fortran 90/95
+!  * Compiler : Intel¢ç Parallel Studio XE 2016 Update 3 Composer Edition
+!  * IDE      : Visual studio 2015
+!  * OS       : Windows 7 64 bits with 24G RAM
+!  * Github   : https://github.com/hmjeon/Designer-Open.git
 !
-!       - Program Inputs
-!           * Geometric input(closed surface mesh)
-!               # Problem selector  : Polyhedra with 3D closed-surface mesh
-!               # Problem.ply       : Polygon format
-!               # Problem.stl       : STL(STereoLithography)
-!               # Problem.wrl       : Interactive vector graphics
-!               # Problem.geo       : Geometric surface data from DNAcs
-!           * Pre-defined cross-section
-!               # Square lattice    : 2 by 2, 3 by 2, 4 by 2, 1 by 4, 2 by 4, 3 by 4
-!                                     4 by 4, 1 by 6, 2 by 6, 3 by 6, 4 by 6
-!                                     3 by 4(hole), 4 by 4(hole), 3 by 4(cross), 4 by 4(cross)
-!               # Honeycomb lattice : 1 by 2, 1 honeycomb, 2 honeycomb, 4 honeycomb, 5 honeycom
-!           * Pre-defined edge length
-!               # Square lattice    : 32bp, 43bp, 53bp, 64bp, 75bp, 85bp, 96bp, 107bp, 117bp, 128bp
-!               # Honeycomb lattice : 31bp, 42bp, 52bp, 63bp, 73bp, 84bp, 94bp, 105bp, 115bp, 126bp
+! Program Inputs
+!  * Geometric input(closed surface mesh)
+!    # Problem selector  : Polyhedra with 3D closed-surface mesh
+!    # Problem.ply       : Polygon format
+!    # Problem.stl       : STL(STereoLithography)
+!    # Problem.wrl       : Interactive vector graphics
+!    # Problem.geo       : Geometric surface data from Designer-6HB
+!  * Pre-defined cross-section
+!    # Square lattice    : 2 by 2, 3 by 2, 4 by 2, 1 by 4, 2 by 4, 3 by 4
+!                          4 by 4, 1 by 6, 2 by 6, 3 by 6, 4 by 6
+!                          3 by 4(hole), 4 by 4(hole), 3 by 4(cross), 4 by 4(cross)
+!    # Honeycomb lattice : 1 by 2, 1 honeycomb, 2 honeycomb, 4 honeycomb, 5 honeycom
+!  * Pre-defined edge length
+!    # Square lattice    : 32bp, 43bp, 53bp, 64bp, 75bp, 85bp, 96bp, 107bp, 117bp, 128bp
+!    # Honeycomb lattice : 31bp, 42bp, 52bp, 63bp, 73bp, 84bp, 94bp, 105bp, 115bp, 126bp
 !
-!       - Program Outputs
-!           * DNAcs.txt         : Solution file
-!           * Problem.in        : ADINA input file
-!           * Problem.dat       : Tecplot input file
-!           * Problem.lay       : TecPlot layer file
-!           * Problem.geo       : Geometric surface input data
-!           * Problem.bat       : Batch file to run Chimera
-!           * Problem.py        : Python script to run Chimera
-!           * Problem.bild      : Bild file for Chimera post-processing
-!           * ~_scaf_xover.txt  : Possible centered scaffold crossovers
-!           * ~.cndo            : ASCII data for atomic generation
-!           * ~_basepair.txt    : ASCII data based on the basepair
-!           * ~_base.txt        : ASCII data based on the base
-!           * strand.txt        : Sequence output
+! Program Outputs
+!  * Designer.txt      : Solution file
+!  * Problem.in        : ADINA input file
+!  * Problem.dat       : Tecplot input file
+!  * Problem.lay       : TecPlot layer file
+!  * Problem.geo       : Geometric surface input data
+!  * Problem.bat       : Batch file to run Chimera
+!  * Problem.py        : Python script to run Chimera
+!  * Problem.bild      : Bild file for Chimera post-processing
+!  * ~_scaf_xover.txt  : Possible centered scaffold crossovers
+!  * ~.cndo            : ASCII data for atomic generation
+!  * ~_basepair.txt    : ASCII data based on the basepair
+!  * ~_base.txt        : ASCII data based on the base
+!  * strand.txt        : Sequence output
 !
-!       - Program Modules
-!           * DNAcs
-!               # 1_Input              : Geometry and cross-section input
-!               # 2_ModGeo             : Modified geometry seperated from vertex
-!               # 3_Section            : Cross-sectional geometry
-!               # 4_Basepair           : Basepair generation
-!               # 5_Route              : B-form DNA and scaffold route
-!               # 6_SeqDesign          : Sequence design
-!               # 7_Output             : Outputs
-!               # OpenGeo              : Not used
-!           * Common
-!               # Data                 : Data stuctures used
-!               # List                 : Linked list
-!               # Mani                 : Data manipulating function
-!               # Math                 : Vector and matrix operation
-!               # Para                 : Parameters used
-!               # SpanTree             : Spanning tree for dual-graph
-!           * Input
-!               # Exam_1_Platonic      : Platonic solids
-!               # Exam_2_Archimedean   : Archimedean solids
-!               # Exam_3_Johnson       : Johnson solids
-!               # Exam_4_Catalan       : Catalan solids
-!               # Exam_5_Miscellaneous : Miscellaneous solids
-!               # Exam_6_Assymmetric   : Assymmetric examples
-!               # Exam_7_OpenGeo       : 2D open geometric examples
-!               # Importer             : Import of PLY/STL data format
-!           * Output
-!               # Chimera              : Post-processing for Chimera
-!               # TecPlot              : Post-processing for TecPlot
-!           * DNAcs                    : Main program module
-!           * env.txt                  : Program environmental setting
-!           * seq.txt                  : User-defined scaffold sequences
-!           * DNAcs.rc                 : Resources data for icon
+! Program Modules
+!  * Designer
+!    # 1_Input              : Geometry and cross-section input
+!    # 2_ModGeo             : Modified geometry seperated from vertex
+!    # 3_Section            : Cross-sectional geometry
+!    # 4_Basepair           : Basepair generation
+!    # 5_Route              : B-form DNA and scaffold route
+!    # 6_SeqDesign          : Sequence design
+!    # 7_Output             : Outputs
+!    # OpenGeo              : Not used
+!  * Common
+!    # Data                 : Data stuctures used
+!    # List                 : Linked list
+!    # Mani                 : Data manipulating function
+!    # Math                 : Vector and matrix operation
+!    # Para                 : Parameters used
+!    # SpanTree             : Spanning tree for dual-graph
+!  * Input
+!    # Exam_1_Platonic      : Platonic solids
+!    # Exam_2_Archimedean   : Archimedean solids
+!    # Exam_3_Johnson       : Johnson solids
+!    # Exam_4_Catalan       : Catalan solids
+!    # Exam_5_Miscellaneous : Miscellaneous solids
+!    # Exam_6_Assymmetric   : Assymmetric examples
+!    # Exam_7_OpenGeo       : 2D open geometric examples
+!    # Importer             : Import of PLY/STL data format
+!  * Output
+!    # Chimera              : Post-processing for Chimera
+!    # TecPlot              : Post-processing for TecPlot
+!  * Designer               : Main program module
+!  * env.txt                : Program environmental setting
+!  * seq.txt                : User-defined scaffold sequences
+!  * Designer.rc            : Resources data for icon
 !
 ! ---------------------------------------------------------------------------------------
 !

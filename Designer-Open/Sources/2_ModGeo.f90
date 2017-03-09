@@ -71,19 +71,21 @@ subroutine ModGeo_Modification(prob, geom, bound)
         write(i, "(a)")
     end do
 
-    ! --------------------------------------------------
-    ! Set neighbor point and line on each line
-    ! --------------------------------------------------
+    ! ==================================================
+    !
+    ! Set local coordinate system
+    !
+    ! ==================================================
     ! Set neighbor point
     call ModGeo_Set_Neighbor_Point(prob, geom)
 
     ! Set neighbor line
     call ModGeo_Set_Neighbor_Line(prob, geom, bound)
 
-    ! Write check geometry
+    ! Chimera check geometry
     call ModGeo_Chimera_Check_Geometry(prob, geom)
 
-    ! Set arm junction data in the whole structure
+    ! Set arm junction data
     call ModGeo_Set_Junction_Data(geom, bound)
 
     ! Set local coordinate system on each line
@@ -92,16 +94,15 @@ subroutine ModGeo_Modification(prob, geom, bound)
     ! Write initial geometry with local coordinate system
     call ModGeo_Chimera_Init_Geometry_Local(prob, geom)
 
-    ! --------------------------------------------------
-    ! Modified geometry construction
-    ! --------------------------------------------------
-    ! Seperate the edge from the junction
+    ! ==================================================
+    !
+    ! Seperated lines from the vertex
+    !
+    ! ==================================================
+    ! Seperate the line from the vertex without off-set distance
     call ModGeo_Seperate_Line(geom, bound)
 
-    ! --------------------------------------------------
-    ! Find scale factor to adjust the size of structure
-    ! Pre-calculate the junctional gap and midified edge length
-    ! --------------------------------------------------
+    ! Find scale factor to scale the structure
     scale = ModGeo_Find_Scale_Factor(prob, geom, bound)
 
     ! Modify the geometic scale with scale factor
@@ -322,7 +323,7 @@ subroutine ModGeo_Set_Neighbor_Line(prob, geom, bound)
     integer :: i, nei_line(2, 2)
 
     ! nei_line(a, b)
-    ! a : line index
+    ! a : point index from the connectivity
     ! b : 1- left and positive, 2- right and negative
 
     ! Find the neighbor line from neighbor points
@@ -354,58 +355,57 @@ end subroutine ModGeo_Set_Neighbor_Line
 
 ! Find neighbor line from neighbor points
 ! Last updated on Wed 08 Mar 2017 by Hyungmin
-subroutine ModGeo_Find_Neighbor_Line(geom, idxL, nei_line)
+subroutine ModGeo_Find_Neighbor_Line(geom, line, nei_line)
     type(GeomType), intent(in)  :: geom
-    integer,        intent(in)  :: idxL
+    integer,        intent(in)  :: line
     integer,        intent(out) :: nei_line(2, 2)
 
-    integer :: j, point_1, point_2
+    integer :: i, poi_1, poi_2
 
-    nei_line(1,1:2) = -1
-    nei_line(2,1:2) = -1
+    nei_line(1, 1:2) = -1
+    nei_line(2, 1:2) = -1
 
-    point_1 = geom.iniL(idxL).poi(1)
-    point_2 = geom.iniL(idxL).poi(2)
+    poi_1 = geom.iniL(line).poi(1)
+    poi_2 = geom.iniL(line).poi(2)
 
     ! Set neighboring lines
-    do j = 1, geom.n_iniL
+    do i = 1, geom.n_iniL
 
-        if( (geom.iniL(idxL).neiP(1, 1) == geom.iniL(j).poi(1) .and. point_1 == geom.iniL(j).poi(2)) .or. &
-            (geom.iniL(idxL).neiP(1, 1) == geom.iniL(j).poi(2) .and. point_1 == geom.iniL(j).poi(1)) ) then
-            nei_line(1,1) = j
+        if( (geom.iniL(line).neiP(1, 1) == geom.iniL(i).poi(1) .and. poi_1 == geom.iniL(i).poi(2)) .or. &
+            (geom.iniL(line).neiP(1, 1) == geom.iniL(i).poi(2) .and. poi_1 == geom.iniL(i).poi(1)) ) then
+            nei_line(1,1) = i
         end if
 
-        if( (geom.iniL(idxL).neiP(2, 1) == geom.iniL(j).poi(1) .and. point_2 == geom.iniL(j).poi(2)) .or. &
-            (geom.iniL(idxL).neiP(2, 1) == geom.iniL(j).poi(2) .and. point_2 == geom.iniL(j).poi(1)) ) then
-            nei_line(2,1) = j
+        if( (geom.iniL(line).neiP(2, 1) == geom.iniL(i).poi(1) .and. poi_2 == geom.iniL(i).poi(2)) .or. &
+            (geom.iniL(line).neiP(2, 1) == geom.iniL(i).poi(2) .and. poi_2 == geom.iniL(i).poi(1)) ) then
+            nei_line(2,1) = i
         end if
 
-        if( (geom.iniL(idxL).neiP(1, 2) == geom.iniL(j).poi(1) .and. point_1 == geom.iniL(j).poi(2)) .or. &
-            (geom.iniL(idxL).neiP(1, 2) == geom.iniL(j).poi(2) .and. point_1 == geom.iniL(j).poi(1)) ) then
-            nei_line(1,2) = j
+        if( (geom.iniL(line).neiP(1, 2) == geom.iniL(i).poi(1) .and. poi_1 == geom.iniL(i).poi(2)) .or. &
+            (geom.iniL(line).neiP(1, 2) == geom.iniL(i).poi(2) .and. poi_1 == geom.iniL(i).poi(1)) ) then
+            nei_line(1,2) = i
         end if
 
-        if( (geom.iniL(idxL).neiP(2, 2) == geom.iniL(j).poi(1) .and. point_2 == geom.iniL(j).poi(2)) .or. &
-            (geom.iniL(idxL).neiP(2, 2) == geom.iniL(j).poi(2) .and. point_2 == geom.iniL(j).poi(1)) ) then
-            nei_line(2,2) = j
+        if( (geom.iniL(line).neiP(2, 2) == geom.iniL(i).poi(1) .and. poi_2 == geom.iniL(i).poi(2)) .or. &
+            (geom.iniL(line).neiP(2, 2) == geom.iniL(i).poi(2) .and. poi_2 == geom.iniL(i).poi(1)) ) then
+            nei_line(2,2) = i
         end if
-
     end do
 end subroutine ModGeo_Find_Neighbor_Line
 
 ! ---------------------------------------------------------------------------------------
 
-! Write check geometry
-! Last updated on Saturday 16 July 2016 by Hyungmin
+! Write Chimera check geometry
+! Last updated on Thur 09 Mar 2017 by Hyungmin
 subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
 
     double precision :: pos_1(3), pos_2(3), pos_c(3), pos_c1(3), pos_c2(3)
     double precision :: vec_a(3), vec_b(3), vec(3)
-    character(200) :: path
-    logical :: f_axis, f_info
     integer :: i, j, point_1, point_2
+    logical :: f_axis, f_info
+    character(200) :: path
 
     if(para_write_301 == .false.) return
 
@@ -455,6 +455,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
         vec_b(1:3) = geom.iniP(geom.face(i).poi(2)).pos - pos_c
         vec(1:3)   = Normalize_Vector(Cross_Product(vec_a, vec_b))
 
+        ! Draw the orientation of the outward vector of the face
         write(301, "(a     )"), ".color salmon"
         write(301, "(a$    )"), ".arrow "
         write(301, "(3f8.2$)"), pos_c(1:3)
@@ -462,7 +463,11 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
         write(301, "(3f8.2 )"), 0.2d0, 0.5d0, 0.6d0
     end do
 
+    ! ==================================================
+    !
     ! Write information on line and neighbor numbers
+    !
+    ! ==================================================
     if (f_info == .true.) then
 
         ! For lines
@@ -476,60 +481,61 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
             pos_c2(1:3) = (6.0d0*pos_2 + 4.0d0*pos_1) / (6.0d0 + 4.0d0)
             pos_c1(1:3) = (6.0d0*pos_1 + 4.0d0*pos_2) / (6.0d0 + 4.0d0)
 
-            ! Line number
+            ! Write line index in blue
             write(301, "(a$   )"), ".cmov "
             write(301, "(3f9.3)"), pos_c(1:3) + 0.4d0
             write(301, "(a    )"), ".color blue"
             write(301, "(a    )"), ".font Helvetica 12 bold"
             write(301, "(i7   )"), i
 
-            ! Draw line direction
+            ! Draw the direction of line connectivity in blue
             write(301, "(a$    )"), ".arrow "
             write(301, "(3f8.2$)"), pos_c(1:3)
             write(301, "(3f8.2$)"), pos_c(1:3) + 1.5d0*vec(1:3)
             write(301, "(2f8.2 )"), 0.25d0, 0.5d0
 
-            ! Neighbor number
-            write(301, "(a)"), ".color red"
-
-            ! End and left
+            ! Write the positive(left) sign at point 1 from line connectivity
             if(geom.iniL(i).neiL(1, 1) /= -1) then
                 vec(1:3) = geom.iniP(geom.iniL(i).neiP(1, 1)).pos - pos_c1
                 vec(1:3) = Normalize_Vector(vec)
                 write(301, "(a$   )"), ".cmov "
                 write(301, "(3f9.3)"), pos_c1(1:3) + 2.0d0*vec(1:3)
+                write(301, "(a    )"), ".color red"
                 write(301, "(i7   )"), geom.iniL(i).neiL(1, 1)
             end if
 
-            ! End and right
+            ! Write the negative(right) sign at point 1 from line connectivity
             if(geom.iniL(i).neiL(1, 2) /= -1) then
                 vec(1:3) = geom.iniP(geom.iniL(i).neiP(1, 2)).pos - pos_c1
                 vec(1:3) = Normalize_Vector(vec)
                 write(301, "(a$   )"), ".cmov "
                 write(301, "(3f9.3)"), pos_c1(1:3) + 2.0d0*vec(1:3)
+                write(301, "(a    )"), ".color red"
                 write(301, "(i7   )"), geom.iniL(i).neiL(1, 2)
             end if
 
-            ! Start and left
+            ! Write the positive(left) sign at point 2 from line connectivity
             if(geom.iniL(i).neiL(2, 1) /= -1) then
                 vec(1:3) = geom.iniP(geom.iniL(i).neiP(2, 1)).pos - pos_c2
                 vec(1:3) = Normalize_Vector(vec)
                 write(301, "(a$   )"), ".cmov "
                 write(301, "(3f9.3)"), pos_c2(1:3) + 2.0d0*vec(1:3)
+                write(301, "(a    )"), ".color red"
                 write(301, "(i7   )"), geom.iniL(i).neiL(2, 1)
             end if
 
-            ! Start and right
+            ! Write the negative(right) sign at point 2 from line connectivity
             if(geom.iniL(i).neiL(2, 2) /= -1) then
                 vec(1:3) = geom.iniP(geom.iniL(i).neiP(2, 2)).pos - pos_c2
                 vec(1:3) = Normalize_Vector(vec)
                 write(301, "(a$   )"), ".cmov "
                 write(301, "(3f9.3)"), pos_c2(1:3) + 2.0d0*vec(1:3)
+                write(301, "(a    )"), ".color red"
                 write(301, "(i7   )"), geom.iniL(i).neiL(2, 2)
             end if
         end do
 
-        ! For points
+        ! Write point index
         do i = 1, geom.n_iniP
             write(301, "(a$   )"), ".cmov "
             write(301, "(3f9.3)"), geom.iniP(i).pos(1:3) + 1.0d0
@@ -537,7 +543,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
             write(301, "(i7   )"), i
         end do
 
-        ! For faces
+        ! Write face index
         do i = 1, geom.n_face
             pos_c(1:3) = 0.0d0
             do j = 1, geom.face(i).n_poi
@@ -547,7 +553,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
 
             write(301, "(a$   )"), ".cmov "
             write(301, "(3f9.3)"), pos_c(1:3) + 1.0d0
-            write(301, "(a    )"), ".color red"
+            write(301, "(a    )"), ".color dark green"
             write(301, "(i7   )"), i
         end do
     end if
@@ -571,8 +577,8 @@ end subroutine ModGeo_Chimera_Check_Geometry
 
 ! ---------------------------------------------------------------------------------------
 
-! Set arm junction data in the whole strcutre
-! Last updated on Thursday 25 Feb 2016 by Hyungmin
+! Set arm junction data
+! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine ModGeo_Set_Junction_Data(geom, bound)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -676,8 +682,8 @@ end subroutine ModGeo_Set_Junction_Data
 
 ! ---------------------------------------------------------------------------------------
 
-! Set local coordinate system on initial geometry
-! Last updated on Tuesday 12 Apr 2016 by Hyungmin
+! Set local coordinate system on each edge
+! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine ModGeo_Set_Local_Coorindate(geom)
     type(GeomType), intent(inout) :: geom
 
@@ -692,7 +698,7 @@ subroutine ModGeo_Set_Local_Coorindate(geom)
     ! Set local vecotrs on each line
     do i = 1, geom.n_iniL
 
-        ! Set local coordinate vecotrs
+        ! Set local coordinate system
         geom.iniL(i).t(:,:) = ModGeo_Set_Local_Vectors(geom, i)
 
         ! Print detailed information
@@ -713,120 +719,85 @@ end subroutine ModGeo_Set_Local_Coorindate
 
 ! ---------------------------------------------------------------------------------------
 
-! Set local vecotrs on initial geometry
-! Last updated on Tuesday 12 Apr 2016 by Hyungmin
-function ModGeo_Set_Local_Vectors_Old(geom, line, point) result(local)
-    type(GeomType), intent(in) :: geom
-    integer,        intent(in) :: line
-    integer,        intent(in) :: point
-
-    double precision :: local(3,3), pos_1(3), pos_2(3), vec_l(3), vec_r(3)
-    double precision :: vec(3), vec_n(3), vec_jn(3), vec_jt(3)
-    integer :: i, point_1, point_2, point_cur
-
-    ! Find first local vector, t1
-    point_1    = geom.iniL(line).poi(1)
-    point_2    = geom.iniL(line).poi(2)
-    pos_1(1:3) = geom.iniP(point_1).pos(1:3)
-    pos_2(1:3) = geom.iniP(point_2).pos(1:3)
-    local(1,:) = Normalize_Vector(pos_2 - pos_1)
-
-    ! Find third local vector, t3
-    point_cur  = geom.iniL(line).poi(point)
-    vec_l(1:3) = geom.iniP(geom.iniL(line).neiP(point, 1)).pos - geom.iniP(point_cur).pos
-    vec_r(1:3) = geom.iniP(geom.iniL(line).neiP(point, 2)).pos - geom.iniP(point_cur).pos
-    vec(1:3)   = Normalize_Vector(vec_r - vec_l)
-
-    ! Vector projection
-    vec_n(1:3)  = Normalize_Vector(pos_1 - pos_2)
-    vec_jn(1:3) = dot_product(vec, vec_n) * vec_n
-    vec_jt(1:3) = Normalize_Vector(vec - vec_jn)
-    local(3,:)  = vec_jt(1:3)
-
-    ! Find second local vector t2
-    local(2,:) = Cross_Product(local(3,:), local(1,:))
-    local(2,:) = Normalize_Vector(local(2,:))
-
-    ! Check local vector
-    if(dabs(Size_Vector(local(1, 1:3)) - 1.0d0) > epsilon) then
-        write(0, "(a$)"), "Error - The t1 local vector was not defined : "
-        write(0, "(a$)"), "ModGeo_Set_Local_Vectors_Old"
-        stop
-    else if(dabs(Size_Vector(local(2, 1:3)) - 1.0d0) > epsilon) then
-        write(0, "(a$)"), "Error - The t2 local vector was not defined : "
-        write(0, "(a$)"), "ModGeo_Set_Local_Vectors_Old"
-        stop
-    else if(dabs(Size_Vector(local(3, 1:3)) - 1.0d0) > epsilon) then
-        write(0, "(a$)"), "Error - The t3 local vector was not defined : "
-        write(0, "(a$)"), "ModGeo_Set_Local_Vectors_Old"
-        stop
-    end if
-end function ModGeo_Set_Local_Vectors_Old
-
-! ---------------------------------------------------------------------------------------
-
-! Set local vecotrs on initial geometry
-! Last updated on Tuesday 10 August 2016 by Hyungmin
+! Set local vecotrs on each edge
+! Last updated on Thu 09 Mar 2017 by Hyungmin
 function ModGeo_Set_Local_Vectors(geom, line) result(local)
     type(GeomType), intent(in) :: geom
     integer,        intent(in) :: line
 
-    double precision :: local(3,3), pos_1(3), pos_2(3), vec_face1(3), vec_face2(3)
+    double precision :: local(3, 3), pos_1(3), pos_2(3), vec_face1(3), vec_face2(3)
     double precision :: vec_a(3), vec_b(3), pos_c(3)
-    integer :: i, point_1, point_2, face1, face2
+    integer :: i, poi_1, poi_2, face1, face2
 
-    ! Find first local vector, t1
-    point_1    = geom.iniL(line).poi(1)
-    point_2    = geom.iniL(line).poi(2)
-    pos_1(1:3) = geom.iniP(point_1).pos(1:3)
-    pos_2(1:3) = geom.iniP(point_2).pos(1:3)
+    ! ==================================================
+    !
+    ! Set first local vector, t1
+    !
+    ! ==================================================
+    poi_1    = geom.iniL(line).poi(1)
+    poi_2    = geom.iniL(line).poi(2)
+    pos_1(1:3) = geom.iniP(poi_1).pos(1:3)
+    pos_2(1:3) = geom.iniP(poi_2).pos(1:3)
     local(1,:) = Normalize_Vector(pos_2 - pos_1)
 
-    ! Find second local vector, t2
+    ! ==================================================
+    !
+    ! Set second local vector, t2
+    !
+    ! ==================================================
     face1 = geom.iniL(line).neiF(1)
-    face2 = geom.iniL(line).neiF(2)
-
     if(face1 /= -1) then
-    ! Find center position in face 1
-    pos_c(1:3) = 0.0d0
-    do i = 1, geom.face(face1).n_poi
-        pos_c(1:3) = pos_c + geom.iniP(geom.face(face1).poi(i)).pos
-    end do
-    pos_c(1:3) = pos_c / dble(geom.face(face1).n_poi)
 
-    ! Find normal vector in face 1
-    vec_a(1:3) = geom.iniP(geom.face(face1).poi(1)).pos - pos_c
-    vec_b(1:3) = geom.iniP(geom.face(face1).poi(2)).pos - pos_c
-    vec_face1(1:3) = Normalize_Vector(Cross_Product(vec_a, vec_b))
+        ! Find center position in face 1
+        pos_c(1:3) = 0.0d0
+        do i = 1, geom.face(face1).n_poi
+            pos_c(1:3) = pos_c + geom.iniP(geom.face(face1).poi(i)).pos
+        end do
+        pos_c(1:3) = pos_c / dble(geom.face(face1).n_poi)
+
+        ! Find normal vector in face 1
+        vec_a(1:3) = geom.iniP(geom.face(face1).poi(1)).pos - pos_c
+        vec_b(1:3) = geom.iniP(geom.face(face1).poi(2)).pos - pos_c
+        vec_face1(1:3) = Normalize_Vector(Cross_Product(vec_a, vec_b))
     else
+
+        ! If the neighbor face 1 is boundary
         vec_face1(1:3) = 0.0d0
     end if
 
+    face2 = geom.iniL(line).neiF(2)
     if(face2 /= -1) then
-    ! Find center position in face 2
-    pos_c(1:3) = 0.0d0
-    do i = 1, geom.face(face2).n_poi
-        pos_c(1:3) = pos_c + geom.iniP(geom.face(face2).poi(i)).pos
-    end do
-    pos_c(1:3) = pos_c / dble(geom.face(face2).n_poi)
 
-    ! Find normal vector in face 2
-    vec_a(1:3) = geom.iniP(geom.face(face2).poi(1)).pos - pos_c
-    vec_b(1:3) = geom.iniP(geom.face(face2).poi(2)).pos - pos_c
-    vec_face2(1:3) = Normalize_Vector(Cross_Product(vec_a, vec_b))
+        ! Find center position in face 2
+        pos_c(1:3) = 0.0d0
+        do i = 1, geom.face(face2).n_poi
+            pos_c(1:3) = pos_c + geom.iniP(geom.face(face2).poi(i)).pos
+        end do
+        pos_c(1:3) = pos_c / dble(geom.face(face2).n_poi)
+
+        ! Find normal vector in face 2
+        vec_a(1:3) = geom.iniP(geom.face(face2).poi(1)).pos - pos_c
+        vec_b(1:3) = geom.iniP(geom.face(face2).poi(2)).pos - pos_c
+        vec_face2(1:3) = Normalize_Vector(Cross_Product(vec_a, vec_b))
     else
+
+        ! If the neighbor face 2 is boundary
         vec_face2(1:3) = 0.0d0
     end if
 
-    ! Set second local vector
+    ! Set second local vector, t2
     if(face1 == -1 .or. face2 == -1) then
         local(2,:) = (vec_face1 + vec_face2)
     else
-        local(2,:) = 0.5d0 * (vec_face1 + vec_face2)
+        local(2,:) = 0.5d0*(vec_face1 + vec_face2)
     end if
     local(2,:) = Normalize_Vector(local(2,:))
 
-    ! Find second local vector t3
+    ! ==================================================
+    !
+    ! Set third local vector, t3
+    !
+    ! ==================================================
     local(3,:) = Cross_Product(local(1,:), local(2,:))
     local(3,:) = Normalize_Vector(local(3,:))
 
@@ -848,16 +819,16 @@ end function ModGeo_Set_Local_Vectors
 
 ! ---------------------------------------------------------------------------------------
 
-! Write initial geometry with local coordinate system
-! Last updated on Saturday 16 July 2016 by Hyungmin
+! Write initial geometry with the local coordinate system
+! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
 
-    double precision :: length, pos_1(3), pos_2(3), pos_c(3), local(3, 3)
-    character(200) :: path
+    double precision :: length, pos_1(3), pos_2(3), pos_c(3)
     logical :: f_axis, f_info
     integer :: i
+    character(200) :: path
 
     if(para_write_302 == .false.) return
 
@@ -868,7 +839,7 @@ subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
     path = trim(prob.path_work1)//trim(prob.name_file)
     open(unit=302, file=trim(path)//"_init_geo_local.bild", form="formatted")
 
-    ! Write modified lines
+    ! Write edges
     write(302, "(a)"), ".color dark green"
     do i = 1, geom.n_iniL
         pos_1(1:3) = geom.iniP(geom.iniL(i).poi(1)).pos
@@ -879,7 +850,7 @@ subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
         write(302, "(1f9.3 )"), 0.2d0
     end do
 
-    ! Write modified points
+    ! Write point as sphere
     write(302, "(a)"), ".color red"
     do i = 1, geom.n_iniP
         write(302, "(a$    )"), ".sphere "
@@ -887,10 +858,35 @@ subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
         write(302, "(1f9.3 )"), 0.5d0
     end do
 
-    ! Information on indeces of the lines and points
+    ! Draw local vectors
+    do i = 1, geom.n_iniL
+        pos_1(1:3) = geom.iniP(geom.iniL(i).poi(1)).pos
+        pos_2(1:3) = geom.iniP(geom.iniL(i).poi(2)).pos
+        pos_c(1:3) = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
+
+        write(302, "(a     )"), ".color red"     ! first vector
+        write(302, "(a$    )"), ".arrow "
+        write(302, "(3f8.2$)"), pos_c(1:3)
+        write(302, "(3f8.2$)"), pos_c + geom.iniL(i).t(1,:) * 1.8d0
+        write(302, "(3f8.2 )"), 0.22d0, 0.44d0, 0.6d0
+
+        write(302, "(a     )"), ".color blue"    ! second vector
+        write(302, "(a$    )"), ".arrow "
+        write(302, "(3f8.2$)"), pos_c(1:3)
+        write(302, "(3f8.2$)"), pos_c + geom.iniL(i).t(2,:) * 1.8d0
+        write(302, "(3f8.2 )"), 0.2d0, 0.4d0, 0.6d0
+
+        write(302, "(a     )"), ".color yellow"  ! third vector
+        write(302, "(a$    )"), ".arrow "
+        write(302, "(3f8.2$)"), pos_c(1:3)
+        write(302, "(3f8.2$)"), pos_c + geom.iniL(i).t(3,:) * 1.8d0
+        write(302, "(3f8.2 )"), 0.2d0, 0.4d0, 0.6d0
+    end do
+
+    ! Information on the index of the each line and point
     if(f_info == .true.) then
 
-        ! For edges
+        ! For edge index
         do i = 1, geom.n_iniL
             pos_1(1:3) = geom.iniP(geom.iniL(i).poi(1)).pos
             pos_2(1:3) = geom.iniP(geom.iniL(i).poi(2)).pos
@@ -903,7 +899,7 @@ subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
             write(302, "(i7   )"), i
         end do
 
-        ! For points
+        ! For point index
         do i = 1, geom.n_iniP
             write(302, "(a$   )"), ".cmov "
             write(302, "(3f9.3)"), geom.iniP(i).pos(1:3) + 0.4d0
@@ -911,37 +907,7 @@ subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
             write(302, "(a    )"), ".font Helvetica 12 bold"
             write(302, "(i7   )"), i
         end do
-
     end if
-
-    do i = 1, geom.n_iniL
-        pos_1(1:3) = geom.iniP(geom.iniL(i).poi(1)).pos
-        pos_2(1:3) = geom.iniP(geom.iniL(i).poi(2)).pos
-        pos_c(1:3) = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
-
-        ! Local vectors
-        local(1, 1:3) = geom.iniL(i).t(1,:)
-        local(2, 1:3) = geom.iniL(i).t(2,:)
-        local(3, 1:3) = geom.iniL(i).t(3,:)
-
-        write(302, "(a     )"), ".color red"     ! x-axis
-        write(302, "(a$    )"), ".arrow "
-        write(302, "(3f8.2$)"), pos_c(1:3)
-        write(302, "(3f8.2$)"), pos_c + local(1,:) * 1.8d0
-        write(302, "(3f8.2 )"), 0.22d0, 0.44d0, 0.6d0
-
-        write(302, "(a     )"), ".color blue"    ! y-axis
-        write(302, "(a$    )"), ".arrow "
-        write(302, "(3f8.2$)"), pos_c(1:3)
-        write(302, "(3f8.2$)"), pos_c + local(2,:) * 1.8d0
-        write(302, "(3f8.2 )"), 0.2d0, 0.4d0, 0.6d0
-
-        write(302, "(a     )"), ".color yellow"  ! z-axis
-        write(302, "(a$    )"), ".arrow "
-        write(302, "(3f8.2$)"), pos_c(1:3)
-        write(302, "(3f8.2$)"), pos_c + local(3,:) * 1.8d0
-        write(302, "(3f8.2 )"), 0.2d0, 0.4d0, 0.6d0
-    end do
 
     ! Write global axis
     if(f_axis == .true.) then
@@ -958,11 +924,11 @@ subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
     end if
     close(unit=302)
 
-    ! ---------------------------------------------
+    ! ==================================================
     !
     ! Write the file for Tecplot
     !
-    ! ---------------------------------------------
+    ! ==================================================
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
@@ -1054,7 +1020,7 @@ end subroutine ModGeo_Chimera_Init_Geometry_Local
 
 ! ---------------------------------------------------------------------------------------
 
-! Seperate the edge from the junction, modified geometry
+! Seperate the line from the vertex without off-set distance
 ! Last updated on Friday 26 Feb 2016 by Hyungmin, should check
 subroutine ModGeo_Seperate_Line(geom, bound)
     type(GeomType),  intent(inout) :: geom
@@ -1159,9 +1125,8 @@ end subroutine ModGeo_Seperate_Line
 
 ! ---------------------------------------------------------------------------------------
 
-! Find scale factor and junctional angle to adjust the size of structure
-! Pre-calculate the junctional gap and midified edge length
-! Last updated on Friday 22 Apr 2016 by Hyungmin
+! Find scale factor to scale the structure
+! Last updated on Thu 09 Mar 2017 by Hyungmin
 function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
     type(ProbType),  intent(in)    :: prob
     type(GeomType),  intent(inout) :: geom
@@ -1173,16 +1138,16 @@ function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
     double precision :: pos_cur(3), pos_opp(3), vec_a(3), vec_b(3)
     integer :: i, j, poi_cur, poi_1, poi_2
 
-    ! Scale up to adjust modified edges
+    ! Scale up in order to avoid small structure
     call ModGeo_Set_Scale_Geometry(geom, 100.0d0/para_init_scale)
 
-    ! Allocate original and modified point position
+    ! To save the position of the seperated points
     allocate(pos_modP(geom.n_modP, 3))
 
-    ! Set angle junction between neighboring edges at the junction
+    ! Find the angle between two neighboring lines at vertex
     call ModGeo_Set_Angle_Junction(geom, bound)
 
-    ! Set width of cross-section
+    ! Set the width of cross-section
     width = ModGeo_Set_Width_Section(geom)
 
     ! Loop for junction to pre-calculate the length of the modified edges
@@ -1193,6 +1158,7 @@ function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
         ! Find reference and total angle
         ref_ang = bound.junc(i).ref_ang
         tot_ang = bound.junc(i).tot_ang
+        tot_ang = 3.141592d0 * 2.0d0
 
         ang = ref_ang*(2.0d0*pi/tot_ang)
 
@@ -1209,13 +1175,13 @@ function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
         !    ", tot_ang : ",  Rad2Deg(tot_ang), ", factor : ", factor
 
         if(tot_ang <= 2.0d0*pi) then
-            !dist_gap = width/2.0d0/dtan(ang/2.0d0) * (2.0d0*pi/tot_ang)
+            dist_gap = width/2.0d0/dtan(ang/2.0d0) * (2.0d0*pi/tot_ang)
             dist_gap = (width/2.0d0/dtan(ang/2.0d0) + factor) * (ang/ref_ang)
 
             ! Find the apothem of a regular polygon at the junction
             ! a = 0.5*s/tan(180/n), https://en.wikipedia.org/wiki/Apothem
             ! The apothem a of a regular n-sided polygon with side length s
-            dist_gap = (0.5d0 * width / dtan(pi/dble(bound.junc(i).n_arm))+factor) * (ang/ref_ang)
+            !dist_gap = (0.5d0 * width / dtan(pi/dble(bound.junc(i).n_arm))+factor) * (ang/ref_ang)
         else
             dist_gap = width/2.0d0/dtan(ang/2.0d0)
             
@@ -1293,12 +1259,13 @@ function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
 
     ! Deallocate
     deallocate(pos_modP)
+
 end function ModGeo_Find_Scale_Factor
 
 ! ---------------------------------------------------------------------------------------
 
-! Set angle junction between neighboring edges at the junction
-! Last updated on Fridya 22 Apr 2016 by Hyungmin
+! Find the angle between two neighboring lines at vertex
+! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine ModGeo_Set_Angle_Junction(geom, bound)
     type(GeomType),  intent(in)    :: geom
     type(BoundType), intent(inout) :: bound
@@ -1309,47 +1276,52 @@ subroutine ModGeo_Set_Angle_Junction(geom, bound)
     end type JuncType
 
     type(JuncType), allocatable, dimension(:) :: junc
-    double precision :: pos_center(3), pos_pre(3), pos_next(3)
+    double precision :: pos_cur(3), pos_pre(3), pos_next(3)
     double precision :: tot_ang, ref_ang, max_ang, min_ang, ang
     double precision :: vec_1(3), vec_2(3)
     integer :: i, j, point, point_c
 
-    ! Allocate junc angle memory
+    ! Allocate and initialize junc memory
     allocate(junc(bound.n_junc))
     do i = 1, bound.n_junc
         junc(i).n_arm = bound.junc(i).n_arm
         allocate(junc(i).ang(junc(i).n_arm))
+
+        ! Initialize memory
         junc(i).n_arm = 0
+        do j = 1, junc(i).n_arm
+            junc(i).ang(j) = 0.0d0
+        end do
     end do
 
-    ! Find angle at the junction
+    ! Find angle at vertex
     do i = 1, geom.n_face
         do j = 1, geom.face(i).n_poi
 
-            ! Find center position
+            ! Find current point in the i-th face
             point_c = geom.face(i).poi(j)
-            pos_center(:) = geom.iniP(point_c).pos(1:3)
+            pos_cur(:) = geom.iniP(point_c).pos(1:3)
 
-            ! Find previous position
+            ! Find previous point in the i-th face
             if(j == 1) then
                 point = geom.face(i).poi(geom.face(i).n_poi)
                 pos_pre(1:3) = geom.iniP(point).pos(1:3)
             else
-                point = geom.face(i).poi(j-1)
+                point = geom.face(i).poi(j - 1)
                 pos_pre(1:3) = geom.iniP(point).pos(1:3)
             end if
 
-            ! Find next position
+            ! Find next point in the i-th face
             if(j == geom.face(i).n_poi) then
                 point = geom.face(i).poi(1)
                 pos_next(1:3) = geom.iniP(point).pos(1:3)
             else
-                point = geom.face(i).poi(j+1)
+                point = geom.face(i).poi(j + 1)
                 pos_next(1:3) = geom.iniP(point).pos(1:3)
             end if
 
-            vec_1(1:3) = pos_pre(1:3)  - pos_center(1:3)
-            vec_2(1:3) = pos_next(1:3) - pos_center(1:3)
+            vec_1(1:3) = pos_pre(1:3)  - pos_cur(1:3)
+            vec_2(1:3) = pos_next(1:3) - pos_cur(1:3)
 
             ! Find angle between two vectors in 3D
             ang = datan2(Size_Vector(Cross_Product(vec_1, vec_2)), dot_product(vec_1, vec_2))
@@ -1359,23 +1331,33 @@ subroutine ModGeo_Set_Angle_Junction(geom, bound)
         end do
     end do
 
-    ! Set maximum and minimum angle at the junction
+    !do i = 1, bound.n_junc
+    !    write(0, "(2i$)"), i, bound.junc(i).n_arm
+    !    do j = 1, junc(i).n_arm
+    !        write(0, "(f$)"), junc(i).ang(j) * 180.0d0 / pi
+    !    end do
+    !    write(0, "(a)")
+    !end do
+
+    ! Set maximum and minimum angle
     do i = 1, bound.n_junc
 
+        ! For total angle
         tot_ang = 0.0d0
-        max_ang = junc(i).ang(1)
-        min_ang = junc(i).ang(1)
-
         do j = 1, junc(i).n_arm
             tot_ang = tot_ang + junc(i).ang(j)
         end do
 
+        ! For maximum and minimum angle
+        max_ang = junc(i).ang(1)
+        min_ang = junc(i).ang(1)
         do j = 2, junc(i).n_arm
             if(max_ang < junc(i).ang(j)) max_ang = junc(i).ang(j)
             if(min_ang > junc(i).ang(j)) min_ang = junc(i).ang(j)
         end do
+        !write(0, "(i, 3f12.4)"), i, tot_ang*180.0d0/pi, max_ang*180.0d0/pi, min_ang*180.0d0/pi
 
-        ! Set reference and total angle at the junction
+        ! Set reference and total angle junction data
         if(para_junc_ang == "min" .or. para_junc_ang == "opt") then
             bound.junc(i).ref_ang = min_ang
         else if(para_junc_ang == "max") then
@@ -1391,14 +1373,13 @@ subroutine ModGeo_Set_Angle_Junction(geom, bound)
     do i = 1, bound.n_junc
         deallocate(junc(i).ang)
     end do
-
     deallocate(junc)
 end subroutine ModGeo_Set_Angle_Junction
 
 ! ---------------------------------------------------------------------------------------
 
 ! Find width cross-section
-! Last updated on Fridya 22 Apr 2016 by Hyungmin
+! Last updated on Thu 09 Mar 2017 by Hyungmin
 function ModGeo_Set_Width_Section(geom) result(width)
     type(GeomType), intent(in) :: geom
 
@@ -1423,15 +1404,15 @@ end function ModGeo_Set_Width_Section
 
 ! ---------------------------------------------------------------------------------------
 
-! Set geometric scale
-! Last updated on Friday 18 Mar 2016 by Hyungmin
+! Set the geometric size with the scale factor
+! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine ModGeo_Set_Scale_Geometry(geom, scale)
     type(GeomType),   intent(inout) :: geom
     double precision, intent(in)    :: scale
 
     integer :: i
 
-    ! Rescale the modified edge length
+    ! Scale seperated lines with the input
     ! para_init_scale is initial scale factor from input
     do i = 1, geom.n_modP
         geom.modP(i).pos(1:3) = geom.modP(i).pos(1:3) * scale
@@ -1446,13 +1427,13 @@ end subroutine ModGeo_Set_Scale_Geometry
 ! ---------------------------------------------------------------------------------------
 
 ! Write modified geometry
-! Last updated on Satuday 16 July 2016 by Hyungmin
+! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine ModGeo_Chimera_Mod_Geometry(prob, geom, mode)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
     character(*),   intent(in) :: mode
 
-    double precision :: length, pos_1(3), pos_2(3), pos_c(3), local(3,3)
+    double precision :: length, pos_1(3), pos_2(3), pos_c(3)
     integer :: i
     logical :: f_axis, f_info
     character(200) :: path
@@ -1466,14 +1447,14 @@ subroutine ModGeo_Chimera_Mod_Geometry(prob, geom, mode)
     path = trim(prob.path_work1)//trim(prob.name_file)//"_"
     open(unit=303, file=trim(path)//trim(mode)//"_geo.bild", form="formatted")
 
-    ! Write modified points
+    ! Write seperated points
     write(303, "(a)"), ".color red"
     do i = 1, geom.n_modP
         write(303, "(a$   )"), ".sphere "
         write(303, "(4f9.3)"), geom.modP(i).pos(1:3), 0.35d0
     end do
 
-    ! Write modified edges
+    ! Write seperated lines
     write(303, "(a)"), ".color dark green"
     do i = 1, geom.n_iniL
 
@@ -1484,10 +1465,10 @@ subroutine ModGeo_Chimera_Mod_Geometry(prob, geom, mode)
         write(303, "(7f9.3)"), pos_1(1:3), pos_2(1:3), 0.15d0
     end do
 
-    ! Information on edge and local coordinates
+    ! Information on the index of points and lines
     if(f_info == .true.) then
 
-        ! For points
+        ! For point index
         do i = 1, geom.n_modP
             write(303, "(a$   )"), ".cmov "
             write(303, "(3f9.3)"), geom.modP(i).pos(1:3) + 0.4d0
@@ -1496,7 +1477,7 @@ subroutine ModGeo_Chimera_Mod_Geometry(prob, geom, mode)
             write(303, "(i7   )"), i
         end do
 
-        ! For edges
+        ! For line index
         do i = 1, geom.n_iniL
             pos_1(1:3) = geom.modP(geom.iniL(i).poi(1)).pos(1:3)
             pos_2(1:3) = geom.modP(geom.iniL(i).poi(2)).pos(1:3)
@@ -1513,33 +1494,28 @@ subroutine ModGeo_Chimera_Mod_Geometry(prob, geom, mode)
                 trim(adjustl(Int2Str(nint(length/para_dist_bp)+1)))//")"
         end do
 
-        ! Local coordinate system on edges
+        ! Draw three local vectors on each line
         do i = 1, geom.n_iniL
             pos_1(1:3) = geom.modP(geom.iniL(i).poi(1)).pos(1:3)
             pos_2(1:3) = geom.modP(geom.iniL(i).poi(2)).pos(1:3)
             pos_c(1:3) = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
 
-            ! Local vectors
-            local(1, 1:3) = geom.iniL(i).t(1, 1:3)
-            local(2, 1:3) = geom.iniL(i).t(2, 1:3)
-            local(3, 1:3) = geom.iniL(i).t(3, 1:3)
-
-            write(303, "(a     )"), ".color red"     ! x-axis
+            write(303, "(a     )"), ".color red"     ! first vector
             write(303, "(a$    )"), ".arrow "
             write(303, "(3f8.2$)"), pos_c(1:3)
-            write(303, "(3f8.2$)"), pos_c(1:3) + local(1, 1:3) * 1.5d0
+            write(303, "(3f8.2$)"), pos_c(1:3) + geom.iniL(i).t(1,1:3)*1.5d0
             write(303, "(3f8.2 )"), 0.18d0, 0.36d0, 0.6d0
 
-            write(303, "(a     )"), ".color blue"    ! y-axis
+            write(303, "(a     )"), ".color blue"    ! section vector
             write(303, "(a$    )"), ".arrow "
             write(303, "(3f8.2$)"), pos_c(1:3)
-            write(303, "(3f8.2$)"), pos_c(1:3) + local(2, 1:3) * 1.2d0
+            write(303, "(3f8.2$)"), pos_c(1:3) + geom.iniL(i).t(2,1:3)*1.2d0
             write(303, "(3f8.2 )"), 0.18d0, 0.36d0, 0.6d0
 
-            write(303, "(a     )"), ".color yellow"  ! z-axis
+            write(303, "(a     )"), ".color yellow"  ! third vector
             write(303, "(a$    )"), ".arrow "
             write(303, "(3f8.2$)"), pos_c(1:3)
-            write(303, "(3f8.2$)"), pos_c(1:3) + local(3, 1:3) * 1.2d0
+            write(303, "(3f8.2$)"), pos_c(1:3) + geom.iniL(i).t(3,1:3)*1.2d0
             write(303, "(3f8.2 )"), 0.18d0, 0.36d0, 0.6d0
         end do
     end if

@@ -122,8 +122,8 @@ module Para
     ! UCSF Chimera output option
     logical :: para_chimera_axis     = .true.   ! *Plot with axis at the ceneter of geometry (*.bild)
     logical :: para_chimera_102_info = .true.   ! *Plot with edge and point number (_init_geo.bild)
-    logical :: para_chimera_301_info = .false.  !  Plot with edge and point number (_check_geo.bild)
-    logical :: para_chimera_302_info = .false.  !  Plot with edge and point number (_init_geo_local.bild)
+    logical :: para_chimera_301_info = .true.   !  Plot with edge and point number (_check_geo.bild)
+    logical :: para_chimera_302_info = .true.   !  Plot with edge and point number (_init_geo_local.bild)
     logical :: para_chimera_303_info = .true.   ! *Plot with edge and point number (_mod_geo.bild)
     logical :: para_chimera_401_info = .true.   ! *Plot with edge and point number (_cross_geo.bild)
     logical :: para_chimera_502_ori  = .false.  !  Plot with helix z-direction (_line.bild / _node.bild)
