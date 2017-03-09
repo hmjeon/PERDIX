@@ -96,63 +96,43 @@ subroutine SeqDesign_Design(prob, geom, mesh, dna)
     type(MeshType), intent(inout) :: mesh
     type(DNAType),  intent(inout) :: dna
 
-    integer :: i
+    ! Build dnaTop data from dna base data
+    call SeqDesign_Build_dnaTop(dna)
 
-    do i = 1, 4
+    ! Build strand data from dnaTop
+    call SeqDesign_Build_Strand(dna)
 
-        ! Build dnaTop data from dna base data
-        call SeqDesign_Build_dnaTop(dna)
+    ! Make non-circular staple strand
+    call SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
 
-        ! Build strand data from dnaTop
-        call SeqDesign_Build_Strand(dna)
 
-        ! Make non-circular staple strand
-        if(para_set_stap_sxover == "on") then
 
-            ! Make non-circular strand by single crossover
-            !call SeqDesign_Make_Noncir_Stap_Single_Xover(mesh, dna)
+    ! Build sequence design with non-circular staple strands
+    ! ++++++++++++++++++++++++++
+    ! max에 문제가 발생됨
+    ! ++++++++++++++++++++++++++
+    if(para_cut_stap_method == "max") call SeqDesign_Build_Sequence_Design_Max(prob, mesh, dna)
+    if(para_cut_stap_method == "opt") call SeqDesign_Build_Sequence_Design_Opt(prob, mesh, dna)
 
-            ! Make non-circular strand by nick
-            call SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
-        else
+    ! ==================================================
+    !
+    ! Rebuild strand data from dnaTop
+    !call SeqDesign_Rebuild_Strand(dna)
 
-            ! Make non-circular strand by nick
-            call SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
-        end if
+    ! Chimera sequence design
+    !call SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
+    !stop
+    !
+    ! ==================================================
 
-        ! Build sequence design with non-circular staple strands
-        if(para_cut_stap_method == "max") call SeqDesign_Build_Sequence_Design_Max(prob, mesh, dna)
-        if(para_cut_stap_method == "opt") call SeqDesign_Build_Sequence_Design_Opt(prob, mesh, dna)
-        if(para_cut_stap_method == "mix") call SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
-        if(para_cut_stap_method == "min") call SeqDesign_Build_Sequence_Design(prob, mesh, dna)
-        if(para_cut_stap_method == "mid") call SeqDesign_Build_Sequence_Design(prob, mesh, dna)
+    ! Make nick in scaffold strand
+    call SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
 
-        ! Make nick in scaffold strand
-        call SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
+    ! Make short scaffold strand
+    call SeqDesign_Make_Short_Scaf(mesh, dna)
 
-        ! Make short scaffold strand
-        call SeqDesign_Make_Short_Scaf(mesh, dna)
-
-        ! Rebuild strand data from dnaTop
-        call SeqDesign_Rebuild_Strand(dna)
-
-        ! For minimum staple length control
-        if(dna.len_min_stap < para_min_cut_stap) then
-
-            ! Change parameter and reset data structure
-            prob.n_cng_min_stap       = i
-            para_gap_xover_bound_stap = para_gap_xover_bound_stap + 2
-
-            ! Reset possible staple crossovers
-            call SeqDesign_Reset_Possible_Stap_Xover(geom, mesh, dna)
-        else
-
-            exit
-        end if
-
-        if(allocated(dna.top))    deallocate(dna.top)
-        if(allocated(dna.strand)) deallocate(dna.strand)
-    end do
+    ! Rebuild strand data from dnaTop
+    call SeqDesign_Rebuild_Strand(dna)
 
     ! List in long length order of the staple
     call SeqDesign_Order_Staple(dna)

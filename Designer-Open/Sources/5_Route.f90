@@ -840,6 +840,15 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
                     nei_cur(1:2) = geom.iniL(iniL_cur).neiL(1:2, 2)     ! right-hand side neighbor
                 end if
 
+                ! Exception for the open boundary
+                if(nei_cur(1) == -1 .and. nei_cur(2) == -1) then
+                    conn((j-1)*bound.junc(i).n_arm+k, 1) = node_cur
+                    conn((j-1)*bound.junc(i).n_arm+k, 2) = -1
+                    
+                    deallocate(node_con)
+                    cycle
+                end if
+
                 ! Find neighboring nodes
                 do m = 1, geom.n_sec
                     do n = 1, bound.junc(i).n_arm
@@ -889,7 +898,7 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
                     else
                         write(0, "(a$)"), "Error - The node_com does not lay on the junction : "
                         write(0, "(a )"), "Route_Reconnect_Junction"
-                        stop
+                        !stop
                     end if
 
                     if(row_cur == row_com) then
@@ -909,6 +918,30 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
             end do
         end do
 
+        
+        do j = 1, geom.n_sec*bound.junc(i).n_arm
+            if(conn(j, 2) == -1) then
+                do k = j + 1, geom.n_sec*bound.junc(i).n_arm
+                    if(conn(k, 2) == -1) then
+                        conn(j, 2) = conn(k, 1)
+                        conn(k, 2) = conn(j, 1)
+                    end if
+                end do
+            end if
+            
+            
+            
+            
+            print *, i, conn(j, 1), conn(j, 2)
+        end do
+
+        
+        
+        
+        
+        
+        
+        
         ! Print progress
         write(11, "(i20$)"), i
         write(11, "(a$  )"), " th junc -> # of nodes to be connected : "
@@ -1009,6 +1042,12 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
         deallocate(conn_new)
     end do
 
+    
+
+    
+    
+    
+    
     ! ==================================================
     !
     ! Self connection

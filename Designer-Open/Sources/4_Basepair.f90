@@ -83,10 +83,10 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
 
     ! Write cylindrial model with orientation
     call Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, "cyl1")
-stop
+
     ! Write cylindrial model, cylinder 1
     call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cyl1")
-stop
+
     ! Modify junction to fill hole or avoid crash depending on vertex design
     call Basepair_Modify_Junction(geom, bound, mesh)
 
@@ -343,7 +343,7 @@ end subroutine Basepair_Generate_Basepair
 ! ---------------------------------------------------------------------------------------
 
 ! Set sectional connection at junction
-! Last updated on Saturday 19 Mar 2016 by Hyungmin
+! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -368,17 +368,17 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
         write(i, "(a)"), "* The number of helices on section     : "//trim(adjustl(Int2Str(geom.n_sec)))
     end do
 
-    ! Loop for junction
+    ! The number of junction
     do i = 1, bound.n_junc
 
-        ! Allocate connect arrary to store node to be connected
+        ! Allocate arrary to store the nodes to be joined each other
         allocate(connect(geom.n_sec*bound.junc(i).n_arm, 2))
 
-        ! Loop for every node at each junction
+        ! all nodes in the junction
         do j = 1, geom.n_sec
             do k = 1, bound.junc(i).n_arm
 
-                ! Allocate array to contain neighboring nodes
+                ! Allocate array to save candinate neighbor nodes
                 allocate(node_con(geom.n_sec))
 
                 node_cur = bound.junc(i).node(k, j)
@@ -390,14 +390,23 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
                 n_column = geom.sec.maxC-geom.sec.minC + 1
 
                 if(geom.sec.posC(mesh.node(node_cur).sec + 1) < n_column / 2 + 1) then
-                    ! Left-hand side neighbor
+                    ! Left and positivie sign
                     nei_cur(1:2) = geom.iniL(iniL_cur).neiL(1:2, 1)
                 else
-                    ! Right-hand side neighbor
+                    ! Right and negative sign
                     nei_cur(1:2) = geom.iniL(iniL_cur).neiL(1:2, 2)
                 end if
 
-                ! Find neighboring nodes
+                ! Exception for the open boundary
+                if(nei_cur(1) == -1 .and. nei_cur(2) == -1) then
+                    bound.junc(i).type_conn(j) = 1
+                    connect((j-1)*bound.junc(i).n_arm+k, 1) = node_cur
+                    connect((j-1)*bound.junc(i).n_arm+k, 2) = -1
+                    deallocate(node_con)
+                    cycle
+                end if
+
+                ! Find neighbor nodes in junction data
                 do m = 1, geom.n_sec
                     do n = 1, bound.junc(i).n_arm
                         node_com = bound.junc(i).node(n, m)
@@ -409,7 +418,7 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
                     end do
                 end do
 
-                ! Find the node to be connected, known - node_cur, node_com(1:geom.n_sec)
+                ! Find the node to be connected, known - node_cur, node_con(1:geom.n_sec)
                 ! Check the initial line whether inword or outward vector to junction
                 ! Get iniL's direction, inward or outward to the junction
                 dir_cur = Basepair_Get_Direction_IniL(geom, mesh, node_cur)
@@ -446,26 +455,6 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
         ! Connect between node_cur and node_com in loop boundary connection
         ! connect(j, 1) : current node
         ! connect(j, 2) : comparing node to be connected with connect(j, 1)
-        !
-        ! Check connect data
-        do j = 1, geom.n_sec*bound.junc(i).n_arm
-            node_cur = connect(j, 1)
-            node_com = connect(j, 2)
-
-            if(mesh.node(node_cur).up      == -1 .and. mesh.node(node_com).dn == -1) then
-                cycle
-            else if(mesh.node(node_cur).dn == -1 .and. mesh.node(node_com).up == -1) then
-                cycle
-            else if(mesh.node(node_cur).up == -1 .and. mesh.node(node_com).dn == -1) then
-                cycle
-            else if(mesh.node(node_cur).dn == -1 .and. mesh.node(node_com).up == -1) then
-                cycle
-            else
-                write(0, "(a$)"), "Error - Connectivity was wrong at the junction : "
-                write(0, "(a )"), "Basepair_Set_Conn_Junction"
-                stop
-            end if
-        end do
 
         ! Set sectional connection at junction (neighbor connection)
         do j = 1, geom.n_sec*bound.junc(i).n_arm
@@ -473,10 +462,31 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
             bound.junc(i).conn(j, 2) = connect(j, 2)
 
             bound.junc(i).type_conn(j) = 1
+
+
+            !write(0, "(3i)"), i, connect(j, 1), connect(j, 2)
         end do
 
         deallocate(connect)
     end do
+    
+    do i = 1, bound.n_junc
+        do j = 1, geom.n_sec*bound.junc(i).n_arm
+            if(bound.junc(i).conn(j, 2) == -1) then
+                do k = j + 1, geom.n_sec*bound.junc(i).n_arm
+                    if(bound.junc(i).conn(k, 2) == -1) then
+                        bound.junc(i).conn(j, 2) = bound.junc(i).conn(k, 1)
+                        bound.junc(i).conn(k, 2) = bound.junc(i).conn(j, 1)
+                    end if
+                end do
+            end if
+            
+            !write(0, "(3i)"), i, bound.junc(i).conn(j, 1), bound.junc(i).conn(j, 2)
+        end do
+        
+        
+    end do
+    
 
     ! --------------------------------------------------
     ! Internal node connection for self connection route

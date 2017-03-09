@@ -62,7 +62,7 @@ module Para
     character(10)    :: para_all_spanning  = "on"       ! [on, off], All possible spanning trees when # of edges is less than 12 for Prim or Kruskal
 
     ! Parameter for sequence design
-    character(10) :: para_cut_stap_method  = "max"      ! [max, mix, opt, min, mid], Cutting method to make short staple strand, opt - 14nt seeds
+    character(10) :: para_cut_stap_method  = "opt"      ! [max, mix, opt, min, mid], Cutting method to make short staple strand, opt - 14nt seeds
     character(10) :: para_set_stap_sxover  = "off"      ! [off, on], To make non-circular staple by single crossover (when para_set_stap_sxover is "on")
     character(10) :: para_output_design    = "arrow"    ! [arrow, seq, strand], Graphical output type for sequence design
     character(10) :: para_set_xover_scaf   = "split"    ! [split, center], Setting possible scaffold strand
@@ -90,34 +90,34 @@ module Para
     logical :: para_write_302   = .true.        !  Initial geometry with local vector,      ModGeo_Chimera_Init_Geometry_L,   "_init_geo_local.bild"
     logical :: para_write_303   = .true.        ! *Modified geometry seperated from vertex, ModGeo_Chimera_Mod_Geometry,      "_mod_geo.bild"
     logical :: para_write_401   = .true.        ! *Cross-sectional geometry,                Section_Chimera_Cross_Geometry,   "_cross_geo.bild"
-    logical :: para_write_501   = .false.       !  Cylindrical model with orientation,      Basepair_Chimera_Cylinder_Ori,    "_cyl_ori1.bild"
+    logical :: para_write_501   = .true.       !  Cylindrical model with orientation,      Basepair_Chimera_Cylinder_Ori,    "_cyl_ori1.bild"
     logical :: para_write_502   = .true.        ! *Cylindrical model,                       Basepair_Chimera_Cylinder,        "_cyl1.bild", "_cyl2.bild"
-    logical :: para_write_503   = .false.       !  Basepair model,                          Basepair_Chimera_Mesh,            "_mesh.bild"
+    logical :: para_write_503   = .true.       !  Basepair model,                          Basepair_Chimera_Mesh,            "_mesh.bild"
     logical :: para_write_504   = .true.        ! *Cross-sectional geometry,                Basepair_Chimera_Cross_Geometry,  "_cross_geo_mod.bild"
     logical :: para_write_505   = .true.        ! *Txt file on edge length,                 Basepair_Write_Edge_Length,       "_edge_length.txt"
-    logical :: para_write_601_1 = .false.       !  Route 1, seperated edges,                Route_Chimera_Route, step 1,      "_route1_scaf.bild", "_route1_stap.bild"
-    logical :: para_write_601_2 = .false.       !  Route 2, contruction closed loop,        Route_Chimera_Route, step 2,      "_route2_scaf.bild", "_route2_stap.bild"
+    logical :: para_write_601_1 = .true.       !  Route 1, seperated edges,                Route_Chimera_Route, step 1,      "_route1_scaf.bild", "_route1_stap.bild"
+    logical :: para_write_601_2 = .true.       !  Route 2, contruction closed loop,        Route_Chimera_Route, step 2,      "_route2_scaf.bild", "_route2_stap.bild"
     logical :: para_write_601_3 = .true.        !  Route 3, centered crossovers             Route_Chimera_Route, step 3,      "_route3_scaf.bild", "_route3_stap.bild"
     logical :: para_write_601_4 = .true.        !  Route 4, modified centered crossovers,   Route_Chimera_Route, step 4,      "_route4_scaf.bild", "_route4_stap.bild"
     logical :: para_write_601_5 = .true.        ! *Route 5, scaffold route,                 Route_Chimera_Route, step 5,      "_route5_scaf.bild", "_route5_stap.bild"
     logical :: para_write_606   = .true.        ! *Sapnning tree for dual-graph,            Route_Graph_Chimera_Spanning_Tre, "_spantree.bild"
     logical :: para_write_607   = .true.        ! *Crossovers based on basepair model,      Route_Chimera_Crossovers,         "_crossovers.bild"
     logical :: para_write_608   = .true.        ! *3-orientation vectors,                   Route_Chimera_Orientation,        "_orientation.bild"
-    logical :: para_write_609   = .false.       !  Atomic model without sequence design,    Route_Chimera_Atom,               "_atom.bild"
+    logical :: para_write_609   = .true.       !  Atomic model without sequence design,    Route_Chimera_Atom,               "_atom.bild"
     logical :: para_write_610   = .true.        ! *Possible centered scaffold crossovers,   Route_Write_Centered_Scaf_Xover,  "_scaf_xover.txt"
     logical :: para_write_701   = .true.        ! *Txt on sequence design data,             SeqDesign_Write_Strand,           "strand.txt"
-    logical :: para_write_711   = .false.       !  Csv file for sequence data,              SeqDesign_Write_Strand,           "sequence.csv"
+    logical :: para_write_711   = .true.       !  Csv file for sequence data,              SeqDesign_Write_Strand,           "sequence.csv"
     logical :: para_write_702   = .true.        ! *Atomic model with sequence design,       SeqDesign_Chimera_Atom,           "_atom_nick.bild"
     logical :: para_write_703   = .true.        ! *Route 6, strand route with nick,         SeqDesign_Chimera_Route,          "_route6_scaf.bild", "_route6_stap.bild"
     logical :: para_write_705   = .true.        ! *Sequence model,                          SeqDesign_Chimera_Sequence,       "_sequence_design.bild"
-    logical :: para_write_706   = .false.       !  Atomic model bases on strands/sequence,  SeqDesign_Chimera_Strand,         "_strand.bild", "_sequence.bild"
+    logical :: para_write_706   = .true.       !  Atomic model bases on strands/sequence,  SeqDesign_Chimera_Strand,         "_strand.bild", "_sequence.bild"
     logical :: para_write_710   = .true.        ! *Edge-based sequence design,              SeqDesign_Write_Graphical_Output, "_design_edgeX"
-    logical :: para_write_801   = .false.       !  Txt on basepair based data,              Output_Write_Basepair,            "_basepair.txt"
-    logical :: para_write_802   = .false.       !  Txt on nucleotide based data,            Output_Write_Base,                "_base.txt"
+    logical :: para_write_801   = .true.       !  Txt on basepair based data,              Output_Write_Basepair,            "_basepair.txt"
+    logical :: para_write_802   = .true.       !  Txt on nucleotide based data,            Output_Write_Base,                "_base.txt"
     logical :: para_write_803   = .true.        ! *CanDo input file,                        Output_Write_CanDo,               ".cndo"
-    logical :: para_write_804   = .false.       !  Tecplot input file,                      Output_Write_TecPlot,             "_tecplot.dat"
-    logical :: para_write_805   = .false.       !  ADINA input file,                        Output_Write_ADINA,               "_adina.in"
-    logical :: para_write_808   = .false.       !  Txt on sectional edges based sequence,   Output_Write_Sequence_CroL,       "_seq_line.txt"
+    logical :: para_write_804   = .true.       !  Tecplot input file,                      Output_Write_TecPlot,             "_tecplot.dat"
+    logical :: para_write_805   = .true.       !  ADINA input file,                        Output_Write_ADINA,               "_adina.in"
+    logical :: para_write_808   = .true.       !  Txt on sectional edges based sequence,   Output_Write_Sequence_CroL,       "_seq_line.txt"
 
     ! UCSF Chimera output option
     logical :: para_chimera_axis     = .true.   ! *Plot with axis at the ceneter of geometry (*.bild)
