@@ -765,17 +765,20 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "      I - 2D open geometries"
     write(0, "(a)"), "      ----------------------"
     write(0, "(a)")
-    write(0, "(a)"), "         1. Plate with uniform quad mesh,         2. Plate with uniform tri mesh"
-    write(0, "(a)"), "         3. Plate with distorted quad mesh,       4. Plate with distorted tri mesh"
-    write(0, "(a)"), "         5. Circular plate with quad mesh,        6. Circular plate with tri mesh"
-    write(0, "(a)"), "         7. Annular plate with quad mesh,         8. Annular plate with tri mesh"
-    write(0, "(a)"), "         9. Hyperbolic Paraboloid with quad,     10. Hyperbolic Paraboloid with tri mesh"
+    write(0, "(a)"), "         1. Plate with uniform quad mesh,               2. Plate with uniform tri mesh"
+    write(0, "(a)"), "         3. Plate with distorted quad mesh,             4. Plate with distorted tri mesh"
+    write(0, "(a)"), "         5. Circular plate with quad mesh,              6. Circular plate with tri mesh"
+    write(0, "(a)"), "         7. Annular plate with quad mesh,               8. Annular plate with tri mesh"
+    write(0, "(a)"), "         9. Hyperbolic Paraboloid with quad,           10. Hyperbolic Paraboloid with tri mesh"
+    write(0, "(a)"), "        11. Circle with tri coarse mesh,               12. Circle with tri fine mesh"
+    write(0, "(a)"), "        13. Ellipse with tri coarse mesh,              14. Ellipse with tri fine mesh"
     write(0, "(a)")
     write(0, "(a)"), "     II - 3D open geometries"
     write(0, "(a)"), "     -----------------------"
-    write(0, "(a)"), "        11. Open end cylinder with quad mesh,    12. Open end cylinder with tri mesh"
-    write(0, "(a)")
-    write(0, "(a)"), "         100. Tetrahedron"
+    write(0, "(a)"), "        15. Open end triangular prism with quad mesh,   16. Open end triangular prism with tri mesh"
+    write(0, "(a)"), "        17. Open end cube with quad mesh,               18. Open end cube with tri mesh"
+    write(0, "(a)"), "        19. Open end pentagonal prism with quad mesh,   20. Open end pentagonal prism with tri mesh"
+    write(0, "(a)"), "        21. Open end cylinder with quad mesh,           22. Open end cylinder with tri mesh"
     write(0, "(a)")
     write(0, "(a)"), "      0. Input from file (*.PLY)"
     write(0, "(a)")
@@ -804,15 +807,12 @@ end subroutine Input_Print_Section
 
 ! ---------------------------------------------------------------------------------------
 
-! Print pre-defined the number of base pair on edges
-! Last updated on Wednesday 9 Mar 2016 by Hyungmin
+! Print pre-defined minimum edge lengths
+! Last updated on Fri 10 Mar 2017 by Hyungmin
 subroutine Input_Print_Num_BP_Edge(prob)
     type(ProbType), intent(in) :: prob
 
-    ! --------------------------------------------------
-    ! Read edge length that is predefined
-    ! The dege that has minimum length is corresponding to the edge lenth
-    ! --------------------------------------------------
+    ! The minimum edge lengths pre-defined
     if(prob.sel_sec <= para_n_square_lattice) then
         write(0, "(a)")
         write(0, "(a)"), "   C. Third input - Pre-defined minimum edge length"
@@ -837,11 +837,16 @@ subroutine Input_Print_Num_BP_Edge(prob)
         write(0, "(a)")
         write(0, "(a)"), "   [Honeycomb lattice]"
         write(0, "(a)")
-        write(0, "(a)"), "      1.  42 bp = 2 turn * 21 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
-        write(0, "(a)"), "      2.  63 bp = 3 turn * 21 bp/turn ->  63 bp * 0.34nm/bp = 21.42nm"
-        write(0, "(a)"), "      3.  84 bp = 4 turn * 21 bp/turn ->  84 bp * 0.34nm/bp = 28.56nm"
-        write(0, "(a)"), "      4. 105 bp = 5 turn * 21 bp/turn -> 105 bp * 0.34nm/bp = 35.70nm"
-        write(0, "(a)"), "      5. 126 bp = 6 turn * 21 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
+        write(0, "(a)"), "      1.  31 bp =  3 turn * 10.5 bp/turn ->  31 bp * 0.34nm/bp = 10.71nm"
+        write(0, "(a)"), "   *  2.  42 bp =  4 turn * 10.5 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
+        write(0, "(a)"), "      3.  52 bp =  5 turn * 10.5 bp/turn ->  52 bp * 0.34nm/bp = 17.85nm"
+        write(0, "(a)"), "   *  4.  63 bp =  6 turn * 10.5 bp/turn ->  63 bp * 0.34nm/bp = 21.42nm"
+        write(0, "(a)"), "      5.  73 bp =  7 turn * 10.5 bp/turn ->  73 bp * 0.34nm/bp = 24.99nm"
+        write(0, "(a)"), "   *  6.  84 bp =  8 turn * 10.5 bp/turn ->  84 bp * 0.34nm/bp = 28.56nm"
+        write(0, "(a)"), "      7.  94 bp =  9 turn * 10.5 bp/turn ->  94 bp * 0.34nm/bp = 32.13nm"
+        write(0, "(a)"), "   *  8. 105 bp = 10 turn * 10.5 bp/turn -> 105 bp * 0.34nm/bp = 35.70nm"
+        write(0, "(a)"), "      9. 115 bp = 11 turn * 10.5 bp/turn -> 115 bp * 0.34nm/bp = 39.27nm"
+        write(0, "(a)"), "   * 10. 126 bp = 12 turn * 10.5 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
         write(0, "(a)")
     end if
 
@@ -959,17 +964,30 @@ subroutine Input_Select_Problem(prob, geom)
     select case (prob.sel_prob)
 
         ! Primitive examples - open geometry
-        case ( 1); call Exam_OpenGeo_Plate_Uniform_Quad         (prob, geom)
-        case ( 2); call Exam_OpenGeo_Plate_Distorted_Quad       (prob, geom)
-        case ( 3); call Exam_OpenGeo_Plate_Uniform_Tri          (prob, geom)
-        case ( 4); call Exam_OpenGeo_Plate_Distorted_Tri        (prob, geom)
-        case ( 5); call Exam_OpenGeo_Circular_Plate_Quad        (prob, geom)
-        case ( 6); call Exam_OpenGeo_Circular_Plate_Tri         (prob, geom)
-        case ( 7); call Exam_OpenGeo_Annular_Plate_Quad         (prob, geom)
-        case ( 8); call Exam_OpenGeo_Annular_Plate_Tri          (prob, geom)
-        case ( 9); call Exam_OpenGeo_Hyperbolic_Paraboloid_Quad (prob, geom)
-        case (10); call Exam_OpenGeo_Hyperbolic_Paraboloid_Tri  (prob, geom)
-        case (11); call Exam_Open_End_Cylinder(prob, geom)
+        case ( 1); call Exam_Open2D_Plate_Uniform_Quad         (prob, geom)
+        case ( 2); call Exam_Open2D_Plate_Distorted_Quad       (prob, geom)
+        case ( 3); call Exam_Open2D_Plate_Uniform_Tri          (prob, geom)
+        case ( 4); call Exam_Open2D_Plate_Distorted_Tri        (prob, geom)
+        case ( 5); call Exam_Open2D_Circular_Plate_Quad        (prob, geom)
+        case ( 6); call Exam_Open2D_Circular_Plate_Tri         (prob, geom)
+        case ( 7); call Exam_Open2D_Annular_Plate_Quad         (prob, geom)
+        case ( 8); call Exam_Open2D_Annular_Plate_Tri          (prob, geom)
+        case ( 9); call Exam_Open2D_Hyperbolic_Paraboloid_Quad (prob, geom)
+        case (10); call Exam_Open2D_Hyperbolic_Paraboloid_Tri  (prob, geom)
+        case (11); call Exam_Open2D_circle_Tri_Coarse          (prob, geom)
+        case (12); call Exam_Open2D_circle_Tri_Fine            (prob, geom)
+        case (13); call Exam_Open2D_Ellipse_Tri_Coarse         (prob, geom)
+        case (14); call Exam_Open2D_Ellipse_Tri_Fine           (prob, geom)
+
+        case (15); call Exam_Open3D_End_Triangular_Prism_Quad (prob, geom)
+        case (16); call Exam_Open3D_End_Triangular_Prism_Tri  (prob, geom)
+        case (17); call Exam_Open3D_End_Cube_Quad             (prob, geom)
+        case (18); call Exam_Open3D_End_Cube_Tri              (prob, geom)
+        case (19); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
+        case (20); call Exam_Open3D_End_Pentagonal_Prism_Tri  (prob, geom)
+        case (21); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
+        case (22); call Exam_Open3D_End_Cylinder_Tri          (prob, geom)
+
         case (99); call Exam_Platonic_Tetrahedron (prob, geom)
 
         case default
@@ -1140,650 +1158,6 @@ end subroutine Input_Set_Section
 
 ! ---------------------------------------------------------------------------------------
 
-! Set cross-section based on square or honeycomb lattices
-! Last updated on Friday 05 August 2016 by Hyungmin
-subroutine Input_Set_Section_Old(prob, geom)
-    type(ProbType), intent(in)    :: prob
-    type(GeomType), intent(inout) :: geom
-
-    integer :: bp_id
-
-    ! Cross-section definition on local coordinate - t3-t2
-    !        t2
-    !        ¡è
-    !        |
-    !     ---|-------¡æ t3
-    !        |
-    ! The number of columns should be even
-    if(prob.sel_sec == 1) then
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü      03 = 02
-        !     ¡Ü¡Ü     .00   01.  <------- reference axis
-        geom.n_sec        = 4
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 2; geom.sec.posC(3) = 2
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 2; geom.sec.posC(4) = 1
-
-    else if(prob.sel_sec == 2) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü     .04   05.
-        !     ¡Ü¡Ü      03 = 02
-        !     ¡Ü¡Ü     .00   01.  <------- reference axis
-        geom.n_sec        = 6
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 2; geom.sec.posC(3) = 2
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 2; geom.sec.posC(4) = 1
-        geom.sec.id(5) = 4; geom.sec.posR(5) = 3; geom.sec.posC(5) = 1
-        geom.sec.id(6) = 5; geom.sec.posR(6) = 3; geom.sec.posC(6) = 2
-
-    else if(prob.sel_sec == 3) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü      07 = 06
-        !     ¡Ü¡Ü     .04   05.
-        !     ¡Ü¡Ü      03 = 02
-        !     ¡Ü¡Ü     .00   01.  <------- reference axis
-        geom.n_sec        = 8
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 2; geom.sec.posC(3) = 2
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 2; geom.sec.posC(4) = 1
-        geom.sec.id(5) = 4; geom.sec.posR(5) = 3; geom.sec.posC(5) = 1
-        geom.sec.id(6) = 5; geom.sec.posR(6) = 3; geom.sec.posC(6) = 2
-        geom.sec.id(7) = 6; geom.sec.posR(7) = 4; geom.sec.posC(7) = 2
-        geom.sec.id(8) = 7; geom.sec.posR(8) = 4; geom.sec.posC(8) = 1
-
-    else if(prob.sel_sec == 4) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü¡Ü¡Ü     .00   01 = 02   03.  <------- reference axis
-        geom.n_sec        = 4
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 1; geom.sec.posC(3) = 3
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 1; geom.sec.posC(4) = 4
-
-    else if(prob.sel_sec == 5) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü¡Ü¡Ü      07 = 06   05 = 04
-        !     ¡Ü¡Ü¡Ü¡Ü     .00   01 = 02   03.  <------- reference axis
-        geom.n_sec        = 8
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 1; geom.sec.posC(3) = 3
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 1; geom.sec.posC(4) = 4
-        geom.sec.id(5) = 4; geom.sec.posR(5) = 2; geom.sec.posC(5) = 4
-        geom.sec.id(6) = 5; geom.sec.posR(6) = 2; geom.sec.posC(6) = 3
-        geom.sec.id(7) = 6; geom.sec.posR(7) = 2; geom.sec.posC(7) = 2
-        geom.sec.id(8) = 7; geom.sec.posR(8) = 2; geom.sec.posC(8) = 1
-
-    else if(prob.sel_sec == 6) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü¡Ü¡Ü     .08   09 = 10   11.
-        !     ¡Ü¡Ü¡Ü¡Ü      07 = 06   05 = 04
-        !     ¡Ü¡Ü¡Ü¡Ü     .00   01 = 02   03.  <------- reference axis
-        geom.n_sec        = 12
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1)  = 0;  geom.sec.posR(1)  = 1; geom.sec.posC(1)  = 1
-        geom.sec.id(2)  = 1;  geom.sec.posR(2)  = 1; geom.sec.posC(2)  = 2
-        geom.sec.id(3)  = 2;  geom.sec.posR(3)  = 1; geom.sec.posC(3)  = 3
-        geom.sec.id(4)  = 3;  geom.sec.posR(4)  = 1; geom.sec.posC(4)  = 4
-        geom.sec.id(5)  = 4;  geom.sec.posR(5)  = 2; geom.sec.posC(5)  = 4
-        geom.sec.id(6)  = 5;  geom.sec.posR(6)  = 2; geom.sec.posC(6)  = 3
-        geom.sec.id(7)  = 6;  geom.sec.posR(7)  = 2; geom.sec.posC(7)  = 2
-        geom.sec.id(8)  = 7;  geom.sec.posR(8)  = 2; geom.sec.posC(8)  = 1
-        geom.sec.id(9)  = 8;  geom.sec.posR(9)  = 3; geom.sec.posC(9)  = 1
-        geom.sec.id(10) = 9;  geom.sec.posR(10) = 3; geom.sec.posC(10) = 2
-        geom.sec.id(11) = 10; geom.sec.posR(11) = 3; geom.sec.posC(11) = 3
-        geom.sec.id(12) = 11; geom.sec.posR(12) = 3; geom.sec.posC(12) = 4
-
-    else if(prob.sel_sec == 7) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü¡Ü¡Ü      15 = 14   13 = 12
-        !     ¡Ü¡Ü¡Ü¡Ü     .08   09 = 10   11.
-        !     ¡Ü¡Ü¡Ü¡Ü      07 = 06   05 = 04
-        !     ¡Ü¡Ü¡Ü¡Ü     .00   01 = 02   03.  <------- reference axis
-        geom.n_sec        = 16
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1)  = 0;  geom.sec.posR(1)  = 1; geom.sec.posC(1)  = 1
-        geom.sec.id(2)  = 1;  geom.sec.posR(2)  = 1; geom.sec.posC(2)  = 2
-        geom.sec.id(3)  = 2;  geom.sec.posR(3)  = 1; geom.sec.posC(3)  = 3
-        geom.sec.id(4)  = 3;  geom.sec.posR(4)  = 1; geom.sec.posC(4)  = 4
-        geom.sec.id(5)  = 4;  geom.sec.posR(5)  = 2; geom.sec.posC(5)  = 4
-        geom.sec.id(6)  = 5;  geom.sec.posR(6)  = 2; geom.sec.posC(6)  = 3
-        geom.sec.id(7)  = 6;  geom.sec.posR(7)  = 2; geom.sec.posC(7)  = 2
-        geom.sec.id(8)  = 7;  geom.sec.posR(8)  = 2; geom.sec.posC(8)  = 1
-        geom.sec.id(9)  = 8;  geom.sec.posR(9)  = 3; geom.sec.posC(9)  = 1
-        geom.sec.id(10) = 9;  geom.sec.posR(10) = 3; geom.sec.posC(10) = 2
-        geom.sec.id(11) = 10; geom.sec.posR(11) = 3; geom.sec.posC(11) = 3
-        geom.sec.id(12) = 11; geom.sec.posR(12) = 3; geom.sec.posC(12) = 4
-        geom.sec.id(13) = 12; geom.sec.posR(13) = 4; geom.sec.posC(13) = 4
-        geom.sec.id(14) = 13; geom.sec.posR(14) = 4; geom.sec.posC(14) = 3
-        geom.sec.id(15) = 14; geom.sec.posR(15) = 4; geom.sec.posC(15) = 2
-        geom.sec.id(16) = 15; geom.sec.posR(16) = 4; geom.sec.posC(16) = 1
-
-    else if(prob.sel_sec == 8) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü¡Ü¡Ü¡Ü¡Ü     .00   01 = 02   03 = 04   05.  <------- reference axis
-        geom.n_sec        = 6
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 6
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1)  = 0;  geom.sec.posR(1)  = 1; geom.sec.posC(1)  = 1
-        geom.sec.id(2)  = 1;  geom.sec.posR(2)  = 1; geom.sec.posC(2)  = 2
-        geom.sec.id(3)  = 2;  geom.sec.posR(3)  = 1; geom.sec.posC(3)  = 3
-        geom.sec.id(4)  = 3;  geom.sec.posR(4)  = 1; geom.sec.posC(4)  = 4
-        geom.sec.id(5)  = 4;  geom.sec.posR(5)  = 1; geom.sec.posC(5)  = 5
-        geom.sec.id(6)  = 5;  geom.sec.posR(6)  = 1; geom.sec.posC(6)  = 6
-
-    else if(prob.sel_sec == 9) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü¡Ü¡Ü¡Ü¡Ü      11 = 10   09 = 08   07 = 06
-        !     ¡Ü¡Ü¡Ü¡Ü¡Ü¡Ü     .00   01 = 02   03 = 04   05.  <------- reference axis
-        geom.n_sec        = 12
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 6
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1)  = 0;  geom.sec.posR(1)  = 1; geom.sec.posC(1)  = 1
-        geom.sec.id(2)  = 1;  geom.sec.posR(2)  = 1; geom.sec.posC(2)  = 2
-        geom.sec.id(3)  = 2;  geom.sec.posR(3)  = 1; geom.sec.posC(3)  = 3
-        geom.sec.id(4)  = 3;  geom.sec.posR(4)  = 1; geom.sec.posC(4)  = 4
-        geom.sec.id(5)  = 4;  geom.sec.posR(5)  = 1; geom.sec.posC(5)  = 5
-        geom.sec.id(6)  = 5;  geom.sec.posR(6)  = 1; geom.sec.posC(6)  = 6
-        geom.sec.id(7)  = 6;  geom.sec.posR(7)  = 2; geom.sec.posC(7)  = 6
-        geom.sec.id(8)  = 7;  geom.sec.posR(8)  = 2; geom.sec.posC(8)  = 5
-        geom.sec.id(9)  = 8;  geom.sec.posR(9)  = 2; geom.sec.posC(9)  = 4
-        geom.sec.id(10) = 9;  geom.sec.posR(10) = 2; geom.sec.posC(10) = 3
-        geom.sec.id(11) = 10; geom.sec.posR(11) = 2; geom.sec.posC(11) = 2
-        geom.sec.id(12) = 11; geom.sec.posR(12) = 2; geom.sec.posC(12) = 1
-
-    else if(prob.sel_sec == 10) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü¡Ü¡Ü     .12   13 = 14   15 = 16   17.
-        !     ¡Ü¡Ü¡Ü¡Ü      11 = 10   09 = 08   07 = 06
-        !     ¡Ü¡Ü¡Ü¡Ü     .00   01 = 02   03 = 04   05.  <------- reference axis
-        geom.n_sec        = 18
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 6
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1)  = 0;  geom.sec.posR(1)  = 1; geom.sec.posC(1)  = 1
-        geom.sec.id(2)  = 1;  geom.sec.posR(2)  = 1; geom.sec.posC(2)  = 2
-        geom.sec.id(3)  = 2;  geom.sec.posR(3)  = 1; geom.sec.posC(3)  = 3
-        geom.sec.id(4)  = 3;  geom.sec.posR(4)  = 1; geom.sec.posC(4)  = 4
-        geom.sec.id(5)  = 4;  geom.sec.posR(5)  = 1; geom.sec.posC(5)  = 5
-        geom.sec.id(6)  = 5;  geom.sec.posR(6)  = 1; geom.sec.posC(6)  = 6
-        geom.sec.id(7)  = 6;  geom.sec.posR(7)  = 2; geom.sec.posC(7)  = 6
-        geom.sec.id(8)  = 7;  geom.sec.posR(8)  = 2; geom.sec.posC(8)  = 5
-        geom.sec.id(9)  = 8;  geom.sec.posR(9)  = 2; geom.sec.posC(9)  = 4
-        geom.sec.id(10) = 9;  geom.sec.posR(10) = 2; geom.sec.posC(10) = 3
-        geom.sec.id(11) = 10; geom.sec.posR(11) = 2; geom.sec.posC(11) = 2
-        geom.sec.id(12) = 11; geom.sec.posR(12) = 2; geom.sec.posC(12) = 1
-        geom.sec.id(13) = 12; geom.sec.posR(13) = 3; geom.sec.posC(13) = 1
-        geom.sec.id(14) = 13; geom.sec.posR(14) = 3; geom.sec.posC(14) = 2
-        geom.sec.id(15) = 14; geom.sec.posR(15) = 3; geom.sec.posC(15) = 3
-        geom.sec.id(16) = 15; geom.sec.posR(16) = 3; geom.sec.posC(16) = 4
-        geom.sec.id(17) = 16; geom.sec.posR(17) = 3; geom.sec.posC(17) = 5
-        geom.sec.id(18) = 17; geom.sec.posR(18) = 3; geom.sec.posC(18) = 6
-
-    else if(prob.sel_sec == 11) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü¡Ü¡Ü¡Ü¡Ü      23 = 22   21 = 20   19 = 18
-        !     ¡Ü¡Ü¡Ü¡Ü¡Ü¡Ü     .12   13 = 14   15 = 16   17.
-        !     ¡Ü¡Ü¡Ü¡Ü¡Ü¡Ü      11 = 10   09 = 08   07 = 06
-        !     ¡Ü¡Ü¡Ü¡Ü¡Ü¡Ü     .00   01 = 02   03 = 04   05.  <------- reference axis
-        geom.n_sec        = 24
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 6
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1)  = 0;  geom.sec.posR(1)  = 1; geom.sec.posC(1)  = 1
-        geom.sec.id(2)  = 1;  geom.sec.posR(2)  = 1; geom.sec.posC(2)  = 2
-        geom.sec.id(3)  = 2;  geom.sec.posR(3)  = 1; geom.sec.posC(3)  = 3
-        geom.sec.id(4)  = 3;  geom.sec.posR(4)  = 1; geom.sec.posC(4)  = 4
-        geom.sec.id(5)  = 4;  geom.sec.posR(5)  = 1; geom.sec.posC(5)  = 5
-        geom.sec.id(6)  = 5;  geom.sec.posR(6)  = 1; geom.sec.posC(6)  = 6
-        geom.sec.id(7)  = 6;  geom.sec.posR(7)  = 2; geom.sec.posC(7)  = 6
-        geom.sec.id(8)  = 7;  geom.sec.posR(8)  = 2; geom.sec.posC(8)  = 5
-        geom.sec.id(9)  = 8;  geom.sec.posR(9)  = 2; geom.sec.posC(9)  = 4
-        geom.sec.id(10) = 9;  geom.sec.posR(10) = 2; geom.sec.posC(10) = 3
-        geom.sec.id(11) = 10; geom.sec.posR(11) = 2; geom.sec.posC(11) = 2
-        geom.sec.id(12) = 11; geom.sec.posR(12) = 2; geom.sec.posC(12) = 1
-        geom.sec.id(13) = 12; geom.sec.posR(13) = 3; geom.sec.posC(13) = 1
-        geom.sec.id(14) = 13; geom.sec.posR(14) = 3; geom.sec.posC(14) = 2
-        geom.sec.id(15) = 14; geom.sec.posR(15) = 3; geom.sec.posC(15) = 3
-        geom.sec.id(16) = 15; geom.sec.posR(16) = 3; geom.sec.posC(16) = 4
-        geom.sec.id(17) = 16; geom.sec.posR(17) = 3; geom.sec.posC(17) = 5
-        geom.sec.id(18) = 17; geom.sec.posR(18) = 3; geom.sec.posC(18) = 6
-        geom.sec.id(19) = 18; geom.sec.posR(19) = 4; geom.sec.posC(19) = 6
-        geom.sec.id(20) = 19; geom.sec.posR(20) = 4; geom.sec.posC(20) = 5
-        geom.sec.id(21) = 20; geom.sec.posR(21) = 4; geom.sec.posC(21) = 4
-        geom.sec.id(22) = 21; geom.sec.posR(22) = 4; geom.sec.posC(22) = 3
-        geom.sec.id(23) = 22; geom.sec.posR(23) = 4; geom.sec.posC(23) = 2
-        geom.sec.id(24) = 23; geom.sec.posR(24) = 4; geom.sec.posC(24) = 1
-
-    else if(prob.sel_sec == 12) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü¡Ü¡Ü     .06   07 = 08   09.
-        !     ¡Ü  ¡Ü     .05             04.
-        !     ¡Ü¡Ü¡Ü¡Ü     .00   01 = 02   03.  <------- reference axis
-        geom.n_sec        = 10
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1)  = 0; geom.sec.posR(1)  = 1; geom.sec.posC(1)  = 1
-        geom.sec.id(2)  = 1; geom.sec.posR(2)  = 1; geom.sec.posC(2)  = 2
-        geom.sec.id(3)  = 2; geom.sec.posR(3)  = 1; geom.sec.posC(3)  = 3
-        geom.sec.id(4)  = 3; geom.sec.posR(4)  = 1; geom.sec.posC(4)  = 4
-        geom.sec.id(5)  = 4; geom.sec.posR(5)  = 2; geom.sec.posC(5)  = 4
-        geom.sec.id(6)  = 5; geom.sec.posR(6)  = 2; geom.sec.posC(6)  = 1
-        geom.sec.id(7)  = 6; geom.sec.posR(7)  = 3; geom.sec.posC(7)  = 1
-        geom.sec.id(8)  = 7; geom.sec.posR(8)  = 3; geom.sec.posC(8)  = 2
-        geom.sec.id(9)  = 8; geom.sec.posR(9)  = 3; geom.sec.posC(9)  = 3
-        geom.sec.id(10) = 9; geom.sec.posR(10) = 3; geom.sec.posC(10) = 4
-
-    else if(prob.sel_sec == 13) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !     ¡Ü¡Ü¡Ü¡Ü      11 = 10   09 = 08
-        !     ¡Ü  ¡Ü     .06             07.
-        !     ¡Ü  ¡Ü     .05             04.
-        !     ¡Ü¡Ü¡Ü¡Ü     .00   01 = 02   03.  <------- reference axis
-        geom.n_sec        = 12
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1)  = 0;  geom.sec.posR(1)  = 1; geom.sec.posC(1)  = 1
-        geom.sec.id(2)  = 1;  geom.sec.posR(2)  = 1; geom.sec.posC(2)  = 2
-        geom.sec.id(3)  = 2;  geom.sec.posR(3)  = 1; geom.sec.posC(3)  = 3
-        geom.sec.id(4)  = 3;  geom.sec.posR(4)  = 1; geom.sec.posC(4)  = 4
-        geom.sec.id(5)  = 4;  geom.sec.posR(5)  = 2; geom.sec.posC(5)  = 4
-        geom.sec.id(6)  = 5;  geom.sec.posR(6)  = 2; geom.sec.posC(6)  = 1
-        geom.sec.id(7)  = 6;  geom.sec.posR(7)  = 3; geom.sec.posC(7)  = 1
-        geom.sec.id(8)  = 7;  geom.sec.posR(8)  = 3; geom.sec.posC(8)  = 4
-        geom.sec.id(9)  = 8;  geom.sec.posR(9)  = 4; geom.sec.posC(9)  = 4
-        geom.sec.id(10) = 9;  geom.sec.posR(10) = 4; geom.sec.posC(10) = 3
-        geom.sec.id(11) = 10; geom.sec.posR(11) = 4; geom.sec.posC(11) = 2
-        geom.sec.id(12) = 11; geom.sec.posR(12) = 4; geom.sec.posC(12) = 1
-
-    else if(prob.sel_sec == 14) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !      ¡Ü¡Ü           .06   07.
-        !     ¡Ü¡Ü¡Ü¡Ü     .04   05 = 02   03.  <------- reference axis
-        !      ¡Ü¡Ü           .00   01.
-        geom.n_sec        = 8
-        geom.sec.ref_row  = 2
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 2
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 3
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 2; geom.sec.posC(3) = 3
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 2; geom.sec.posC(4) = 4
-        geom.sec.id(5) = 4; geom.sec.posR(5) = 2; geom.sec.posC(5) = 1
-        geom.sec.id(6) = 5; geom.sec.posR(6) = 2; geom.sec.posC(6) = 2
-        geom.sec.id(7) = 6; geom.sec.posR(7) = 3; geom.sec.posC(7) = 2
-        geom.sec.id(8) = 7; geom.sec.posR(8) = 3; geom.sec.posC(8) = 3
-
-    else if(prob.sel_sec == 15) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 0
-        bp_id = mod(para_start_bp_ID, 32)
-
-        ! Starting BP - 0, 10, 11, 20, 21
-        !      ¡Ü¡Ü            11 = 10
-        !     ¡Ü¡Ü¡Ü¡Ü      07 = 06   09 = 08
-        !     ¡Ü¡Ü¡Ü¡Ü     .04   05 = 02   03.  <------- reference axis
-        !      ¡Ü¡Ü           .00   01.
-        geom.n_sec        = 12
-        geom.sec.ref_row  = 2
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "square")
-
-        geom.sec.id(1)  = 0;  geom.sec.posR(1)  = 1; geom.sec.posC(1)  = 2
-        geom.sec.id(2)  = 1;  geom.sec.posR(2)  = 1; geom.sec.posC(2)  = 3
-        geom.sec.id(3)  = 2;  geom.sec.posR(3)  = 2; geom.sec.posC(3)  = 3
-        geom.sec.id(4)  = 3;  geom.sec.posR(4)  = 2; geom.sec.posC(4)  = 4
-        geom.sec.id(5)  = 4;  geom.sec.posR(5)  = 2; geom.sec.posC(5)  = 1
-        geom.sec.id(6)  = 5;  geom.sec.posR(6)  = 2; geom.sec.posC(6)  = 2
-        geom.sec.id(7)  = 6;  geom.sec.posR(7)  = 3; geom.sec.posC(7)  = 2
-        geom.sec.id(8)  = 7;  geom.sec.posR(8)  = 3; geom.sec.posC(8)  = 1
-        geom.sec.id(9)  = 8;  geom.sec.posR(9)  = 3; geom.sec.posC(9)  = 4
-        geom.sec.id(10) = 9;  geom.sec.posR(10) = 3; geom.sec.posC(10) = 3
-        geom.sec.id(11) = 10; geom.sec.posR(11) = 4; geom.sec.posC(11) = 3
-        geom.sec.id(12) = 11; geom.sec.posR(12) = 4; geom.sec.posC(12) = 2
-
-    else if(prob.sel_sec == 16) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 3 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        ! Starting BP - 3, 13
-        !     ¡Ü¡Ü     .00   01.  <------- reference axis
-        geom.n_sec        = 2
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
-
-    else if(prob.sel_sec == 17) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 18 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        ! Starting BP - 8, 9, 18, 19
-        !      ¡Ü¡Ü        05=04
-        !     ¡Ü  ¡Ü     .00   03.  <------- reference axis
-        !      ¡Ü¡Ü        01=02
-        geom.n_sec        = 6
-        geom.sec.ref_row  = 2
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 2; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 1
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 1; geom.sec.posC(3) = 2
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 2; geom.sec.posC(4) = 2
-        geom.sec.id(5) = 4; geom.sec.posR(5) = 3; geom.sec.posC(5) = 2
-        geom.sec.id(6) = 5; geom.sec.posR(6) = 3; geom.sec.posC(6) = 1
-
-        ! Decrease edge length at the bottom
-        if(para_vertex_modify == "mod") para_vertex_modify = "mod1"
-
-    else if(prob.sel_sec == 18) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 13 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        ! Starting BP - 13, 14
-        !      ¡Ü¡Ü        04 03
-        !     ¡Ü  ¡Ü      05   02
-        !      ¡Ü¡Ü       .00 01.     <------- reference axis
-        geom.n_sec        = 6
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 2; geom.sec.posC(3) = 2
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 3; geom.sec.posC(4) = 2
-        geom.sec.id(5) = 4; geom.sec.posR(5) = 3; geom.sec.posC(5) = 1
-        geom.sec.id(6) = 5; geom.sec.posR(6) = 2; geom.sec.posC(6) = 1
-
-        ! Increase or decrease edge length except for reference row and column section
-        para_vertex_modify = "mod2"
-
-    else if(prob.sel_sec == 19) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 8 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        ! Starting BP - 8, 9, 18, 19
-        !      ¡Ü¡Ü  ¡Ü¡Ü       05=04   11=10
-        !     ¡Ü  ¡Ü¡Ü  ¡Ü    .00   03=06   09.  <------- reference axis
-        !      ¡Ü¡Ü  ¡Ü¡Ü       01=02   07=08
-        geom.n_sec        = 12
-        geom.sec.ref_row  = 2
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id(1)  = 0;  geom.sec.posR(1)  = 2; geom.sec.posC(1)  = 1
-        geom.sec.id(2)  = 1;  geom.sec.posR(2)  = 1; geom.sec.posC(2)  = 1
-        geom.sec.id(3)  = 2;  geom.sec.posR(3)  = 1; geom.sec.posC(3)  = 2
-        geom.sec.id(4)  = 3;  geom.sec.posR(4)  = 2; geom.sec.posC(4)  = 2
-        geom.sec.id(5)  = 4;  geom.sec.posR(5)  = 3; geom.sec.posC(5)  = 2
-        geom.sec.id(6)  = 5;  geom.sec.posR(6)  = 3; geom.sec.posC(6)  = 1
-        geom.sec.id(7)  = 6;  geom.sec.posR(7)  = 2; geom.sec.posC(7)  = 3
-        geom.sec.id(8)  = 7;  geom.sec.posR(8)  = 1; geom.sec.posC(8)  = 3
-        geom.sec.id(9)  = 8;  geom.sec.posR(9)  = 1; geom.sec.posC(9)  = 4
-        geom.sec.id(10) = 9;  geom.sec.posR(10) = 2; geom.sec.posC(10) = 4
-        geom.sec.id(11) = 10; geom.sec.posR(11) = 3; geom.sec.posC(11) = 4
-        geom.sec.id(12) = 11; geom.sec.posR(12) = 3; geom.sec.posC(12) = 3
-
-        ! Decrease edge length at the bottom
-        if(para_vertex_modify == "mod") para_vertex_modify = "mod1"
-
-    else if(prob.sel_sec == 20) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 8 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        ! Starting BP - 8, 9, 18, 19
-        !        ¡Ü¡Ü              15=14
-        !      ¡Ü¡Ü  ¡Ü¡Ü        05=04   11=10
-        !     ¡Ü  ¡Ü¡Ü  ¡Ü     .00   03=06   09.  <------- reference axis
-        !      ¡Ü¡Ü  ¡Ü¡Ü        01=02   07=08
-        !        ¡Ü¡Ü              13=12
-        geom.n_sec        = 16
-        geom.sec.ref_row  = 3
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id(1)  = 0;  geom.sec.posR(1)  = 3+1; geom.sec.posC(1)  = 1
-        geom.sec.id(2)  = 1;  geom.sec.posR(2)  = 2+1; geom.sec.posC(2)  = 1
-        geom.sec.id(3)  = 2;  geom.sec.posR(3)  = 2+1; geom.sec.posC(3)  = 2
-        geom.sec.id(4)  = 3;  geom.sec.posR(4)  = 3+1; geom.sec.posC(4)  = 2
-        geom.sec.id(5)  = 4;  geom.sec.posR(5)  = 4+1; geom.sec.posC(5)  = 2
-        geom.sec.id(6)  = 5;  geom.sec.posR(6)  = 4+1; geom.sec.posC(6)  = 1
-        geom.sec.id(7)  = 6;  geom.sec.posR(7)  = 3+1; geom.sec.posC(7)  = 3
-        geom.sec.id(8)  = 7;  geom.sec.posR(8)  = 2+1; geom.sec.posC(8)  = 3
-        geom.sec.id(9)  = 8;  geom.sec.posR(9)  = 2+1; geom.sec.posC(9)  = 4
-        geom.sec.id(10) = 9;  geom.sec.posR(10) = 3+1; geom.sec.posC(10) = 4
-        geom.sec.id(11) = 10; geom.sec.posR(11) = 4+1; geom.sec.posC(11) = 4
-        geom.sec.id(12) = 11; geom.sec.posR(12) = 4+1; geom.sec.posC(12) = 3
-        geom.sec.id(13) = 12; geom.sec.posR(13) = 1+1; geom.sec.posC(13) = 3
-        geom.sec.id(14) = 13; geom.sec.posR(14) = 1+1; geom.sec.posC(14) = 2
-        geom.sec.id(15) = 14; geom.sec.posR(15) = 5+1; geom.sec.posC(15) = 3
-        geom.sec.id(16) = 15; geom.sec.posR(16) = 5+1; geom.sec.posC(16) = 2
-
-        ! Decrease edge length at the bottom
-        if(para_vertex_modify == "mod") para_vertex_modify = "mod1"
-
-    else if(prob.sel_sec == 21) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 8 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        ! Starting BP - 8, 9, 18, 19
-        !      ¡Ü¡Ü  ¡Ü¡Ü        07=06   17=16
-        !     ¡Ü  ¡Ü¡Ü  ¡Ü     .08   05=18   15.
-        !      ¡Ü¡Ü  ¡Ü¡Ü        09=04   19=14
-        !     ¡Ü  ¡Ü¡Ü  ¡Ü     .00   03=10   13.  <------- reference axis
-        !      ¡Ü¡Ü  ¡Ü¡Ü        01=02   11=12
-        geom.n_sec        = 20
-        geom.sec.ref_row  = 2
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id(1)  = 0;  geom.sec.posR(1)  = 2; geom.sec.posC(1)  = 1
-        geom.sec.id(2)  = 1;  geom.sec.posR(2)  = 1; geom.sec.posC(2)  = 1
-        geom.sec.id(3)  = 2;  geom.sec.posR(3)  = 1; geom.sec.posC(3)  = 2
-        geom.sec.id(4)  = 3;  geom.sec.posR(4)  = 2; geom.sec.posC(4)  = 2
-        geom.sec.id(5)  = 4;  geom.sec.posR(5)  = 3; geom.sec.posC(5)  = 2
-        geom.sec.id(6)  = 5;  geom.sec.posR(6)  = 4; geom.sec.posC(6)  = 2
-        geom.sec.id(7)  = 6;  geom.sec.posR(7)  = 5; geom.sec.posC(7)  = 2
-        geom.sec.id(8)  = 7;  geom.sec.posR(8)  = 5; geom.sec.posC(8)  = 1
-        geom.sec.id(9)  = 8;  geom.sec.posR(9)  = 4; geom.sec.posC(9)  = 1
-        geom.sec.id(10) = 9;  geom.sec.posR(10) = 3; geom.sec.posC(10) = 1
-        geom.sec.id(11) = 10; geom.sec.posR(11) = 2; geom.sec.posC(11) = 3
-        geom.sec.id(12) = 11; geom.sec.posR(12) = 1; geom.sec.posC(12) = 3
-        geom.sec.id(13) = 12; geom.sec.posR(13) = 1; geom.sec.posC(13) = 4
-        geom.sec.id(14) = 13; geom.sec.posR(14) = 2; geom.sec.posC(14) = 4
-        geom.sec.id(15) = 14; geom.sec.posR(15) = 3; geom.sec.posC(15) = 4
-        geom.sec.id(16) = 15; geom.sec.posR(16) = 4; geom.sec.posC(16) = 4
-        geom.sec.id(17) = 16; geom.sec.posR(17) = 5; geom.sec.posC(17) = 4
-        geom.sec.id(18) = 17; geom.sec.posR(18) = 5; geom.sec.posC(18) = 3
-        geom.sec.id(19) = 18; geom.sec.posR(19) = 4; geom.sec.posC(19) = 3
-        geom.sec.id(20) = 19; geom.sec.posR(20) = 3; geom.sec.posC(20) = 3
-
-        ! Decrease edge length at the bottom
-        if(para_vertex_modify == "mod") para_vertex_modify = "mod1"
-    else
-
-        write(0, "(a$)"), "Error - Not defined cross-section : "
-        write(0, "(a )"), "Input_Set_Section"
-        stop
-    end if
-
-    !! Set section connectivity in the defined initial section
-    call Input_Set_Section_Connectivity(prob, geom)
-
-    ! Find maximum and minimum sectional row and column
-    call Input_Find_Max_Min_Section(geom)
-end subroutine Input_Set_Section_Old
-
-! ---------------------------------------------------------------------------------------
-
 ! Find maximum and minimum sectional row and column
 ! Last updated on Wednesday 24 Feb 2016 by Hyungmin
 subroutine Input_Find_Max_Min_Section(geom)
@@ -1897,7 +1271,7 @@ end subroutine Input_Set_Section_Connectivity
 
 ! ---------------------------------------------------------------------------------------
 
-! Set length of edge
+! Set edge lengths
 ! Last updated on Thursday 25 Feb 2016 by Hyungmin
 subroutine Input_Set_Num_BP_Edge(prob, geom)
     type(ProbType), intent(inout) :: prob

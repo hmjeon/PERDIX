@@ -1,14 +1,19 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                               Module for Exam_OpenGeo
+!                               Module for Exam_3D Open
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
-!                                                            First programed : 2015/10/20
-!                                                            Last  modified  : 2016/08/30
+!                                                             First modified : 2017/03/10
+!                                                             Last  modified : 2017/03/10
+!
+! Comments: This module contains the geometric definition of 3D open structures
+!
+! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
+!
+! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
+! M.I.T. hereby makes following copyrightable material available to the
+! public under GNU General Public License, version 2 (GPL-2.0). A copy of
+! this license is available at https://opensource.org/licenses/GPL-2.0
 !
 ! ---------------------------------------------------------------------------------------
 !
@@ -23,40 +28,298 @@ module Exam_3D_Open
 
     implicit none
 
-    public  Exam_Open_End_Cylinder             ! 53. Plate with uniform quadrilater mesh
+    public Exam_Open3D_End_Triangular_Prism_Quad    ! 15. Open end triangular prism with quad mesh
+    public Exam_Open3D_End_Triangular_Prism_Tri     ! 16. Open end triangular prism with tri mesh
+    public Exam_Open3D_End_Cube_Quad                ! 17. Open end cube with quad mesh
+    public Exam_Open3D_End_Cube_Tri                 ! 18. Open end cube with tri mesh
+    public Exam_Open3D_End_Pentagonal_Prism_Quad    ! 19. Open end pentagonal prism with quad mesh
+    public Exam_Open3D_End_Pentagonal_Prism_Tri     ! 20. Open end pentagonal prism with tri mesh
+    public Exam_Open3D_End_Cylinder_Quad            ! 21. Open end cylinder with quad mesh
+    public Exam_Open3D_End_Cylinder_Tri             ! 22. Open end cylinder with tri mesh
 
-    contains
+contains
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of retagular plate geometry with the uniform mesh of quadrilaterals
-! Last updated on Tuesday 30 August 2016 by Hyungmin
-subroutine Exam_Open_End_Cylinder(prob, geom)
+! Example of open end triangular prism with quad mesh
+! Last updated on Fri 10 Mar 2017 by Hyungmin
+subroutine Exam_Open3D_End_Triangular_Prism_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: x_width, y_width, del_x, del_y
-    integer :: n_i_point, n_j_point, n_i_face, n_j_face
-    integer :: i, j, n, numbering
+    double precision :: rad, ang, leng
+    integer :: i, j, n, nz, nr, n_poi, n_face
     character(10) :: char_sec, char_bp, char_start_bp
-
-    double precision :: young, possion, thick
-    double precision :: radius, length
-    double precision :: angle, layer_length
-    integer :: domainsize, nz, nr, jointN, elementN
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "1_Plate_Uniform_Quad"//&
+    prob.name_file = "15_End_Triangular_Prism_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "Plate Uniform Quad"
+    prob.name_prob = "End Triangular Prism Quad"
+
+    ! Set geometric type and view
+    prob.color    = [52, 152, 219]
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    prob.type_geo = "open"
+    if(para_fig_view == "preset") para_fig_view = "XY"
+
+    n    = 3
+    rad  = 1.0d0
+    leng = dble(n) * rad * sqrt(3.0d0)
+    nz   = n
+    nr   = 3
+
+    geom.n_face = nz * nr
+    geom.n_iniP = (nz + 1) * nr
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 4
+        allocate(geom.face(i).poi(4))
+    end do
+
+    ! set nodal position vector
+    n_poi = 0
+    do i = 1, nz + 1
+        do j = 1, nr
+            n_poi = n_poi + 1
+            ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
+
+            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
+            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
+            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+        end do
+    end do
+
+    ! set face connectivity
+    n_face = 0
+    do i = 1, nz
+        do j = 1, nr - 1
+            n_face = n_face + 1
+            geom.face(n_face).poi(1) = (i - 1) * nr + j
+            geom.face(n_face).poi(2) = (i - 1) * nr + j + 1
+            geom.face(n_face).poi(3) = i * nr + j + 1
+            geom.face(n_face).poi(4) = i * nr + j
+        end do
+
+        n_face = n_face + 1
+        geom.face(n_face).poi(1) = (i - 1) * nr + j
+        geom.face(n_face).poi(2) = (i - 1) * nr + 1
+        geom.face(n_face).poi(3) = i * nr + 1
+        geom.face(n_face).poi(4) = i * nr + j
+    end do
+end subroutine Exam_Open3D_End_Triangular_Prism_Quad
+
+! ---------------------------------------------------------------------------------------
+
+! Example of open end triangular prism with tri mesh
+! Last updated on Fri 10 Mar 2017 by Hyungmin
+subroutine Exam_Open3D_End_Triangular_Prism_Tri(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: rad, ang, leng
+    integer :: i, j, n, nz, nr, n_poi, n_face
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_file = "16_End_Triangular_Prism_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_vertex_modify)//&                ! Vertex modification
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    prob.name_prob = "End Triangular Prism Tri"
+
+    ! Set geometric type and view
+    prob.color    = [52, 152, 219]
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    prob.type_geo = "open"
+    if(para_fig_view == "preset") para_fig_view = "XY"
+
+    n    = 3
+    rad  = 1.0d0
+    leng = dble(n) * rad * sqrt(3.0d0)
+    nz   = n
+    nr   = 3
+
+    geom.n_face = nz * nr * 2
+    geom.n_iniP = (nz + 1) * nr
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
+    end do
+
+    ! set nodal position vector
+    n_poi = 0
+    do i = 1, nz + 1
+        do j = 1, nr
+            n_poi = n_poi + 1
+            ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
+
+            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
+            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
+            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+        end do
+    end do
+
+    ! set connectivity
+    n_face = 0
+    do i = 1, nz
+        do j = 1, nr - 1
+            n_face = n_face + 1
+            geom.face(n_face).poi(1) = (i - 1) * nr + j
+            geom.face(n_face).poi(2) = (i - 1) * nr + j + 1
+            geom.face(n_face).poi(3) = i * nr + j
+
+            n_face = n_face + 1
+            geom.face(n_face).poi(1) = (i - 1) * nr + j + 1
+            geom.face(n_face).poi(2) = i * nr + j + 1
+            geom.face(n_face).poi(3) = i * nr + j
+        end do
+
+        n_face = n_face + 1
+        geom.face(n_face).poi(1) = (i - 1) * nr + j
+        geom.face(n_face).poi(2) = (i - 1) * nr + 1
+        geom.face(n_face).poi(3) = i * nr + j
+
+        n_face = n_face + 1
+        geom.face(n_face).poi(1) = (i - 1) * nr + 1
+        geom.face(n_face).poi(2) = i * nr + 1
+        geom.face(n_face).poi(3) = i * nr + j
+    end do
+end subroutine Exam_Open3D_End_Triangular_Prism_Tri
+
+! ---------------------------------------------------------------------------------------
+
+! Example of open end cube with quad mesh
+! Last updated on Fri 10 Mar 2017 by Hyungmin
+subroutine Exam_Open3D_End_Cube_Quad(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: rad, ang, leng
+    integer :: i, j, n, nz, nr, n_poi, n_face
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_file = "17_End_Cube_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_vertex_modify)//&                ! Vertex modification
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    prob.name_prob = "End Cube Quad"
+
+    ! Set geometric type and view
+    prob.color    = [52, 152, 219]
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    prob.type_geo = "open"
+    if(para_fig_view == "preset") para_fig_view = "XY"
+
+    n    = 3
+    rad  = 1.0d0
+    leng = dble(n) * rad * sqrt(2.0d0)
+    nz   = n
+    nr   = 4
+
+    geom.n_face = nz * nr
+    geom.n_iniP = (nz + 1) * nr
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 4
+        allocate(geom.face(i).poi(4))
+    end do
+
+    ! set nodal position vector
+    n_poi = 0
+    do i = 1, nz + 1
+        do j = 1, nr
+            n_poi = n_poi + 1
+            ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
+
+            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
+            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
+            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+        end do
+    end do
+
+    ! set face connectivity
+    n_face = 0
+    do i = 1, nz
+        do j = 1, nr - 1
+            n_face = n_face + 1
+            geom.face(n_face).poi(1) = (i - 1) * nr + j
+            geom.face(n_face).poi(2) = (i - 1) * nr + j + 1
+            geom.face(n_face).poi(3) = i * nr + j + 1
+            geom.face(n_face).poi(4) = i * nr + j
+        end do
+
+        n_face = n_face + 1
+        geom.face(n_face).poi(1) = (i - 1) * nr + j
+        geom.face(n_face).poi(2) = (i - 1) * nr + 1
+        geom.face(n_face).poi(3) = i * nr + 1
+        geom.face(n_face).poi(4) = i * nr + j
+    end do
+end subroutine Exam_Open3D_End_Cube_Quad
+
+! ---------------------------------------------------------------------------------------
+
+! Example of open end cube with tri mesh
+! Last updated on Fri 10 Mar 2017 by Hyungmin
+subroutine Exam_Open3D_End_Cube_Tri(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: rad, ang, leng
+    integer :: i, j, n, nz, nr, n_poi, n_face
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_file = "18_End_Cube_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_vertex_modify)//&                ! Vertex modification
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    prob.name_prob = "End Cube Tri"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -66,98 +329,415 @@ subroutine Exam_Open_End_Cylinder(prob, geom)
     prob.move_y   = 0.0d0      ! Cylindrical model
     prob.type_geo = "open"
     if(para_fig_view == "preset") para_fig_view = "XY"
-    
-    domainsize   =  6
-    radius       =  4.953d0                 ! radius
-    layer_length =  10.35d0 * 2.0d0
-    nz           =  domainsize
-    nr           =  2 * domainsize
-    geom.n_face  =  nz * nr * 2
-    geom.n_iniP  =  (nz + 1) * nr
+
+    n    = 3
+    rad  = 1.0d0
+    leng = dble(n) * rad * sqrt(2.0d0)
+    nz   = n
+    nr   = 4
+
+    geom.n_face = nz * nr * 2
+    geom.n_iniP = (nz + 1) * nr
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
-    ! set nodal position vector
-    jointN = 0
-    do i = 1, nz + 1
-	    do j = 1, nr
-            jointN = jointN + 1
-            angle  = (360.0d0-(j-1)*(360.0d0/nr))*(3.141592653589793d0/180.0d0)
-		    
-            geom.iniP(jointN).pos(1) =  radius*dcos(angle)           ! x-coordinate
-            geom.iniP(jointN).pos(2) = -(i-1)*(layer_length/nz)      ! y-coordinate
-            geom.iniP(jointN).pos(3) =  radius*dsin(angle)           ! z-coordinate
-
-	    end do
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
     end do
-    
-    ! set connectivity
-    !elementN = 0
-    !do i = 1, nz
-    !    do j = 1, nr - 1
-    !        elementN = elementN + 1
-    !        geom.face(elementN).n_poi = 4
-    !        allocate(geom.face(elementN).poi(4))
-    !        
-    !        geom.face(elementN).poi(1) = (i - 1) * nr + j
-    !        geom.face(elementN).poi(2) = (i - 1) * nr + j + 1
-    !        geom.face(elementN).poi(3) = i * nr + j + 1
-    !        geom.face(elementN).poi(4) = i * nr + j
-    !        
-    !        print *, geom.face(elementN).poi(1:4)
-    !    end do
 
-    !    elementN = elementN + 1
-    !    geom.face(elementN).n_poi = 4
-    !    allocate(geom.face(elementN).poi(4))
-    !    geom.face(elementN).poi(1) = (i - 1) * nr + j
-	!    geom.face(elementN).poi(2) = (i - 1) * nr + 1
-	!    geom.face(elementN).poi(3) = i * nr + 1
-    !    geom.face(elementN).poi(4) = i * nr + j
-    !end do
-    
-    
-    
-    
+    ! set nodal position vector
+    n_poi = 0
+    do i = 1, nz + 1
+        do j = 1, nr
+            n_poi = n_poi + 1
+            ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
+
+            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
+            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
+            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+        end do
+    end do
+
     ! set connectivity
-    elementN = 0
+    n_face = 0
     do i = 1, nz
         do j = 1, nr - 1
-            elementN = elementN + 1
-                    geom.face(elementN).n_poi = 3
-        allocate(geom.face(elementN).poi(3))
-            geom.face(elementN).poi(1) = (i - 1) * nr + j
-            geom.face(elementN).poi(2) = (i - 1) * nr + j + 1
-            geom.face(elementN).poi(3) = i * nr + j
+            n_face = n_face + 1
+            geom.face(n_face).poi(1) = (i - 1) * nr + j
+            geom.face(n_face).poi(2) = (i - 1) * nr + j + 1
+            geom.face(n_face).poi(3) = i * nr + j
 
-            elementN = elementN + 1
-                    geom.face(elementN).n_poi = 3
-        allocate(geom.face(elementN).poi(3))
-            geom.face(elementN).poi(1) = (i - 1) * nr + j + 1
-            geom.face(elementN).poi(2) = i * nr + j + 1
-            geom.face(elementN).poi(3) = i * nr + j
+            n_face = n_face + 1
+            geom.face(n_face).poi(1) = (i - 1) * nr + j + 1
+            geom.face(n_face).poi(2) = i * nr + j + 1
+            geom.face(n_face).poi(3) = i * nr + j
         end do
 
-        elementN = elementN + 1
-                geom.face(elementN).n_poi = 3
-        allocate(geom.face(elementN).poi(3))
-        geom.face(elementN).poi(1) = (i - 1) * nr + j
-	    geom.face(elementN).poi(2) = (i - 1) * nr + 1
-        geom.face(elementN).poi(3) = i * nr + j
+        n_face = n_face + 1
+        geom.face(n_face).poi(1) = (i - 1) * nr + j
+        geom.face(n_face).poi(2) = (i - 1) * nr + 1
+        geom.face(n_face).poi(3) = i * nr + j
 
-        elementN = elementN + 1
-                geom.face(elementN).n_poi = 3
-        allocate(geom.face(elementN).poi(3))
-	    geom.face(elementN).poi(1) = (i - 1) * nr + 1
-	    geom.face(elementN).poi(2) = i * nr + 1
-        geom.face(elementN).poi(3) = i * nr + j
+        n_face = n_face + 1
+        geom.face(n_face).poi(1) = (i - 1) * nr + 1
+        geom.face(n_face).poi(2) = i * nr + 1
+        geom.face(n_face).poi(3) = i * nr + j
     end do
-    
-    
-    
-!stop
-end subroutine Exam_Open_End_Cylinder
+end subroutine Exam_Open3D_End_Cube_Tri
+
+! ---------------------------------------------------------------------------------------
+
+! Example of open end pentagonal prism with quad mesh
+! Last updated on Fri 10 Mar 2017 by Hyungmin
+subroutine Exam_Open3D_End_Pentagonal_Prism_Quad(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: rad, ang, leng
+    integer :: i, j, n, nz, nr, n_poi, n_face
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_file = "19_End_Pentagonal_Prism_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_vertex_modify)//&                ! Vertex modification
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    prob.name_prob = "End Pentagonal Prism Quad"
+
+    ! Set geometric type and view
+    prob.color    = [52, 152, 219]
+    prob.scale    = 1.0d0      ! Atomic model
+    prob.size     = 1.0d0      ! Cylindrical model
+    prob.move_x   = 0.0d0      ! Cylindrical model
+    prob.move_y   = 0.0d0      ! Cylindrical model
+    prob.type_geo = "open"
+    if(para_fig_view == "preset") para_fig_view = "XY"
+
+    n    = 3
+    rad  = 1.0d0
+    leng = dble(n) * rad * sqrt(1.4d0)
+    nz   = n
+    nr   = 5
+
+    geom.n_face = nz * nr
+    geom.n_iniP = (nz + 1) * nr
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 4
+        allocate(geom.face(i).poi(4))
+    end do
+
+    ! set nodal position vector
+    n_poi = 0
+    do i = 1, nz + 1
+        do j = 1, nr
+            n_poi = n_poi + 1
+            ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
+
+            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
+            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
+            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+        end do
+    end do
+
+    ! set face connectivity
+    n_face = 0
+    do i = 1, nz
+        do j = 1, nr - 1
+            n_face = n_face + 1
+            geom.face(n_face).poi(1) = (i - 1) * nr + j
+            geom.face(n_face).poi(2) = (i - 1) * nr + j + 1
+            geom.face(n_face).poi(3) = i * nr + j + 1
+            geom.face(n_face).poi(4) = i * nr + j
+        end do
+
+        n_face = n_face + 1
+        geom.face(n_face).poi(1) = (i - 1) * nr + j
+        geom.face(n_face).poi(2) = (i - 1) * nr + 1
+        geom.face(n_face).poi(3) = i * nr + 1
+        geom.face(n_face).poi(4) = i * nr + j
+    end do
+end subroutine Exam_Open3D_End_Pentagonal_Prism_Quad
+
+! ---------------------------------------------------------------------------------------
+
+! Example of open end pentagonal prism with tri mesh
+! Last updated on Fri 10 Mar 2017 by Hyungmin
+subroutine Exam_Open3D_End_Pentagonal_Prism_Tri(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: rad, ang, leng
+    integer :: i, j, n, nz, nr, n_poi, n_face
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_file = "20_End_Pentagonal_Prism_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_vertex_modify)//&                ! Vertex modification
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    prob.name_prob = "End Pentagonal Prism Tri"
+
+    ! Set geometric type and view
+    prob.color    = [52, 152, 219]
+    prob.scale    = 1.0d0      ! Atomic model
+    prob.size     = 1.0d0      ! Cylindrical model
+    prob.move_x   = 0.0d0      ! Cylindrical model
+    prob.move_y   = 0.0d0      ! Cylindrical model
+    prob.type_geo = "open"
+    if(para_fig_view == "preset") para_fig_view = "XY"
+
+    n    = 3
+    rad  = 1.0d0
+    leng = dble(n) * rad * sqrt(1.4d0)
+    nz   = n
+    nr   = 5
+
+    geom.n_face = nz * nr * 2
+    geom.n_iniP = (nz + 1) * nr
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
+    end do
+
+    ! set nodal position vector
+    n_poi = 0
+    do i = 1, nz + 1
+        do j = 1, nr
+            n_poi = n_poi + 1
+            ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
+
+            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
+            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
+            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+        end do
+    end do
+
+    ! set connectivity
+    n_face = 0
+    do i = 1, nz
+        do j = 1, nr - 1
+            n_face = n_face + 1
+            geom.face(n_face).poi(1) = (i - 1) * nr + j
+            geom.face(n_face).poi(2) = (i - 1) * nr + j + 1
+            geom.face(n_face).poi(3) = i * nr + j
+
+            n_face = n_face + 1
+            geom.face(n_face).poi(1) = (i - 1) * nr + j + 1
+            geom.face(n_face).poi(2) = i * nr + j + 1
+            geom.face(n_face).poi(3) = i * nr + j
+        end do
+
+        n_face = n_face + 1
+        geom.face(n_face).poi(1) = (i - 1) * nr + j
+        geom.face(n_face).poi(2) = (i - 1) * nr + 1
+        geom.face(n_face).poi(3) = i * nr + j
+
+        n_face = n_face + 1
+        geom.face(n_face).poi(1) = (i - 1) * nr + 1
+        geom.face(n_face).poi(2) = i * nr + 1
+        geom.face(n_face).poi(3) = i * nr + j
+    end do
+end subroutine Exam_Open3D_End_Pentagonal_Prism_Tri
+
+! ---------------------------------------------------------------------------------------
+
+! Example of open end cylinder with quad mesh
+! Last updated on Fri 10 Mar 2017 by Hyungmin
+subroutine Exam_Open3D_End_Cylinder_Quad(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: rad, ang, length
+    integer :: i, j, n, nz, nr, n_poi, n_face
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_file = "21_End_Cylinder_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_vertex_modify)//&                ! Vertex modification
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    prob.name_prob = "End Cylinder Quad"
+
+    ! Set geometric type and view
+    prob.color    = [52, 152, 219]
+    prob.scale    = 1.0d0      ! Atomic model
+    prob.size     = 1.0d0      ! Cylindrical model
+    prob.move_x   = 0.0d0      ! Cylindrical model
+    prob.move_y   = 0.0d0      ! Cylindrical model
+    prob.type_geo = "open"
+    if(para_fig_view == "preset") para_fig_view = "XY"
+
+    ! Set mesh
+    n  = 5
+    nz = n
+    nr = 8
+
+    ! Set dimension
+    rad    = 1.0d0
+    length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
+
+    geom.n_face = nz * nr
+    geom.n_iniP = (nz + 1) * nr
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 4
+        allocate(geom.face(i).poi(4))
+    end do
+
+    ! set nodal position vector
+    n_poi = 0
+    do i = 1, nz + 1
+        do j = 1, nr
+            n_poi = n_poi + 1
+            ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
+
+            geom.iniP(n_poi).pos(1) = rad*dcos(ang)
+            geom.iniP(n_poi).pos(2) = -(i-1)*(length/nz)  
+            geom.iniP(n_poi).pos(3) = rad*dsin(ang)
+        end do
+    end do
+
+    ! set face connectivity
+    n_face = 0
+    do i = 1, nz
+        do j = 1, nr - 1
+            n_face = n_face + 1
+            geom.face(n_face).poi(1) = (i - 1) * nr + j
+            geom.face(n_face).poi(2) = (i - 1) * nr + j + 1
+            geom.face(n_face).poi(3) = i * nr + j + 1
+            geom.face(n_face).poi(4) = i * nr + j
+        end do
+
+        n_face = n_face + 1
+        geom.face(n_face).poi(1) = (i - 1) * nr + j
+        geom.face(n_face).poi(2) = (i - 1) * nr + 1
+        geom.face(n_face).poi(3) = i * nr + 1
+        geom.face(n_face).poi(4) = i * nr + j
+    end do
+end subroutine Exam_Open3D_End_Cylinder_Quad
+
+! ---------------------------------------------------------------------------------------
+
+! Example of open end cylinder with tri mesh
+! Last updated on Fri 10 Mar 2017 by Hyungmin
+subroutine Exam_Open3D_End_Cylinder_Tri(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: rad, ang, leng
+    integer :: i, j, n, nz, nr, n_poi, n_face
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_file = "22_End_Cylinder_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_vertex_modify)//&                ! Vertex modification
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    prob.name_prob = "End Cylinder Tri"
+
+    ! Set geometric type and view
+    prob.color    = [52, 152, 219]
+    prob.scale    = 1.0d0      ! Atomic model
+    prob.size     = 1.0d0      ! Cylindrical model
+    prob.move_x   = 0.0d0      ! Cylindrical model
+    prob.move_y   = 0.0d0      ! Cylindrical model
+    prob.type_geo = "open"
+    if(para_fig_view == "preset") para_fig_view = "XY"
+
+    n         = 6
+    rad       = 4.953d0
+    leng = 10.35d0 * 2.0d0
+    nz        = n
+    nr        = 2 * n
+    nr        = 5
+
+    geom.n_face = nz * nr * 2
+    geom.n_iniP = (nz + 1) * nr
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
+    end do
+
+    ! set nodal position vector
+    n_poi = 0
+    do i = 1, nz + 1
+        do j = 1, nr
+            n_poi = n_poi + 1
+            ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
+
+            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
+            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
+            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+        end do
+    end do
+
+    ! set connectivity
+    n_face = 0
+    do i = 1, nz
+        do j = 1, nr - 1
+            n_face = n_face + 1
+            geom.face(n_face).poi(1) = (i - 1) * nr + j
+            geom.face(n_face).poi(2) = (i - 1) * nr + j + 1
+            geom.face(n_face).poi(3) = i * nr + j
+
+            n_face = n_face + 1
+            geom.face(n_face).poi(1) = (i - 1) * nr + j + 1
+            geom.face(n_face).poi(2) = i * nr + j + 1
+            geom.face(n_face).poi(3) = i * nr + j
+        end do
+
+        n_face = n_face + 1
+        geom.face(n_face).poi(1) = (i - 1) * nr + j
+        geom.face(n_face).poi(2) = (i - 1) * nr + 1
+        geom.face(n_face).poi(3) = i * nr + j
+
+        n_face = n_face + 1
+        geom.face(n_face).poi(1) = (i - 1) * nr + 1
+        geom.face(n_face).poi(2) = i * nr + 1
+        geom.face(n_face).poi(3) = i * nr + j
+    end do
+end subroutine Exam_Open3D_End_Cylinder_Tri
 
 ! ---------------------------------------------------------------------------------------
 
