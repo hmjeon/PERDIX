@@ -47,7 +47,7 @@ subroutine Exam_Open3D_End_Triangular_Prism_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: rad, ang, leng
+    double precision :: rad, ang, length
     integer :: i, j, n, nz, nr, n_poi, n_face
     character(10) :: char_sec, char_bp, char_start_bp
 
@@ -73,11 +73,14 @@ subroutine Exam_Open3D_End_Triangular_Prism_Quad(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "preset") para_fig_view = "XY"
 
-    n    = 3
-    rad  = 1.0d0
-    leng = dble(n) * rad * sqrt(3.0d0)
-    nz   = n
-    nr   = 3
+    ! Set mesh
+    n  = 3
+    nz = n
+    nr = 3
+
+    ! Set dimension
+    rad    = 1.0d0
+    length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
     geom.n_face = nz * nr
     geom.n_iniP = (nz + 1) * nr
@@ -97,9 +100,9 @@ subroutine Exam_Open3D_End_Triangular_Prism_Quad(prob, geom)
             n_poi = n_poi + 1
             ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
 
-            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
-            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
-            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+            geom.iniP(n_poi).pos(1) = rad*dcos(ang)
+            geom.iniP(n_poi).pos(2) = -(i-1)*(length/nz)
+            geom.iniP(n_poi).pos(3) = rad*dsin(ang)
         end do
     end do
 
@@ -130,7 +133,7 @@ subroutine Exam_Open3D_End_Triangular_Prism_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: rad, ang, leng
+    double precision :: rad, ang, length
     integer :: i, j, n, nz, nr, n_poi, n_face
     character(10) :: char_sec, char_bp, char_start_bp
 
@@ -156,11 +159,14 @@ subroutine Exam_Open3D_End_Triangular_Prism_Tri(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "preset") para_fig_view = "XY"
 
-    n    = 3
-    rad  = 1.0d0
-    leng = dble(n) * rad * sqrt(3.0d0)
-    nz   = n
-    nr   = 3
+    ! Set mesh
+    n  = 3
+    nz = n
+    nr = 3
+
+    ! Set dimension
+    rad    = 1.0d0
+    length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
     geom.n_face = nz * nr * 2
     geom.n_iniP = (nz + 1) * nr
@@ -180,9 +186,9 @@ subroutine Exam_Open3D_End_Triangular_Prism_Tri(prob, geom)
             n_poi = n_poi + 1
             ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
 
-            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
-            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
-            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+            geom.iniP(n_poi).pos(1) = rad*dcos(ang)
+            geom.iniP(n_poi).pos(2) = -(i-1)*(length/nz)
+            geom.iniP(n_poi).pos(3) = rad*dsin(ang)
         end do
     end do
 
@@ -221,7 +227,7 @@ subroutine Exam_Open3D_End_Cube_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: rad, ang, leng
+    double precision :: rad, ang, length
     integer :: i, j, n, nz, nr, n_poi, n_face
     character(10) :: char_sec, char_bp, char_start_bp
 
@@ -247,11 +253,14 @@ subroutine Exam_Open3D_End_Cube_Quad(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "preset") para_fig_view = "XY"
 
-    n    = 3
-    rad  = 1.0d0
-    leng = dble(n) * rad * sqrt(2.0d0)
-    nz   = n
-    nr   = 4
+    ! Set mesh
+    n  = 3
+    nz = n
+    nr = 4
+
+    ! Set dimension
+    rad    = 1.0d0
+    length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
     geom.n_face = nz * nr
     geom.n_iniP = (nz + 1) * nr
@@ -271,9 +280,9 @@ subroutine Exam_Open3D_End_Cube_Quad(prob, geom)
             n_poi = n_poi + 1
             ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
 
-            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
-            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
-            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+            geom.iniP(n_poi).pos(1) = rad*dcos(ang)
+            geom.iniP(n_poi).pos(2) = -(i-1)*(length/nz)
+            geom.iniP(n_poi).pos(3) = rad*dsin(ang)
         end do
     end do
 
@@ -304,7 +313,7 @@ subroutine Exam_Open3D_End_Cube_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: rad, ang, leng
+    double precision :: rad, ang, length
     integer :: i, j, n, nz, nr, n_poi, n_face
     character(10) :: char_sec, char_bp, char_start_bp
 
@@ -330,11 +339,14 @@ subroutine Exam_Open3D_End_Cube_Tri(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "preset") para_fig_view = "XY"
 
-    n    = 3
-    rad  = 1.0d0
-    leng = dble(n) * rad * sqrt(2.0d0)
-    nz   = n
-    nr   = 4
+    ! Set mesh
+    n  = 3
+    nz = n
+    nr = 4
+
+    ! Set dimension
+    rad    = 1.0d0
+    length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
     geom.n_face = nz * nr * 2
     geom.n_iniP = (nz + 1) * nr
@@ -354,9 +366,9 @@ subroutine Exam_Open3D_End_Cube_Tri(prob, geom)
             n_poi = n_poi + 1
             ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
 
-            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
-            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
-            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+            geom.iniP(n_poi).pos(1) = rad*dcos(ang)
+            geom.iniP(n_poi).pos(2) = -(i-1)*(length/nz)
+            geom.iniP(n_poi).pos(3) = rad*dsin(ang)
         end do
     end do
 
@@ -395,7 +407,7 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: rad, ang, leng
+    double precision :: rad, ang, length
     integer :: i, j, n, nz, nr, n_poi, n_face
     character(10) :: char_sec, char_bp, char_start_bp
 
@@ -421,11 +433,14 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Quad(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "preset") para_fig_view = "XY"
 
-    n    = 3
-    rad  = 1.0d0
-    leng = dble(n) * rad * sqrt(1.4d0)
-    nz   = n
-    nr   = 5
+    ! Set mesh
+    n  = 3
+    nz = n
+    nr = 5
+
+    ! Set dimension
+    rad    = 1.0d0
+    length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
     geom.n_face = nz * nr
     geom.n_iniP = (nz + 1) * nr
@@ -445,9 +460,9 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Quad(prob, geom)
             n_poi = n_poi + 1
             ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
 
-            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
-            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
-            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+            geom.iniP(n_poi).pos(1) = rad*dcos(ang)
+            geom.iniP(n_poi).pos(2) = -(i-1)*(length/nz)
+            geom.iniP(n_poi).pos(3) = rad*dsin(ang)
         end do
     end do
 
@@ -478,7 +493,7 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: rad, ang, leng
+    double precision :: rad, ang, length
     integer :: i, j, n, nz, nr, n_poi, n_face
     character(10) :: char_sec, char_bp, char_start_bp
 
@@ -504,11 +519,14 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Tri(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "preset") para_fig_view = "XY"
 
-    n    = 3
-    rad  = 1.0d0
-    leng = dble(n) * rad * sqrt(1.4d0)
-    nz   = n
-    nr   = 5
+    ! Set mesh
+    n  = 3
+    nz = n
+    nr = 5
+
+    ! Set dimension
+    rad    = 1.0d0
+    length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
     geom.n_face = nz * nr * 2
     geom.n_iniP = (nz + 1) * nr
@@ -528,9 +546,9 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Tri(prob, geom)
             n_poi = n_poi + 1
             ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
 
-            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
-            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
-            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+            geom.iniP(n_poi).pos(1) = rad*dcos(ang)
+            geom.iniP(n_poi).pos(2) = -(i-1)*(length/nz)
+            geom.iniP(n_poi).pos(3) = rad*dsin(ang)
         end do
     end do
 
@@ -655,7 +673,7 @@ subroutine Exam_Open3D_End_Cylinder_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: rad, ang, leng
+    double precision :: rad, ang, length
     integer :: i, j, n, nz, nr, n_poi, n_face
     character(10) :: char_sec, char_bp, char_start_bp
 
@@ -681,12 +699,14 @@ subroutine Exam_Open3D_End_Cylinder_Tri(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "preset") para_fig_view = "XY"
 
-    n         = 6
-    rad       = 4.953d0
-    leng = 10.35d0 * 2.0d0
-    nz        = n
-    nr        = 2 * n
-    nr        = 5
+    ! Set mesh
+    n  = 5
+    nz = n
+    nr = 8
+
+    ! Set dimension
+    rad    = 1.0d0
+    length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
     geom.n_face = nz * nr * 2
     geom.n_iniP = (nz + 1) * nr
@@ -706,9 +726,9 @@ subroutine Exam_Open3D_End_Cylinder_Tri(prob, geom)
             n_poi = n_poi + 1
             ang   = (360.0d0-dble(j-1)*(360.0d0/dble(nr)))*(pi/180.0d0)
 
-            geom.iniP(n_poi).pos(1) =  rad*dcos(ang)    ! x-coordinate
-            geom.iniP(n_poi).pos(2) = -(i-1)*(leng/nz)  ! y-coordinate
-            geom.iniP(n_poi).pos(3) =  rad*dsin(ang)    ! z-coordinate
+            geom.iniP(n_poi).pos(1) = rad*dcos(ang)
+            geom.iniP(n_poi).pos(2) = -(i-1)*(length/nz)
+            geom.iniP(n_poi).pos(3) = rad*dsin(ang)
         end do
     end do
 
