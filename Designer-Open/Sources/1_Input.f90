@@ -965,8 +965,8 @@ subroutine Input_Select_Problem(prob, geom)
 
         ! Primitive examples - open geometry
         case ( 1); call Exam_Open2D_Plate_Uniform_Quad         (prob, geom)
-        case ( 2); call Exam_Open2D_Plate_Distorted_Quad       (prob, geom)
-        case ( 3); call Exam_Open2D_Plate_Uniform_Tri          (prob, geom)
+        case ( 2); call Exam_Open2D_Plate_Uniform_Tri          (prob, geom)
+        case ( 3); call Exam_Open2D_Plate_Distorted_Quad       (prob, geom)
         case ( 4); call Exam_Open2D_Plate_Distorted_Tri        (prob, geom)
         case ( 5); call Exam_Open2D_Circular_Plate_Quad        (prob, geom)
         case ( 6); call Exam_Open2D_Circular_Plate_Tri         (prob, geom)
