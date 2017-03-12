@@ -24,15 +24,15 @@
 
 # Executables
 *.exe
-!DNAcs/Library/sleep.exe
-!DNAcs/Library/meshconv.exe
+!Designer-Open/Library/sleep.exe
+!Designer-Open/Library/meshconv.exe
 *.out
 *.app
-DNAcs/Debug
-DNAcs/Release
-DNAcs/x64
+Designer-Open/Debug
+Designer-Open/Release
+Designer-Open/x64
 *.u2d
-DNAcs/Output
+Designer-Open/Output
 .vs
 *.11
 *.101
