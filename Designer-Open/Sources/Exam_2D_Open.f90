@@ -855,14 +855,14 @@ end subroutine Exam_Open2D_Circular_Plate_Tri
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of Annular plate with quad mesh
+! Example of annular plate with quad mesh
 ! Last updated on Sat 11 Mar 2017 by Hyungmin
 subroutine Exam_Open2D_Annular_Plate_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: i_radius, o_radius, angle, radius, force
-    integer :: i, j, count, n, nx, nr
+    double precision :: i_rad, o_rad, ang, rad
+    integer :: i, j, index, n, nx, nr
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
@@ -887,11 +887,12 @@ subroutine Exam_Open2D_Annular_Plate_Quad(prob, geom)
     prob.type_geo = "open"
     if(para_fig_view == "preset") para_fig_view = "XY"
 
-    n        = 2
-    o_radius = 4.0d0        ! Outer radius
-    i_radius = 2.4d0        ! Internal radius
-    nx       = n
-    nr       = 5*n
+    n  = 2
+    nx = n
+    nr = n * 5
+
+    o_rad = 4.0d0       ! Outer radius
+    i_rad = 1.8d0       ! Internal radius
 
     geom.n_iniP = (nx + 1) * nr
     geom.n_face = nx * nr
@@ -905,35 +906,35 @@ subroutine Exam_Open2D_Annular_Plate_Quad(prob, geom)
         allocate(geom.face(i).poi(4))
     end do
 
-    count = 0
+    index = 0
     do j = 1, nr
         do i = 1, nx + 1
-            count  = count + 1
-            angle  = 2.0d0 * pi / dble(nr) * dble(j - 1)
-            radius = ((o_radius - i_radius) / dble(nx) * dble(i - 1)) + i_radius
+            index  = index + 1
+            ang = 2.0d0 * pi / dble(nr) * dble(j - 1)
+            rad = ((o_rad - i_rad) / dble(nx) * dble(i - 1)) + i_rad
 
-            geom.iniP(count).pos(1) = radius * dcos(angle)
-            geom.iniP(count).pos(2) = radius * dsin(angle)
-            geom.iniP(count).pos(3) = 0.0d0
+            geom.iniP(index).pos(1) = rad * dcos(ang)
+            geom.iniP(index).pos(2) = rad * dsin(ang)
+            geom.iniP(index).pos(3) = 0.0d0
         end do
     end do
 
     ! Set connectivity
-    count = 0
+    index = 0
     do i = 1, nr
         do j = 1, nx
             if(i /= nr) then
-                count = count + 1
-                geom.face(count).poi(1) = (nx+1)*(i-1) + (j-1) + 1
-                geom.face(count).poi(2) = (nx+1)*(i-1) + (j-1) + 2
-                geom.face(count).poi(3) = (nx+1)*(i-0) + (j-1) + 2
-                geom.face(count).poi(4) = (nx+1)*(i-0) + (j-1) + 1
+                index = index + 1
+                geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 1
+                geom.face(index).poi(2) = (nx+1)*(i-1) + (j-1) + 2
+                geom.face(index).poi(3) = (nx+1)*(i-0) + (j-1) + 2
+                geom.face(index).poi(4) = (nx+1)*(i-0) + (j-1) + 1
             else if(i == nr) then
-                count = count + 1
-                geom.face(count).poi(1) = (nx+1)*(i-1) + (j-1) + 1
-                geom.face(count).poi(2) = (nx+1)*(i-1) + (j-1) + 2
-                geom.face(count).poi(3) = (nx+1)*(1-1) + (j-1) + 2
-                geom.face(count).poi(4) = (nx+1)*(1-1) + (j-1) + 1
+                index = index + 1
+                geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 1
+                geom.face(index).poi(2) = (nx+1)*(i-1) + (j-1) + 2
+                geom.face(index).poi(3) = (nx+1)*(1-1) + (j-1) + 2
+                geom.face(index).poi(4) = (nx+1)*(1-1) + (j-1) + 1
             end if
         end do
     end do
@@ -941,22 +942,22 @@ end subroutine Exam_Open2D_Annular_Plate_Quad
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of annular plate with triangles
-! Last updated on Tuesday 30 August 2016 by Hyungmin
+! Example of annular plate with tri mesh
+! Last updated on Sat 11 Mar 2017 by Hyungmin
 subroutine Exam_Open2D_Annular_Plate_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: i_radius, o_radius, angle, radius, force
-    integer :: i, j, count, n, nx, nr
-    character :: pattern
+    double precision :: i_rad, o_rad, ang, rad
+    integer :: i, j, index, n, nx, nr
+    character :: pn
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "60_Annular_Plate_Tri"//&
+    prob.name_file = "8_Annular_Plate_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -967,104 +968,98 @@ subroutine Exam_Open2D_Annular_Plate_Tri(prob, geom)
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   = 0.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
     prob.type_geo = "open"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
+    if(para_fig_view == "preset") para_fig_view = "XY"
 
-    n        = 3
-    pattern  = "\"
-    o_radius = 1.0d0        ! Outer radius
-    i_radius = 0.6d0        ! Internal radius
-    nx       = n
-    nr       = 5 * n
+    n  = 2
+    nx = n
+    nr = n * 5
+    pn = "\"
 
-    geom.n_iniP = (nx + 1)*nr
-    geom.n_face = nx*nr*2
+    o_rad = 4.0d0       ! Outer radius
+    i_rad = 1.8d0       ! Internal radius
 
-    ! Set position vector
+    geom.n_iniP = (nx + 1) * nr
+    geom.n_face = nx * nr * 2
+
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
-    count = 0
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
+    end do
+
+    ! Set position vector
+    index = 0
     do j = 1, nr
         do i = 1, nx + 1
-            count  = count + 1
-            angle  = 2.0d0 * pi / dble(nr) * dble(j - 1)
-            radius = ((o_radius - i_radius) / dble(nx) * dble(i - 1)) + i_radius
+            index = index + 1
 
-            geom.iniP(count).pos(1) = radius * dcos(angle)
-            geom.iniP(count).pos(2) = radius * dsin(angle)
-            geom.iniP(count).pos(3) = 0.0d0
+            ang = 2.0d0 * pi / dble(nr) * dble(j - 1)
+            rad = ((o_rad - i_rad) / dble(nx) * dble(i - 1)) + i_rad
+
+            geom.iniP(index).pos(1) = rad * dcos(ang)
+            geom.iniP(index).pos(2) = rad * dsin(ang)
+            geom.iniP(index).pos(3) = 0.0d0
         end do
     end do
 
     ! Set connectivity
-    count = 0
+    index = 0
     do i = 1, nr
         do j = 1, nx
             if(i /= nr) then
-                if(pattern == "\") then
-                    count = count + 1
-                    geom.face(count).n_poi = 3
-                    allocate(geom.face(count).poi(3))
-                    geom.face(count).poi(1) = (nx+1)*(i-1) + (j-1) + 1
-                    geom.face(count).poi(2) = (nx+1)*(i-1) + (j-1) + 2
-                    geom.face(count).poi(3) = (nx+1)*(i-0) + (j-1) + 1
+                if(pn == "\") then
 
-                    count = count + 1
-                    geom.face(count).n_poi = 3
-                    allocate(geom.face(count).poi(3))
-                    geom.face(count).poi(1) = (nx+1)*(i-1) + (j-1) + 2
-                    geom.face(count).poi(2) = (nx+1)*(i-0) + (j-1) + 2
-                    geom.face(count).poi(3) = (nx+1)*(i-0) + (j-1) + 1
-                else if(pattern == "\") then
-                    count = count + 1
-                    geom.face(count).n_poi = 3
-                    allocate(geom.face(count).poi(3))
-                    geom.face(count).poi(1) = (nx+1)*(i-1) + (j-1) + 1
-                    geom.face(count).poi(2) = (nx+1)*(i-0) + (j-1) + 2
-                    geom.face(count).poi(3) = (nx+1)*(i-0) + (j-1) + 1
+                    index = index + 1
+                    geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 1
+                    geom.face(index).poi(2) = (nx+1)*(i-1) + (j-1) + 2
+                    geom.face(index).poi(3) = (nx+1)*(i-0) + (j-1) + 1
 
-                    count = count + 1
-                    geom.face(count).n_poi = 3
-                    allocate(geom.face(count).poi(3))
-                    geom.face(count).poi(1) = (nx+1)*(i-1) + (j-1) + 1
-                    geom.face(count).poi(2) = (nx+1)*(i-1) + (j-1) + 2
-                    geom.face(count).poi(3) = (nx+1)*(i-0) + (j-1) + 2
+                    index = index + 1
+                    geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 2
+                    geom.face(index).poi(2) = (nx+1)*(i-0) + (j-1) + 2
+                    geom.face(index).poi(3) = (nx+1)*(i-0) + (j-1) + 1
+                else if(pn == "\") then
+
+                    index = index + 1
+                    geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 1
+                    geom.face(index).poi(2) = (nx+1)*(i-0) + (j-1) + 2
+                    geom.face(index).poi(3) = (nx+1)*(i-0) + (j-1) + 1
+
+                    index = index + 1
+                    geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 1
+                    geom.face(index).poi(2) = (nx+1)*(i-1) + (j-1) + 2
+                    geom.face(index).poi(3) = (nx+1)*(i-0) + (j-1) + 2
                 end if
             else if(i == nr) then
-                if(pattern == "\") then
-                    count = count + 1
-                    geom.face(count).n_poi = 3
-                    allocate(geom.face(count).poi(3))
-                    geom.face(count).poi(1) = (nx+1)*(i-1) + (j-1) + 1
-                    geom.face(count).poi(2) = (nx+1)*(i-1) + (j-1) + 2
-                    geom.face(count).poi(3) = (nx+1)*(1-1) + (j-1) + 1
+                if(pn == "\") then
 
-                    count = count + 1
-                    geom.face(count).n_poi = 3
-                    allocate(geom.face(count).poi(3))
-                    geom.face(count).poi(1) = (nx+1)*(i-1) + (j-1) + 2
-                    geom.face(count).poi(2) = (nx+1)*(1-1) + (j-1) + 2
-                    geom.face(count).poi(3) = (nx+1)*(1-1) + (j-1) + 1
-                else if(pattern == "\") then
+                    index = index + 1
+                    geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 1
+                    geom.face(index).poi(2) = (nx+1)*(i-1) + (j-1) + 2
+                    geom.face(index).poi(3) = (nx+1)*(1-1) + (j-1) + 1
 
-                    count = count + 1
-                    geom.face(count).n_poi = 3
-                    allocate(geom.face(count).poi(3))
-                    geom.face(count).poi(1) = (nx+1)*(i-1) + (j-1) + 1
-                    geom.face(count).poi(2) = (nx+1)*(1-1) + (j-1) + 2
-                    geom.face(count).poi(3) = (nx+1)*(1-1) + (j-1) + 1
+                    index = index + 1
+                    geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 2
+                    geom.face(index).poi(2) = (nx+1)*(1-1) + (j-1) + 2
+                    geom.face(index).poi(3) = (nx+1)*(1-1) + (j-1) + 1
+                else if(pn == "\") then
 
-                    count = count + 1
-                    geom.face(count).n_poi = 3
-                    allocate(geom.face(count).poi(3))
-                    geom.face(count).poi(1) = (nx+1)*(i-1) + (j-1) + 1
-                    geom.face(count).poi(2) = (nx+1)*(i-1) + (j-1) + 2
-                    geom.face(count).poi(3) = (nx+1)*(1-1) + (j-1) + 2
+                    index = index + 1
+                    geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 1
+                    geom.face(index).poi(2) = (nx+1)*(1-1) + (j-1) + 2
+                    geom.face(index).poi(3) = (nx+1)*(1-1) + (j-1) + 1
+
+                    index = index + 1
+                    geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 1
+                    geom.face(index).poi(2) = (nx+1)*(i-1) + (j-1) + 2
+                    geom.face(index).poi(3) = (nx+1)*(1-1) + (j-1) + 2
                 end if
             end if
         end do
@@ -1073,20 +1068,21 @@ end subroutine Exam_Open2D_Annular_Plate_Tri
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of hyperbolic paraboloid with quadrilaterals
-! Last updated on Tuesday 30 August 2016 by Hyungmin
+! Example of hyperbolic paraboloid with quad mesh
+! Last updated on Sat 11 Mar 2017 by Hyungmin
 subroutine Exam_Open2D_Hyperbolic_Paraboloid_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    integer :: i, j, count, n, nx, ny
+    double precision :: x_width, y_width
+    integer :: i, j, index, n, nx, ny
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "61_Hyperbolic_Paraboloid_Quad"//&
+    prob.name_file = "9_Hyperbolic_Paraboloid_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -1097,70 +1093,69 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Quad(prob, geom)
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   = 0.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
     prob.type_geo = "open"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
+    if(para_fig_view == "preset") para_fig_view = "XY"
 
     n  = 3
     nx = n
     ny = n
 
-    geom.n_iniP = (nx + 1)*(ny + 1)
-    geom.n_face = nx*ny
+    geom.n_iniP = (nx + 1) * (ny + 1)
+    geom.n_face = nx * ny
 
-    ! Allocate point structure and set position vector
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
-    count = 0
-    do i = 1, nx + 1
-        do j = 1, ny + 1
-            count = count + 1
-
-            geom.iniP(count).pos(1) = (dble(i) - 1.0d0) * (1.0d0 / dble(nx)) - 0.5d0
-            geom.iniP(count).pos(2) = (dble(j) - 1.0d0) * (1.0d0 / dble(ny)) - 0.5d0
-            geom.iniP(count).pos(3) = geom.iniP(count).pos(1)**2.0d0 - geom.iniP(count).pos(2)**2.0d0
-        end do
-    end do
-
-    ! Allocate face structure and set connectivity
     do i = 1, geom.n_face
         geom.face(i).n_poi = 4
         allocate(geom.face(i).poi(4))
     end do
 
-    count = 0
+    ! Set position vector
+    index = 0
+    do i = 1, nx + 1
+        do j = 1, ny + 1
+            index = index + 1
+            geom.iniP(index).pos(1) = (dble(i) - 1.0d0) * (1.0d0 / dble(nx)) - 0.5d0
+            geom.iniP(index).pos(2) = (dble(j) - 1.0d0) * (1.0d0 / dble(ny)) - 0.5d0
+            geom.iniP(index).pos(3) = geom.iniP(index).pos(1)**2.0d0 - geom.iniP(index).pos(2)**2.0d0
+        end do
+    end do
+
+    ! Set connectivity
+    index = 0
     do i = 1, nx
         do j = 1, ny
-            count = count + 1
-            geom.face(count).poi(1) = (ny+1)*(i+0) + (j-1) + 1
-            geom.face(count).poi(2) = (ny+1)*(i+0) + (j-1) + 2
-            geom.face(count).poi(3) = (ny+1)*(i-1) + (j-1) + 2
-            geom.face(count).poi(4) = (ny+1)*(i-1) + (j-1) + 1
+            index = index + 1
+            geom.face(index).poi(1) = (ny+1)*(i+0) + (j-1) + 1
+            geom.face(index).poi(2) = (ny+1)*(i+0) + (j-1) + 2
+            geom.face(index).poi(3) = (ny+1)*(i-1) + (j-1) + 2
+            geom.face(index).poi(4) = (ny+1)*(i-1) + (j-1) + 1
         end do
     end do
 end subroutine Exam_Open2D_Hyperbolic_Paraboloid_Quad
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of hyperbolic paraboloid with triangles
-! Last updated on Tuesday 30 August 2016 by Hyungmin
+! Example of hyperbolic paraboloid with quad mesh
+! Last updated on Sat 11 Mar 2017 by Hyungmin
 subroutine Exam_Open2D_Hyperbolic_Paraboloid_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    integer :: i, j, count, n, nx, ny
-    character :: pattern
+    integer :: i, j, index, n, nx, ny
+    character :: pn
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "62_Hyperbolic_Paraboloid_Tri"//&
+    prob.name_file = "10_Hyperbolic_Paraboloid_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -1171,64 +1166,64 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Tri(prob, geom)
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   = 0.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
     prob.type_geo = "open"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
+    if(para_fig_view == "preset") para_fig_view = "XY"
 
-    n       = 3
-    pattern = "\"
-    nx      = n
-    ny      = n
+    n  = 3
+    nx = n
+    ny = n
+    pn = "\"
 
-    geom.n_iniP = (nx + 1)*(ny + 1)
-    geom.n_face = nx*ny*2
+    geom.n_iniP = (nx + 1) * (ny + 1)
+    geom.n_face = nx * ny * 2
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
-    ! Allocate face structure and set connectivity
+
     do i = 1, geom.n_face
         geom.face(i).n_poi = 3
         allocate(geom.face(i).poi(3))
     end do
+
     ! Set position vector
-    count = 0
+    index = 0
     do i = 1, nx + 1
         do j = 1, ny + 1
-            count = count + 1
-
-            geom.iniP(count).pos(1) = (dble(i) - 1.0d0) * (1.0d0 / dble(nx)) - 0.5d0
-            geom.iniP(count).pos(2) = (dble(j) - 1.0d0) * (1.0d0 / dble(ny)) - 0.5d0
-            geom.iniP(count).pos(3) = geom.iniP(count).pos(1)**2.0d0 - geom.iniP(count).pos(2)**2.0d0
+            index = index + 1
+            geom.iniP(index).pos(1) = (dble(i) - 1.0d0) * (1.0d0 / dble(nx)) - 0.5d0
+            geom.iniP(index).pos(2) = (dble(j) - 1.0d0) * (1.0d0 / dble(ny)) - 0.5d0
+            geom.iniP(index).pos(3) = geom.iniP(index).pos(1)**2.0d0 - geom.iniP(index).pos(2)**2.0d0
         end do
     end do
 
     ! Set connectivity
-    count = 0
+    index = 0
     do i = 1, nx
         do j = 1, ny
-            if(pattern == "\") then
-                count = count + 1
-                geom.face(count).poi(1) = (ny+1)*(i+0) + (j-1) + 1
-                geom.face(count).poi(2) = (ny+1)*(i+0) + (j-1) + 2
-                geom.face(count).poi(3) = (ny+1)*(i-1) + (j-1) + 1
+            if(pn == "\") then
+                index = index + 1
+                geom.face(index).poi(1) = (ny+1)*(i+0) + (j-1) + 1
+                geom.face(index).poi(2) = (ny+1)*(i+0) + (j-1) + 2
+                geom.face(index).poi(3) = (ny+1)*(i-1) + (j-1) + 1
 
-                count = count + 1
-                geom.face(count).poi(1) = (ny+1)*(i+0) + (j-1) + 2
-                geom.face(count).poi(2) = (ny+1)*(i-1) + (j-1) + 2
-                geom.face(count).poi(3) = (ny+1)*(i-1) + (j-1) + 1
-            else if(pattern == "/") then
-                count = count + 1
-                geom.face(count).poi(1) = (ny+1)*(i+0) + (j-1) + 1
-                geom.face(count).poi(2) = (ny+1)*(i-1) + (j-1) + 2
-                geom.face(count).poi(3) = (ny+1)*(i-1) + (j-1) + 1
+                index = index + 1
+                geom.face(index).poi(1) = (ny+1)*(i+0) + (j-1) + 2
+                geom.face(index).poi(2) = (ny+1)*(i-1) + (j-1) + 2
+                geom.face(index).poi(3) = (ny+1)*(i-1) + (j-1) + 1
+            else if(pn == "/") then
+                index = index + 1
+                geom.face(index).poi(1) = (ny+1)*(i+0) + (j-1) + 1
+                geom.face(index).poi(2) = (ny+1)*(i-1) + (j-1) + 2
+                geom.face(index).poi(3) = (ny+1)*(i-1) + (j-1) + 1
 
-                count = count + 1
-                geom.face(count).poi(1) = (ny+1)*(i+0) + (j-1) + 1
-                geom.face(count).poi(2) = (ny+1)*(i+0) + (j-1) + 2
-                geom.face(count).poi(3) = (ny+1)*(i-1) + (j-1) + 2
+                index = index + 1
+                geom.face(index).poi(1) = (ny+1)*(i+0) + (j-1) + 1
+                geom.face(index).poi(2) = (ny+1)*(i+0) + (j-1) + 2
+                geom.face(index).poi(3) = (ny+1)*(i-1) + (j-1) + 2
             end if
         end do
     end do
@@ -1236,7 +1231,8 @@ end subroutine Exam_Open2D_Hyperbolic_Paraboloid_Tri
 
 ! ---------------------------------------------------------------------------------------
 
-! Last updated on Tuesday 30 August 2016 by Hyungmin
+! Return cross point
+! Last updated on Sat 11 Mar 2017 by Hyungmin
 subroutine Exam_Open2D_Cross_Point(AP1, AP2, BP1, BP2, CP)
     double precision, intent(in) :: AP1(2), AP2(2), BP1(2), BP2(2)
     double precision, intent(out) :: CP(2)
@@ -1253,12 +1249,12 @@ end subroutine Exam_Open2D_Cross_Point
 
 ! ---------------------------------------------------------------------------------------
 
-! Merge points and faces
-! Last updated on Tuesday 30 August 2016 by Hyungmin
+! Merge points and faces for quad mesh
+! Last updated on Sat 11 Mar 2017 by Hyungmin
 subroutine Exam_Open2D_Merge_Point_Face_Quad(n, joint, conn, n_node, n_element, geom) 
-    type(GeomType), intent(inout) :: geom
-    double precision, intent(in) :: joint((n+1)**2, 3)
-    integer, intent(in) :: n, conn(n*n, 4)
+    type(GeomType),   intent(inout) :: geom
+    double precision, intent(in)    :: joint((n+1)**2, 3)
+    integer, intent(in)    :: n, conn(n*n, 4)
     integer, intent(inout) :: n_node, n_element
 
     integer :: i, j, k, m, flag
@@ -1299,12 +1295,12 @@ end subroutine Exam_Open2D_Merge_Point_Face_Quad
 
 ! ---------------------------------------------------------------------------------------
 
-! Merge points and faces
-! Last updated on Tuesday 30 August 2016 by Hyungmin
+! Merge points and faces for tri mesh
+! Last updated on Sat 11 Mar 2017 by Hyungmin
 subroutine Exam_Open2D_Merge_Point_Face_Tri(n, joint, conn, n_node, n_element, geom)  
     type(GeomType), intent(inout) :: geom
-    double precision, intent(in) :: joint((n+1)**2, 3)
-    integer, intent(in) :: n, conn(n*n*2, 3)
+    double precision, intent(in)  :: joint((n+1)**2, 3)
+    integer, intent(in)    :: n, conn(n*n*2, 3)
     integer, intent(inout) :: n_node, n_element
 
     integer :: i, j, k, m, flag
@@ -1343,14 +1339,15 @@ end subroutine Exam_Open2D_Merge_Point_Face_Tri
 
 ! ---------------------------------------------------------------------------------------
 
-! Last updated on Tuesday 30 August 2016 by Hyungmin
+! Return 0 or 1
+! Last updated on Sat 11 Mar 2017 by Hyungmin
 integer function Exam_Open2D_Comp_XYZ(a, b)
    double precision, intent(in) :: a(3), b(3) 
    double precision :: d
 
    Exam_Open2D_Comp_XYZ = 0
    d = dsqrt((a(1)-b(1))**2.0d0 + (a(2)-b(2))**2.0d0 + (a(3)-b(3))**2.0d0)
-   if(d<1.0d-5) Exam_Open2D_Comp_XYZ = 1
+   if(d < 1.0d-5) Exam_Open2D_Comp_XYZ = 1
 end function Exam_Open2D_Comp_XYZ
 
 ! ---------------------------------------------------------------------------------------
@@ -1367,33 +1364,25 @@ subroutine Exam_Open2D_circle_Tri_Coarse(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Exam_Open2D_circle_Tri_Coarse"//&
+    prob.name_file = "11_Circle_Tri_Coarse"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "Tetrahedron"
-
-    ! Problem specified preset parameters
-    if(para_vertex_design == "flat" .and. para_preset == "on") then
-        para_junc_ang        = "min"    ! [opt, max, ave, min], Junction gap modification for different arm angle
-        para_const_edge_mesh = "on"     ! [off, on], Constant edge length from polyhedra mesh
-        para_unpaired_scaf   = "off"    ! [on, off], Unpaired scaffold nucleotides
-        para_n_base_tn       = 7
-    end if
+    prob.name_prob = "Circle Tri Coarse"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   =-1.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   =-1.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
     prob.type_geo = "closed"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
+    if(para_fig_view == "preset") para_fig_view = "XY"
 
-    ! allocate point, line and face structure
+    ! The number of points and faces
     geom.n_iniP = 19
     geom.n_face = 24
 
@@ -1462,35 +1451,27 @@ subroutine Exam_Open2D_circle_Tri_Fine(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Exam_Open2D_circle_Tri_Fine"//&
+    prob.name_file = "12_Circle_Tri_Fine"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "Tetrahedron"
-
-    ! Problem specified preset parameters
-    if(para_vertex_design == "flat" .and. para_preset == "on") then
-        para_junc_ang        = "min"    ! [opt, max, ave, min], Junction gap modification for different arm angle
-        para_const_edge_mesh = "on"     ! [off, on], Constant edge length from polyhedra mesh
-        para_unpaired_scaf   = "off"    ! [on, off], Unpaired scaffold nucleotides
-        para_n_base_tn       = 7
-    end if
+    prob.name_prob = "Circle Tri Fine"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   =-1.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   =-1.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
     prob.type_geo = "closed"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
+    if(para_fig_view == "preset") para_fig_view = "XY"
 
-    ! Allocate point and face structure
-    geom.n_iniP =   41
-    geom.n_face =   62
+    ! The number of points and faces
+    geom.n_iniP = 41
+    geom.n_face = 62
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
@@ -1635,7 +1616,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Coarse(prob, geom)
     prob.type_geo = "closed"
     if(para_fig_view == "preset") para_fig_view = "XY"
 
-    ! Allocate point and face structure
+    ! The number of points and faces
     geom.n_iniP = 27
     geom.n_face = 36
 
@@ -1742,7 +1723,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Fine(prob, geom)
     prob.type_geo = "closed"
     if(para_fig_view == "preset") para_fig_view = "XY"
 
-    ! Allocate point and face structure
+    ! The number of points and faces
     geom.n_iniP = 43
     geom.n_face = 65
 

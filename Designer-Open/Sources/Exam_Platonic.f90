@@ -6,7 +6,7 @@
 !                                                             First modified : 2015/08/03
 !                                                             Last  modified : 2016/07/14
 !
-! Comments:
+! Comments: This module contains the geometric definition of platonic solids
 !
 ! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
 !
@@ -31,10 +31,6 @@ module Exam_Platonic
     public Exam_Platonic_Octahedron         ! 3. V=6,  E=12, F=8
     public Exam_Platonic_Dodecahedron       ! 4. V=20, E=30, F=12
     public Exam_Platonic_Icosahedron        ! 5. V=12, E=30, F=20
-
-    public Exam_Asym_Tetra_I_63_73_52_42    ! 59. V=4,  E=6,  F=4
-    public Exam_Asym_Tetra_II_63_52_42      ! 60. V=4,  E=6,  F=4
-    public Exam_Asym_Tetra_III_63_42        ! 61. V=4,  E=6,  F=4
 
 contains
 
@@ -76,7 +72,7 @@ subroutine Exam_Platonic_Tetrahedron(prob, geom)
     prob.move_x   =-1.0d0      ! Cylindrical model
     prob.move_y   = 0.0d0      ! Cylindrical model
     prob.type_geo = "closed"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
+    if(para_fig_view == "preset") para_fig_view = "XY"
 
     ! allocate point, line and face structure
     geom.n_iniP = 4
@@ -96,19 +92,6 @@ subroutine Exam_Platonic_Tetrahedron(prob, geom)
     geom.face(2).n_poi = 3; allocate(geom.face(2).poi(3)); geom.face(2).poi(1:3) = [ 1, 3, 4 ]
     geom.face(3).n_poi = 3; allocate(geom.face(3).poi(3)); geom.face(3).poi(1:3) = [ 1, 4, 2 ]
     geom.face(4).n_poi = 3; allocate(geom.face(4).poi(3)); geom.face(4).poi(1:3) = [ 2, 4, 3 ]
-
-    ! Sakul's tetraheron geometric information
-    ! Set point position vectors
-    !geom.iniP(1).pos(1:3) = [  0.000000d0,  0.000000d0,  0.612372d0 ]
-    !geom.iniP(2).pos(1:3) = [ -0.288675d0, -0.500000d0, -0.204124d0 ]
-    !geom.iniP(3).pos(1:3) = [ -0.288675d0,  0.500000d0, -0.204124d0 ]
-    !geom.iniP(4).pos(1:3) = [  0.577350d0,  0.000000d0, -0.204124d0 ]
-
-    ! Set face connnectivity
-    !geom.face(1).n_poi = 3; allocate(geom.face(1).poi(3)); geom.face(1).poi(1:3) = [ 1, 3, 2 ]
-    !geom.face(2).n_poi = 3; allocate(geom.face(2).poi(3)); geom.face(2).poi(1:3) = [ 1, 2, 4 ]
-    !geom.face(3).n_poi = 3; allocate(geom.face(3).poi(3)); geom.face(3).poi(1:3) = [ 1, 4, 3 ]
-    !geom.face(4).n_poi = 3; allocate(geom.face(4).poi(3)); geom.face(4).poi(1:3) = [ 2, 3, 4 ]
 end subroutine Exam_Platonic_Tetrahedron
 
 ! ---------------------------------------------------------------------------------------
@@ -148,7 +131,7 @@ subroutine Exam_Platonic_Cube(prob, geom)
     prob.move_x   = 0.0d0      ! Cylindrical model
     prob.move_y   = 0.0d0      ! Cylindrical model
     prob.type_geo = "closed"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XYZ"
+    if(para_fig_view == "preset") para_fig_view = "XYZ"
 
     ! allocate point, line and face structure
     geom.n_iniP = 8
@@ -170,20 +153,6 @@ subroutine Exam_Platonic_Cube(prob, geom)
     geom.face(4).n_poi = 4; allocate(geom.face(4).poi(4)); geom.face(4).poi(1:4) = [ 1, 5, 8, 4 ]
     geom.face(5).n_poi = 4; allocate(geom.face(5).poi(4)); geom.face(5).poi(1:4) = [ 1, 2, 6, 5 ]
     geom.face(6).n_poi = 4; allocate(geom.face(6).poi(4)); geom.face(6).poi(1:4) = [ 3, 4, 8, 7 ]
-
-    ! Set point position vectors
-    !point(1).pos(1:3) = [  0.00000d0,  0.00000d0,  8.66030d0 ]; iniP(2).pos(1:3) = [  8.16497d0,  0.00000d0,  2.88675d0 ]
-    !point(3).pos(1:3) = [ -4.08248d0,  7.07107d0,  2.88675d0 ]; iniP(4).pos(1:3) = [ -4.08248d0, -7.07107d0,  2.88675d0 ]
-    !point(5).pos(1:3) = [  4.08248d0,  7.07107d0, -2.88675d0 ]; iniP(6).pos(1:3) = [  4.08248d0, -7.07107d0, -2.88675d0 ]
-    !point(7).pos(1:3) = [ -8.16497d0,  0.00000d0, -2.88675d0 ]; iniP(8).pos(1:3) = [  0.00000d0,  0.00000d0, -8.66030d0 ]
-
-    ! Set face connnectivity
-    !face(1).n_poi = 4; allocate(face(1).poi(4)); face(1).poi(1:4) = [ 1, 2, 5, 3 ]
-    !face(2).n_poi = 4; allocate(face(2).poi(4)); face(2).poi(1:4) = [ 1, 3, 7, 4 ]
-    !face(3).n_poi = 4; allocate(face(3).poi(4)); face(3).poi(1:4) = [ 1, 4, 6, 2 ]
-    !face(4).n_poi = 4; allocate(face(4).poi(4)); face(4).poi(1:4) = [ 2, 6, 8, 5 ]
-    !face(5).n_poi = 4; allocate(face(5).poi(4)); face(5).poi(1:4) = [ 3, 5, 8, 7 ]
-    !face(6).n_poi = 4; allocate(face(6).poi(4)); face(6).poi(1:4) = [ 4, 7, 8, 6 ]
 end subroutine Exam_Platonic_Cube
 
 ! ---------------------------------------------------------------------------------------
@@ -224,7 +193,7 @@ subroutine Exam_Platonic_Octahedron(prob, geom)
     prob.move_x   = -1.0d0     ! Cylindrical model
     prob.move_y   = -1.0d0     ! Cylindrical model
     prob.type_geo = "closed"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
+    if(para_fig_view == "preset") para_fig_view = "XY"
 
     ! allocate point, line and face structure
     geom.n_iniP = 6
@@ -289,7 +258,7 @@ subroutine Exam_Platonic_Dodecahedron(prob, geom)
     prob.move_x   = 3.0d0      ! Cylindrical model
     prob.move_y   = 0.0d0      ! Cylindrical model
     prob.type_geo = "closed"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
+    if(para_fig_view == "preset") para_fig_view = "XY"
 
     ! allocate point, line and face structure
     geom.n_iniP = 20
@@ -365,7 +334,7 @@ subroutine Exam_Platonic_Icosahedron(prob, geom)
     prob.move_x   =-0.5d0      ! Cylindrical model
     prob.move_y   = 0.0d0      ! Cylindrical model
     prob.type_geo = "closed"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
+    if(para_fig_view == "preset") para_fig_view = "XY"
 
     ! allocate point, line and face structure
     geom.n_iniP = 12
@@ -404,231 +373,6 @@ subroutine Exam_Platonic_Icosahedron(prob, geom)
     geom.face(19).n_poi = 3; allocate(geom.face(19).poi(3)); geom.face(19).poi(1:3) = [  9, 12, 10 ]
     geom.face(20).n_poi = 3; allocate(geom.face(20).poi(3)); geom.face(20).poi(1:3) = [ 10, 12, 11 ]
 end subroutine Exam_Platonic_Icosahedron
-
-! ---------------------------------------------------------------------------------------
-
-! Example of Asym Tetra I[63-63-63-73-52-42]
-! Last updated on Tuesday 11 October 2016 by Hyungmin
-subroutine Exam_Asym_Tetra_I_63_73_52_42(prob, geom)
-    type(ProbType), intent(inout) :: prob
-    type(GeomType), intent(inout) :: geom
-
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    ! Fixed edge length as 42bp (minimum edge length)
-    prob.sel_bp_edge = 2
-
-    if(geom.sec.types == "square") then
-        if(prob.sel_bp_edge == 1) prob.n_bp_edge = 32   ! 32bp * 1
-        if(prob.sel_bp_edge == 2) prob.n_bp_edge = 43
-        if(prob.sel_bp_edge == 3) prob.n_bp_edge = 53
-        if(prob.sel_bp_edge == 4) prob.n_bp_edge = 64   ! 32bp * 2
-    else if(geom.sec.types == "honeycomb") then
-        if(prob.sel_bp_edge == 1) prob.n_bp_edge = 31
-        if(prob.sel_bp_edge == 2) prob.n_bp_edge = 42   ! 21bp * 2
-        if(prob.sel_bp_edge == 3) prob.n_bp_edge = 52
-        if(prob.sel_bp_edge == 4) prob.n_bp_edge = 63   ! 21bp * 3
-    end if
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_file = "59_Asym_Tetra_I_63_73_52_42"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
-    prob.name_prob = "Asym Tetra I[63-63-63-73-52-42]"
-
-    ! Problem specified preset parameters
-    if(para_vertex_design == "flat" .and. para_preset == "on") then
-        para_junc_ang        = "max"    ! [opt, max, ave, min], Junction gap modification for different arm angle
-        para_const_edge_mesh = "on"     ! [off, on], Constant edge length from polyhedra mesh
-        para_unpaired_scaf   = "off"    ! [on, off], Unpaired scaffold nucleotides
-        para_n_base_tn       = 7        ! [-1     ], The number of nucleotides in poly T loop, -1 : depending on distance
-    end if
-
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   = 0.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
-
-    ! allocate point, line and face structure
-    geom.n_iniP = 4
-    geom.n_face = 4
-
-    allocate(geom.iniP(geom.n_iniP))
-    allocate(geom.face(geom.n_face))
-
-    ! Set point position vectors
-    geom.iniP(1).pos(1:3) = [  0.000000d0,  0.000000d0,  0.000000d0 ]
-    geom.iniP(2).pos(1:3) = [  0.000000d0, 63.000000d0,  0.000000d0 ]
-    geom.iniP(3).pos(1:3) = [ 59.499976d0, 20.706349d0,  0.000000d0 ]
-    geom.iniP(4).pos(1:3) = [ 37.426315d0, 41.539683d0, 29.029739d0 ]
-
-    ! Set face connnectivity
-    geom.face(1).n_poi = 3; allocate(geom.face(1).poi(3)); geom.face(1).poi(1:3) = [ 1, 4, 2 ]
-    geom.face(2).n_poi = 3; allocate(geom.face(2).poi(3)); geom.face(2).poi(1:3) = [ 1, 3, 4 ]
-    geom.face(3).n_poi = 3; allocate(geom.face(3).poi(3)); geom.face(3).poi(1:3) = [ 1, 2, 3 ]
-    geom.face(4).n_poi = 3; allocate(geom.face(4).poi(3)); geom.face(4).poi(1:3) = [ 2, 4, 3 ]
-end subroutine Exam_Asym_Tetra_I_63_73_52_42
-
-! ---------------------------------------------------------------------------------------
-
-! Example of Asym Tetra II[63-63-63-63-52-42]
-! Last updated on Tuesday 11 October 2016 by Hyungmin
-subroutine Exam_Asym_Tetra_II_63_52_42(prob, geom)
-    type(ProbType), intent(inout) :: prob
-    type(GeomType), intent(inout) :: geom
-
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    ! Fixed edge length as 42bp (minimum edge length)
-    prob.sel_bp_edge = 2
-
-    if(geom.sec.types == "square") then
-        if(prob.sel_bp_edge == 1) prob.n_bp_edge = 32   ! 32bp * 1
-        if(prob.sel_bp_edge == 2) prob.n_bp_edge = 43
-        if(prob.sel_bp_edge == 3) prob.n_bp_edge = 53
-        if(prob.sel_bp_edge == 4) prob.n_bp_edge = 64   ! 32bp * 2
-    else if(geom.sec.types == "honeycomb") then
-        if(prob.sel_bp_edge == 1) prob.n_bp_edge = 31
-        if(prob.sel_bp_edge == 2) prob.n_bp_edge = 42   ! 21bp * 2
-        if(prob.sel_bp_edge == 3) prob.n_bp_edge = 52
-        if(prob.sel_bp_edge == 4) prob.n_bp_edge = 63   ! 21bp * 3
-    end if
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_file = "60_Asym_Tetra_II_63_52_42"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
-    prob.name_prob = "Asym Tetra II[63-63-63-63-52-42]"
-
-    ! Problem specified preset parameters
-    if(para_vertex_design == "flat" .and. para_preset == "on") then
-        para_junc_ang        = "max"    ! [opt, max, ave, min], Junction gap modification for different arm angle
-        para_const_edge_mesh = "on"     ! [off, on], Constant edge length from polyhedra mesh
-        para_unpaired_scaf   = "off"    ! [on, off], Unpaired scaffold nucleotides
-        para_n_base_tn       = 7        ! [-1     ], The number of nucleotides in poly T loop, -1 : depending on distance
-    end if
-
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   = 0.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
-
-    ! allocate point, line and face structure
-    geom.n_iniP = 4
-    geom.n_face = 4
-
-    allocate(geom.iniP(geom.n_iniP))
-    allocate(geom.face(geom.n_face))
-
-    ! Set point position vectors
-    geom.iniP(1).pos(1:3) = [  0.000000d0,  0.000000d0,  0.000000d0 ]
-    geom.iniP(2).pos(1:3) = [  0.000000d0, 63.000000d0,  0.000000d0 ]
-    geom.iniP(3).pos(1:3) = [ 54.559600d0, 31.500000d0,  0.000000d0 ]
-    geom.iniP(4).pos(1:3) = [ 32.597379d0, 41.539683d0, 34.363725d0 ]
-
-    ! Set face connnectivity
-    geom.face(1).n_poi = 3; allocate(geom.face(1).poi(3)); geom.face(1).poi(1:3) = [ 1, 4, 2 ]
-    geom.face(2).n_poi = 3; allocate(geom.face(2).poi(3)); geom.face(2).poi(1:3) = [ 1, 3, 4 ]
-    geom.face(3).n_poi = 3; allocate(geom.face(3).poi(3)); geom.face(3).poi(1:3) = [ 1, 2, 3 ]
-    geom.face(4).n_poi = 3; allocate(geom.face(4).poi(3)); geom.face(4).poi(1:3) = [ 2, 4, 3 ]
-end subroutine Exam_Asym_Tetra_II_63_52_42
-
-! ---------------------------------------------------------------------------------------
-
-! Example of Asym Tetra III[63-63-63-63-63-42]
-! Last updated on Tuesday 11 October 2016 by Hyungmin
-subroutine Exam_Asym_Tetra_III_63_42(prob, geom)
-    type(ProbType), intent(inout) :: prob
-    type(GeomType), intent(inout) :: geom
-
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    ! Fixed edge length as 42bp (minimum edge length)
-    prob.sel_bp_edge = 2
-
-    if(geom.sec.types == "square") then
-        if(prob.sel_bp_edge == 1) prob.n_bp_edge = 32   ! 32bp * 1
-        if(prob.sel_bp_edge == 2) prob.n_bp_edge = 43
-        if(prob.sel_bp_edge == 3) prob.n_bp_edge = 53
-        if(prob.sel_bp_edge == 4) prob.n_bp_edge = 64   ! 32bp * 2
-    else if(geom.sec.types == "honeycomb") then
-        if(prob.sel_bp_edge == 1) prob.n_bp_edge = 31
-        if(prob.sel_bp_edge == 2) prob.n_bp_edge = 42   ! 21bp * 2
-        if(prob.sel_bp_edge == 3) prob.n_bp_edge = 52
-        if(prob.sel_bp_edge == 4) prob.n_bp_edge = 63   ! 21bp * 3
-    end if
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_file = "61_Asym_Tetra_III_63_42"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
-    prob.name_prob = "Asym Tetra III[63-63-63-63-63-42]"
-
-    ! Problem specified preset parameters
-    if(para_vertex_design == "flat" .and. para_preset == "on") then
-        para_junc_ang        = "max"    ! [opt, max, ave, min], Junction gap modification for different arm angle
-        para_const_edge_mesh = "on"     ! [off, on], Constant edge length from polyhedra mesh
-        para_unpaired_scaf   = "off"    ! [on, off], Unpaired scaffold nucleotides
-        para_n_base_tn       = 7        ! [-1     ], The number of nucleotides in poly T loop, -1 : depending on distance
-    end if
-
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   = 0.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
-
-    ! allocate point, line and face structure
-    geom.n_iniP = 4
-    geom.n_face = 4
-
-    allocate(geom.iniP(geom.n_iniP))
-    allocate(geom.face(geom.n_face))
-
-    ! Set point position vectors
-    geom.iniP(1).pos(1:3) = [  0.000000d0,  0.000000d0,  0.000000d0 ]
-    geom.iniP(2).pos(1:3) = [  0.000000d0, 63.000000d0,  0.000000d0 ]
-    geom.iniP(3).pos(1:3) = [ 54.559600d0, 31.500000d0,  0.000000d0 ]
-    geom.iniP(4).pos(1:3) = [ 38.393793d0, 31.500000d0, 38.764245d0 ]
-
-    ! Set face connnectivity
-    geom.face(1).n_poi = 3; allocate(geom.face(1).poi(3)); geom.face(1).poi(1:3) = [ 1, 4, 2 ]
-    geom.face(2).n_poi = 3; allocate(geom.face(2).poi(3)); geom.face(2).poi(1:3) = [ 1, 3, 4 ]
-    geom.face(3).n_poi = 3; allocate(geom.face(3).poi(3)); geom.face(3).poi(1:3) = [ 1, 2, 3 ]
-    geom.face(4).n_poi = 3; allocate(geom.face(4).poi(3)); geom.face(4).poi(1:3) = [ 2, 4, 3 ]
-end subroutine Exam_Asym_Tetra_III_63_42
 
 ! ---------------------------------------------------------------------------------------
 

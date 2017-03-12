@@ -77,7 +77,7 @@
 		<Filter Name="Output">
 		<File RelativePath=".\Sources\Chimera.f90"/>
 		<File RelativePath=".\Sources\TecPlot.f90"/></Filter>
-		<File RelativePath=".\Sources\DNAcs.f90"/>
+		<File RelativePath=".\Sources\Designer-Open.f90"/>
 		<File RelativePath=".\env.txt"/>
 		<File RelativePath=".\seq.txt"/></Filter></Files>
 	<Globals/></VisualStudioProject>
