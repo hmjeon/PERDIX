@@ -6,7 +6,7 @@
 !                                                            First programed : 2015/04/21
 !                                                            Last  modified  : 2017/03/09
 !
-! Comments: The program 
+! Comments: The program generate the sequence design for the open DNA nano-structures
 !
 ! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
 !
@@ -25,12 +25,9 @@
 !  * Github   : https://github.com/hmjeon/Designer-Open.git
 !
 ! Program Inputs
-!  * Geometric input(closed surface mesh)
-!    # Problem selector  : Polyhedra with 3D closed-surface mesh
+!  * Geometric input(open/closed surface mesh)
+!    # Problem selector  : Polyhedra with surface mesh
 !    # Problem.ply       : Polygon format
-!    # Problem.stl       : STL(STereoLithography)
-!    # Problem.wrl       : Interactive vector graphics
-!    # Problem.geo       : Geometric surface data from Designer-6HB
 !  * Pre-defined cross-section
 !    # Square lattice    : 2 by 2, 3 by 2, 4 by 2, 1 by 4, 2 by 4, 3 by 4
 !                          4 by 4, 1 by 6, 2 by 6, 3 by 6, 4 by 6
@@ -64,28 +61,23 @@
 !    # 5_Route              : B-form DNA and scaffold route
 !    # 6_SeqDesign          : Sequence design
 !    # 7_Output             : Outputs
-!    # OpenGeo              : Not used
 !  * Common
 !    # Data                 : Data stuctures used
 !    # List                 : Linked list
 !    # Mani                 : Data manipulating function
 !    # Math                 : Vector and matrix operation
 !    # Para                 : Parameters used
-!    # SpanTree             : Spanning tree for dual-graph
+!    # SpanTree             : Spanning tree of the dual-graph
 !  * Input
-!    # Exam_1_Platonic      : Platonic solids
-!    # Exam_2_Archimedean   : Archimedean solids
-!    # Exam_3_Johnson       : Johnson solids
-!    # Exam_4_Catalan       : Catalan solids
-!    # Exam_5_Miscellaneous : Miscellaneous solids
-!    # Exam_6_Assymmetric   : Assymmetric examples
-!    # Exam_7_OpenGeo       : 2D open geometric examples
-!    # Importer             : Import of PLY/STL data format
+!    # Exam_2D_Open         : 2D open structures
+!    # Exam_3D_Open         : 3D open structures
+!    # Exam_2D_Open         : Platonic solids
+!    # Importer             : Import of PLY data format
 !  * Output
-!    # Chimera              : Post-processing for Chimera
-!    # TecPlot              : Post-processing for TecPlot
+!    # Chimera              : Post-processing using Chimera
+!    # TecPlot              : Post-processing using TecPlot
 !  * Designer               : Main program module
-!  * env.txt                : Program environmental setting
+!  * env.txt                : Program environmental variables
 !  * seq.txt                : User-defined scaffold sequences
 !  * Designer.rc            : Resources data for icon
 !
@@ -103,13 +95,12 @@ program DNAcs
     use Para            ! Parameters used
 
     use Input           ! 1st step : Input for geometry and cross-section
-    use OpenGeo         ! 2nd step : Open or closed geometry check
-    use ModGeo          ! 3rd step : Modified geometry seperated from vertex
-    use Section         ! 4th step : Cross-sectional geometry
-    use Basepair        ! 5th step : Basepair design from cross-sectional geometry
-    use Route           ! 6th step : B-form DNA genertion and scaffold routing
-    use SeqDesign       ! 7th step : Sequence design
-    use Output          ! 8th step : Outputs for Chimera and Tecplot
+    use ModGeo          ! 2nd step : Seperated line from the vertex
+    use Section         ! 3rd step : Multiple lines seperated from vertex
+    use Basepair        ! 4th step : Basepair design from cross-sectional geometry
+    use Route           ! 5th step : B-form DNA genertion and scaffold routing
+    use SeqDesign       ! 6th step : Sequence design
+    use Output          ! 7th step : Outputs for Chimera and Tecplot
 
     implicit none
 
@@ -122,13 +113,13 @@ program DNAcs
 ! ---------------------------------------------------------------------------------------
 
 ! Main subroutine
-! Last updated on Sunday 18 September 2016 by Hyungmin
+! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Main()
 
     ! Declare variables
-    type(ProbType)  :: prob     ! Problem description
-    type(GeomType)  :: geom     ! Geometric data(section, point, edge, face)
-    type(BoundType) :: bound    ! Boundary data(outer, junction)
+    type(ProbType)  :: prob     ! Problem data
+    type(GeomType)  :: geom     ! Geometry data
+    type(BoundType) :: bound    ! Boundary data
     type(MeshType)  :: mesh     ! Basepaire data
     type(DNAType)   :: dna      ! B-form DNA data
     real            :: time     ! Computational time
@@ -309,9 +300,6 @@ subroutine Autorun()
         para_write_802   = .false.; para_write_803   = .false.; para_write_804   = .false.
         para_write_805   = .false.; para_write_808   = .false.
 
-        ! 2nd step : Check open/closed geometry
-        call OpenGeo_Check(prob, geom, bound)
-
         ! 3rd step : Modifed geometry seperated from vertex
         call ModGeo_Modification(prob, geom, bound)
 
@@ -431,9 +419,6 @@ subroutine Autorun_CHK()
                 para_write_802   = .false.; para_write_803   = .false.; para_write_804   = .false.
                 para_write_805   = .false.; para_write_808   = .false.
 
-                ! 2nd step : Check open/closed geometry
-                call OpenGeo_Check(prob, geom, bound)
-
                 ! 3rd step : Modifed geometry seperated from vertex
                 call ModGeo_Modification(prob, geom, bound)
 
@@ -496,8 +481,6 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         write(i, "(a)"), "8.1. Geometry, cross-section and problem description"
         call Space(i, 11)
         write(i, "(a)"), "* Full geometric name               : "//trim(prob.name_file)
-        call Space(i, 11)
-        write(i, "(a)"), "* Geometry type                     : "//trim(prob.type_geo)//" geometry"
         call Space(i, 11)
         write(i, "(a)"), "* The number of initial faces       : "//trim(adjustl(Int2Str(geom.n_face)))
         call Space(i, 11)

@@ -932,7 +932,7 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
             
             
             
-            print *, i, conn(j, 1), conn(j, 2)
+            !print *, i, conn(j, 1), conn(j, 2)
         end do
 
         

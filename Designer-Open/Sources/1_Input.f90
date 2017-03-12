@@ -3,12 +3,17 @@
 !
 !                                   Module for Input
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
-!                                                            First programed : 2015/08/03
-!                                                            Last  modified  : 2016/10/12
+!                                                            First programed : 2015/04/21
+!                                                            Last  modified  : 2017/03/09
+!
+! Comments: The module is to read three inputs, the geometry, crosssection and edge length.
+!
+! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
+!
+! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
+! M.I.T. hereby makes following copyrightable material available to the
+! public under GNU General Public License, version 2 (GPL-2.0). A copy of
+! this license is available at https://opensource.org/licenses/GPL-2.0
 !
 ! ---------------------------------------------------------------------------------------
 !
@@ -58,14 +63,13 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Initialize parameters and inputs
-! Last updated on Friday 15 Apr 2016 by Hyungmin
+! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Initialization(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    integer :: arg, i, j, k, n_problem, n_section, n_edge_length
-    character(10) :: char_problem, char_section, char_edge_length
-    character(10) :: char_vertex_design, char_vertex_modify, char_cut_stap
+    integer :: arg, i, j, n_problem, n_section, n_edge_len
+    character(10) :: c_prob, c_sec, c_edge_len, c_stap_break
     logical :: results
 
     ! Read parameters from env.dat
@@ -77,67 +81,69 @@ subroutine Input_Initialization(prob, geom)
     if(iargc() == 0) then
 
         ! ==================================================
-        !
-        ! Select geometry and cross-section from screen input
-        !
+        ! Running from Win32 console interface menu
         ! ==================================================
+
+        prob.run_type = "console"
+
         ! Print pre-defined problems
-        call Input_Print_Problem; read(*, *) prob.sel_prob
-        if(prob.sel_prob <= 0) stop
+        call Input_Print_Problem
+        read(*, *) prob.sel_prob
+
+        ! The negative value terminate the program
+        if(prob.sel_prob < 0) stop
 
         ! Clean the screen
         results = SYSTEMQQ("cls")
 
         ! Print pre-defined cross-sections
-        call Input_Print_Section; read(*, *) prob.sel_sec
-        if(prob.sel_sec <= 0 .or. prob.sel_sec >= 6) stop
+        call Input_Print_Section
+        read(*, *) prob.sel_sec
+
+        ! The negative value terminate the program
+        if(prob.sel_sec < 1 .or. prob.sel_sec > 3) stop
 
         ! Print pre-defined edge length(bps)
-        if(prob.sel_prob <= 58 .or. prob.sel_prob >= 62) then
-            call Input_Print_Num_BP_Edge(prob)
-            read(*, *) prob.sel_bp_edge
-            if(prob.sel_bp_edge <= 0) stop
-        end if
+        call Input_Print_Num_BP_Edge(prob)
+        read(*, *) prob.sel_bp_edge
+
+        ! The negative value terminate the program
+        if(prob.sel_bp_edge < 1 .or. prob.sel_bp_edge > 10) stop
     else
 
         ! ==================================================
-        !
-        ! Input system by using main argument
-        !
+        ! Running from a command shell with options
         ! ==================================================
-        arg = 1; call getarg(arg, char_problem)         ! 1st argument, problem
-        arg = 2; call getarg(arg, char_section)         ! 2nd argument, section
-        arg = 3; call getarg(arg, char_edge_length)     ! 3rd argument, edge length
-        arg = 4; call getarg(arg, char_vertex_design)   ! 4th argument, vertex design
-        arg = 5; call getarg(arg, char_vertex_modify)   ! 5th argument, vertex modify
-        arg = 6; call getarg(arg, char_cut_stap)        ! 6th argument, cutting method
 
-        read(char_problem,     *), n_problem
-        read(char_section,     *), n_section
-        read(char_edge_length, *), n_edge_length
+        arg = 1; call getarg(arg, c_prob)        ! 1st argument, problem
+        arg = 2; call getarg(arg, c_sec)         ! 2nd argument, section
+        arg = 3; call getarg(arg, c_edge_len)    ! 3rd argument, edge length
+        arg = 4; call getarg(arg, c_stap_break)  ! 4th argument, staple-break rule
 
-        ! Set parameters of problem, section, edge length, and so on
-        prob.sel_prob        = n_problem
+        prob.name_file = trim(c_prob)
+        read(c_sec,      *), n_section
+        read(c_edge_len, *), n_edge_len
+
+        ! Set inputs for geometry, section, edge length, stap-break rule
+        ! Zero means that it will take arbitrary inputs
+        prob.sel_prob        = 0
         prob.sel_sec         = n_section
-        prob.sel_bp_edge     = n_edge_length
-        para_vertex_design   = trim(char_vertex_design)
-        para_vertex_modify   = trim(char_vertex_modify)
-        para_cut_stap_method = trim(char_cut_stap)
-        para_start_bp_ID     = -1
+        prob.sel_bp_edge     = n_edge_len
+        para_cut_stap_method = trim(c_stap_break)
     end if
 
     ! ==================================================
     !
-    ! Set problem, cross-section and the number of basepairs
+    ! Set problem, cross-section and edge length
     !
     ! ==================================================
-    ! Set cross-section based on square or honeycomb lattices
+    ! Set cross-section
     call Input_Set_Section(prob, geom)
 
-    ! Set the number of basepair on edge that has minimum length
+    ! Set the minimum edge length
     call Input_Set_Num_BP_Edge(prob, geom)
 
-    ! Set problem to be solved
+    ! Set problem
     call Input_Set_Problem(prob, geom)
 
     ! External running
@@ -183,7 +189,7 @@ subroutine Input_Initialization(prob, geom)
     call Input_Generate_Schlegel_Diagram(prob, geom)
 
     ! Open output progress file (unit 11 is used for global output file)
-    open(unit=11, file=trim(prob.path_work1)//"DNAcs.txt", form="formatted")
+    open(unit=11, file=trim(prob.path_work1)//"Designer.txt", form="formatted")
 
     ! Print progress
     do i = 0, 11, 11
@@ -199,8 +205,6 @@ subroutine Input_Initialization(prob, geom)
         write(i, "(a)"), "* Geometric name                    : "//trim(prob.name_prob)
         call Space(i, 11)
         write(i, "(a)"), "* Geometric file type               : "//trim(prob.type_file)
-        call Space(i, 11)
-        write(i, "(a)"), "* Surface type                      : "//trim(prob.type_geo)//" geometry"
         call Space(i, 11)
         write(i, "(a)"), "* The number of faces               : "//trim(adjustl(Int2Str(geom.n_face)))
         call Space(i, 11)
@@ -368,16 +372,16 @@ subroutine Input_Initialization_Autorun(prob, geom, ii, sec, edge, vertex, char_
 
     ! ==================================================
     !
-    ! Set problem, cross-section and the number of basepairs
+    ! Set problem, cross-section and edge length
     !
     ! ==================================================
-    ! Set cross-section based on square or honeycomb lattices
+    ! Set cross-section
     call Input_Set_Section(prob, geom)
 
-    ! Set the number of basepair on edge that has minimum length
+    ! Set the minimum edge length
     call Input_Set_Num_BP_Edge(prob, geom)
 
-    ! Set problem to be solved
+    ! Set problem
     call Input_Set_Problem(prob, geom)
 
     ! ==================================================
@@ -463,8 +467,6 @@ subroutine Input_Initialization_Autorun(prob, geom, ii, sec, edge, vertex, char_
 
         call Space(i, 6)
         write(i, "(a )"), "1.4. Design type"
-        call Space(i, 11)
-        write(i, "(a )"), "* Geometry type              :   "//trim(prob.type_geo)
         call Space(i, 11)
         write(i, "(a )"), "* Vertex design              :   "//trim(para_vertex_design)//" vertex"
         call Space(i, 11)
@@ -680,7 +682,7 @@ subroutine Input_Reset_Parameter
     para_fig_output      = "off"      ! [off, on], Automatic figure generation from outputs
     para_fig_route_step  = "off"      ! [off, on], Automatic figure generation from route steps
     para_fig_bgcolor     = "black"    ! [black, white, all], Background color for figures from UCSF Chimera
-    para_fig_view        = "preset"   ! [preset, xy, xz, xyz, all], Viewpoint for figures from UCSF Chimera
+    para_fig_view        = "xy"       ! [xy, xz, xyz, all], Viewpoint for figures from UCSF Chimera
     para_n_route_step    = 5          ! [5], The number of steps in routing progress
     para_type_cndo       = 2          ! [2, 1], CanDo file option, 1 : original format, 2 : updated format
     para_path_Chimera    = "C:\Program Files\Chimera 1.10.2\bin\chimera.exe"
@@ -755,7 +757,7 @@ subroutine Input_Print_Problem
     write(0, "(a)")
     write(0, "(a)"), "   +=====================================================================================+"
     write(0, "(a)"), "   |                                                                                     |"
-    write(0, "(a)"), "   |     Designer-6HB by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017    |"
+    write(0, "(a)"), "   |    Designer-Open by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017    |"
     write(0, "(a)"), "   |                                                                                     |"
     write(0, "(a)"), "   +=====================================================================================+"
     write(0, "(a)")
@@ -788,7 +790,7 @@ end subroutine Input_Print_Problem
 ! ---------------------------------------------------------------------------------------
 
 ! Print pre-defined cross-sections
-! Last updated on Monday 12 December 2016 by Hyungmin
+! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Print_Section
     write(0, "(a)")
     write(0, "(a)"), "   B. Second input - Pre-defined cross-sections"
@@ -855,88 +857,57 @@ end subroutine Input_Print_Num_BP_Edge
 
 ! ---------------------------------------------------------------------------------------
 
-! Set problem to be solved
-! Last updated on Tuesday 30 August 2016 by Hyungmin
+! Set problem
+! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Set_Problem(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
     ! Set problem
-    if(prob.sel_prob == 100) then
-
-        ! File selector
-        call Input_Select_File(prob, geom)
-    else
-
-        ! Select the pre-defined example from user input
-        call Input_Select_Problem(prob, geom)
-    end if
+    if(prob.sel_prob == 0) call Input_Select_File(prob, geom)
+    if(prob.sel_prob /= 0) call Input_Select_Problem(prob, geom)
 end subroutine Input_Set_Problem
 
 ! ---------------------------------------------------------------------------------------
 
-! File selector
-! Last updated on Tuesday 30 August 2016 by Hyungmin
+! Select geometry file
+! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Select_File(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
     integer :: i, len_char
-    character(10) :: char_sec, char_bp, char_start_bp
+    character(10) :: c_sec, c_bp, c_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+    write(unit=c_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=c_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=c_start_bp, fmt = "(i10)"), para_start_bp_ID
 
     ! Read geometric file
     write(0, "(a)")
-    write(0, "(a)"), " Write the file name (*.ply, *.geo, *.stl, *.wrl), [Enter] : "
+    write(0, "(a)"), " Write the file name (*.PLY), [Enter] : "
     read(*, *),  prob.name_file
 
     len_char       = LEN_TRIM(prob.name_file)
     prob.type_file = prob.name_file(len_char-2:len_char)
     prob.name_file = prob.name_file(1:len_char-4)
 
-    ! Set geometric type and view
+    ! Set view points
     prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   = 0.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "PRESET" .or. para_fig_view == "preset") para_fig_view = "XY"
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    para_fig_view = "XY"
 
     ! Select file type
-    if(prob.type_file == "ply") then
-
-        ! Import ply format
-        call Importer_PLY(prob, geom)
-    else if(prob.type_file == "stl") then
-
-        ! Import stl format -> ply format
-        call Importer_STL(prob)
-        call Importer_PLY(prob, geom)
-
-    else if(prob.type_file == "wrl") then
-
-        ! Import wrl format -> ply format
-        call Importer_WRL(prob)
-        call Importer_PLY(prob, geom)
-    else if(prob.type_file == "geo") then
-
-        ! Import geo format
-        call Importer_GEO(prob, geom)
-    else
-
-        write(0, "(a$)"), "Error - Not defined file type : "
-        write(0, "(a )"), "Input_Select_File"
-        stop
-    end if
+    if(prob.type_file == "ply") call Importer_PLY(prob, geom)
+    if(prob.type_file /= "ply") stop
 
     prob.name_prob = prob.name_file
     prob.name_file = trim(prob.name_file)//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(adjustl(trim(c_sec)))//"cs"//&        ! Cross-section
+        "_"//trim(adjustl(trim(c_bp)))//"bp"//&         ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
@@ -951,8 +922,8 @@ end subroutine Input_Select_File
 
 ! ---------------------------------------------------------------------------------------
 
-! Select the pre-defined example from user input
-! Last updated on Wednesday 9 Mar 2016 by Hyungmin
+! Select the pre-defined geometry
+! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Select_Problem(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -999,21 +970,21 @@ end subroutine Input_Select_Problem
 
 ! ---------------------------------------------------------------------------------------
 
-! Set cross-section based on square or honeycomb lattices
-! Last updated on Monday 12 December 2016 by Hyungmin
+! Set cross-section
+! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Set_Section(prob, geom)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(inout) :: geom
 
     integer :: bp_id
 
-    ! Cross-section definition on local coordinate - t3-t2
+    ! The cross-section is defined on the local coordinate, t3-t2
     !        t2
     !        ¡è
     !        |
-    !     ---|-------¡æ t3
+    !     ---|------¡æ t3
     !        |
-    ! The number of columns should be even
+    ! The number of columns of the crosssection should be even
     if(prob.sel_sec == 1) then
 
         if(para_start_bp_ID == -1) para_start_bp_ID = 3 + 1
@@ -1271,38 +1242,37 @@ end subroutine Input_Set_Section_Connectivity
 
 ! ---------------------------------------------------------------------------------------
 
-! Set edge lengths
-! Last updated on Thursday 25 Feb 2016 by Hyungmin
+! Set the minimum edge length
+! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Set_Num_BP_Edge(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(in)    :: geom
 
-    ! One base pair will be added at the end of nodes after FE meshing
+    ! The edge length depends on the types of the lattice
     if(geom.sec.types == "square") then
 
-        if(prob.sel_bp_edge == 1)  prob.n_bp_edge = 32       ! 32bp * 1
-        if(prob.sel_bp_edge == 2)  prob.n_bp_edge = 43
-        if(prob.sel_bp_edge == 3)  prob.n_bp_edge = 53
-        if(prob.sel_bp_edge == 4)  prob.n_bp_edge = 64       ! 32bp * 2
-        if(prob.sel_bp_edge == 5)  prob.n_bp_edge = 75
-        if(prob.sel_bp_edge == 6)  prob.n_bp_edge = 85
-        if(prob.sel_bp_edge == 7)  prob.n_bp_edge = 96       ! 32bp * 3
-        if(prob.sel_bp_edge == 8)  prob.n_bp_edge = 107
-        if(prob.sel_bp_edge == 9)  prob.n_bp_edge = 117
-        if(prob.sel_bp_edge == 10) prob.n_bp_edge = 128      ! 32bp * 4
-
+        if(prob.sel_bp_edge == 1)  prob.n_bp_edge = 32      ! 10.67bp * 3
+        if(prob.sel_bp_edge == 2)  prob.n_bp_edge = 43      ! 10.67bp * 4
+        if(prob.sel_bp_edge == 3)  prob.n_bp_edge = 53      ! 10.67bp * 5
+        if(prob.sel_bp_edge == 4)  prob.n_bp_edge = 64      ! 10.67bp * 6
+        if(prob.sel_bp_edge == 5)  prob.n_bp_edge = 75      ! 10.67bp * 7
+        if(prob.sel_bp_edge == 6)  prob.n_bp_edge = 85      ! 10.67bp * 8
+        if(prob.sel_bp_edge == 7)  prob.n_bp_edge = 96      ! 10.67bp * 9
+        if(prob.sel_bp_edge == 8)  prob.n_bp_edge = 107     ! 10.67bp * 10
+        if(prob.sel_bp_edge == 9)  prob.n_bp_edge = 117     ! 10.67bp * 11
+        if(prob.sel_bp_edge == 10) prob.n_bp_edge = 128     ! 10.67bp * 12
     else if(geom.sec.types == "honeycomb") then
 
-        if(prob.sel_bp_edge == 1)  prob.n_bp_edge = 31
-        if(prob.sel_bp_edge == 2)  prob.n_bp_edge = 42       ! 21bp * 2
-        if(prob.sel_bp_edge == 3)  prob.n_bp_edge = 52
-        if(prob.sel_bp_edge == 4)  prob.n_bp_edge = 63       ! 21bp * 3
-        if(prob.sel_bp_edge == 5)  prob.n_bp_edge = 73
-        if(prob.sel_bp_edge == 6)  prob.n_bp_edge = 84       ! 21bp * 4
-        if(prob.sel_bp_edge == 7)  prob.n_bp_edge = 94
-        if(prob.sel_bp_edge == 8)  prob.n_bp_edge = 105      ! 21bp * 5
-        if(prob.sel_bp_edge == 9)  prob.n_bp_edge = 115
-        if(prob.sel_bp_edge == 10) prob.n_bp_edge = 126      ! 21bp * 6
+        if(prob.sel_bp_edge == 1)  prob.n_bp_edge = 31      ! 10.5bp * 3
+        if(prob.sel_bp_edge == 2)  prob.n_bp_edge = 42      ! 10.5bp * 4
+        if(prob.sel_bp_edge == 3)  prob.n_bp_edge = 52      ! 10.5bp * 5
+        if(prob.sel_bp_edge == 4)  prob.n_bp_edge = 63      ! 10.5bp * 6
+        if(prob.sel_bp_edge == 5)  prob.n_bp_edge = 73      ! 10.5bp * 7
+        if(prob.sel_bp_edge == 6)  prob.n_bp_edge = 84      ! 10.5bp * 8
+        if(prob.sel_bp_edge == 7)  prob.n_bp_edge = 94      ! 10.5bp * 9
+        if(prob.sel_bp_edge == 8)  prob.n_bp_edge = 105     ! 10.5bp * 10
+        if(prob.sel_bp_edge == 9)  prob.n_bp_edge = 115     ! 10.5bp * 11
+        if(prob.sel_bp_edge == 10) prob.n_bp_edge = 126     ! 10.5bp * 12
 
         ! Unpaired scaffold and staple nucleotides at the vertex when square lattice
         para_unpaired_square = "off"

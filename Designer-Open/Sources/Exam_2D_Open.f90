@@ -81,8 +81,7 @@ subroutine Exam_Open2D_Plate_Uniform_Quad(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! Set options
     n  = 3
@@ -161,8 +160,7 @@ subroutine Exam_Open2D_Plate_Uniform_Tri(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! Set options
     n  = 2
@@ -258,8 +256,7 @@ subroutine Exam_Open2D_Plate_Distorted_Quad(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! Set options
     n  = 3
@@ -371,8 +368,7 @@ subroutine Exam_Open2D_Plate_Distorted_Tri(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     n  = 3
     pn = "\"
@@ -501,8 +497,7 @@ subroutine Exam_Open2D_Circular_Plate_Quad(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     n           = 2
     geom.n_iniP = (n + 1)*(n + 1 ) + n*(n + 1) + n*n
@@ -670,8 +665,7 @@ subroutine Exam_Open2D_Circular_Plate_Tri(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     n  = 2
     pn = "\"
@@ -884,8 +878,7 @@ subroutine Exam_Open2D_Annular_Plate_Quad(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     n  = 2
     nx = n
@@ -972,8 +965,7 @@ subroutine Exam_Open2D_Annular_Plate_Tri(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     n  = 2
     nx = n
@@ -1097,8 +1089,7 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Quad(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     n  = 3
     nx = n
@@ -1170,8 +1161,7 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Tri(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     n  = 3
     nx = n
@@ -1379,8 +1369,7 @@ subroutine Exam_Open2D_circle_Tri_Coarse(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   =-1.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! The number of points and faces
     geom.n_iniP = 19
@@ -1466,8 +1455,7 @@ subroutine Exam_Open2D_circle_Tri_Fine(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   =-1.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! The number of points and faces
     geom.n_iniP = 41
@@ -1613,8 +1601,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Coarse(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   =-1.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! The number of points and faces
     geom.n_iniP = 27
@@ -1720,8 +1707,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Fine(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! The number of points and faces
     geom.n_iniP = 43

@@ -71,8 +71,7 @@ subroutine Exam_Platonic_Tetrahedron(prob, geom)
     prob.size     = 1.0d0      ! Cylindrical model
     prob.move_x   =-1.0d0      ! Cylindrical model
     prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! allocate point, line and face structure
     geom.n_iniP = 4
@@ -130,8 +129,7 @@ subroutine Exam_Platonic_Cube(prob, geom)
     prob.size     = 1.00d0     ! Cylindrical model
     prob.move_x   = 0.0d0      ! Cylindrical model
     prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "preset") para_fig_view = "XYZ"
+    para_fig_view = "XYZ"
 
     ! allocate point, line and face structure
     geom.n_iniP = 8
@@ -192,8 +190,7 @@ subroutine Exam_Platonic_Octahedron(prob, geom)
     prob.size     = 1.0d0      ! Cylindrical model
     prob.move_x   = -1.0d0     ! Cylindrical model
     prob.move_y   = -1.0d0     ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! allocate point, line and face structure
     geom.n_iniP = 6
@@ -257,8 +254,7 @@ subroutine Exam_Platonic_Dodecahedron(prob, geom)
     prob.size     = 0.95d0     ! Cylindrical model
     prob.move_x   = 3.0d0      ! Cylindrical model
     prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! allocate point, line and face structure
     geom.n_iniP = 20
@@ -333,8 +329,7 @@ subroutine Exam_Platonic_Icosahedron(prob, geom)
     prob.size     = 1.05d0     ! Cylindrical model
     prob.move_x   =-0.5d0      ! Cylindrical model
     prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "closed"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! allocate point, line and face structure
     geom.n_iniP = 12

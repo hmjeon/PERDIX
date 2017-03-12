@@ -31,6 +31,7 @@ module Data_Prob
         double precision :: move_x          ! To adjust center position
         double precision :: move_y          ! To adjust conter position
 
+        character(10)  :: run_type          ! Program runnung type, console or command
         character(200) :: name_file         ! File name
         character(200) :: name_prob         ! Problem name
         character(10)  :: type_file         ! File type

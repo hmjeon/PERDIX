@@ -58,7 +58,6 @@
 		<File RelativePath=".\Sources\List.f90"/>
 		<File RelativePath=".\Sources\Mani.f90"/>
 		<File RelativePath=".\Sources\Math.f90"/>
-		<File RelativePath=".\Sources\OpenGeo.f90"/>
 		<File RelativePath=".\Sources\Para.f90"/>
 		<File RelativePath=".\Sources\SpanTree.f90"/></Filter>
 		<Filter Name="Desinger">

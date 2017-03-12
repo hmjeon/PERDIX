@@ -904,49 +904,46 @@ subroutine Output_Figure_Route_Step(prob, n_progress)
     integer :: i
 
     ! Make step directories for PNG files
-    if(para_fig_bgcolor == "WHITE" .or. para_fig_bgcolor == "white") then
+    if(para_fig_bgcolor == "white") then
         ! --------------------------------------------------
         ! White background
         ! --------------------------------------------------
-        if(para_fig_view == "XY" .or. para_fig_view == "xy") then
+        if(para_fig_view == "xy") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_XY\")
-        else if(para_fig_view == "XZ" .or. para_fig_view == "xz") then
+        else if(para_fig_view == "xz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_XZ\")
-        else if(para_fig_view == "YZ" .or. para_fig_view == "yz") then
+        else if(para_fig_view == "yz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_YZ\")
-        else if(para_fig_view == "XYZ" .or. para_fig_view == "xyz" .or. &
-                para_fig_view == "ALL" .or. para_fig_view == "all" ) then
+        else if(para_fig_view == "xyz" .or. para_fig_view == "all" ) then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_XYZ\")
         end if
-    else if(para_fig_bgcolor == "BLACK" .or. para_fig_bgcolor == "black") then
+    else if(para_fig_bgcolor == "black") then
         ! --------------------------------------------------
         ! Black background
         ! --------------------------------------------------
-        if(para_fig_view == "XY" .or. para_fig_view == "xy") then
+        if(para_fig_view == "xy") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_XY\")
-        else if(para_fig_view == "XZ" .or. para_fig_view == "xz") then
+        else if(para_fig_view == "xz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_XZ\")
-        else if(para_fig_view == "YZ" .or. para_fig_view == "yz") then
+        else if(para_fig_view == "yz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_YZ\")
-        else if(para_fig_view == "XYZ" .or. para_fig_view == "xyz" .or. &
-                para_fig_view == "ALL" .or. para_fig_view == "all" ) then
+        else if(para_fig_view == "xyz" .or. para_fig_view == "all" ) then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_XYZ\")
         end if
-    else if(para_fig_bgcolor == "ALL" .or. para_fig_bgcolor == "all") then
+    else if(para_fig_bgcolor == "all") then
         ! --------------------------------------------------
         ! White and black background
         ! --------------------------------------------------
-        if(para_fig_view == "XY" .or. para_fig_view == "xy") then
+        if(para_fig_view == "xy") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_XY\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_XY\")
-        else if(para_fig_view == "XZ" .or. para_fig_view == "xz") then
+        else if(para_fig_view == "xz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_XZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_XZ\")
-        else if(para_fig_view == "YZ" .or. para_fig_view == "yz") then
+        else if(para_fig_view == "yz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_YZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_YZ\")
-        else if(para_fig_view == "XYZ" .or. para_fig_view == "xyz" .or. &
-                para_fig_view == "ALL" .or. para_fig_view == "all" ) then
+        else if(para_fig_view == "xyz" .or. para_fig_view == "all" ) then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_XYZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_XYZ\")
         end if

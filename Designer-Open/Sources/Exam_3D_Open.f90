@@ -70,8 +70,7 @@ subroutine Exam_Open3D_End_Triangular_Prism_Quad(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! Set mesh
     n  = 3
@@ -156,8 +155,7 @@ subroutine Exam_Open3D_End_Triangular_Prism_Tri(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! Set mesh
     n  = 3
@@ -250,8 +248,7 @@ subroutine Exam_Open3D_End_Cube_Quad(prob, geom)
     prob.size     = 1.0d0           ! Cylindrical model
     prob.move_x   = 0.0d0           ! Cylindrical model
     prob.move_y   = 0.0d0           ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    para_fig_view = "XY"
 
     ! Set mesh
     n  = 3
@@ -332,12 +329,11 @@ subroutine Exam_Open3D_End_Cube_Tri(prob, geom)
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   = 0.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    para_fig_view = "XY"
 
     ! Set mesh
     n  = 3
@@ -426,12 +422,11 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Quad(prob, geom)
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   = 0.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    para_fig_view = "XY"
 
     ! Set mesh
     n  = 3
@@ -512,12 +507,11 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Tri(prob, geom)
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   = 0.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    para_fig_view = "XY"
 
     ! Set mesh
     n  = 3
@@ -606,12 +600,11 @@ subroutine Exam_Open3D_End_Cylinder_Quad(prob, geom)
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   = 0.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    para_fig_view = "XY"
 
     ! Set mesh
     n  = 5
@@ -692,12 +685,11 @@ subroutine Exam_Open3D_End_Cylinder_Tri(prob, geom)
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0      ! Atomic model
-    prob.size     = 1.0d0      ! Cylindrical model
-    prob.move_x   = 0.0d0      ! Cylindrical model
-    prob.move_y   = 0.0d0      ! Cylindrical model
-    prob.type_geo = "open"
-    if(para_fig_view == "preset") para_fig_view = "XY"
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    para_fig_view = "XY"
 
     ! Set mesh
     n  = 5

@@ -223,7 +223,7 @@ subroutine Chimera_Command_Output(prob)
         write(i, "(a)"), "runCommand('preset apply publication 3')"
 
         ! Set background color
-        if(para_fig_bgcolor == "BLACK" .or. para_fig_bgcolor == "black") then
+        if(para_fig_bgcolor == "black") then
             write(i, "(a)"), "runCommand('unset bgTransparency')"
             write(i, "(a)"), "runCommand('set bgcolor black')"
         else
@@ -398,7 +398,7 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
     write(1002, "(a, f8.2, a)"), "runCommand('scale ", Chimera.scale, "')"
 
     ! Set background color
-    if(para_fig_bgcolor == "WHITE" .or. para_fig_bgcolor == "white") then
+    if(para_fig_bgcolor == "white") then
         ! --------------------------------------------------
         ! White background
         ! --------------------------------------------------
@@ -436,7 +436,7 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
             write(1002, "(a )"), "runCommand('turn y 120')"
             write(1002, "(a )"), "runCommand('turn x 90')"
         end if
-    else if(para_fig_bgcolor == "BLACK" .or. para_fig_bgcolor == "black") then
+    else if(para_fig_bgcolor == "black") then
         ! --------------------------------------------------
         ! Black background
         ! --------------------------------------------------
@@ -474,7 +474,7 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
             write(1002, "(a )"), "runCommand('turn y 120')"
             write(1002, "(a )"), "runCommand('turn x 90')"
         end if
-    else if(para_fig_bgcolor == "ALL" .or. para_fig_bgcolor == "all") then
+    else if(para_fig_bgcolor == "all") then
         ! --------------------------------------------------
         ! White and black background (white)
         ! --------------------------------------------------
@@ -602,65 +602,65 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
     integer :: i
 
     ! Make output directories for TIF images
-    if(para_fig_bgcolor == "WHITE" .or. para_fig_bgcolor == "white") then
+    if(para_fig_bgcolor == "white") then
         ! ==================================================
         !
         ! White background
         !
         ! ==================================================
-        if(para_fig_view == "XY" .or. para_fig_view == "xy") then
+        if(para_fig_view == "xy") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XY\")
-        else if(para_fig_view == "XZ" .or. para_fig_view == "xz") then
+        else if(para_fig_view == "xz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XZ\")
-        else if(para_fig_view == "YZ" .or. para_fig_view == "yz") then
+        else if(para_fig_view == "yz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_YZ\")
-        else if(para_fig_view == "XYZ" .or. para_fig_view == "xyz") then
+        else if(para_fig_view == "xyz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XYZ\")
-        else if(para_fig_view == "ALL" .or. para_fig_view == "all") then
+        else if(para_fig_view == "all") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XY\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_YZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XYZ\")
         end if
-    else if(para_fig_bgcolor == "BLACK" .or. para_fig_bgcolor == "black") then
+    else if(para_fig_bgcolor == "black") then
         ! ==================================================
         !
         ! Black background
         !
         ! ==================================================
-        if(para_fig_view == "XY" .or. para_fig_view == "xy") then
+        if(para_fig_view == "xy") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XY\")
-        else if(para_fig_view == "XZ" .or. para_fig_view == "xz") then
+        else if(para_fig_view == "xz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XZ\")
-        else if(para_fig_view == "YZ" .or. para_fig_view == "yz") then
+        else if(para_fig_view == "yz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_YZ\")
-        else if(para_fig_view == "XYZ" .or. para_fig_view == "xyz") then
+        else if(para_fig_view == "xyz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XYZ\")
-        else if(para_fig_view == "ALL" .or. para_fig_view == "all") then
+        else if(para_fig_view == "all") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XY\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_YZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XYZ\")
         end if
-    else if(para_fig_bgcolor == "ALL" .or. para_fig_bgcolor == "all") then
+    else if(para_fig_bgcolor == "all") then
         ! ==================================================
         !
         ! White and black background
         !
         ! ==================================================
-        if(para_fig_view == "XY" .or. para_fig_view == "xy") then
+        if(para_fig_view == "xy") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XY\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XY\")
-        else if(para_fig_view == "XZ" .or. para_fig_view == "xz") then
+        else if(para_fig_view == "xz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XZ\")
-        else if(para_fig_view == "YZ" .or. para_fig_view == "yz") then
+        else if(para_fig_view == "yz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_YZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_YZ\")
-        else if(para_fig_view == "XYZ" .or. para_fig_view == "xyz") then
+        else if(para_fig_view == "xyz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XYZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XYZ\")
-        else if(para_fig_view == "ALL" .or. para_fig_view == "all") then
+        else if(para_fig_view == "all") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XY\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_YZ\")
@@ -741,7 +741,7 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
         end if
 
         ! Set background color
-        if(para_fig_bgcolor == "WHITE" .or. para_fig_bgcolor == "white") then
+        if(para_fig_bgcolor == "white") then
             ! ==================================================
             !
             ! White background
@@ -812,7 +812,7 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
                 write(101, "(a )"), "runCommand('turn x 90')"
             end if
 
-        else if(para_fig_bgcolor == "BLACK" .or. para_fig_bgcolor == "black") then
+        else if(para_fig_bgcolor == "black") then
             ! ==================================================
             !
             ! Black background
@@ -883,7 +883,7 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
                 write(101, "(a )"), "runCommand('turn x 90')"
             end if
 
-        else if(para_fig_bgcolor == "ALL" .or. para_fig_bgcolor == "all") then
+        else if(para_fig_bgcolor == "all") then
             ! ==================================================
             !
             ! White and black background (white)
