@@ -28,14 +28,16 @@ module Exam_3D_Open
 
     implicit none
 
-    public Exam_Open3D_End_Triangular_Prism_Quad    ! 15. Open end triangular prism with quad mesh
-    public Exam_Open3D_End_Triangular_Prism_Tri     ! 16. Open end triangular prism with tri mesh
-    public Exam_Open3D_End_Cube_Quad                ! 17. Open end cube with quad mesh
-    public Exam_Open3D_End_Cube_Tri                 ! 18. Open end cube with tri mesh
-    public Exam_Open3D_End_Pentagonal_Prism_Quad    ! 19. Open end pentagonal prism with quad mesh
-    public Exam_Open3D_End_Pentagonal_Prism_Tri     ! 20. Open end pentagonal prism with tri mesh
-    public Exam_Open3D_End_Cylinder_Quad            ! 21. Open end cylinder with quad mesh
-    public Exam_Open3D_End_Cylinder_Tri             ! 22. Open end cylinder with tri mesh
+    public Exam_Open3D_End_Triangular_Prism_Quad    ! 16. Open end triangular prism with quad mesh
+    public Exam_Open3D_End_Triangular_Prism_Tri     ! 17. Open end triangular prism with tri mesh
+    public Exam_Open3D_End_Cube_Quad                ! 18. Open end cube with quad mesh
+    public Exam_Open3D_End_Cube_Tri                 ! 19. Open end cube with tri mesh
+    public Exam_Open3D_End_Pentagonal_Prism_Quad    ! 20. Open end pentagonal prism with quad mesh
+    public Exam_Open3D_End_Pentagonal_Prism_Tri     ! 21. Open end pentagonal prism with tri mesh
+    public Exam_Open3D_End_Cylinder_Quad            ! 22. Open end cylinder with quad mesh
+    public Exam_Open3D_End_Cylinder_Tri             ! 23. Open end cylinder with tri mesh
+    !public Exam_open3D                             ! 24. 잘라진 원
+    !public Exam_open3D                             ! 25. 잘라진 실린더
 
 contains
 
@@ -55,7 +57,7 @@ subroutine Exam_Open3D_End_Triangular_Prism_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "15_End_Triangular_Prism_Quad"//&
+    prob.name_file = "13_End_Triangular_Prism_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -140,7 +142,7 @@ subroutine Exam_Open3D_End_Triangular_Prism_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "16_End_Triangular_Prism_Tri"//&
+    prob.name_file = "14_End_Triangular_Prism_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -233,7 +235,7 @@ subroutine Exam_Open3D_End_Cube_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "17_End_Cube_Quad"//&
+    prob.name_file = "15_End_Cube_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -318,7 +320,7 @@ subroutine Exam_Open3D_End_Cube_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "18_End_Cube_Tri"//&
+    prob.name_file = "16_End_Cube_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -411,7 +413,7 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "19_End_Pentagonal_Prism_Quad"//&
+    prob.name_file = "17_End_Pentagonal_Prism_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -496,7 +498,7 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "20_End_Pentagonal_Prism_Tri"//&
+    prob.name_file = "18_End_Pentagonal_Prism_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -589,7 +591,7 @@ subroutine Exam_Open3D_End_Cylinder_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "21_End_Cylinder_Quad"//&
+    prob.name_file = "19_End_Cylinder_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -674,7 +676,7 @@ subroutine Exam_Open3D_End_Cylinder_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "22_End_Cylinder_Tri"//&
+    prob.name_file = "20_End_Cylinder_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design

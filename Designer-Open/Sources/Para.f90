@@ -82,7 +82,7 @@ module Para
     integer   :: para_set_start_scaf       = 7217       ! [7217, 4141], Starting nucleotide position of scaffold strand
 
     ! UCSF Chimera output control
-    logical :: para_write_101   = .false.       !  GEO file,                                Input_Write_GEO_File,             ".geo"
+    logical :: para_write_101   = .true.       !  GEO file,                                Input_Write_GEO_File,             ".geo"
     logical :: para_write_102   = .true.        ! *Initial geometry,                        Input_Chimera_Init_Geometry,      "init_geo.bild"
     logical :: para_write_103   = .false.       !  Faced initial geometry,                  Input_Tecplot_Init_Geometry,      "init_geo_face.bild"
     logical :: para_write_104   = .false.       !  Schlegel diagram,                        Input_Chimera_Schlegel_Diagram,   "_schlegel.bild"

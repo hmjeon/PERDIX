@@ -23,6 +23,8 @@ module Input
 
     use Exam_2D_Open
     use Exam_3D_Open
+    use Exam_Johnson
+    use Exam_Prism
     use Exam_Platonic
 
     use Section
@@ -935,30 +937,50 @@ subroutine Input_Select_Problem(prob, geom)
     select case (prob.sel_prob)
 
         ! Primitive examples - open geometry
-        case ( 1); call Exam_Open2D_Plate_Uniform_Quad         (prob, geom)
-        case ( 2); call Exam_Open2D_Plate_Uniform_Tri          (prob, geom)
-        case ( 3); call Exam_Open2D_Plate_Distorted_Quad       (prob, geom)
-        case ( 4); call Exam_Open2D_Plate_Distorted_Tri        (prob, geom)
-        case ( 5); call Exam_Open2D_Circular_Plate_Quad        (prob, geom)
-        case ( 6); call Exam_Open2D_Circular_Plate_Tri         (prob, geom)
-        case ( 7); call Exam_Open2D_Annular_Plate_Quad         (prob, geom)
-        case ( 8); call Exam_Open2D_Annular_Plate_Tri          (prob, geom)
-        case ( 9); call Exam_Open2D_Hyperbolic_Paraboloid_Quad (prob, geom)
-        case (10); call Exam_Open2D_Hyperbolic_Paraboloid_Tri  (prob, geom)
-        case (11); call Exam_Open2D_circle_Tri_Coarse          (prob, geom)
-        case (12); call Exam_Open2D_circle_Tri_Fine            (prob, geom)
-        case (13); call Exam_Open2D_Ellipse_Tri_Coarse         (prob, geom)
-        case (14); call Exam_Open2D_Ellipse_Tri_Fine           (prob, geom)
+        case ( 1); call Exam_Open2D_Plate_Uniform_Quad          (prob, geom)
+        case ( 2); call Exam_Open2D_Plate_Uniform_Tri           (prob, geom)
+        case ( 3); call Exam_Open2D_Plate_Distorted_Quad        (prob, geom)
+        case ( 4); call Exam_Open2D_Plate_Distorted_Tri         (prob, geom)
+        case ( 5); call Exam_Open2D_Circular_Plate_Quad         (prob, geom)
+        case ( 6); call Exam_Open2D_Circular_Plate_Tri          (prob, geom)
+        case ( 7); call Exam_Open2D_Circle_Hole_Quad            (prob, geom)
+        case ( 8); call Exam_Open2D_Circle_Hole_Tri             (prob, geom)
+        !case ( 9); call Exam_Open2D_Hyperbolic_Paraboloid_Quad (prob, geom)
+        !case (10); call Exam_Open2D_Hyperbolic_Paraboloid_Tri  (prob, geom)
+        case ( 9); call Exam_Open2D_Circle_Tri_Coarse          (prob, geom)
+        case (10); call Exam_Open2D_Circle_Tri_Fine            (prob, geom)
+        case (11); call Exam_Open2D_Ellipse_Tri_Coarse         (prob, geom)
+        case (12); call Exam_Open2D_Ellipse_Tri_Fine           (prob, geom)
 
-        case (15); call Exam_Open3D_End_Triangular_Prism_Quad (prob, geom)
-        case (16); call Exam_Open3D_End_Triangular_Prism_Tri  (prob, geom)
-        case (17); call Exam_Open3D_End_Cube_Quad             (prob, geom)
-        case (18); call Exam_Open3D_End_Cube_Tri              (prob, geom)
-        case (19); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
-        case (20); call Exam_Open3D_End_Pentagonal_Prism_Tri  (prob, geom)
-        case (21); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
-        case (22); call Exam_Open3D_End_Cylinder_Tri          (prob, geom)
+        case (13); call Exam_Open3D_End_Triangular_Prism_Quad (prob, geom)
+        case (14); call Exam_Open3D_End_Triangular_Prism_Tri  (prob, geom)
+        case (15); call Exam_Open3D_End_Cube_Quad             (prob, geom)
+        case (16); call Exam_Open3D_End_Cube_Tri              (prob, geom)
+        case (17); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
+        case (18); call Exam_Open3D_End_Pentagonal_Prism_Tri  (prob, geom)
+        case (19); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
+        case (20); call Exam_Open3D_End_Cylinder_Tri          (prob, geom)
 
+        ! Prism
+        case (26); call Exam_Prism_Triangular    (prob, geom)
+        case (27); call Exam_Prism_Pentagonal    (prob, geom)
+        case (28); call Exam_Prism_Hexagonal     (prob, geom)
+        case (29); call Exam_Prism_Heptagonal    (prob, geom)
+        case (30); call Exam_Prism_Octagonal     (prob, geom)
+        case (31); call Exam_Prism_Enneagonal    (prob, geom)
+        case (32); call Exam_Prism_Decagonal     (prob, geom)
+
+        ! Antiprism
+        case (33); call Exam_Antiprism_Square          (prob, geom)
+        case (34); call Exam_Antiprism_Pentagonal      (prob, geom)
+        case (35); call Exam_Antiprism_Hexagonal       (prob, geom)
+        case (36); call Exam_Antiprism_Heptagonal      (prob, geom)
+        case (37); call Exam_Antiprism_Octagonal       (prob, geom)
+        case (38); call Exam_Antiprism_Enneagonal      (prob, geom)
+        case (39); call Exam_Antiprism_Decagonal       (prob, geom)
+
+        !case (50); call Exam_Johnson_Pentagonal_Pyramid_J2 (prob, geom)
+        
         case (99); call Exam_Platonic_Tetrahedron (prob, geom)
 
         case default

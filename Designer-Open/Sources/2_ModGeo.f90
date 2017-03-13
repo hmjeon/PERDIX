@@ -1,14 +1,19 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                                  Module for ModGeo
+!                                   Module for ModGeo
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
 !                                                            First programed : 2015/04/21
-!                                                            Last  modified  : 2016/10/12
+!                                                            Last  modified  : 2017/03/13
+!
+! Comments: The module is to generate the seperated line from the vertex.
+!
+! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
+!
+! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
+! M.I.T. hereby makes following copyrightable material available to the
+! public under GNU General Public License, version 2 (GPL-2.0). A copy of
+! this license is available at https://opensource.org/licenses/GPL-2.0
 !
 ! ---------------------------------------------------------------------------------------
 !
@@ -731,11 +736,11 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
 
     ! ==================================================
     !
-    ! Set first local vector, t1
+    ! Set first local vector, t1 - along the direction of the connectivity
     !
     ! ==================================================
-    poi_1    = geom.iniL(line).poi(1)
-    poi_2    = geom.iniL(line).poi(2)
+    poi_1 = geom.iniL(line).poi(1)
+    poi_2 = geom.iniL(line).poi(2)
     pos_1(1:3) = geom.iniP(poi_1).pos(1:3)
     pos_2(1:3) = geom.iniP(poi_2).pos(1:3)
     local(1,:) = Normalize_Vector(pos_2 - pos_1)
@@ -748,16 +753,9 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
     face1 = geom.iniL(line).neiF(1)
     if(face1 /= -1) then
 
-        ! Find center position in face 1
-        pos_c(1:3) = 0.0d0
-        do i = 1, geom.face(face1).n_poi
-            pos_c(1:3) = pos_c + geom.iniP(geom.face(face1).poi(i)).pos
-        end do
-        pos_c(1:3) = pos_c / dble(geom.face(face1).n_poi)
-
-        ! Find normal vector in face 1
-        vec_a(1:3) = geom.iniP(geom.face(face1).poi(1)).pos - pos_c
-        vec_b(1:3) = geom.iniP(geom.face(face1).poi(2)).pos - pos_c
+        ! Find outward vector of the face 1
+        vec_a(1:3) = geom.iniP(geom.face(face1).poi(2)).pos - geom.iniP(geom.face(face1).poi(1)).pos
+        vec_b(1:3) = geom.iniP(geom.face(face1).poi(3)).pos - geom.iniP(geom.face(face1).poi(2)).pos
         vec_face1(1:3) = Normalize_Vector(Cross_Product(vec_a, vec_b))
     else
 
@@ -768,16 +766,9 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
     face2 = geom.iniL(line).neiF(2)
     if(face2 /= -1) then
 
-        ! Find center position in face 2
-        pos_c(1:3) = 0.0d0
-        do i = 1, geom.face(face2).n_poi
-            pos_c(1:3) = pos_c + geom.iniP(geom.face(face2).poi(i)).pos
-        end do
-        pos_c(1:3) = pos_c / dble(geom.face(face2).n_poi)
-
-        ! Find normal vector in face 2
-        vec_a(1:3) = geom.iniP(geom.face(face2).poi(1)).pos - pos_c
-        vec_b(1:3) = geom.iniP(geom.face(face2).poi(2)).pos - pos_c
+        ! Find outward vector of the face 2
+        vec_a(1:3) = geom.iniP(geom.face(face2).poi(2)).pos - geom.iniP(geom.face(face2).poi(1)).pos
+        vec_b(1:3) = geom.iniP(geom.face(face2).poi(3)).pos - geom.iniP(geom.face(face2).poi(2)).pos
         vec_face2(1:3) = Normalize_Vector(Cross_Product(vec_a, vec_b))
     else
 
@@ -825,7 +816,7 @@ subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
 
-    double precision :: length, pos_1(3), pos_2(3), pos_c(3)
+    double precision :: pos_1(3), pos_2(3), pos_c(3)
     logical :: f_axis, f_info
     integer :: i
     character(200) :: path

@@ -71,7 +71,9 @@
 		<Filter Name="Input">
 		<File RelativePath=".\Sources\Exam_2D_Open.f90"/>
 		<File RelativePath=".\Sources\Exam_3D_Open.f90"/>
+		<File RelativePath=".\Sources\Exam_Johnson.f90"/>
 		<File RelativePath=".\Sources\Exam_Platonic.f90"/>
+		<File RelativePath=".\Sources\Exam_Prism.f90"/>
 		<File RelativePath=".\Sources\Importer.f90"/></Filter>
 		<Filter Name="Output">
 		<File RelativePath=".\Sources\Chimera.f90"/>

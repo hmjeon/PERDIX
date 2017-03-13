@@ -17,6 +17,8 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
+! Reference: https://people.sc.fsu.edu/~jburkardt/m_src/distmesh/distmesh.html
+!
 module Exam_2D_Open
 
     use Data_Prob
@@ -30,18 +32,25 @@ module Exam_2D_Open
 
     public Exam_Open2D_Plate_Uniform_Quad           !  1. Plate with uniform quad mesh
     public Exam_Open2D_Plate_Uniform_Tri            !  2. Plate with uniform tri mesh
-    public Exam_Open2D_Plate_Distorted_Quad         !  3. Plate with distorted quad mesh
-    public Exam_Open2D_Plate_Distorted_Tri          !  4. Plate with distorted tri mesh
-    public Exam_Open2D_Circular_Plate_Quad          !  5. Circular plate with quad mesh
-    public Exam_Open2D_Circular_Plate_Tri           !  6. Circular plate with tri mesh
-    public Exam_Open2D_Annular_Plate_Quad           !  7. Annular plate with quad mesh
-    public Exam_Open2D_Annular_Plate_Tri            !  8. Annular plate with tri mesh
-    public Exam_Open2D_Hyperbolic_Paraboloid_Quad   !  9. Hyperbolic paraboloid with quad mesh
-    public Exam_Open2D_Hyperbolic_Paraboloid_Tri    ! 10. Hyperbolic paraboloid with tri mesh
-    public Exam_Open2D_Circle_Tri_Coarse            ! 11. Circle with tri coarse mesh
-    public Exam_Open2D_Circle_Tri_Fine              ! 12. Circle with tri fine mesh
-    public Exam_Open2D_Ellipse_Tri_Coarse           ! 13. Ellipse with tri coarse mesh
-    public Exam_Open2D_Ellipse_Tri_Fine             ! 14. Ellipse with tri fine mesh
+    public Exam_Open2D_Circular_Plate_Quad          !  3. Circular plate with quad mesh
+    public Exam_Open2D_Circular_Plate_Tri           !  4. Circular plate with tri mesh
+    public Exam_Open2D_Circle_Hole_Quad             !  5. Circle with hole quad mesh
+    public Exam_Open2D_Circle_Hole_Tri              !  6. Circle with hole tri mesh
+
+    public Exam_Open2D_Circle_Tri_Coarse            !  7. Circle with tri coarse mesh
+    public Exam_Open2D_Circle_Tri_Fine              !  8. Circle with tri fine mesh
+    public Exam_Open2D_Ellipse_Tri_Coarse           !  9. Ellipse with tri coarse mesh
+    public Exam_Open2D_Ellipse_Tri_Fine             ! 10. Ellipse with tri fine mesh
+    !public Exam_Open2D_Hexagon_Hexagonal_Hole       ! 11. Hexagon with a hexagonal hole
+    !public Exam_Open2D_Superellipse                 ! 12. Superellipse
+    !public Exam_Open2D_Bicycle_Seat                 ! 13. Bicycle seat
+    !public Exam_Open2D_Square_Two_Hexagonal_Holes   ! 14. Square with two hexagonal holes
+    !public Exam_Open2D_L_Shaped_Region              ! 15. L-shaped region
+
+    !public Exam_Open2D_Plate_Distorted_Quad         ! Plate with distorted quad mesh
+    !public Exam_Open2D_Plate_Distorted_Tri          ! Plate with distorted tri mesh
+    !public Exam_Open2D_Hyperbolic_Paraboloid_Quad   ! Hyperbolic paraboloid with quad mesh
+    !public Exam_Open2D_Hyperbolic_Paraboloid_Tri    ! Hyperbolic paraboloid with tri mesh
 
     private Exam_Open2D_Cross_Point
     private Exam_Open2D_Merge_Point_Face_Quad
@@ -84,9 +93,9 @@ subroutine Exam_Open2D_Plate_Uniform_Quad(prob, geom)
     para_fig_view = "XY"
 
     ! Set options
-    n  = 3
-    nx = n
-    ny = n
+    !n  = 2
+    nx = 4
+    ny = 3
 
     n_i_poi = nx + 1
     n_j_poi = ny + 1
@@ -163,9 +172,9 @@ subroutine Exam_Open2D_Plate_Uniform_Tri(prob, geom)
     para_fig_view = "XY"
 
     ! Set options
-    n  = 2
-    nx = n * 2
-    ny = n
+    !n  = 2
+    nx = 3
+    ny = 4
     pn = "\"
 
     n_i_poi = nx + 1
@@ -849,9 +858,9 @@ end subroutine Exam_Open2D_Circular_Plate_Tri
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of annular plate with quad mesh
+! Example of circle with hole quad mesh
 ! Last updated on Sat 11 Mar 2017 by Hyungmin
-subroutine Exam_Open2D_Annular_Plate_Quad(prob, geom)
+subroutine Exam_Open2D_Circle_Hole_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -863,14 +872,14 @@ subroutine Exam_Open2D_Annular_Plate_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "07_Annular_Plate_Quad"//&
+    prob.name_file = "07_Circle_Hole_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "Annular Plate Quad"
+    prob.name_prob = "Cricle Hole Quad"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -931,13 +940,13 @@ subroutine Exam_Open2D_Annular_Plate_Quad(prob, geom)
             end if
         end do
     end do
-end subroutine Exam_Open2D_Annular_Plate_Quad
+end subroutine Exam_Open2D_Circle_Hole_Quad
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of annular plate with tri mesh
+! Example of circle with hole tri mesh
 ! Last updated on Sat 11 Mar 2017 by Hyungmin
-subroutine Exam_Open2D_Annular_Plate_Tri(prob, geom)
+subroutine Exam_Open2D_Circle_Hole_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -950,14 +959,14 @@ subroutine Exam_Open2D_Annular_Plate_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "08_Annular_Plate_Tri"//&
+    prob.name_file = "07_Circle_Hole_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "Annular Plate Tri"
+    prob.name_prob = "Circle Hole Tri"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -1056,7 +1065,7 @@ subroutine Exam_Open2D_Annular_Plate_Tri(prob, geom)
             end if
         end do
     end do
-end subroutine Exam_Open2D_Annular_Plate_Tri
+end subroutine Exam_Open2D_Circle_Hole_Tri
 
 ! ---------------------------------------------------------------------------------------
 
@@ -1074,7 +1083,7 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "09_Hyperbolic_Paraboloid_Quad"//&
+    prob.name_file = "Hyperbolic_Paraboloid_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -1146,7 +1155,7 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "10_Hyperbolic_Paraboloid_Tri"//&
+    prob.name_file = "Hyperbolic_Paraboloid_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -1354,7 +1363,7 @@ subroutine Exam_Open2D_circle_Tri_Coarse(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "11_Circle_Tri_Coarse"//&
+    prob.name_file = "09_Circle_Tri_Coarse"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -1440,7 +1449,7 @@ subroutine Exam_Open2D_circle_Tri_Fine(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "12_Circle_Tri_Fine"//&
+    prob.name_file = "10_Circle_Tri_Fine"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -1586,7 +1595,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Coarse(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "13_Ellipse_Tri_Coarse"//&
+    prob.name_file = "11_Ellipse_Tri_Coarse"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -1692,7 +1701,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Fine(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "14_Ellipse_Tri_Fine"//&
+    prob.name_file = "12_Ellipse_Tri_Fine"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
