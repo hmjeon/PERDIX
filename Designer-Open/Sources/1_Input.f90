@@ -936,21 +936,17 @@ subroutine Input_Select_Problem(prob, geom)
     ! Select problem
     select case (prob.sel_prob)
 
-        ! Primitive examples - open geometry
-        case ( 1); call Exam_Open2D_Plate_Uniform_Quad          (prob, geom)
-        case ( 2); call Exam_Open2D_Plate_Uniform_Tri           (prob, geom)
-        case ( 3); call Exam_Open2D_Plate_Distorted_Quad        (prob, geom)
-        case ( 4); call Exam_Open2D_Plate_Distorted_Tri         (prob, geom)
-        case ( 5); call Exam_Open2D_Circular_Plate_Quad         (prob, geom)
-        case ( 6); call Exam_Open2D_Circular_Plate_Tri          (prob, geom)
-        case ( 7); call Exam_Open2D_Circle_Hole_Quad            (prob, geom)
-        case ( 8); call Exam_Open2D_Circle_Hole_Tri             (prob, geom)
-        !case ( 9); call Exam_Open2D_Hyperbolic_Paraboloid_Quad (prob, geom)
-        !case (10); call Exam_Open2D_Hyperbolic_Paraboloid_Tri  (prob, geom)
-        case ( 9); call Exam_Open2D_Circle_Tri_Coarse          (prob, geom)
-        case (10); call Exam_Open2D_Circle_Tri_Fine            (prob, geom)
-        case (11); call Exam_Open2D_Ellipse_Tri_Coarse         (prob, geom)
-        case (12); call Exam_Open2D_Ellipse_Tri_Fine           (prob, geom)
+        ! 2D open geometry
+        case ( 1); call Exam_Open2D_Plate_Uniform_Quad  (prob, geom)
+        case ( 2); call Exam_Open2D_Plate_Uniform_Tri   (prob, geom)
+        case ( 3); call Exam_Open2D_Circular_Plate_Quad (prob, geom)
+        case ( 4); call Exam_Open2D_Circle_Hole_Quad    (prob, geom)
+        case ( 5); call Exam_Open2D_Circle_Hole_Tri     (prob, geom)
+        case ( 6); call Exam_Open2D_Circle_Tri_Coarse   (prob, geom)
+        case ( 7); call Exam_Open2D_Circle_Tri_Fine     (prob, geom)
+        case ( 8); call Exam_Open2D_Ellipse_Tri_Coarse  (prob, geom)
+        case ( 9); call Exam_Open2D_Ellipse_Tri_Fine    (prob, geom)
+        case (10); call Exam_Open2D_L_Shaped_Region     (prob, geom)
 
         case (13); call Exam_Open3D_End_Triangular_Prism_Quad (prob, geom)
         case (14); call Exam_Open3D_End_Triangular_Prism_Tri  (prob, geom)
@@ -979,9 +975,26 @@ subroutine Input_Select_Problem(prob, geom)
         case (38); call Exam_Antiprism_Enneagonal      (prob, geom)
         case (39); call Exam_Antiprism_Decagonal       (prob, geom)
 
+        ! Johnson solids
+        case (40); call Exam_Johnson_Square_Pyramid_J1                    (prob, geom)
+        case (41); call Exam_Johnson_Pentagonal_Pyramid_J2                (prob, geom)
+        case (42); call Exam_Johnson_Triangular_Cupola_J3                 (prob, geom)
+        case (43); call Exam_Johnson_Square_Cupola_J4                     (prob, geom)
+        case (44); call Exam_Johnson_Pentagonal_Cupola_J5                 (prob, geom)
+        case (45); call Exam_Johnson_Pentagonal_Rotunda_J6                (prob, geom)
+        case (46); call Exam_Johnson_Elongated_Triangular_Cupola_J18      (prob, geom)
+        case (47); call Exam_Johnson_Elongated_Square_Cupola_J19          (prob, geom)
+        case (48); call Exam_Johnson_Elongated_Pentagonal_Cupola_J20      (prob, geom)
+        case (49); call Exam_Johnson_Elongated_Pentagonal_Rotunda_J21     (prob, geom)
+        case (50); call Exam_Johnson_Gyroelongated_Triangular_Cupola_J22  (prob, geom)
+        case (51); call Exam_Johnson_Gyroelongated_Square_Cupola_J23      (prob, geom)
+        case (52); call Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24  (prob, geom)
+        case (53); call Exam_Johnson_Gyroelongated_Pentagonal_Rotunda_J25 (prob, geom)
+        case (54); call Exam_Johnson_Gyrobifastigium_J26                  (prob, geom)
+
         !case (50); call Exam_Johnson_Pentagonal_Pyramid_J2 (prob, geom)
         
-        case (99); call Exam_Platonic_Tetrahedron (prob, geom)
+        case (99); call Exam_Platonic_Octahedron (prob, geom)
 
         case default
             write(0, "(a$)"), "Error - Not defined problem : "

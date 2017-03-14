@@ -28,17 +28,16 @@ module Exam_3D_Open
 
     implicit none
 
-    public Exam_Open3D_End_Triangular_Prism_Quad    ! 16. Open end triangular prism with quad mesh
-    public Exam_Open3D_End_Triangular_Prism_Tri     ! 17. Open end triangular prism with tri mesh
-    public Exam_Open3D_End_Cube_Quad                ! 18. Open end cube with quad mesh
-    public Exam_Open3D_End_Cube_Tri                 ! 19. Open end cube with tri mesh
-    public Exam_Open3D_End_Pentagonal_Prism_Quad    ! 20. Open end pentagonal prism with quad mesh
-    public Exam_Open3D_End_Pentagonal_Prism_Tri     ! 21. Open end pentagonal prism with tri mesh
-    public Exam_Open3D_End_Cylinder_Quad            ! 22. Open end cylinder with quad mesh
-    public Exam_Open3D_End_Cylinder_Tri             ! 23. Open end cylinder with tri mesh
+    public Exam_Open3D_End_Triangular_Prism_Quad    ! 11. Open end triangular prism with quad mesh
+!    public Exam_Open3D_End_Triangular_Prism_Tri     ! 12. Open end triangular prism with tri mesh
+    public Exam_Open3D_End_Cube_Quad                ! 13. Open end cube with quad mesh
+!    public Exam_Open3D_End_Cube_Tri                 ! 14. Open end cube with tri mesh
+    public Exam_Open3D_End_Pentagonal_Prism_Quad    ! 15. Open end pentagonal prism with quad mesh
+!    public Exam_Open3D_End_Pentagonal_Prism_Tri     ! 16. Open end pentagonal prism with tri mesh
+    public Exam_Open3D_End_Cylinder_Quad            ! 17. Open end cylinder with quad mesh
+    public Exam_Open3D_End_Cylinder_Tri             ! 18. Open end cylinder with tri mesh
     !public Exam_open3D                             ! 24. 잘라진 원
     !public Exam_open3D                             ! 25. 잘라진 실린더
-
 contains
 
 ! ---------------------------------------------------------------------------------------

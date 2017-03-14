@@ -1,0 +1,68 @@
+#VRML V1.0 ascii
+
+Separator {
+
+  DirectionalLight {
+    direction -.5 -1 0
+    intensity .75
+    }
+  DirectionalLight {
+    direction .5 1 0
+    intensity .75
+    }
+  Coordinate3 {
+    point [
+	-0.577350 0.577350 0.000000,
+	0.577350 0.577350 0.000000,
+	0.577350 -0.577350 0.000000,
+	-0.577350 -0.577350 0.000000,
+	0.000000 0.577350 1.000000,
+	0.000000 -0.577350 1.000000,
+	-0.577350 0.000000 -1.000000,
+	0.577350 0.000000 -1.000000,
+	]
+    }
+  Material {     # 3-sided faces
+    diffuseColor 1.000 0.100 0.100
+    }
+  IndexedFaceSet {
+    coordIndex [
+	4,0,1,-1,
+	5,2,3,-1,
+	6,0,3,-1,
+	7,2,1,-1,
+	]
+    }
+  Material {     # 4-sided faces
+    diffuseColor 0.300 0.300 1.000
+    }
+  IndexedFaceSet {
+    coordIndex [
+	0,4,5,3,-1,
+	2,5,4,1,-1,
+	0,6,7,1,-1,
+	2,7,6,3,-1,
+	]
+    }
+  Material {
+    diffuseColor 0 0 0    # black edges
+    }
+  IndexedLineSet {
+    coordIndex [
+	0,4,-1,
+	4,5,-1,
+	5,3,-1,
+	3,0,-1,
+	2,5,-1,
+	4,1,-1,
+	1,2,-1,
+	0,6,-1,
+	6,7,-1,
+	7,1,-1,
+	1,0,-1,
+	2,7,-1,
+	6,3,-1,
+	3,2,-1,
+	]
+    }
+  }
