@@ -766,23 +766,32 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "   A. First input - Geometry discretized by surface mesh"
     write(0, "(a)"), "   ====================================================="
     write(0, "(a)")
-    write(0, "(a)"), "      I - 2D open geometries"
+    write(0, "(a)"), "      I - 2D Open Geometries"
     write(0, "(a)"), "      ----------------------"
     write(0, "(a)")
-    write(0, "(a)"), "         1. Plate with uniform quad mesh,               2. Plate with uniform tri mesh"
-    write(0, "(a)"), "         3. Plate with distorted quad mesh,             4. Plate with distorted tri mesh"
-    write(0, "(a)"), "         5. Circular plate with quad mesh,              6. Circular plate with tri mesh"
-    write(0, "(a)"), "         7. Annular plate with quad mesh,               8. Annular plate with tri mesh"
-    write(0, "(a)"), "         9. Hyperbolic Paraboloid with quad,           10. Hyperbolic Paraboloid with tri mesh"
-    write(0, "(a)"), "        11. Circle with tri coarse mesh,               12. Circle with tri fine mesh"
-    write(0, "(a)"), "        13. Ellipse with tri coarse mesh,              14. Ellipse with tri fine mesh"
+    write(0, "(a)"), "         1. Plate with 4 by 3 Mesh [QUAD],          2. Plate with 3 by 4 Mesh [TRI]"
+    write(0, "(a)"), "         3. Circular Plate [QUAD],                  4. Circle with Hole [QUAD]"
+    write(0, "(a)"), "         5. Circle with Hole [TRI],                 6. Circle with Corse Mesh [TRI]"
+    write(0, "(a)"), "         7. Circle with Fine Mesh [TRI],            8. Ellipse with Corse Mesh [TRI]"
+    write(0, "(a)"), "         9. Ellipse with Fine Mesh [TRI],          10. L-Shaped Region [TRI]"
     write(0, "(a)")
-    write(0, "(a)"), "     II - 3D open geometries"
+    write(0, "(a)"), "     II - 3D Open Geometries"
     write(0, "(a)"), "     -----------------------"
-    write(0, "(a)"), "        15. Open end triangular prism with quad mesh,   16. Open end triangular prism with tri mesh"
-    write(0, "(a)"), "        17. Open end cube with quad mesh,               18. Open end cube with tri mesh"
-    write(0, "(a)"), "        19. Open end pentagonal prism with quad mesh,   20. Open end pentagonal prism with tri mesh"
-    write(0, "(a)"), "        21. Open end cylinder with quad mesh,           22. Open end cylinder with tri mesh"
+    write(0, "(a)"), "        11. Open End Triangular Prism [QUAD],      12. Open End Cube [QUAD]"
+    write(0, "(a)"), "        13. Open End Pentagonal Prism [QUAD],      14. Open End Cylinder [QUAD]"
+    write(0, "(a)"), "        15. Hemisphere [QUAD]"
+    write(0, "(a)")
+    write(0, "(a)"), "    III - Closed Geometries - Prism and Antiprism"
+    write(0, "(a)"), "    ---------------------------------------------"
+    write(0, "(a)"), "        16. Octagonal Prism,                       17. Enneagonal Prism"
+    write(0, "(a)"), "        18. Pentagonal Antiprism,                  19. Hexagonal Antiprism"
+    write(0, "(a)"), "        20. Heptagonal Antiprism"
+    write(0, "(a)")
+    write(0, "(a)"), "     VI - Closed Geometries - Johnson Solids"
+    write(0, "(a)"), "     ---------------------------------------"
+    write(0, "(a)"), "        21. Square Pyramid J1,                     22. Pentagonal Pyramid J2"
+    write(0, "(a)"), "        23. Pentagonal Cupola J5,                  24. Gyroelongated Square Cupola J23"
+    write(0, "(a)"), "        25. Gyroelongated Pentagonal Cupola J24"
     write(0, "(a)")
     write(0, "(a)"), "      0. Input from file (*.PLY)"
     write(0, "(a)")
@@ -948,53 +957,29 @@ subroutine Input_Select_Problem(prob, geom)
         case ( 9); call Exam_Open2D_Ellipse_Tri_Fine    (prob, geom)
         case (10); call Exam_Open2D_L_Shaped_Region     (prob, geom)
 
-        case (13); call Exam_Open3D_End_Triangular_Prism_Quad (prob, geom)
-        case (14); call Exam_Open3D_End_Triangular_Prism_Tri  (prob, geom)
-        case (15); call Exam_Open3D_End_Cube_Quad             (prob, geom)
-        case (16); call Exam_Open3D_End_Cube_Tri              (prob, geom)
-        case (17); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
-        case (18); call Exam_Open3D_End_Pentagonal_Prism_Tri  (prob, geom)
-        case (19); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
-        case (20); call Exam_Open3D_End_Cylinder_Tri          (prob, geom)
+        ! 3D open geometry
+        case (11); call Exam_Open3D_End_Triangular_Prism_Quad (prob, geom)
+        case (12); call Exam_Open3D_End_Cube_Quad             (prob, geom)
+        case (13); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
+        case (14); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
+        case (15); call Exam_Open3D_Hemisphere_Quad           (prob, geom)
 
-        ! Prism
-        case (26); call Exam_Prism_Triangular    (prob, geom)
-        case (27); call Exam_Prism_Pentagonal    (prob, geom)
-        case (28); call Exam_Prism_Hexagonal     (prob, geom)
-        case (29); call Exam_Prism_Heptagonal    (prob, geom)
-        case (30); call Exam_Prism_Octagonal     (prob, geom)
-        case (31); call Exam_Prism_Enneagonal    (prob, geom)
-        case (32); call Exam_Prism_Decagonal     (prob, geom)
-
-        ! Antiprism
-        case (33); call Exam_Antiprism_Square          (prob, geom)
-        case (34); call Exam_Antiprism_Pentagonal      (prob, geom)
-        case (35); call Exam_Antiprism_Hexagonal       (prob, geom)
-        case (36); call Exam_Antiprism_Heptagonal      (prob, geom)
-        case (37); call Exam_Antiprism_Octagonal       (prob, geom)
-        case (38); call Exam_Antiprism_Enneagonal      (prob, geom)
-        case (39); call Exam_Antiprism_Decagonal       (prob, geom)
+        ! Prism and antiprism
+        case (16); call Exam_Prism_Octagonal      (prob, geom)
+        case (17); call Exam_Prism_Enneagonal     (prob, geom)
+        case (18); call Exam_Antiprism_Pentagonal (prob, geom)
+        case (19); call Exam_Antiprism_Hexagonal  (prob, geom)
+        case (20); call Exam_Antiprism_Heptagonal (prob, geom)
 
         ! Johnson solids
-        case (40); call Exam_Johnson_Square_Pyramid_J1                    (prob, geom)
-        case (41); call Exam_Johnson_Pentagonal_Pyramid_J2                (prob, geom)
-        case (42); call Exam_Johnson_Triangular_Cupola_J3                 (prob, geom)
-        case (43); call Exam_Johnson_Square_Cupola_J4                     (prob, geom)
-        case (44); call Exam_Johnson_Pentagonal_Cupola_J5                 (prob, geom)
-        case (45); call Exam_Johnson_Pentagonal_Rotunda_J6                (prob, geom)
-        case (46); call Exam_Johnson_Elongated_Triangular_Cupola_J18      (prob, geom)
-        case (47); call Exam_Johnson_Elongated_Square_Cupola_J19          (prob, geom)
-        case (48); call Exam_Johnson_Elongated_Pentagonal_Cupola_J20      (prob, geom)
-        case (49); call Exam_Johnson_Elongated_Pentagonal_Rotunda_J21     (prob, geom)
-        case (50); call Exam_Johnson_Gyroelongated_Triangular_Cupola_J22  (prob, geom)
-        case (51); call Exam_Johnson_Gyroelongated_Square_Cupola_J23      (prob, geom)
-        case (52); call Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24  (prob, geom)
-        case (53); call Exam_Johnson_Gyroelongated_Pentagonal_Rotunda_J25 (prob, geom)
-        case (54); call Exam_Johnson_Gyrobifastigium_J26                  (prob, geom)
+        case (21); call Exam_Johnson_Square_Pyramid_J1                   (prob, geom)
+        case (22); call Exam_Johnson_Pentagonal_Pyramid_J2               (prob, geom)
+        case (23); call Exam_Johnson_Pentagonal_Cupola_J5                (prob, geom)
+        case (24); call Exam_Johnson_Gyroelongated_Square_Cupola_J23     (prob, geom)
+        case (25); call Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24 (prob, geom)
 
-        !case (50); call Exam_Johnson_Pentagonal_Pyramid_J2 (prob, geom)
-        
-        case (99); call Exam_Platonic_Octahedron (prob, geom)
+        ! Platonic solids
+        !case (99); call Exam_Platonic_Tetrahedron (prob, geom)
 
         case default
             write(0, "(a$)"), "Error - Not defined problem : "

@@ -258,7 +258,7 @@ subroutine Exam_Platonic_Dodecahedron(prob, geom)
 
     ! allocate point, line and face structure
     geom.n_iniP = 20
-    geom.n_face = 10
+    geom.n_face = 12
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
@@ -286,8 +286,8 @@ subroutine Exam_Platonic_Dodecahedron(prob, geom)
     geom.face(8).n_poi  = 5; allocate(geom.face(8).poi(5));  geom.face( 8).poi(1:5) = [  6,  9, 15, 18, 12 ]
     geom.face(9).n_poi  = 5; allocate(geom.face(9).poi(5));  geom.face( 9).poi(1:5) = [  7, 13, 19, 16, 10 ]
     geom.face(10).n_poi = 5; allocate(geom.face(10).poi(5)); geom.face(10).poi(1:5) = [ 11, 12, 18, 20, 17 ]
-    !geom.face(11).n_poi = 5; allocate(geom.face(11).poi(5)); geom.face(11).poi(1:5) = [ 13, 14, 17, 20, 19 ]
-    !geom.face(12).n_poi = 5; allocate(geom.face(12).poi(5)); geom.face(12).poi(1:5) = [ 15, 16, 19, 20, 18 ]
+    geom.face(11).n_poi = 5; allocate(geom.face(11).poi(5)); geom.face(11).poi(1:5) = [ 13, 14, 17, 20, 19 ]
+    geom.face(12).n_poi = 5; allocate(geom.face(12).poi(5)); geom.face(12).poi(1:5) = [ 15, 16, 19, 20, 18 ]
 end subroutine Exam_Platonic_Dodecahedron
 
 ! ---------------------------------------------------------------------------------------
@@ -332,8 +332,8 @@ subroutine Exam_Platonic_Icosahedron(prob, geom)
     para_fig_view = "XY"
 
     ! allocate point, line and face structure
-    geom.n_iniP = 11
-    geom.n_face = 15
+    geom.n_iniP = 12
+    geom.n_face = 20
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
@@ -344,7 +344,7 @@ subroutine Exam_Platonic_Icosahedron(prob, geom)
     geom.iniP( 5).pos(1:3) = [ -6.88192d0, -5.00001d0,  4.25326d0 ]; geom.iniP( 6).pos(1:3) = [  2.62866d0, -8.09018d0,  4.25326d0 ]
     geom.iniP( 7).pos(1:3) = [  6.88192d0,  5.00001d0, -4.25326d0 ]; geom.iniP( 8).pos(1:3) = [  6.88192d0, -5.00001d0, -4.25326d0 ]
     geom.iniP( 9).pos(1:3) = [ -2.62866d0,  8.09018d0, -4.25326d0 ]; geom.iniP(10).pos(1:3) = [ -8.50650d0,  0.00000d0, -4.25326d0 ]
-    geom.iniP(11).pos(1:3) = [ -2.62866d0, -8.09018d0, -4.25326d0 ]!; geom.iniP(12).pos(1:3) = [  0.00000d0,  0.00000d0, -9.51058d0 ]
+    geom.iniP(11).pos(1:3) = [ -2.62866d0, -8.09018d0, -4.25326d0 ]; geom.iniP(12).pos(1:3) = [  0.00000d0,  0.00000d0, -9.51058d0 ]
 
     ! Set face connnectivity
     geom.face(1).n_poi  = 3; allocate(geom.face(1).poi(3));  geom.face( 1).poi(1:3) = [  1,  2,  3 ]
@@ -362,11 +362,11 @@ subroutine Exam_Platonic_Icosahedron(prob, geom)
     geom.face(13).n_poi = 3; allocate(geom.face(13).poi(3)); geom.face(13).poi(1:3) = [  5, 10, 11 ]
     geom.face(14).n_poi = 3; allocate(geom.face(14).poi(3)); geom.face(14).poi(1:3) = [  5, 11,  6 ]
     geom.face(15).n_poi = 3; allocate(geom.face(15).poi(3)); geom.face(15).poi(1:3) = [  6, 11,  8 ]
-    !geom.face(16).n_poi = 3; allocate(geom.face(16).poi(3)); geom.face(16).poi(1:3) = [  7,  8, 12 ]
-    !geom.face(17).n_poi = 3; allocate(geom.face(17).poi(3)); geom.face(17).poi(1:3) = [  7, 12,  9 ]
-    !geom.face(18).n_poi = 3; allocate(geom.face(18).poi(3)); geom.face(18).poi(1:3) = [  8, 11, 12 ]
-    !geom.face(19).n_poi = 3; allocate(geom.face(19).poi(3)); geom.face(19).poi(1:3) = [  9, 12, 10 ]
-    !geom.face(20).n_poi = 3; allocate(geom.face(20).poi(3)); geom.face(20).poi(1:3) = [ 10, 12, 11 ]
+    geom.face(16).n_poi = 3; allocate(geom.face(16).poi(3)); geom.face(16).poi(1:3) = [  7,  8, 12 ]
+    geom.face(17).n_poi = 3; allocate(geom.face(17).poi(3)); geom.face(17).poi(1:3) = [  7, 12,  9 ]
+    geom.face(18).n_poi = 3; allocate(geom.face(18).poi(3)); geom.face(18).poi(1:3) = [  8, 11, 12 ]
+    geom.face(19).n_poi = 3; allocate(geom.face(19).poi(3)); geom.face(19).poi(1:3) = [  9, 12, 10 ]
+    geom.face(20).n_poi = 3; allocate(geom.face(20).poi(3)); geom.face(20).poi(1:3) = [ 10, 12, 11 ]
 end subroutine Exam_Platonic_Icosahedron
 
 ! ---------------------------------------------------------------------------------------

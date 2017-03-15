@@ -45,7 +45,7 @@ module Exam_Johnson
     public Exam_Johnson_Gyroelongated_Pentagonal_Rotunda_J25    ! V=30, E=65, F=37
     public Exam_Johnson_Gyrobifastigium_J26                     ! V= 8, E=14, F= 8
 
-    contains
+contains
 
 ! ---------------------------------------------------------------------------------------
 
@@ -61,14 +61,14 @@ subroutine Exam_Johnson_Square_Pyramid_J1(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "21_Square_Pyramid_J1"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Square Pyramid J1"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -102,7 +102,7 @@ end subroutine Exam_Johnson_Square_Pyramid_J1
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of pentagonal pyramid - J2
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Pentagonal_Pyramid_J2(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -114,14 +114,14 @@ subroutine Exam_Johnson_Pentagonal_Pyramid_J2(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "22_Penta_Pyramid_J2"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Penta Pyramid J2"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -157,7 +157,7 @@ end subroutine Exam_Johnson_Pentagonal_Pyramid_J2
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of triangular cupola - J3
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Triangular_Cupola_J3(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -169,14 +169,14 @@ subroutine Exam_Johnson_Triangular_Cupola_J3(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "Trir_Cupola_J3"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Tri Cupola J3"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -217,7 +217,7 @@ end subroutine Exam_Johnson_Triangular_Cupola_J3
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of square cupola - J4
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Square_Cupola_J4(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -229,14 +229,14 @@ subroutine Exam_Johnson_Square_Cupola_J4(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "Square_Cupola_J4"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Square Cupola J4"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -282,7 +282,7 @@ end subroutine Exam_Johnson_Square_Cupola_J4
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of pentagonal cupola - J5
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Pentagonal_Cupola_J5(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -294,14 +294,14 @@ subroutine Exam_Johnson_Pentagonal_Cupola_J5(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "23_Penta_Cupola_J5"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Penta Cupola J5"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -352,7 +352,7 @@ end subroutine Exam_Johnson_Pentagonal_Cupola_J5
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of pentagonal rotunda - J6
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Pentagonal_Rotunda_J6(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -364,14 +364,14 @@ subroutine Exam_Johnson_Pentagonal_Rotunda_J6(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "Penta_Rotunda_J6"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Penta Rotunda J6"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -432,7 +432,7 @@ end subroutine Exam_Johnson_Pentagonal_Rotunda_J6
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of elongated triangular cupola - J18
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Elongated_Triangular_Cupola_J18(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -444,14 +444,14 @@ subroutine Exam_Johnson_Elongated_Triangular_Cupola_J18(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "Elon_Tri_Cupola_J18"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Elong Tri Cupola J18"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -504,7 +504,7 @@ end subroutine Exam_Johnson_Elongated_Triangular_Cupola_J18
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of elongated square cupola - J19
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Elongated_Square_Cupola_J19(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -516,14 +516,14 @@ subroutine Exam_Johnson_Elongated_Square_Cupola_J19(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "Elong_Square_Cupola_J19"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Elon Square Cupola J19"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -585,7 +585,7 @@ end subroutine Exam_Johnson_Elongated_Square_Cupola_J19
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of elongated pentagonal cupola - J20
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Elongated_Pentagonal_Cupola_J20(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -597,14 +597,14 @@ subroutine Exam_Johnson_Elongated_Pentagonal_Cupola_J20(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "Elon_Penta_Cupola_J20"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Elon Penta Cupola J20"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -675,7 +675,7 @@ end subroutine Exam_Johnson_Elongated_Pentagonal_Cupola_J20
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of elongated pentagonal rotunda - J21
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Elongated_Pentagonal_Rotunda_J21(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -687,14 +687,14 @@ subroutine Exam_Johnson_Elongated_Pentagonal_Rotunda_J21(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "Elon_Penta_Rotunda_J21"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Elon Penta Rotunda J21"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -775,7 +775,7 @@ end subroutine Exam_Johnson_Elongated_Pentagonal_Rotunda_J21
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of gyroelongated triangular cupola - J22
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Gyroelongated_Triangular_Cupola_J22(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -787,14 +787,14 @@ subroutine Exam_Johnson_Gyroelongated_Triangular_Cupola_J22(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "Gyro_Tri_Cupola_J22"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Gyro Tri Cupola J22"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -853,7 +853,7 @@ end subroutine Exam_Johnson_Gyroelongated_Triangular_Cupola_J22
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of gyroelongated square cupola - J23
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Gyroelongated_Square_Cupola_J23(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -865,14 +865,14 @@ subroutine Exam_Johnson_Gyroelongated_Square_Cupola_J23(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "24_Gyro_Square_Cupola_J23"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Gyro Square Cupola J23"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -942,7 +942,7 @@ end subroutine Exam_Johnson_Gyroelongated_Square_Cupola_J23
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of gyroelongated pentagonal cupola - J24
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -954,14 +954,14 @@ subroutine Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "25_Gyro_Penta_Cupola_J24"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Gyro Penta Cupola J24"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -1042,7 +1042,7 @@ end subroutine Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of gyroelongated pentagonal rotunda - J25
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Gyroelongated_Pentagonal_Rotunda_J25(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -1054,14 +1054,14 @@ subroutine Exam_Johnson_Gyroelongated_Pentagonal_Rotunda_J25(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "Gyro_Penta_Rotunda_J25"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Gyro Penta Rotunda J25"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -1152,7 +1152,7 @@ end subroutine Exam_Johnson_Gyroelongated_Pentagonal_Rotunda_J25
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of square pyramid - J1
+! Example of gyrobifastigium - J26
 ! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Gyrobifastigium_J26(prob, geom)
     type(ProbType), intent(inout) :: prob
@@ -1164,14 +1164,14 @@ subroutine Exam_Johnson_Gyrobifastigium_J26(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "test"//&
+    prob.name_file = "Gyrobifastigium_J26"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "test"
+    prob.name_prob = "Gyrobifastigium J26"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
