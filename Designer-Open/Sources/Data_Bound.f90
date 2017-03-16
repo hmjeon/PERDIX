@@ -51,7 +51,6 @@ module Data_Bound
     type :: BoundType
         integer :: n_outer              ! The number of outers
         integer :: n_junc               ! The number of juncs
-        integer :: max_gap, min_gap     ! Maximum and minimum gap from vertex
 
         type(OuterType), allocatable, dimension(:) :: outer
         type(JuncType),  allocatable, dimension(:) :: junc

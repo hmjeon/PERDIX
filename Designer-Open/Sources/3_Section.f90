@@ -3,12 +3,17 @@
 !
 !                                   Module for Section
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
 !                                                            First programed : 2015/04/29
-!                                                            Last  modified  : 2016/07/14
+!                                                            Last  modified  : 2017/03/16
+!
+! Comments: The module is to generate multiple-lines corresponding to # of sections.
+!
+! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
+!
+! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
+! M.I.T. hereby makes following copyrightable material available to the
+! public under GNU General Public License, version 2 (GPL-2.0). A copy of
+! this license is available at https://opensource.org/licenses/GPL-2.0
 !
 ! ---------------------------------------------------------------------------------------
 !
@@ -37,7 +42,7 @@ module Section
     private Section_Get_Director
     private Section_Get_Parameter
     private Section_Reset_Local_Coordinate
-    private Section_Chimera_Cross_Geometry
+    private Section_Chimera_Cro_Geometry
 
 contains
 
@@ -50,7 +55,7 @@ subroutine Section_Generation(prob, geom, bound)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
 
-    integer :: i
+    double precision :: i
 
     ! Print progress
     do i = 0, 11, 11
@@ -70,7 +75,7 @@ subroutine Section_Generation(prob, geom, bound)
     call Section_Generate_Section_Geometry(geom)
 
     ! Write cross-sectional geometry
-    call Section_Chimera_Cross_Geometry(prob, geom)
+    call Section_Chimera_Cro_Geometry(prob, geom)
 end subroutine Section_Generation
 
 ! ---------------------------------------------------------------------------
@@ -670,7 +675,7 @@ end function Section_Connection_Stap
 
 ! ---------------------------------------------------------------------------------------
 
-! set crosssectional data, croP and croL and update junction data
+! Set crosssectional data, croP and croL and update junction data
 ! Last updated on Monday 7 Mar 2016 by Hyungmin
 subroutine Section_Set_Sectional_Data(geom, bound)
     type(GeomType),  intent(inout) :: geom
@@ -1118,7 +1123,7 @@ end subroutine Section_Reset_Local_Coordinate
 
 ! Write cross-sectional geometry
 ! Last updated on Saturday 16 July 2016 by Hyungmin
-subroutine Section_Chimera_Cross_Geometry(prob, geom)
+subroutine Section_Chimera_Cro_Geometry(prob, geom)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -1135,7 +1140,7 @@ subroutine Section_Chimera_Cross_Geometry(prob, geom)
     f_info = para_chimera_401_info
 
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=401, file=trim(path)//"_cross_geo.bild", form="formatted")
+    open(unit=401, file=trim(path)//"_cro_geo.bild", form="formatted")
 
     ! Write cross-sectional points
     write(401, "(a)"), ".color red"
@@ -1279,7 +1284,7 @@ subroutine Section_Chimera_Cross_Geometry(prob, geom)
     end do
 
     close(unit=401)
-end subroutine Section_Chimera_Cross_Geometry
+end subroutine Section_Chimera_Cro_Geometry
 
 ! ---------------------------------------------------------------------------------------
 

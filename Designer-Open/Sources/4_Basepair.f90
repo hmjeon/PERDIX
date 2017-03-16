@@ -3,12 +3,17 @@
 !
 !                                   Module for Basepair
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
 !                                                            First programed : 2015/04/29
-!                                                            Last  modified  : 2016/08/05
+!                                                            Last  modified  : 2017/03/16
+!
+! Comments: The module is to generate the basepair model.
+!
+! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
+!
+! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
+! M.I.T. hereby makes following copyrightable material available to the
+! public under GNU General Public License, version 2 (GPL-2.0). A copy of
+! this license is available at https://opensource.org/licenses/GPL-2.0
 !
 ! ---------------------------------------------------------------------------------------
 !
@@ -88,6 +93,7 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
     call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cyl1")
 
     ! Modify junction to fill hole or avoid crash depending on vertex design
+    ! 한직선에 있을 경우를 대비 한 수정
     call Basepair_Modify_Junction(geom, bound, mesh)
 
     ! Delete ghost node from node data
@@ -110,6 +116,7 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
 
     ! Write edge length
     call Basepair_Write_Edge_Length(prob, geom)
+stop
 end subroutine Basepair_Discretize
 
 ! ---------------------------------------------------------------------------------------

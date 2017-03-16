@@ -49,7 +49,7 @@ module ModGeo
     private ModGeo_Set_Width_Section
     private ModGeo_Set_Scale_Geometry
     private ModGeo_Set_Gap_Junction
-    private ModGeo_Chimera_Mod_Geometry
+    private ModGeo_Chimera_Sep_Geometry
     private ModGeo_Set_Const_Geometric_Ratio
 
 contains
@@ -58,7 +58,7 @@ contains
 
 ! Geometry modification
 subroutine ModGeo_Modification(prob, geom, bound)
-    type(ProbType),  intent(in)    :: prob
+    type(ProbType),  intent(inout) :: prob
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
 
@@ -107,14 +107,14 @@ subroutine ModGeo_Modification(prob, geom, bound)
     ! Seperate the line from the vertex without off-set distance
     call ModGeo_Seperate_Line(geom, bound)
 
-    ! Find scale factor to scale the structure
+    ! Find the factor to scale the geometry
     scale = ModGeo_Find_Scale_Factor(prob, geom, bound)
 
-    ! Modify the geometic scale with scale factor
+    ! Scale the geometry with the factor
     call ModGeo_Set_Scale_Geometry(geom, scale)
 
-    ! Write modified geometry
-    call ModGeo_Chimera_Mod_Geometry(prob, geom, "mod1")
+    ! Write seperated geometry
+    !call ModGeo_Chimera_Sep_Geometry(prob, geom, "sep0")
 
     ! Set the gap distance between the junction and end of edges
     call ModGeo_Set_Gap_Junction(geom, bound)
@@ -122,9 +122,8 @@ subroutine ModGeo_Modification(prob, geom, bound)
     ! Set constant modified edge ratio based on original geometry
     if(para_const_edge_mesh == "on") call ModGeo_Set_Const_Geometric_Ratio(geom)
 
-    ! Write modified geometry
-    call ModGeo_Chimera_Mod_Geometry(prob, geom, "mod2")
-
+    ! Write seperated geometry
+    call ModGeo_Chimera_Sep_Geometry(prob, geom, "sep")
 end subroutine ModGeo_Modification
 
 ! ---------------------------------------------------------------------------------------
@@ -132,7 +131,7 @@ end subroutine ModGeo_Modification
 ! Set neighbor points from two faces sharing with the line
 ! Last updated on Wed 08 Mar 2017 by Hyungmin
 subroutine ModGeo_Set_Neighbor_Point(prob, geom)
-    type(ProbType),  intent(in)    :: prob
+    type(ProbType),  intent(inout) :: prob
     type(GeomType),  intent(inout) :: geom
 
     integer :: i, nei_face(2), nei_poi(2, 2)
@@ -151,6 +150,9 @@ subroutine ModGeo_Set_Neighbor_Point(prob, geom)
 
         ! Find neighbor face sharing with the i th line
         nei_face(1:2) = ModGeo_Find_Neighbor_Face(geom, i)
+
+        ! Set open geometry
+        if(nei_face(1) == -1 .or. nei_face(2) == -1) prob.type_geo = "open"
 
         ! Set nighbor face, 1: left and positive, 2: right and negative
         geom.iniL(i).neiF(1) = nei_face(1)
@@ -1012,7 +1014,7 @@ end subroutine ModGeo_Chimera_Init_Geometry_Local
 ! ---------------------------------------------------------------------------------------
 
 ! Seperate the line from the vertex without off-set distance
-! Last updated on Friday 26 Feb 2016 by Hyungmin, should check
+! Last updated on Thu 16 Feb 2017 by Hyungmin
 subroutine ModGeo_Seperate_Line(geom, bound)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -1020,30 +1022,7 @@ subroutine ModGeo_Seperate_Line(geom, bound)
     integer, allocatable, dimension(:) :: count_arm
     integer :: i, j, poi_1, poi_2, poi_c
 
-    ! Print progress
-    do i = 0, 11, 11
-        call Space(i, 6)
-        write(i, "(a)"), "2.5. Seperate edges from the vertex (modified edges)"
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of initial points  : "//trim(adjustl(Int2Str(geom.n_iniP)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of initial edges   : "//trim(adjustl(Int2Str(geom.n_iniL)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of modified points : "//trim(adjustl(Int2Str(2*geom.n_iniL)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of modified edges  : "//trim(adjustl(Int2Str(geom.n_iniL)))
-        write(i, "(a)")
-    end do
-
-    ! Check edge length
-    !do i = 1, geom.n_iniL
-    !    poi_1  = geom.iniL(i).poi(1)
-    !    poi_2  = geom.iniL(i).poi(2)
-    !    print *, Size_Vector(geom.iniP(poi_1).pos - geom.iniP(poi_2).pos)
-    !end do
-
-    ! Reset the number of the points
-    ! The number of lines in modfied geometry are the same to initial one
+    ! Set the number of the seperated points and lines
     geom.n_modP = 2 * geom.n_iniL
     geom.n_iniL = geom.n_iniL
 
@@ -1054,25 +1033,40 @@ subroutine ModGeo_Seperate_Line(geom, bound)
     allocate(count_arm(bound.n_junc))
     count_arm(1:bound.n_junc) = 0
 
-    ! Set point connectivity from line number
+    ! Print progress
+    do i = 0, 11, 11
+        call Space(i, 6)
+        write(i, "(a)"), "2.5. Seperate edges from the vertex"
+        call Space(i, 11)
+        write(i, "(a)"), "* The number of initial vertex   : "//trim(adjustl(Int2Str(geom.n_iniP)))
+        call Space(i, 11)
+        write(i, "(a)"), "* The number of initial edges    : "//trim(adjustl(Int2Str(geom.n_iniL)))
+        call Space(i, 11)
+        write(i, "(a)"), "* The number of seperated points : "//trim(adjustl(Int2Str(geom.n_modP)))
+        call Space(i, 11)
+        write(i, "(a)"), "* The number of seperated lines  : "//trim(adjustl(Int2Str(geom.n_iniL)))
+        write(i, "(a)")
+    end do
+
+    ! Set connectivity of the each seperate line
     do i = 1, geom.n_iniL
 
         ! Point of initial line
         poi_1 = geom.iniL(i).poi(1)
         poi_2 = geom.iniL(i).poi(2)
 
-        ! Set position vector for new points
+        ! Set the position vector for seperated points
         geom.modP(2*i-1).pos(1:3) = geom.iniP(poi_1).pos(1:3)
         geom.modP(2*i-0).pos(1:3) = geom.iniP(poi_2).pos(1:3)
 
-        ! Set connectivity for new points
+        ! Set new connectivity for new points
         geom.iniL(i).poi(1) = 2 * i - 1
         geom.iniL(i).poi(2) = 2 * i
 
-        ! Update modified points in the junction data
+        ! Update junction data with the seperated points
         do j = 1, bound.n_junc
 
-            ! Center point of junction
+            ! The original point at the junction
             poi_c = bound.junc(j).poi_c
 
             if(poi_1 == poi_c) then
@@ -1085,147 +1079,119 @@ subroutine ModGeo_Seperate_Line(geom, bound)
         end do
     end do
 
-    ! Check edge length
-    !do i = 1, geom.n_iniL
-    !    poi_1  = geom.iniL(i).poi(1)
-    !    poi_2  = geom.iniL(i).poi(2)
-    !    print *, Size_Vector(geom.modP(poi_1).pos - geom.modP(poi_2).pos)
-    !end do
-
     ! Deallocation
     deallocate(count_arm)
 
     ! Print progress
     do i = 0, 11, 11
         call Space(i, 6)
-        write(i, "(a)"), "2.6. Update junction data with modified points"
+        write(i, "(a)"), "2.6. Update junction data with the seperated points"
     end do
 
     do i = 1, bound.n_junc
         ! 1 th junction : 3-arms -> mod points # : (1, 2, 3)
         write(11, "(i20, a$)"), i, " th junc : "
-        write(11, "(i4,  a$)"), bound.junc(i).n_arm, "-arms -> mod points # : ("
+        write(11, "(i3,  a$)"), bound.junc(i).n_arm, "-arms -> seperated points - ("
         do j = 1, bound.junc(i).n_arm - 1
             write(11, "(i4, a$)"), bound.junc(i).modP(j), ", "
         end do
         write(11, "(i4, a)"), bound.junc(i).modP(j), ")"
     end do
-
     write(0, "(a)"); write(11, "(a)")
 end subroutine ModGeo_Seperate_Line
 
 ! ---------------------------------------------------------------------------------------
 
-! Find scale factor to scale the structure
-! Last updated on Thu 09 Mar 2017 by Hyungmin
+! Find the factor to scale the geometry
+! Last updated on Thu 16 Mar 2017 by Hyungmin
 function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
     type(ProbType),  intent(in)    :: prob
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
 
     double precision, allocatable, dimension (:,:) :: pos_modP
-    double precision :: tot_ang, ref_ang, ang, width, dist_gap
-    double precision :: factor, scale, length, min_length, diff, mod_length
+    double precision :: tot_ang, ref_ang, ang, width
+    double precision :: scale, length, min_length, diff, cur_length
     double precision :: pos_cur(3), pos_opp(3), vec_a(3), vec_b(3)
     integer :: i, j, poi_cur, poi_1, poi_2
 
-    ! Scale up in order to avoid small structure
+    ! Scale up to avoid small edge length after modification
     call ModGeo_Set_Scale_Geometry(geom, 100.0d0/para_init_scale)
 
-    ! To save the position of the seperated points
+    ! To save the position of the seperated points with off-set distance
     allocate(pos_modP(geom.n_modP, 3))
 
-    ! Find the angle between two neighboring lines at vertex
+    ! Set the angle between two adjacent lines sharing the same faces
     call ModGeo_Set_Angle_Junction(geom, bound)
 
     ! Set the width of cross-section
     width = ModGeo_Set_Width_Section(geom)
 
-    ! Loop for junction to pre-calculate the length of the modified edges
-    bound.max_gap = bound.junc(1).gap
-    bound.min_gap = bound.junc(1).gap
+    ! Loop for all junction to pre-calculate the edge length
     do i = 1, bound.n_junc
 
         ! Find reference and total angle
         ref_ang = bound.junc(i).ref_ang
         tot_ang = bound.junc(i).tot_ang
-        tot_ang = 3.141592d0 * 2.0d0
 
-        ang = ref_ang*(2.0d0*pi/tot_ang)
+        if(prob.type_geo == "open") tot_ang = 2.0d0 * pi
 
-        ! 0.2    -------- 60
-        ! factor -------- ang-ref_ang
-        ! 0.0    -------- 0
-        if(geom.sec.n_col == 2) then
-            factor = (0.20d0-0.0d0)*(ang-ref_ang)/Deg2Rad(60.0d0) + 0.0d0
-        else
-            factor = 0.0d0
-        end if
+        ! Total angle : Reference angle = 2 pi : ang
+        ang = ref_ang * (2.0d0 * pi / tot_ang)
 
-        !write(0, "(4(a, f10.3))"), "ang : ", Rad2Deg(ang), ", ref_ang  : ", Rad2Deg(ref_ang), &
-        !    ", tot_ang : ",  Rad2Deg(tot_ang), ", factor : ", factor
-
-        if(tot_ang <= 2.0d0*pi) then
-            dist_gap = width/2.0d0/dtan(ang/2.0d0) * (2.0d0*pi/tot_ang)
-            dist_gap = (width/2.0d0/dtan(ang/2.0d0) + factor) * (ang/ref_ang)
+        if(tot_ang <= 2.0d0 * pi) then
+            ! Total angle : Inradius = 2 pi : bound.junc(i).gap
+            bound.junc(i).gap = width/2.0d0/dtan(ang/2.0d0) * (2.0d0 * pi / tot_ang)
 
             ! Find the apothem of a regular polygon at the junction
             ! a = 0.5*s/tan(180/n), https://en.wikipedia.org/wiki/Apothem
-            ! The apothem a of a regular n-sided polygon with side length s
-            !dist_gap = (0.5d0 * width / dtan(pi/dble(bound.junc(i).n_arm))+factor) * (ang/ref_ang)
+            !bound.junc(i).gap = (0.5d0 * width / dtan(pi/dble(bound.junc(i).n_arm))) * (ang/ref_ang)
         else
-            dist_gap = width/2.0d0/dtan(ang/2.0d0)
-            
+            bound.junc(i).gap = width/2.0d0/dtan(ang/2.0d0)
         end if
 
-        bound.junc(i).gap = dist_gap
-        if(bound.max_gap <= dist_gap) bound.max_gap = dist_gap
-        if(bound.min_gap >= dist_gap) bound.min_gap = dist_gap
-
-        ! Find modified position at the given initial scale
+        ! Find modified position due to off-set distance
         do j = 1, bound.junc(i).n_arm
 
-            ! Position vector of arm junction point
+            ! The seperated points at the junction
             poi_cur = bound.junc(i).modP(j)
             pos_cur = geom.modP(poi_cur).pos(1:3)
 
             poi_1 = geom.iniL(bound.junc(i).iniL(j)).poi(1)
             poi_2 = geom.iniL(bound.junc(i).iniL(j)).poi(2)
 
-            ! Find point that is opposite to point_ori
+            ! Find point that is opposite to poi_cur
             if(poi_1 == poi_cur) then
                 pos_opp(1:3) = geom.modP(poi_2).pos(1:3)
             else if(poi_2 == poi_cur) then
                 pos_opp(1:3) = geom.modP(poi_1).pos(1:3)
             end if
 
-            ! Original edge length
+            ! Total length
             length = Size_Vector(pos_opp(1:3) - pos_cur(1:3))
 
-            ! Find modified position vector
-            vec_a(1:3) = dist_gap*pos_opp(1:3)
-            vec_b(1:3) = (length-dist_gap)*pos_cur(1:3)
+            ! Find modified position due to off-set distance
+            vec_a(1:3) = bound.junc(i).gap * pos_opp(1:3)
+            vec_b(1:3) = (length-bound.junc(i).gap) * pos_cur(1:3)
             pos_modP(poi_cur, 1:3) = (vec_a + vec_b)/length
         end do
     end do
 
-    ! Find minimum difference length
+    ! Find edge with minimum length
     do i = 1, geom.n_iniL
 
-        ! Find point
+        ! Find modified point from the seperated line
         poi_1 = geom.iniL(i).poi(1)
         poi_2 = geom.iniL(i).poi(2)
 
-        ! Find difference length between original and modified edges
-        ! Length of modified edge
+        ! Length of the modified edge
         length = Size_Vector(pos_modP(poi_1,:) - pos_modP(poi_2,:))
 
-        ! Find minimum length of modified edge
+        ! Find modified edge with minimum length
         if(i == 1 .or. min_length > length) then
             min_length = length
-            mod_length = Size_Vector(geom.modP(poi_1).pos - geom.modP(poi_2).pos)
-            diff       = mod_length - min_length
-            !write(0, "(i, 2f)"), i, mod_length, min_length
+            cur_length = Size_Vector(geom.modP(poi_1).pos - geom.modP(poi_2).pos)
+            diff       = cur_length - min_length
         end if
     end do
 
@@ -1235,7 +1201,7 @@ function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
     else if(geom.sec.types == "honeycomb") then
         length = diff + para_dist_bp * (dble(prob.n_bp_edge-1-1))
     end if
-    scale = length / mod_length
+    scale = length / cur_length
 
     ! Print progress
     do i = 0, 11, 11
@@ -1250,13 +1216,12 @@ function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
 
     ! Deallocate
     deallocate(pos_modP)
-
 end function ModGeo_Find_Scale_Factor
 
 ! ---------------------------------------------------------------------------------------
 
-! Find the angle between two neighboring lines at vertex
-! Last updated on Thu 09 Mar 2017 by Hyungmin
+! Set the angle between two adjacent lines sharing the same faces
+! Last updated on Thu 16 Mar 2017 by Hyungmin
 subroutine ModGeo_Set_Angle_Junction(geom, bound)
     type(GeomType),  intent(in)    :: geom
     type(BoundType), intent(inout) :: bound
@@ -1270,7 +1235,7 @@ subroutine ModGeo_Set_Angle_Junction(geom, bound)
     double precision :: pos_cur(3), pos_pre(3), pos_next(3)
     double precision :: tot_ang, ref_ang, max_ang, min_ang, ang
     double precision :: vec_1(3), vec_2(3)
-    integer :: i, j, point, point_c
+    integer :: i, j, poi, poi_c
 
     ! Allocate and initialize junc memory
     allocate(junc(bound.n_junc))
@@ -1290,25 +1255,25 @@ subroutine ModGeo_Set_Angle_Junction(geom, bound)
         do j = 1, geom.face(i).n_poi
 
             ! Find current point in the i-th face
-            point_c = geom.face(i).poi(j)
-            pos_cur(:) = geom.iniP(point_c).pos(1:3)
+            poi_c = geom.face(i).poi(j)
+            pos_cur(:) = geom.iniP(poi_c).pos(1:3)
 
             ! Find previous point in the i-th face
             if(j == 1) then
-                point = geom.face(i).poi(geom.face(i).n_poi)
-                pos_pre(1:3) = geom.iniP(point).pos(1:3)
+                poi = geom.face(i).poi(geom.face(i).n_poi)
+                pos_pre(1:3) = geom.iniP(poi).pos(1:3)
             else
-                point = geom.face(i).poi(j - 1)
-                pos_pre(1:3) = geom.iniP(point).pos(1:3)
+                poi = geom.face(i).poi(j - 1)
+                pos_pre(1:3) = geom.iniP(poi).pos(1:3)
             end if
 
             ! Find next point in the i-th face
             if(j == geom.face(i).n_poi) then
-                point = geom.face(i).poi(1)
-                pos_next(1:3) = geom.iniP(point).pos(1:3)
+                poi = geom.face(i).poi(1)
+                pos_next(1:3) = geom.iniP(poi).pos(1:3)
             else
-                point = geom.face(i).poi(j + 1)
-                pos_next(1:3) = geom.iniP(point).pos(1:3)
+                poi = geom.face(i).poi(j + 1)
+                pos_next(1:3) = geom.iniP(poi).pos(1:3)
             end if
 
             vec_1(1:3) = pos_pre(1:3)  - pos_cur(1:3)
@@ -1317,11 +1282,12 @@ subroutine ModGeo_Set_Angle_Junction(geom, bound)
             ! Find angle between two vectors in 3D
             ang = datan2(Size_Vector(Cross_Product(vec_1, vec_2)), dot_product(vec_1, vec_2))
 
-            junc(point_c).n_arm = junc(point_c).n_arm + 1
-            junc(point_c).ang(junc(point_c).n_arm) = ang
+            junc(poi_c).n_arm = junc(poi_c).n_arm + 1
+            junc(poi_c).ang(junc(poi_c).n_arm) = ang
         end do
     end do
 
+    ! Print angle between two lines at the junction
     !do i = 1, bound.n_junc
     !    write(0, "(2i$)"), i, bound.junc(i).n_arm
     !    do j = 1, junc(i).n_arm
@@ -1330,16 +1296,17 @@ subroutine ModGeo_Set_Angle_Junction(geom, bound)
     !    write(0, "(a)")
     !end do
 
-    ! Set maximum and minimum angle
+    ! Set total, maximum and minimum angle at the junction
     do i = 1, bound.n_junc
 
-        ! For total angle
+        ! Find total angle
         tot_ang = 0.0d0
         do j = 1, junc(i).n_arm
             tot_ang = tot_ang + junc(i).ang(j)
         end do
+        bound.junc(i).tot_ang = tot_ang
 
-        ! For maximum and minimum angle
+        ! Find maximum and minimum angle
         max_ang = junc(i).ang(1)
         min_ang = junc(i).ang(1)
         do j = 2, junc(i).n_arm
@@ -1348,7 +1315,7 @@ subroutine ModGeo_Set_Angle_Junction(geom, bound)
         end do
         !write(0, "(i, 3f12.4)"), i, tot_ang*180.0d0/pi, max_ang*180.0d0/pi, min_ang*180.0d0/pi
 
-        ! Set reference and total angle junction data
+        ! Set the reference anle in junction data
         if(para_junc_ang == "min" .or. para_junc_ang == "opt") then
             bound.junc(i).ref_ang = min_ang
         else if(para_junc_ang == "max") then
@@ -1356,11 +1323,9 @@ subroutine ModGeo_Set_Angle_Junction(geom, bound)
         else if(para_junc_ang == "ave") then
             bound.junc(i).ref_ang = tot_ang / dble(junc(i).n_arm)
         end if
-
-        bound.junc(i).tot_ang = tot_ang
     end do
 
-    ! deallocate memory
+    ! Deallocate memory
     do i = 1, bound.n_junc
         deallocate(junc(i).ang)
     end do
@@ -1369,7 +1334,7 @@ end subroutine ModGeo_Set_Angle_Junction
 
 ! ---------------------------------------------------------------------------------------
 
-! Find width cross-section
+! Set width cross-section
 ! Last updated on Thu 09 Mar 2017 by Hyungmin
 function ModGeo_Set_Width_Section(geom) result(width)
     type(GeomType), intent(in) :: geom
@@ -1417,9 +1382,9 @@ end subroutine ModGeo_Set_Scale_Geometry
 
 ! ---------------------------------------------------------------------------------------
 
-! Write modified geometry
-! Last updated on Thu 09 Mar 2017 by Hyungmin
-subroutine ModGeo_Chimera_Mod_Geometry(prob, geom, mode)
+! Write seperated geometry
+! Last updated on Thu 16 Mar 2017 by Hyungmin
+subroutine ModGeo_Chimera_Sep_Geometry(prob, geom, mode)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
     character(*),   intent(in) :: mode
@@ -1534,7 +1499,7 @@ subroutine ModGeo_Chimera_Mod_Geometry(prob, geom, mode)
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
-    open(unit=303, file=trim(path)//"_mod_geo.dat", form="formatted")
+    open(unit=303, file=trim(path)//"_sep_geo.dat", form="formatted")
 
     write(303, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
     write(303, "(a )"), 'VARIABLES = "X", "Y", "Z", "t1", "t2", "t3"'
@@ -1618,7 +1583,7 @@ subroutine ModGeo_Chimera_Mod_Geometry(prob, geom, mode)
     end do
 
     close(unit=303)
-end subroutine ModGeo_Chimera_Mod_Geometry
+end subroutine ModGeo_Chimera_Sep_Geometry
 
 ! ---------------------------------------------------------------------------------------
 

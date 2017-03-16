@@ -89,8 +89,8 @@ subroutine Exam_Open2D_Plate_Uniform_Quad(prob, geom)
 
     ! Set options
     !n  = 2
-    nx = 4
-    ny = 3
+    nx = 2 !4
+    ny = 2 !3
 
     n_i_poi = nx + 1
     n_j_poi = ny + 1

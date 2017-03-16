@@ -979,7 +979,7 @@ subroutine Input_Select_Problem(prob, geom)
         case (25); call Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24 (prob, geom)
 
         ! Platonic solids
-        !case (99); call Exam_Platonic_Tetrahedron (prob, geom)
+        case (99); call Exam_Platonic_Tetrahedron (prob, geom)
 
         case default
             write(0, "(a$)"), "Error - Not defined problem : "
