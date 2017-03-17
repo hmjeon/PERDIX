@@ -27,8 +27,8 @@ module Data_Mesh
         integer :: croL     ! Cross-section line ID
 
         ! Nodal connectivity at vertex
-        ! -1 - no-connection, 1 - neighbor, 2 - self, 3 - modified neighbor, 4 - modified self
-        integer :: conn
+        ! -1 - no-connection, 1 - reference, 2 - self, 3 - modified neighbor, 4 - modified self
+        integer :: conn = -1
 
         ! Ghost node : -1 : normal node, 1 : ghost node to be deleted
         integer :: ghost
@@ -46,8 +46,8 @@ module Data_Mesh
 
     ! MeshType data structure
     type :: MeshType
-        integer :: n_node   ! The number of nodes
-        integer :: n_ele    ! The number of elements
+        integer :: n_node = 0   ! The number of nodes
+        integer :: n_ele  = 0   ! The number of elements
 
         type(NodeType), allocatable, dimension(:) :: node   ! Node array
         type(EleType),  allocatable, dimension(:) :: ele    ! Element array

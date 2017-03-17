@@ -37,6 +37,7 @@ module Basepair
     private Basepair_Count_Basepair
     private Basepair_Generate_Basepair
     private Basepair_Set_Conn_Junction
+    private Basepair_Print_Bound_Data
     private Basepair_Get_Direction_IniL
     private Basepair_Chimera_Cylinder_Ori
     private Basepair_Chimera_Cylinder
@@ -56,8 +57,8 @@ contains
 
 ! ---------------------------------------------------------------------------------------
 
-! Discretize cross-sectional lines to make base pairs
-! Last updated on Saturday 13 Feb 2016 by Hyungmin
+! Discretize multiple lines to basepairs
+! Last updated on Fri 17 Mar 2017 by Hyungmin
 subroutine Basepair_Discretize(prob, geom, bound, mesh)
     type(ProbType),  intent(in)    :: prob
     type(GeomType),  intent(inout) :: geom
@@ -71,19 +72,19 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
         write(i, "(a)")
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
         write(i, "(a)"), "   |                                                                    |"
-        write(i, "(a)"), "   |          4. Build basepairs based on cross-sectional edges         |"
+        write(i, "(a)"), "   |                    4. Build the basepair model                     |"
         write(i, "(a)"), "   |                                                                    |"
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
         write(i, "(a)")
     end do
 
-    ! Count the number of base pairs(finite nodes)
-    call Basepair_Count_Basepair(geom, mesh)
+    ! Count the number of basepairs
+    call Basepair_Count_Basepair(prob, geom, mesh)
 
-    ! Generate base pair(FE discretization)
+    ! Generate the basepair model
     call Basepair_Generate_Basepair(geom, bound, mesh)
 
-    ! Set sectional connection at junction
+    ! Set sectional connection at the junction
     call Basepair_Set_Conn_Junction(geom, bound, mesh)
 
     ! Write cylindrial model with orientation
@@ -92,8 +93,7 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
     ! Write cylindrial model, cylinder 1
     call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cyl1")
 
-    ! Modify junction to fill hole or avoid crash depending on vertex design
-    ! 한직선에 있을 경우를 대비 한 수정
+    ! Modify the length of the duplex at the junction
     call Basepair_Modify_Junction(geom, bound, mesh)
 
     ! Delete ghost node from node data
@@ -116,25 +116,22 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
 
     ! Write edge length
     call Basepair_Write_Edge_Length(prob, geom)
-stop
+!stop
 end subroutine Basepair_Discretize
 
 ! ---------------------------------------------------------------------------------------
 
-! count the number of base pairs(finite nodes)
-! Last updated on Saturday 13 Feb 2016 by Hyungmin
-subroutine Basepair_Count_Basepair(geom, mesh)
+! Count the number of basepairs
+! Last updated on Fri 17 Mar 2017 by Hyungmin
+subroutine Basepair_Count_Basepair(prob, geom, mesh)
+    type(ProbType), intent(in)    :: prob
     type(GeomType), intent(in)    :: geom
     type(MeshType), intent(inout) :: mesh
 
     double precision :: length, pos_1(3), pos_2(3)
     integer :: i, count
 
-    ! Initialize the total number of nodes and elements
-    mesh.n_node = 0
-    mesh.n_ele  = 0
-
-    ! Find total number of elements and nodes
+    ! Find total number of elements and conns
     do i = 1, geom.n_croL
         pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
         pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
@@ -142,16 +139,14 @@ subroutine Basepair_Count_Basepair(geom, mesh)
         length = Size_Vector(pos_2(1:3) - pos_1(1:3))
         count  = nint(length / para_dist_bp)
 
-        ! Increase the number of nodes and elements
+        ! Increase the number of nodes and conns
         mesh.n_node = mesh.n_node + count + 1
         mesh.n_ele  = mesh.n_ele  + count
 
-        ! --------------------------------------------------
         ! Check minimum edge length
-        ! --------------------------------------------------
-        if(count < 20) then
-            write(0, "(a$)"), "Error - Short length of edge : "
-            write(0, "(a )"), "Basepair_Count_Node"
+        if( (geom.sec.types == "square"    .and. prob.n_bp_edge - 1 > count ) .or. &
+            (geom.sec.types == "honeycomb" .and. prob.n_bp_edge - 2 > count ) ) then
+            write(0, "(a)"), "Error - edge length : Basepair_Count_Node"
             stop
         end if
     end do
@@ -161,50 +156,46 @@ subroutine Basepair_Count_Basepair(geom, mesh)
         call Space(i, 6)
         write(i, "(a)"), "4.1. Pre-calculate the number of basepairs"
         call Space(i, 11)
-        write(i, "(a)"), "* The number of cross-sectional points : "//trim(adjustl(Int2Str(geom.n_croP)))
+        write(i, "(a)"), "* The number of multiple points : "//trim(adjustl(Int2Str(geom.n_croP)))
         call Space(i, 11)
-        write(i, "(a)"), "* The number of cross-sectional edges  : "//trim(adjustl(Int2Str(geom.n_croL)))
+        write(i, "(a)"), "* The number of multiple lines  : "//trim(adjustl(Int2Str(geom.n_croL)))
         call Space(i, 11)
-        write(i, "(a)"), "* The number of basepairs              : "//trim(adjustl(Int2Str(mesh.n_node)))
+        write(i, "(a)"), "* The number of basepairs       : "//trim(adjustl(Int2Str(mesh.n_node)))
         call Space(i, 11)
-        write(i, "(a)"), "* The number of basepair connectivity  : "//trim(adjustl(Int2Str(mesh.n_ele)))
+        write(i, "(a)"), "* The number of basepair conns  : "//trim(adjustl(Int2Str(mesh.n_ele)))
         write(i, "(a)")
     end do
 end subroutine Basepair_Count_Basepair
 
 ! ---------------------------------------------------------------------------------------
 
-! Generate base pair(FE discretization)
-! Last updated on Saturday 13 Feb 2016 by Hyungmin
+! Generate the basepair model
+! Last updated on Fri 17 Mar 2017 by Hyungmin
 subroutine Basepair_Generate_Basepair(geom, bound, mesh)
     type(GeomType),  intent(in)    :: geom
     type(BoundType), intent(inout) :: bound
     type(MeshType),  intent(inout) :: mesh
 
     double precision :: length, pos_1(3), pos_2(3)
-    integer :: i, j, k, m, count, n_node, node_start, n_ele
-    integer :: point_1, point_2, point_arm
-    logical :: check_mesh
+    integer :: i, j, k, m, count, n_node, node_start, n_conn
+    integer :: poi_1, poi_2, poi_arm
 
     ! Print progress
     do i = 0, 11, 11
         call Space(i, 6)
-        write(i, "(a)"), "4.2. Discretize cross-sectional edges into basepairs"
+        write(i, "(a)"), "4.2. Discretize multiple lines into basepairs"
     end do
 
-    ! Allocate memory node and element data
+    ! Allocate and initialize mesh data
     allocate(mesh.node(mesh.n_node))
     allocate(mesh.ele(mesh.n_ele))
-
-    ! Initialize node and element data
     call Mani_Init_MeshType(mesh)
 
-    ! Initialize the number of nodes and elements
+    ! Initialize the number of nodes and conns
     n_node = 0
-    n_ele  = 0
+    n_conn = 0
 
     ! Dicretize and set connvectivity
-    check_mesh = .false.
     do i = 1, geom.n_croL
 
         pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
@@ -215,7 +206,7 @@ subroutine Basepair_Generate_Basepair(geom, bound, mesh)
         ! Set the first base pair position
         n_node = n_node + 1
 
-        ! Set nodal position and information at starting points 1
+        ! Set nodal position and information at the starting point
         mesh.node(n_node).id       = n_node
         mesh.node(n_node).bp       = 1
         mesh.node(n_node).sec      = geom.croL(i).sec
@@ -237,7 +228,7 @@ subroutine Basepair_Generate_Basepair(geom, bound, mesh)
         ! For junction connectivity
         node_start = n_node
 
-        ! Discretize sub edge
+        ! Discretize edge from the following node
         do j = 1, count
 
             ! Connectivity and information for new base pairs
@@ -274,82 +265,44 @@ subroutine Basepair_Generate_Basepair(geom, bound, mesh)
             end if
 
             ! Set finite element connectivity
-            n_ele = n_ele + 1
-            mesh.ele(n_ele).cn(1) = n_node - 1
-            mesh.ele(n_ele).cn(2) = n_node
-
+            n_conn = n_conn + 1
+            mesh.ele(n_conn).cn(1) = n_node - 1
+            mesh.ele(n_conn).cn(2) = n_node
         end do
 
-        ! --------------------------------------------------
+        ! ==================================================
         ! Set junction connectivity
-        ! Junction points are always starting and ending nodes
-        ! --------------------------------------------------
-        point_1 = geom.croL(i).poi(1)   ! Starting point
-        point_2 = geom.croL(i).poi(2)   ! Ending point
+        ! ==================================================
+        poi_1 = geom.croL(i).poi(1)   ! Start point
+        poi_2 = geom.croL(i).poi(2)   ! End point
         do j = 1, bound.n_junc
             do k = 1, bound.junc(j).n_arm
                 do m = 1, geom.n_sec
 
                     ! # of geom.n_modP is equal to geom.n_croP / geom.n_croP
-                    point_arm = bound.junc(j).modP(k) + (m - 1) * geom.n_croP / geom.n_sec
-                    point_arm = bound.junc(j).croP(k, m)
+                    !poi_arm = bound.junc(j).modP(k) + (m - 1) * geom.n_croP / geom.n_sec
+                    poi_arm = bound.junc(j).croP(k, m)
 
-                    if(point_1 == point_arm) bound.junc(j).node(k, m) = node_start
-                    if(point_2 == point_arm) bound.junc(j).node(k, m) = n_node
-
+                    if(poi_1 == poi_arm) bound.junc(j).node(k, m) = node_start
+                    if(poi_2 == poi_arm) bound.junc(j).node(k, m) = n_node
                 end do
             end do
         end do
 
-        ! --------------------------------------------------
         ! Print progress
-        ! --------------------------------------------------
         write(11, "(i20$  )"), i
-        write(11, "(a, i4$)"), " th edge (",           n_node-node_start+1
-        write(11, "(a, i7$)"), ") -> start node # : ", node_start
-        write(11, "(a, i7$)"), ", end node # : ",      n_node
-        write(11, "(a, i4$)"), ", sec # : ",           geom.croL(i).sec
-        write(11, "(a, i4 )"), ", init line # : ",     geom.croL(i).iniL
-
-        ! check edge bounday connectivity
-        if(mod(geom.croL(i).sec, 2) == 0) then
-            if(mesh.node(node_start).dn == -1 .and. mesh.node(n_node).up == -1) then
-                check_mesh = .true.
-            end if
-        else
-            if(mesh.node(node_start).up == -1 .and. mesh.node(n_node).dn == -1) then
-                check_mesh = .true.
-            end if
-        end if
+        write(11, "(a, i3$)"), " th line (",             n_node-node_start + 1
+        write(11, "(a, i6$)"), "-bp) - start node # : ", node_start
+        write(11, "(a, i6$)"), ", end node # : ",        n_node
+        write(11, "(a, i3$)"), ", sec # : ",             geom.croL(i).sec
+        write(11, "(a, i3 )"), ", init edge # : ",       geom.croL(i).iniL
     end do
-
-    if(check_mesh == .false.) then
-        write(0, "(a$)"), "Error - node boundary should be negative value : "
-        write(0, "(a )"), "Basepair_Generate"
-        stop
-    end if
-
-    ! Check the connection up or down in junction data should be -1
-    do i = 1, bound.n_junc
-        do j = 1, bound.junc(i).n_arm
-            do k = 1, geom.n_sec
-                if( mesh.node(bound.junc(i).node(j, k)).up /= -1 .and. &
-                    mesh.node(bound.junc(i).node(j, k)).dn /= -1 ) then
-
-                    write(0, "(a$)"), "Error - Not negative value : "
-                    write(0, "(a )"), "Basepair_Generate"
-                    stop
-                end if
-            end do
-        end do
-    end do
-
     write(0, "(a)"); write(11, "(a)")
 end subroutine Basepair_Generate_Basepair
 
 ! ---------------------------------------------------------------------------------------
 
-! Set sectional connection at junction
+! Set sectional connection at the junction
 ! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
     type(GeomType),  intent(inout) :: geom
@@ -358,11 +311,9 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
 
     integer, allocatable, dimension(:,:) :: connect
     integer, allocatable, dimension(:)   :: node_con
-    integer :: node_cur, iniL_cur, croL_cur, nei_cur(2)
-    integer :: node_com, iniL_com, croL_com, nei_com(2)
-    integer :: col_cur, row_cur, sec_cur
-    integer :: col_com, row_com, sec_com
-    integer :: i, j, k, m, n, count, n_column
+    integer :: node_cur, iniL_cur, croL_cur, node_com, iniL_com, croL_com
+    integer :: col_cur, row_cur, sec_cur, col_com, row_com, sec_com
+    integer :: i, j, k, m, n, count, n_column, nei_line(2)
     character(10) :: dir_cur, dir_com
 
     ! Print progress
@@ -370,26 +321,26 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
         call Space(i, 6)
         write(i, "(a)"), "4.3. Set connection for the junction"
         call Space(i, 11)
-        write(i, "(a)"), "* The number of junctions              : "//trim(adjustl(Int2Str(bound.n_junc)))
+        write(i, "(a)"), "* The number of junctions             : "//trim(adjustl(Int2Str(bound.n_junc)))
         call Space(i, 11)
-        write(i, "(a)"), "* The number of helices on section     : "//trim(adjustl(Int2Str(geom.n_sec)))
+        write(i, "(a)"), "* The number of duplexes on each edge : "//trim(adjustl(Int2Str(geom.n_sec)))
+        write(i, "(a)")
     end do
 
     ! The number of junction
     do i = 1, bound.n_junc
 
         ! Allocate arrary to store the nodes to be joined each other
-        allocate(connect(geom.n_sec*bound.junc(i).n_arm, 2))
+        allocate(connect(bound.junc(i).n_arm*geom.n_sec, 2))
 
         ! all nodes in the junction
         do j = 1, geom.n_sec
             do k = 1, bound.junc(i).n_arm
 
-                ! Allocate array to save candinate neighbor nodes
-                allocate(node_con(geom.n_sec))
-
+                ! Find the current node and its initial edge
                 node_cur = bound.junc(i).node(k, j)
                 iniL_cur = mesh.node(node_cur).iniL
+
                 croL_cur = mesh.node(node_cur).croL
                 sec_cur  = Geom.croL(croL_cur).sec
                 col_cur  = Geom.sec.posC(sec_cur + 1)
@@ -398,36 +349,37 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
 
                 if(geom.sec.posC(mesh.node(node_cur).sec + 1) < n_column / 2 + 1) then
                     ! Left and positivie sign
-                    nei_cur(1:2) = geom.iniL(iniL_cur).neiL(1:2, 1)
+                    nei_line(1:2) = geom.iniL(iniL_cur).neiL(1:2, 1)
                 else
                     ! Right and negative sign
-                    nei_cur(1:2) = geom.iniL(iniL_cur).neiL(1:2, 2)
+                    nei_line(1:2) = geom.iniL(iniL_cur).neiL(1:2, 2)
                 end if
 
                 ! Exception for the open boundary
-                if(nei_cur(1) == -1 .and. nei_cur(2) == -1) then
+                if(nei_line(1) == -1 .and. nei_line(2) == -1) then
                     bound.junc(i).type_conn(j) = 1
                     connect((j-1)*bound.junc(i).n_arm+k, 1) = node_cur
                     connect((j-1)*bound.junc(i).n_arm+k, 2) = -1
-                    deallocate(node_con)
                     cycle
                 end if
 
-                ! Find neighbor nodes in junction data
+                ! Allocate array to save candinate neighbor nodes
+                allocate(node_con(geom.n_sec))
+
+                ! Find the comparing node and its initial edge
                 do m = 1, geom.n_sec
                     do n = 1, bound.junc(i).n_arm
                         node_com = bound.junc(i).node(n, m)
                         iniL_com = mesh.node(node_com).iniL
 
-                        if(nei_cur(1) == iniL_com .or. nei_cur(2) == iniL_com) then
+                        if(nei_line(1) == iniL_com .or. nei_line(2) == iniL_com) then
                             node_con(m) = node_com
                         end if
                     end do
                 end do
 
-                ! Find the node to be connected, known - node_cur, node_con(1:geom.n_sec)
+                ! Find proper node among node_con, in which node_cur and node_con(1:geom.n_sec) are known
                 ! Check the initial line whether inword or outward vector to junction
-                ! Get iniL's direction, inward or outward to the junction
                 dir_cur = Basepair_Get_Direction_IniL(geom, mesh, node_cur)
 
                 ! Loop for every comparing node
@@ -438,9 +390,10 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
                     col_com  = Geom.sec.posC(sec_com + 1)
                     row_com  = Geom.sec.posR(sec_com + 1)
 
-                    ! Get iniL's direction, inward or outward to the junction
+                    ! Get the edge direction of comparing nodes, inward or outward to the junction
                     dir_com = Basepair_Get_Direction_IniL(geom, mesh, node_con(m))
 
+                    ! The connection will happen at the node with the same row
                     if(row_cur == row_com) then
 
                         ! If direction is the same and column index is reverse to original one
@@ -454,29 +407,25 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
                     end if
                 end do
 
+                ! Deallocate memory
                 deallocate(node_con)
             end do
         end do
 
-        !
-        ! Connect between node_cur and node_com in loop boundary connection
-        ! connect(j, 1) : current node
-        ! connect(j, 2) : comparing node to be connected with connect(j, 1)
-
-        ! Set sectional connection at junction (neighbor connection)
+        ! Set neighbor connection at junction
+        ! connect(j, 1) : current node -> connect(j, 2) : node to be connected with connect(j, 1)
         do j = 1, geom.n_sec*bound.junc(i).n_arm
             bound.junc(i).conn(j, 1) = connect(j, 1)
             bound.junc(i).conn(j, 2) = connect(j, 2)
 
             bound.junc(i).type_conn(j) = 1
-
-
-            !write(0, "(3i)"), i, connect(j, 1), connect(j, 2)
         end do
 
+        ! Deallocate memory
         deallocate(connect)
     end do
-    
+
+    ! Exception for the open geometry with conn == -1
     do i = 1, bound.n_junc
         do j = 1, geom.n_sec*bound.junc(i).n_arm
             if(bound.junc(i).conn(j, 2) == -1) then
@@ -487,17 +436,14 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
                     end if
                 end do
             end if
-            
-            !write(0, "(3i)"), i, bound.junc(i).conn(j, 1), bound.junc(i).conn(j, 2)
         end do
-        
-        
     end do
-    
 
-    ! --------------------------------------------------
+    ! ==================================================
+    !
     ! Internal node connection for self connection route
-    ! --------------------------------------------------
+    !
+    ! ==================================================
     ! Loop for junction
     do i = 1, bound.n_junc
         do j = 1, bound.junc(i).n_arm
@@ -516,7 +462,7 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
                     ! Check whether self or neighbor connection
                     if(geom.sec.conn(sec_cur + 1) /= sec_com) cycle
 
-                    ! Set sectional connection at junction (self connection)
+                    ! Set self connection at junction
                     bound.junc(i).conn((m-1)*bound.junc(i).n_arm+j, 1) = node_cur
                     bound.junc(i).conn((m-1)*bound.junc(i).n_arm+j, 2) = node_com
 
@@ -526,8 +472,81 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
         end do
     end do
 
-    write(0, "(a)"); write(11, "(a)")
+    ! Print bound data
+    !call Basepair_Print_Bound_Data(geom, bound)
 end subroutine Basepair_Set_Conn_Junction
+
+! ---------------------------------------------------------------------------------------
+
+! Print bound data
+! Last updated on Thu 09 Mar 2017 by Hyungmin
+subroutine Basepair_Print_Bound_Data(geom, bound)
+    type(GeomType),  intent(in) :: geom
+    type(BoundType), intent(in) :: bound
+
+    integer :: i, j, k
+
+    ! Check boundary data
+    do i = 1, bound.n_junc
+        write(0, "(3i)"), i, bound.junc(i).n_arm, bound.junc(i).poi_c
+        call Space(0, 20)
+        write(0, "(3f8.3)"), Rad2Deg(bound.junc(i).ref_ang), Rad2Deg(bound.junc(i).tot_ang), bound.junc(i).gap
+
+        ! Initial lines
+        call Space(0, 20)
+        do j = 1, bound.junc(i).n_arm
+            write(0, "(i4$)"), bound.junc(i).iniL(j)
+        end do
+        write(0, "(a)")
+
+        ! Seperated points
+        call Space(0, 20)
+        do j = 1, bound.junc(i).n_arm
+            write(0, "(i4$)"), bound.junc(i).modP(j)
+        end do
+        write(0, "(a)")
+
+        ! Multiple points
+        call Space(0, 20)
+        do j = 1, bound.junc(i).n_arm
+            do k = 1, geom.n_sec
+                write(0, "(i4$)"), bound.junc(i).croP(j, k)
+            end do
+            write(0, "(a$)"), ","
+        end do
+        write(0, "(a)")
+
+        ! Nodes
+        call Space(0, 20)
+        do j = 1, bound.junc(i).n_arm
+            do k = 1, geom.n_sec
+                write(0, "(i4$)"), bound.junc(i).node(j, k)
+            end do
+            write(0, "(a$)"), ","
+        end do
+        write(0, "(a)"); write(0, "(a)")
+
+        ! Node connectivity
+        call Space(0, 20)
+        do j = 1, geom.n_sec*bound.junc(i).n_arm
+            write(0, "(i8$)"), bound.junc(i).conn(j, 1)
+        end do
+        write(0, "(a)")
+        call Space(0, 20)
+        do j = 1, geom.n_sec*bound.junc(i).n_arm
+            write(0, "(i8$)"), bound.junc(i).conn(j, 2)
+        end do
+        write(0, "(a)")
+
+        ! Junction connection type
+        call Space(0, 20)
+        do j = 1, geom.n_sec*bound.junc(i).n_arm
+            write(0, "(i8$)"), bound.junc(i).type_conn(j)
+        end do
+        write(0, "(a)")
+        write(0, "(a)"); write(0, "(a)")
+    end do
+end subroutine Basepair_Print_Bound_Data
 
 ! ---------------------------------------------------------------------------------------
 
@@ -564,7 +583,7 @@ end function Basepair_Get_Direction_IniL
 ! ---------------------------------------------------------------------------------------
 
 ! Write cylindrial model with orientation
-! Last updated on Friday 27 Mar 2016 by Hyungmin
+! Last updated on Fri 17 Mar 2017 by Hyungmin
 subroutine Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, mode)
     type(ProbType),  intent(in) :: prob
     type(GeomType),  intent(in) :: geom
@@ -715,7 +734,7 @@ end subroutine Basepair_Chimera_Cylinder_Ori
 ! ---------------------------------------------------------------------------------------
 
 ! Write cylindrial model
-! Last updated on Thursday 26 May 2016 by Hyungmin
+! Last updated on Fri 17 Mar 2017 by Hyungmin
 subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     type(ProbType),  intent(in) :: prob
     type(GeomType),  intent(in) :: geom
@@ -859,15 +878,15 @@ end subroutine Basepair_Chimera_Cylinder
 
 ! ---------------------------------------------------------------------------------------
 
-! Modify junction to fill hole or avoid crash depending on vertex design
-! Last updated on Friday 05 August 2016 by Hyungmin
+! Modify the length of the duplex at the junction
+! Last updated on Fri 17 Mar 2017 by Hyungmin
 subroutine Basepair_Modify_Junction(geom, bound, mesh)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
     type(MeshType),  intent(inout) :: mesh
 
     integer, allocatable, dimension(:,:) :: conn
-    integer, allocatable, dimension(:)   :: type_conn
+    integer, allocatable, dimension(:)   :: t_conn
 
     integer :: node_cur, node_com, sec, col, row
     integer :: i, j, k, cn, n_conn, n_move
@@ -876,9 +895,9 @@ subroutine Basepair_Modify_Junction(geom, bound, mesh)
     ! Print progress
     do i = 0, 11, 11
         call Space(i, 6)
-        write(i, "(a)"), "4.4. Modify junction depending on vertex design"
+        write(i, "(a)"), "4.4. Modify the length of duplex at the junction"
         call Space(i, 11)
-        write(i, "(a)"), "* Increase or decrease the number of nodes around junction"
+        write(i, "(a)"), "* Find the proper length of duplex at the junction"
         call Space(i, 11)
         write(i, "(a)"), "* Update junction data with updated nodes"
         call Space(i, 11)
@@ -891,12 +910,12 @@ subroutine Basepair_Modify_Junction(geom, bound, mesh)
         ! Print progress bar
         call Mani_Progress_Bar(i, bound.n_junc)
 
-        ! Allocate conn that is not inlcuded duplicated data
-        ! The size of this array is the half of connection data
+        ! Allocate conn wihout duplicated data, which is the half of connection data
         n_conn = geom.n_sec * bound.junc(i).n_arm / 2
         allocate(conn(n_conn, 2))
-        allocate(type_conn(n_conn))
+        allocate(t_conn(n_conn))
 
+        ! Loop for junction nodes
         cn = 0
         do j = 1, n_conn * 2
 
@@ -918,27 +937,31 @@ subroutine Basepair_Modify_Junction(geom, bound, mesh)
             if(b_con == .false.) then
                 cn            = cn + 1
                 conn(cn, 1:2) = bound.junc(i).conn(j, 1:2)
-                type_conn(cn) = bound.junc(i).type_conn(j)
+                t_conn(cn)    = bound.junc(i).type_conn(j)
             end if
         end do
 
         ! Print progress
+        ! The data conn contains information on which node is connected to the current node
+        ! The data t_conn contains connection type, 1 - neighboring 2 - self connection
         write(11, "(i20$)"), i
-        write(11, "(a$  )"), " th junc -> # of nodes to be connected : "
+        write(11, "(a$  )"), " th junc -> # of arms : "
         write(11, "(i7  )"), n_conn
-
         do j = 1, n_conn
-
             write(11, "(i30, a$)"), conn(j, 1), " th node --> "
             write(11, "(i7,  a$)"), conn(j, 2), " th node,"
-            write(11, "(a12, i5)"), "type :", type_conn(j)
+            write(11, "(a12, i5)"), "type :", t_conn(j)
+        end do
+
+        ! Modify the edge length
+        do j = 1, n_conn
 
             ! Modify junction depending on connection type
-            if(type_conn(j) == 2) then
+            if(t_conn(j) == 2) then
 
                 ! ============================================================
                 !
-                ! Self-connection modification depending on vertex modeling
+                ! Self-connection modification
                 !
                 ! ============================================================
 
@@ -950,9 +973,7 @@ subroutine Basepair_Modify_Junction(geom, bound, mesh)
                 if(para_vertex_modify == "const") then
 
                     ! ------------------------------------------------------------
-                    !
                     ! Self-connectin #1 - constant edge length
-                    !
                     ! ------------------------------------------------------------
                     ! Set node connection as self-connection
                     mesh.node(node_cur).conn = 2
@@ -976,9 +997,7 @@ subroutine Basepair_Modify_Junction(geom, bound, mesh)
                 else if(para_vertex_modify == "mod1") then
 
                     ! ------------------------------------------------------------
-                    !
                     ! Self-connectin #2 - Decrease edge length to avoid crash
-                    !
                     ! ------------------------------------------------------------
                     sec = mesh.node(node_cur).sec
                     row = geom.sec.posR(sec + 1)
@@ -999,9 +1018,7 @@ subroutine Basepair_Modify_Junction(geom, bound, mesh)
                 else if(para_vertex_modify == "mod2") then
 
                     ! ------------------------------------------------------------
-                    !
                     ! Self-connectin #3 - modification using closet crossover
-                    !
                     ! ------------------------------------------------------------
                     ! Find closet crossovers nearby
                     n_move = Basepair_Find_Xover_Nearby(geom, bound, mesh, node_cur, node_com)
@@ -1023,12 +1040,11 @@ subroutine Basepair_Modify_Junction(geom, bound, mesh)
                     end if
 
                 end if
-
             else
 
                 ! ============================================================
                 !
-                ! For neighbor-connection, increase edge legnth to fill hole
+                ! Self-connection modification, increase edge legnth to fill hole
                 !
                 ! ============================================================
                 ! Node and sectional information
@@ -1042,7 +1058,8 @@ subroutine Basepair_Modify_Junction(geom, bound, mesh)
                 mesh.node(node_cur).conn = 3
                 mesh.node(node_com).conn = 3
 
-                ! If the node is reference, set 1 as sectional connectivity
+                ! If the node is reference, set 1 as node connectivity
+                ! -1 - no-connection, 1 - reference, 2 - self, 3 - modified neighbor, 4 - modified self
                 if(row == geom.sec.ref_row) then
                     if(col == geom.sec.ref_maxC .or. col == geom.sec.ref_minC) then
                         mesh.node(node_cur).conn = 1
@@ -1050,31 +1067,15 @@ subroutine Basepair_Modify_Junction(geom, bound, mesh)
                     end if
                 end if
 
-                ! If min or max junction design and small row number than reference, skip this loop
-                !     5 4
-                !   0     3  <------ reference row
-                !     1 2    <------ skip junctional modification
-                if(para_junc_ang /= "opt") then
-                    if(row <= geom.sec.ref_row) then
-                        if(col == geom.sec.ref_maxC .or. col == geom.sec.ref_minC) then
-                            cycle
-                        end if
-                    end if
-                end if
-
-                ! *--------->*        or        *<---------*
-                ! node_cur   node_com           node_cur   node_com
-                ! Modifiy current and comparing node with additional nodes
-                ! Increase edge length for neighbor connection
+                ! Increase edge length of the duplex to fill junctional gap
                 call Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
             end if
         end do
 
         ! Deallocate memory
         deallocate(conn)
-        deallocate(type_conn)
+        deallocate(t_conn)
     end do
-
     write(0, "(a)"); write(11, "(a)")
 end subroutine Basepair_Modify_Junction
 
@@ -1323,8 +1324,10 @@ end subroutine Basepair_Make_Ghost_Node
 
 ! ---------------------------------------------------------------------------------------
 
-! Increase edge length for neighbor connection
-! Last updated on Monday 11 June 2016 by Hyungmin
+! *--------->*        or        *<---------*
+! node_cur   node_com           node_cur   node_com
+! Increase edge length of the duplex to fill junctional gap
+! Last updated on Fri 17 Mar 2017 by Hyungmin
 subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
     type(geomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -1340,12 +1343,12 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
 
     b_increase = .false.
 
-    ! --------------------------------------------------
+    ! ==================================================
     !
     ! *--------->*         or        *<---------*
     ! node_cur   node_com            node_cur   node_com
     !
-    ! --------------------------------------------------
+    ! ==================================================
     ! Set direction, node_in and node_out
     if(mesh.node(node_cur).up == -1) then
 
@@ -1358,6 +1361,10 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
         node_in  = node_com
         node_out = node_cur
     end if
+
+    // 두벡터가 이루는 각도계산 하는 공식 다시 체크
+    // 두 포인트 사이의 거리와 공식으로 구해진 거리 비교
+    // 한직선 사이에 있는지 체크 하는 것 해볼 것,, 두점이 한직선에 있는지...
 
     ! Set down and up ID
     node_in_dn  = mesh.node(node_in).dn
@@ -1417,8 +1424,13 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
     length = dsqrt(((b-a)/2.0d0)**2.0d0 / (1.0d0-((y**2.0d0-((c-b)/2.0d0)**2.0d0)/y**2.0d0)))
     count  = dnint(length / dble(para_dist_bp))
 
+    
+    print *, length, count
+
+    stop
+
     ! Loop for adding new nodes
-    do i = 1, count
+    do i = 1, count - 1
 
         ! Add one basepair at the position indicating vector, return updated newly node ID
         call Basepair_Add_Basepair(geom, bound, mesh, node_in,  vec_in)
@@ -1430,8 +1442,8 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
 
     ! If the edge was modified, change junctional connectivity
     if(b_increase == .true.) then
-        mesh.node(node_in).conn  = 3
-        mesh.node(node_out).conn = 3
+        mesh.node(node_in).conn  = 1        ! Should be check
+        mesh.node(node_out).conn = 1
     end if
 end subroutine Basepair_Increase_Edge
 
