@@ -100,7 +100,7 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
     call Basepair_Delete_Ghost_Node(geom, bound, mesh)
 
     ! Add one base to 5'-end
-    call Basepair_Make_Sticky_End(geom, bound, mesh)
+    !call Basepair_Make_Sticky_End(geom, bound, mesh)
 
     ! Write cylindrial model with orientation
     call Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, "cyl2")
@@ -116,7 +116,7 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
 
     ! Write edge length
     call Basepair_Write_Edge_Length(prob, geom)
-!stop
+stop
 end subroutine Basepair_Discretize
 
 ! ---------------------------------------------------------------------------------------
@@ -1324,10 +1324,8 @@ end subroutine Basepair_Make_Ghost_Node
 
 ! ---------------------------------------------------------------------------------------
 
-! *--------->*        or        *<---------*
-! node_cur   node_com           node_cur   node_com
 ! Increase edge length of the duplex to fill junctional gap
-! Last updated on Fri 17 Mar 2017 by Hyungmin
+! Last updated on Mon 20 Mar 2017 by Hyungmin
 subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
     type(geomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -1341,34 +1339,30 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
     integer :: i, count, n_col_bottom
     logical :: b_increase
 
+    ! ==================================================
+    !     vertex                     vertex
+    ! *-----#---->*      or      *<----#-----*
+    ! node_cur   node_com        node_cur   node_com
+    !
+    ! ==================================================
+
     b_increase = .false.
 
-    ! ==================================================
-    !
-    ! *--------->*         or        *<---------*
-    ! node_cur   node_com            node_cur   node_com
-    !
-    ! ==================================================
-    ! Set direction, node_in and node_out
+    ! Set direction of node_in and node_out
     if(mesh.node(node_cur).up == -1) then
 
-        ! If the direction is "inward"
         node_in  = node_cur
         node_out = node_com
     else if(mesh.node(node_cur).dn == -1) then
 
-        ! If the direction is "outward"
         node_in  = node_com
         node_out = node_cur
     end if
 
-    // 두벡터가 이루는 각도계산 하는 공식 다시 체크
-    // 두 포인트 사이의 거리와 공식으로 구해진 거리 비교
-    // 한직선 사이에 있는지 체크 하는 것 해볼 것,, 두점이 한직선에 있는지...
-
     ! Set down and up ID
     node_in_dn  = mesh.node(node_in).dn
     node_out_up = mesh.node(node_out).up
+
     !
     !            @ angle
     !           ↗ ↘
@@ -1406,7 +1400,7 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
     ! Set inward and outward vector and find angle bewteen them
     vec_in(1:3)  = mesh.node(node_in).pos  - mesh.node(node_in_dn).pos
     vec_out(1:3) = mesh.node(node_out).pos - mesh.node(node_out_up).pos
-    angle        = dacos(dot_product(vec_in, vec_out)/(Size_Vector(vec_in)*Size_Vector(vec_out)))
+    angle        = datan2(Size_Vector(Cross_Product(vec_in, vec_out)), dot_product(vec_in, vec_out))
 
     ! 2nd cosine law to find the length, a
     len_side = para_rad_helix + para_gap_helix / 2.0d0
@@ -1420,14 +1414,10 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
     ! If two nodes are close, skip this subroutine
     if(a > b) return
 
+    //여기 부터 다시 시작
     ! Find final length
     length = dsqrt(((b-a)/2.0d0)**2.0d0 / (1.0d0-((y**2.0d0-((c-b)/2.0d0)**2.0d0)/y**2.0d0)))
     count  = dnint(length / dble(para_dist_bp))
-
-    
-    print *, length, count
-
-    stop
 
     ! Loop for adding new nodes
     do i = 1, count - 1
