@@ -3,15 +3,19 @@
 !
 !                                    Module for Route
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
 !                                                            First programed : 2015/04/21
-!                                                            Last  modified  : 2016/11/10
+!                                                            Last  modified  : 2016/03/21
+!
+! Comments: The module is to generate the dual graph and compute spanning tree.
+!
+! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
+!
+! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
+! M.I.T. hereby makes following copyrightable material available to the
+! public under GNU General Public License, version 2 (GPL-2.0). A copy of
+! this license is available at https://opensource.org/licenses/GPL-2.0
 !
 ! ---------------------------------------------------------------------------------------
-!
 module Route
 
     use Ifport
@@ -37,7 +41,7 @@ module Route
     private Route_Init_Base_Connectivity
     private Route_Set_Base_Position
     private Route_Chimera_Route
-    private Route_Reconnect_Junction
+    private Route_Connect_Strand_Junc
     private Route_Connect_Scaf
     private Route_Connect_Stap
     private Route_Add_Nucleotide
@@ -104,8 +108,8 @@ subroutine Route_Generation(prob, geom, bound, mesh, dna)
     ! Write scaffold route, step 1 - no connection at the junction
     call Route_Chimera_Route(prob, geom, mesh, dna, "route1")
 
-    ! Connect strands at the vertex by poly Tn loop or unpaired nucleotides
-    call Route_Reconnect_Junction(geom, bound, mesh, dna)
+    ! Connect strands at the junction by unpaired nucleotides
+    call Route_Connect_Strand_Junc(geom, bound, mesh, dna)
 
     ! Set the strand ID in scaffold
     call Route_Set_Strand_ID_Scaf(dna)
@@ -763,26 +767,25 @@ end subroutine Route_Chimera_Route
 
 ! ---------------------------------------------------------------------------------------
 
-! Connect strands at the vertex by poly Tn loop or unpaired nucleotides
-! Last updated on Saturday 13 June 2016 by Hyungmin
-subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
+! Connect strands at the junction by unpaired nucleotides
+! Last updated on Tue 21 Mar 2017 by Hyungmin
+subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
     type(GeomType),  intent(in)    :: geom
     type(BoundType), intent(in)    :: bound
     type(MeshType),  intent(in)    :: mesh
     type(DNAType),   intent(inout) :: dna
 
     integer, allocatable, dimension(:,:) :: conn
-    integer, allocatable, dimension(:,:) :: conn_new
-    integer, allocatable, dimension(:)   :: node_con
+    integer, allocatable, dimension(:,:) :: join
 
-    integer :: node_cur, iniL_cur, croL_cur, nei_cur(2), col_cur, row_cur, sec_cur
-    integer :: node_com, iniL_com, croL_com, nei_com(2), col_com, row_com, sec_com
+    integer :: node_cur, iniL_cur, croL_cur, sec_cur
+    integer :: node_com, iniL_com, croL_com, sec_com
     integer :: n_col, start, count, n_scaf, n_stap, n_face, n_conn
     integer :: i, j, k, m, n, n_add_base_scaf, n_add_base_stap
     logical :: b_conn
     character(10) :: dir_cur, dir_com
 
-    ! Print bound information
+    ! Print progress
     do i = 0, 11, 11
         call Space(i, 6)
         write(i, "(a )"), "5.3. Connect strands at the junction"
@@ -798,150 +801,24 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
         write(i, "(a)"), "* Detailed information on connection"
     end do
 
-    ! The number of additional bases
+    ! The number of added unpaired nucleotides
     n_add_base_scaf = 0
     n_add_base_stap = 0
 
-    ! Loop for junction to make neighbor connection
+    ! Loop for junction data
     do i = 1, bound.n_junc
 
         ! Print progress bar
         call Mani_Progress_Bar(i, bound.n_junc)
 
         ! Allocate conn arrary to store node to be connected
+        ! conn(j, 1) : current node
+        ! conn(j, 2) : node to be joined with conn(j, 1)
         allocate(conn(geom.n_sec*bound.junc(i).n_arm, 2))
 
-        ! ==================================================
-        !
-        ! Build conn data
-        ! conn(j, 1) : current node
-        ! conn(j, 2) : comparing node to be connected with conn(j, 1)
-        ! Size j     : geom.n_sec * bound.junc(i).n_arm
-        !
-        ! ==================================================
-        ! Loop for every node at each junction
-        do j = 1, geom.n_sec
-            do k = 1, bound.junc(i).n_arm
+        conn(:, 1) = bound.junc(i).conn(:, 1)
+        conn(:, 2) = bound.junc(i).conn(:, 2)
 
-                ! Allocate array to contain neighboring nodes
-                allocate(node_con(geom.n_sec))
-
-                node_cur = bound.junc(i).node(k, j)
-                iniL_cur = mesh.node(node_cur).iniL
-                croL_cur = mesh.node(node_cur).croL
-                sec_cur  = Geom.croL(croL_cur).sec
-                col_cur  = Geom.sec.posC(sec_cur + 1)
-                row_cur  = Geom.sec.posR(sec_cur + 1)
-                n_col    = geom.sec.maxC-geom.sec.minC + 1
-
-                if(geom.sec.posC(mesh.node(node_cur).sec + 1) < n_col / 2 + 1) then
-                    nei_cur(1:2) = geom.iniL(iniL_cur).neiL(1:2, 1)     ! left-hand side neighbor
-                else
-                    nei_cur(1:2) = geom.iniL(iniL_cur).neiL(1:2, 2)     ! right-hand side neighbor
-                end if
-
-                ! Exception for the open boundary
-                if(nei_cur(1) == -1 .and. nei_cur(2) == -1) then
-                    conn((j-1)*bound.junc(i).n_arm+k, 1) = node_cur
-                    conn((j-1)*bound.junc(i).n_arm+k, 2) = -1
-                    
-                    deallocate(node_con)
-                    cycle
-                end if
-
-                ! Find neighboring nodes
-                do m = 1, geom.n_sec
-                    do n = 1, bound.junc(i).n_arm
-                        node_com = bound.junc(i).node(n, m)
-                        iniL_com = mesh.node(node_com).iniL
-
-                        if(nei_cur(1) == iniL_com .or. nei_cur(2) == iniL_com) then
-                            node_con(m) = node_com
-                        end if
-                    end do
-                end do
-
-                ! Find the node to be connected, known - node_cur, node_com(1:geom.n_sec)
-                ! by direction from junction - comparing row and column
-                ! Check the line whether inword or outward vector to junction
-                if(mesh.node(node_cur).dn      == -1 .and. mod(sec_cur, 2) == 0) then
-                    dir_cur = "outward"
-                else if(mesh.node(node_cur).dn == -1 .and. mod(sec_cur, 2) /= 0) then
-                    dir_cur = "inward"
-                else if(mesh.node(node_cur).up == -1 .and. mod(sec_cur, 2) == 0) then
-                    dir_cur = "inward"
-                else if(mesh.node(node_cur).up == -1 .and. mod(sec_cur, 2) /= 0) then
-                    dir_cur = "outward"
-                else
-                    write(0, "(a$)"), "Error - The node_cur does not lay on the junction : "
-                    write(0, "(a )"), "Route_Reconnect_Junction"
-                    stop
-                end if
-
-                ! Loop for every comparing node
-                do m = 1, geom.n_sec
-
-                    croL_com = mesh.node(node_con(m)).croL
-                    sec_com  = Geom.croL(croL_com).sec
-                    col_com  = Geom.sec.posC(sec_com + 1)
-                    row_com  = Geom.sec.posR(sec_com + 1)
-
-                    ! Check the line whether inword or outward vector to junction
-                    if(mesh.node(node_con(m)).dn      == -1 .and. mod(sec_com, 2) == 0) then
-                        dir_com = "outward"
-                    else if(mesh.node(node_con(m)).dn == -1 .and. mod(sec_com, 2) /= 0) then
-                        dir_com = "inward"
-                    else if(mesh.node(node_con(m)).up == -1 .and. mod(sec_com, 2) == 0) then
-                        dir_com = "inward"
-                    else if(mesh.node(node_con(m)).up == -1 .and. mod(sec_com, 2) /= 0) then
-                        dir_com = "outward"
-                    else
-                        write(0, "(a$)"), "Error - The node_com does not lay on the junction : "
-                        write(0, "(a )"), "Route_Reconnect_Junction"
-                        !stop
-                    end if
-
-                    if(row_cur == row_com) then
-
-                        ! If direction is the same and column index is reverse to original one
-                        if(dir_cur == dir_com .and. col_cur == Geom.sec.maxC - col_com + 1) then
-                            conn((j-1)*bound.junc(i).n_arm+k, 1) = node_cur
-                            conn((j-1)*bound.junc(i).n_arm+k, 2) = node_con(m)
-                        else if(dir_cur /= dir_com .and. col_cur == col_com) then
-                            conn((j-1)*bound.junc(i).n_arm+k, 1) = node_cur
-                            conn((j-1)*bound.junc(i).n_arm+k, 2) = node_con(m)
-                        end if
-                    end if
-                end do
-
-                deallocate(node_con)
-            end do
-        end do
-
-        
-        do j = 1, geom.n_sec*bound.junc(i).n_arm
-            if(conn(j, 2) == -1) then
-                do k = j + 1, geom.n_sec*bound.junc(i).n_arm
-                    if(conn(k, 2) == -1) then
-                        conn(j, 2) = conn(k, 1)
-                        conn(k, 2) = conn(j, 1)
-                    end if
-                end do
-            end if
-            
-            
-            
-            
-            !print *, i, conn(j, 1), conn(j, 2)
-        end do
-
-        
-        
-        
-        
-        
-        
-        
         ! Print progress
         write(11, "(i20$)"), i
         write(11, "(a$  )"), " th junc -> # of nodes to be connected : "
@@ -952,46 +829,25 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
             write(11, "(i7, a  )"), conn(j, 2), " th node"
         end do
 
-        ! Check conn data
-        do j = 1, geom.n_sec*bound.junc(i).n_arm
-            node_cur = conn(j, 1)
-            node_com = conn(j, 2)
-
-            if(dna.base_scaf(node_cur).up      == -1 .and. dna.base_scaf(node_com).dn == -1) then
-                cycle
-            else if(dna.base_scaf(node_cur).dn == -1 .and. dna.base_scaf(node_com).up == -1) then
-                cycle
-            else if(dna.base_stap(node_cur).up == -1 .and. dna.base_stap(node_com).dn == -1) then
-                cycle
-            else if(dna.base_stap(node_cur).dn == -1 .and. dna.base_stap(node_com).up == -1) then
-                cycle
-            else
-                write(0, "(a$)"), "Error - Connectivity was wrong at the junction : "
-                write(0, "(a )"), "Route_Reconnect_Junction"
-                stop
-            end if
-        end do
-
         ! ==================================================
-        !
-        ! Build conn_new data - without any duplicate connection
-        !
+        ! Build join without any duplicate data
         ! ==================================================
-        ! Allocate conn_new that is not inlcuded duplicated data
-        allocate(conn_new(geom.n_sec*bound.junc(i).n_arm/2, 2))
+        ! Allocate join
+        allocate(join(geom.n_sec*bound.junc(i).n_arm/2, 2))
 
+        ! Find duplicate data
         n_conn = 0
         do j = 1, geom.n_sec*bound.junc(i).n_arm
 
             ! Compare with previous storaged data
             b_conn = .false.
             do k = 1, n_conn
-                if(conn_new(k, 1) == conn(j, 1)) then
-                    if(conn_new(k, 2) == conn(j, 2)) then
+                if(join(k, 1) == conn(j, 1)) then
+                    if(join(k, 2) == conn(j, 2)) then
                         b_conn = .true.
                     end if
-                else if(conn_new(k, 1) == conn(j, 2)) then
-                    if(conn_new(k, 2) == conn(j, 1)) then
+                else if(join(k, 1) == conn(j, 2)) then
+                    if(join(k, 2) == conn(j, 1)) then
                         b_conn = .true.
                     end if
                 end if
@@ -1000,27 +856,27 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
             ! If there is no entity in existing array
             if(b_conn == .false.) then
                 n_conn = n_conn + 1
-                conn_new(n_conn, 1:2) = conn(j, 1:2)
+                join(n_conn, 1:2) = conn(j, 1:2)
             end if
         end do
         deallocate(conn)
 
         ! ==================================================
         !
-        ! Connect node between conn_new(j, 1) and conn_new(j, 2)
+        ! Connect nodes between join(j,1) and join(j,2)
         ! Size j : geom.n_sec * bound.junc(i).n_arm / 2
         !
         ! ==================================================
-        ! Connect from current to comparing node
+        ! Connect node from join1 to join2
         do j = 1, geom.n_sec * bound.junc(i).n_arm / 2
             !
-            ! *--------->*            or       *<---------*
-            ! node_cur   node_com           node_cur   node_com
+            ! *--------->*         or    *<---------*
+            ! node_cur   node_com        node_cur   node_com
             !
-            ! Set current and comparing node to be connected each other
-            node_cur = conn_new(j, 1)
-            node_com = conn_new(j, 2)
-
+            ! Set current and comparing node to be connected
+            node_cur = join(j, 1)
+            node_com = join(j, 2)
+//  여기 부터
             ! ==================================================
             !
             ! Neighbor connection
@@ -1039,13 +895,13 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
             end if
         end do
 
-        deallocate(conn_new)
+        deallocate(join)
     end do
 
     
 
     
-    
+    stop
     
     
     ! ==================================================
@@ -1121,7 +977,8 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
     end do
 
     write(0, "(a)"); write(11, "(a)")
-end subroutine Route_Reconnect_Junction
+
+end subroutine Route_Connect_Strand_Junc
 
 ! ---------------------------------------------------------------------------------------
 
@@ -1145,6 +1002,7 @@ function Route_Connect_Scaf(mesh, dna, node_cur, node_com) result(n_add_base)
     pos_com(1:3) = dna.base_scaf(com).pos(1:3)
 
     ! Only for modified neighbor connection
+    !if(para_unpaired_scaf == "on") then
     if(para_unpaired_scaf == "on" .and. mesh.node(cur).conn == 3 .and. mesh.node(com).conn == 3) then
 
         ! mesh.node(cur).conn = 3 means modified neighbor connection

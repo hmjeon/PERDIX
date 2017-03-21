@@ -6198,7 +6198,7 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
     character(200) :: path
 
     ! For option
-    f_opt = .false.
+    f_opt = .true.
 
     if(para_write_703 == .false.) return
 
