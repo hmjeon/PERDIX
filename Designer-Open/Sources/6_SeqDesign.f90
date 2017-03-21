@@ -6184,26 +6184,28 @@ end subroutine SeqDesign_Chimera_Atom
 ! ---------------------------------------------------------------------------------------
 
 ! Write scaffold or staple route for Chimera
-! Last updated on Tuesday 9 August 2016 by Hyungmin
+! Last updated on Tur 21 Mar 2017 by Hyungmin
 subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
     type(ProbType), intent(in) :: prob
     type(MeshType), intent(in) :: mesh
     type(DNAType),  intent(in) :: dna
 
     double precision, allocatable :: base_scaf(:,:), base_stap(:,:)
-
-    double precision :: pos_1(3), pos_2(3), vec(3), radius
+    double precision :: pos_1(3), pos_2(3), vec(3)
     integer :: i, j, k, cur_base, up_base, down_base, cur_node, up_node
     integer :: n_base_scaf, n_base_stap
-    logical :: f_axis
+    logical :: f_axis, f_opt
     character(200) :: path
+
+    ! For option
+    f_opt = .false.
 
     if(para_write_703 == .false.) return
 
     ! Exception for Tecplot drawing
     if(para_output_Tecplot == "on") then
-        allocate(base_scaf (dna.n_base_scaf *2, 3))
-        allocate(base_stap (dna.n_base_stap *2, 3))
+        allocate(base_scaf (dna.n_base_scaf*2, 3))
+        allocate(base_stap (dna.n_base_stap*2, 3))
         n_base_scaf = 0
         n_base_stap = 0
     end if
@@ -6216,17 +6218,15 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
     open(unit=703, file=trim(path)//"_route6_scaf.bild", form="formatted")
     open(unit=704, file=trim(path)//"_route6_stap.bild", form="formatted")
 
-    ! --------------------------------------------------
-    !
-    ! For bases in the scaffold strand
-    !
-    ! --------------------------------------------------
+    ! ==================================================
+    ! For scaffold strand
+    ! ==================================================
     do i = 1, dna.n_strand
 
-        ! For scaffold strand
+        ! Only for the scaffold
         if(dna.strand(i).types /= "scaf") cycle
 
-        ! Loop for strand
+        ! Loop for bases
         do j = 1, dna.strand(i).n_base
 
             ! Find the base
@@ -6237,86 +6237,80 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
             ! Find the node for cur_base and up_base
             cur_node = dna.top(cur_base).node
 
+            ! For the unpaired nucleotide of the scaffold
             if(cur_node == -1) cycle
 
+            ! If the upper nt is not the nick
             if(up_base /= -1) then
 
                 ! Find the node for up_base
                 up_node = dna.top(up_base).node
             else
 
-                ! Draw point and skip if there is no upward base
-                !write(703, "(a     )"), ".color dark green"
-                !write(703, "(a$    )"), ".sphere "
-                !write(703, "(3f9.3$)"), mesh.node(cur_node).pos(1:3)
-                !write(703, "(1f9.3 )"), 0.2d0
+                ! Draw end point of the nick
+                if(f_opt == .true.) then
+                    write(703, "(a     )"), ".color dark green"
+                    write(703, "(a$    )"), ".sphere "
+                    write(703, "(3f9.3$)"), mesh.node(cur_node).pos(1:3)
+                    write(703, "(1f9.3 )"), 0.2d0
+                end if
                 cycle
             end if
 
-            ! Draw starting point as the point and arrow
+            ! Draw starting point with the arrow
             if(down_base == -1 .and. cur_node /= -1 .and. up_node /= -1) then
                 pos_1(1:3) = mesh.node(cur_node).pos(1:3)
                 pos_2(1:3) = mesh.node(up_node).pos(1:3)
                 vec(1:3)   = Normalize_Vector(pos_2 - pos_1)
 
-                !write(703, "(a     )"), ".color dark green"
-                !write(703, "(a$    )"), ".sphere "
-                !write(703, "(3f9.3$)"), mesh.node(cur_node).pos(1:3)
-                !write(703, "(1f9.3 )"), 0.2d0
-
-                !write(703, "(a$    )"), ".arrow "
-                !write(703, "(3f8.2$)"), pos_1(1:3)
-                !write(703, "(3f8.2$)"), pos_1(1:3) + vec(1:3)*1.3d0
-                !write(703, "(2f8.2 )"), 0.21d0, 0.4d0
+                if(f_opt == .true.) then
+                    write(703, "(a     )"), ".color dark green"
+                    write(703, "(a$    )"), ".arrow "
+                    write(703, "(3f8.2$)"), pos_1(1:3)
+                    write(703, "(3f8.2$)"), pos_1(1:3) + vec(1:3) * 1.3d0
+                    write(703, "(2f8.2 )"), 0.11d0, 0.35d0
+                end if
             end if
 
-            ! Color section for Tn loop and crossover
-            if(cur_node == -1 .or. up_node == -1) then
+            ! For Tn loop, crossover and scaffold
+            if(mesh.node(cur_node).up == -1) then
 
-                ! Check Tn loop
-                if(cur_node /= -1 .and. up_node == -1) then
-                    do
-                        if(up_base == -1) cycle
-                        if(dna.top(up_base).node /= -1) exit
-                        up_base = dna.top(up_base).up
-                    end do
-                else
-                    cycle
-                end if
-
-                if(up_base == -1) cycle
+                ! For Tn loop with tan
+                do
+                    if(dna.top(up_base).node /= -1) exit
+                    up_base = dna.top(up_base).up
+                end do
                 up_node = dna.top(up_base).node
-                write(703, "(a)"), ".color orange"
-                radius = 0.1d0
-            else if(dna.top(cur_base).xover == up_base) then
-
-                ! Crossovers color
-                write(703, "(a)"), ".color red"
-                radius = 0.1d0
+                if(f_opt == .true.)  write(703, "(a)"), ".color tan"
+                if(f_opt == .false.) write(703, "(a)"), ".color steel blue"
             else
 
-                ! Scaffold strand color
-                write(703, "(a)"), ".color steel blue"
-                radius = 0.1d0
+                if(dna.top(cur_base).xover == up_base) then
+                    ! For crossovers with red
+                    write(703, "(a)"), ".color red"
+                else
+                    ! For scaffold with blue
+                    write(703, "(a)"), ".color steel blue"
+                end if
             end if
 
             ! Draw route path
             write(703, "(a$    )"), ".cylinder "
             write(703, "(3f9.3$)"), mesh.node(cur_node).pos(1:3)
-            write(703, "(3f9.3$)"), mesh.node(up_node).pos(1:3)
-            write(703, "(1f9.3 )"), radius
+            write(703, "(3f9.3$)"), mesh.node(up_node ).pos(1:3)
+            write(703, "(1f9.3 )"), 0.1d0
 
             if(para_output_Tecplot == "on") then
                 base_scaf(n_base_scaf + 1, 1:3) = mesh.node(cur_node).pos(1:3)
-                base_scaf(n_base_scaf + 2, 1:3) = mesh.node(up_node).pos(1:3)
+                base_scaf(n_base_scaf + 2, 1:3) = mesh.node(up_node ).pos(1:3)
                 n_base_scaf = n_base_scaf + 2
             end if
         end do
     end do
 
-    ! --------------------------------------------------
+    ! ==================================================
     ! For bases in the staple strand
-    ! --------------------------------------------------
+    ! ==================================================
     do i = 1, dna.n_strand
 
         ! For staple strand
@@ -6333,6 +6327,7 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
             ! Find the node for cur_base ann up_base
             cur_node = dna.top(cur_base).node
 
+            ! For the unpaired nucleotide of staples
             if(cur_node == -1) cycle
 
             if(up_base /= -1) then
@@ -6341,66 +6336,58 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
                 up_node = dna.top(up_base).node
             else
 
-                ! Draw point and skip if there is no upward base
-                !write(704, "(a     )"), ".color dark green"
-                !write(704, "(a$    )"), ".sphere "
-                !write(704, "(3f9.3$)"), mesh.node(cur_node).pos(1:3)
-                !write(704, "(1f9.3 )"), 0.2d0
+                ! Draw end point of the nick
+                if(f_opt == .true.) then
+                    write(704, "(a     )"), ".color dark green"
+                    write(704, "(a$    )"), ".sphere "
+                    write(704, "(3f9.3$)"), mesh.node(cur_node).pos(1:3)
+                    write(704, "(1f9.3 )"), 0.2d0
+                end if
                 cycle
             end if
 
-            ! Draw starting point as the point and arrow
+            ! Draw starting point with the arrow
             if(down_base == -1 .and. cur_node /= -1 .and. up_node /= -1) then
                 pos_1(1:3) = mesh.node(cur_node).pos(1:3)
                 pos_2(1:3) = mesh.node(up_node).pos(1:3)
                 vec(1:3)   = Normalize_Vector(pos_2 - pos_1)
 
-                !write(704, "(a     )"), ".color dark green"
-                !write(704, "(a$    )"), ".sphere "
-                !write(704, "(3f9.3$)"), mesh.node(cur_node).pos(1:3)
-                !write(704, "(1f9.3 )"), 0.2d0
-
-                !write(704, "(a$    )"), ".arrow "
-                !write(704, "(3f8.2$)"), pos_1(1:3)
-                !write(704, "(3f8.2$)"), pos_1(1:3) + vec(1:3)*1.5d0
-                !write(704, "(2f8.2 )"), 0.31d0, 0.55d0
+                if(f_opt == .true.) then
+                    write(704, "(a     )"), ".color dark green"
+                    write(704, "(a$    )"), ".arrow "
+                    write(704, "(3f8.2$)"), pos_1(1:3)
+                    write(704, "(3f8.2$)"), pos_1(1:3) + vec(1:3) * 1.3d0
+                    write(704, "(2f8.2 )"), 0.11d0, 0.35d0
+                end if
             end if
 
-            ! Color section for Tn loop and crossover
-            if(cur_node == -1 .or. up_node == -1) then
+            ! For Tn loop, crossover and staples
+            if(mesh.node(cur_node).dn == -1) then
 
-                ! Check Tn loop
-                if(cur_node /= -1 .and. up_node == -1) then
-                    do
-                        if(up_base == -1) cycle
-                        if(dna.top(up_base).node /= -1) exit
-                        up_base = dna.top(up_base).up
-                    end do
-                else
-                    cycle
-                end if
-
-                if(up_base == -1) cycle
+                ! For Tn loop with tan
+                do
+                    if(dna.top(up_base).node /= -1) exit
+                    up_base = dna.top(up_base).up
+                end do
                 up_node = dna.top(up_base).node
-                write(704, "(a)"), ".color orange"
-                radius = 0.1d0
-            else if(dna.top(cur_base).xover == up_base) then
-
-                ! Crossovers color
-                write(704, "(a)"), ".color red"
-                radius = 0.1d0
+                if(f_opt == .true.)  write(704, "(a)"), ".color tan"
+                if(f_opt == .false.) write(704, "(a)"), ".color orange"
             else
 
-                ! Staple strand color
-                write(704, "(a)"), ".color orange"
-                radius = 0.1d0
+                if(dna.top(cur_base).xover == up_base) then
+                    ! For crossovers with red
+                    write(704, "(a)"), ".color red"
+                else
+                    ! For scaffold with blue
+                    write(704, "(a)"), ".color orange"
+                end if
             end if
 
             ! Draw route path
             write(704, "(a$    )"), ".cylinder "
             write(704, "(3f9.3$)"), mesh.node(cur_node).pos(1:3)
             write(704, "(3f9.3$)"), mesh.node(up_node).pos(1:3)
-            write(704, "(1f9.3 )"), radius
+            write(704, "(1f9.3 )"), 0.1d0
 
             if(para_output_Tecplot == "on") then
                 base_stap(n_base_stap + 1, 1:3) = mesh.node(cur_node).pos(1:3)
@@ -6429,12 +6416,16 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
     close(unit=703)
     close(unit=704)
 
-    ! ---------------------------------------------
+    ! ==================================================
     !
-    ! Write the file for Tecplot
+    ! For Tecplot
     !
-    ! ---------------------------------------------
-    if(para_output_Tecplot == "off") return
+    ! ==================================================
+    if(para_output_Tecplot == "off") then
+        if(allocated(base_scaf)) deallocate(base_scaf)
+        if(allocated(base_stap)) deallocate(base_stap)
+        return
+    end if
 
     path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
     open(unit=703, file=trim(path)//"_route6_scaf.dat", form="formatted")
@@ -6471,8 +6462,8 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
         write(704, "(2i7)"), 2*i, 2*i-1
     end do
 
-    if(allocated(base_scaf))  deallocate(base_scaf)
-    if(allocated(base_stap))  deallocate(base_stap)
+    if(allocated(base_scaf)) deallocate(base_scaf)
+    if(allocated(base_stap)) deallocate(base_stap)
 
     close(unit=703)
     close(unit=704)

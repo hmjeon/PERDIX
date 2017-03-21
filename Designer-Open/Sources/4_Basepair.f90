@@ -100,7 +100,7 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
     call Basepair_Delete_Ghost_Node(geom, bound, mesh)
 
     ! Add one base to 5'-end
-    !call Basepair_Make_Sticky_End(geom, bound, mesh)
+    call Basepair_Make_Sticky_End(geom, bound, mesh)
 
     ! Write cylindrial model with orientation
     call Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, "cyl2")
@@ -116,7 +116,6 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
 
     ! Write edge length
     call Basepair_Write_Edge_Length(prob, geom)
-stop
 end subroutine Basepair_Discretize
 
 ! ---------------------------------------------------------------------------------------
@@ -1040,32 +1039,16 @@ subroutine Basepair_Modify_Junction(geom, bound, mesh)
                     end if
 
                 end if
-            else
+            else if(t_conn(j) == 1) then
 
                 ! ============================================================
                 !
-                ! Self-connection modification, increase edge legnth to fill hole
+                ! neighbor-connection modification, increase edge legnth to fill hole
                 !
                 ! ============================================================
                 ! Node and sectional information
                 node_cur = conn(j, 1)
                 node_com = conn(j, 2)
-                sec      = mesh.node(node_cur).sec
-                col      = Geom.sec.posC(sec + 1)
-                row      = Geom.sec.posR(sec + 1)
-
-                ! Set nodes as modified neighbor connection
-                mesh.node(node_cur).conn = 3
-                mesh.node(node_com).conn = 3
-
-                ! If the node is reference, set 1 as node connectivity
-                ! -1 - no-connection, 1 - reference, 2 - self, 3 - modified neighbor, 4 - modified self
-                if(row == geom.sec.ref_row) then
-                    if(col == geom.sec.ref_maxC .or. col == geom.sec.ref_minC) then
-                        mesh.node(node_cur).conn = 1
-                        mesh.node(node_com).conn = 1
-                    end if
-                end if
 
                 ! Increase edge length of the duplex to fill junctional gap
                 call Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
@@ -1337,7 +1320,6 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
     double precision :: length, pos(3), vec_in(3), vec_out(3)
     integer :: node_in, node_out, node_in_dn, node_out_up
     integer :: i, count, n_col_bottom
-    logical :: b_increase
 
     ! ==================================================
     !     vertex                     vertex
@@ -1345,8 +1327,6 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
     ! node_cur   node_com        node_cur   node_com
     !
     ! ==================================================
-
-    b_increase = .false.
 
     ! Set direction of node_in and node_out
     if(mesh.node(node_cur).up == -1) then
@@ -1412,35 +1392,35 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
     y = para_dist_bp
 
     ! If two nodes are close, skip this subroutine
-    if(a > b) return
+    if(dabs(a-b) < 0.001d0 ) then
+        mesh.node(node_in ).conn = 1
+        mesh.node(node_out).conn = 1
+        return
+    end if
 
-    //여기 부터 다시 시작
-    ! Find final length
+    ! Find required length to be increased
     length = dsqrt(((b-a)/2.0d0)**2.0d0 / (1.0d0-((y**2.0d0-((c-b)/2.0d0)**2.0d0)/y**2.0d0)))
-    count  = dnint(length / dble(para_dist_bp))
+    count  = floor(length / dble(para_dist_bp))
 
-    ! Loop for adding new nodes
-    do i = 1, count - 1
+    ! Add new nodes in node_in
+    do i = 1, count
 
-        ! Add one basepair at the position indicating vector, return updated newly node ID
+        ! Add one bp at the end indicating vector, vec_in and return newly node ID
         call Basepair_Add_Basepair(geom, bound, mesh, node_in,  vec_in)
         call Basepair_Add_Basepair(geom, bound, mesh, node_out, vec_out)
 
-        ! If the node was added, change junctional connectivity
-        b_increase = .true.
+        ! After the edge was increased, change connectivity
+        if(i == count) then
+            mesh.node(node_in ).conn = 3
+            mesh.node(node_out).conn = 3
+        end if
     end do
-
-    ! If the edge was modified, change junctional connectivity
-    if(b_increase == .true.) then
-        mesh.node(node_in).conn  = 1        ! Should be check
-        mesh.node(node_out).conn = 1
-    end if
 end subroutine Basepair_Increase_Edge
 
 ! ---------------------------------------------------------------------------------------
 
-! Add one basepair at the position indicating vector, vec, return updated newly node ID
-! Last updated on Thursday 04 August 2016 by Hyungmin
+! Add one bp at the end indicating vector, vec_in and return newly node ID
+! Last updated on Thu 21 Mar 2017 by Hyungmin
 subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     type(GeomType),   intent(inout) :: geom
     type(BoundType),  intent(inout) :: bound
@@ -1456,7 +1436,7 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     ! Allocate temporal node data
     allocate(t_node(mesh.n_node))
 
-    ! Copy from original data(mesh.node) to temporal data(t_node)
+    ! Copy data from 'mesh.node' to 't_node'
     call Mani_Copy_NodeType(mesh.node, t_node, mesh.n_node)
 
     ! Deallocate original node data
@@ -1468,14 +1448,12 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     ! Reallocate node data
     allocate(mesh.node(mesh.n_node))
 
-    ! Copy from temporal data(t_node) to original data(mesh.node)
+    ! Copy data from 't_node' to 'mesh.node'
     call Mani_Copy_NodeType(t_node, mesh.node, mesh.n_node - 1)
 
-    ! --------------------------------------------------
-    !
+    ! ==================================================
     ! Set up new added node information
-    !
-    ! --------------------------------------------------
+    ! ==================================================
     ! Set node id
     mesh.node(mesh.n_node).id = mesh.n_node
 
@@ -1515,8 +1493,7 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
         mesh.node(node).dn        = mesh.n_node
     else
 
-        write(0, "(a$)"), "Error - Not junction : "
-        write(0, "(a )"), "Basepair_Add_Node"
+        write(0, "(a)"), "Error - junctional connectivity : Basepair_Add_Basepair"
         stop
     end if
 
@@ -1543,15 +1520,13 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     ! Deallocate temporal node data
     deallocate(t_node)
 
-    ! --------------------------------------------------
-    !
-    ! Set up element connectivity
-    !
-    ! --------------------------------------------------
+    ! ==================================================
+    ! Set element connectivity
+    ! ==================================================
     ! Allocate temporal element data
     allocate(t_ele(mesh.n_ele))
 
-    ! Copy from original data to temporal data
+    ! Copy data from 'mesh.ele' to 't_ele'
     call Mani_Copy_EleType(mesh.ele, t_ele, mesh.n_ele)
 
     ! Deallocate original data
@@ -1563,7 +1538,7 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     ! Reallocate original data
     allocate(mesh.ele(mesh.n_ele))
 
-    ! Copy from temporal data to original data
+    ! Copy data from 't_ele' to 'mesh.ele'
     call Mani_Copy_EleType(t_ele, mesh.ele, mesh.n_ele - 1)
 
     ! Set added element connectivity
@@ -1573,11 +1548,9 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     ! Deallocate temporal element data
     deallocate(t_ele)
 
-    ! --------------------------------------------------
-    !
+    ! ==================================================
     ! Update junction information
-    !
-    ! --------------------------------------------------
+    ! ==================================================
     do i = 1, bound.n_junc
         do j = 1, geom.n_sec
             do k = 1, bound.junc(i).n_arm
@@ -1588,7 +1561,7 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
                     ! Update newly added node
                     bound.junc(i).node(k, j) = mesh.n_node
 
-                    ! Update cross-section point
+                    ! Update multiple points
                     croP = bound.junc(i).croP(k, j)
                     geom.croP(croP).pos(1:3) = mesh.node(mesh.n_node).pos(1:3)
                 end if
@@ -1604,7 +1577,7 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
         end do
     end do
 
-    ! Update newly added node number
+    ! Return value, newly added node ID
     node = mesh.n_node
 end subroutine Basepair_Add_Basepair
 
@@ -1920,8 +1893,8 @@ end subroutine Basepair_Delete_Nodes
 
 ! ---------------------------------------------------------------------------------------
 
-! Make stick end with one additional node at inward direction from vertex
-! Last updated on Thuesday 17 August 2016 by Hyungmin
+! Add one base to 5'-end
+! Last updated on Tue 21 Mar 2017 by Hyungmin
 subroutine Basepair_Make_Sticky_End(geom, bound, mesh)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -1968,6 +1941,9 @@ subroutine Basepair_Make_Sticky_End(geom, bound, mesh)
 
                 ! If modified self connection, skip this loop
                 if(mesh.node(node).conn == 4 .and. para_sticky_self == "off") cycle
+
+                ! If modified neighbor connection, skip this loop
+                if(mesh.node(node).conn == 3) cycle
 
                 ! If the node is inward direction from vertex
                 if(mesh.node(node).dn == -1) then

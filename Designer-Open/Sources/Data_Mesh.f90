@@ -26,8 +26,8 @@ module Data_Mesh
         integer :: iniL     ! Initial line ID
         integer :: croL     ! Cross-section line ID
 
-        ! Nodal connectivity at vertex
-        ! -1 - no-connection, 1 - reference, 2 - self, 3 - modified neighbor, 4 - modified self
+        ! Nodal connectivity at the section
+        ! -1 - no-connection, 1 - neighbor, 2 - self, 3 - modified neighbor, 4 - modified self
         integer :: conn = -1
 
         ! Ghost node : -1 : normal node, 1 : ghost node to be deleted

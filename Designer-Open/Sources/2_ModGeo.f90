@@ -1110,7 +1110,7 @@ function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
     type(BoundType), intent(inout) :: bound
 
     double precision, allocatable, dimension (:,:) :: pos_modP
-    double precision :: tot_ang, ref_ang, ang, width
+    double precision :: tot_ang, ref_ang, ang, width, factor
     double precision :: scale, length, min_length, diff, cur_length
     double precision :: pos_cur(3), pos_opp(3), vec_a(3), vec_b(3)
     integer :: i, j, poi_cur, poi_1, poi_2
@@ -1139,9 +1139,18 @@ function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
         ! Total angle : Reference angle = 2 pi : ang
         ang = ref_ang * (2.0d0 * pi / tot_ang)
 
+        ! 0.2    -------- 60
+        ! factor -------- ang-ref_ang
+        ! 0.0    -------- 0
+        if(geom.sec.n_col == 2) then
+            factor = (0.20d0-0.0d0)*(ang-ref_ang)/Deg2Rad(60.0d0) + 0.0d0
+        else
+            factor = 0.0d0
+        end if
+
         if(tot_ang <= 2.0d0 * pi) then
             ! Total angle : Inradius = 2 pi : bound.junc(i).gap
-            bound.junc(i).gap = width/2.0d0/dtan(ang/2.0d0) * (2.0d0 * pi / tot_ang)
+            bound.junc(i).gap = (width/2.0d0/dtan(ang/2.0d0) + factor) * (2.0d0 * pi / tot_ang)
 
             ! Find the apothem of a regular polygon at the junction
             ! a = 0.5*s/tan(180/n), https://en.wikipedia.org/wiki/Apothem

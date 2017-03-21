@@ -272,7 +272,7 @@ end subroutine Mani_Init_Ele
 ! ---------------------------------------------------------------------------
 
 ! Copy node data from ori to copy with size num
-! Last updated on Monday 11 June 2016 by Hyungmin
+! Last updated on Tue 21 Mar 2017 by Hyungmin
 subroutine Mani_Copy_NodeType(ori, copy, num)
     type(NodeType), intent(in)    :: ori(:)
     type(NodeType), intent(inout) :: copy(:)
@@ -282,20 +282,20 @@ subroutine Mani_Copy_NodeType(ori, copy, num)
 
     ! Copy node data from ori to copy with size num
     do i = 1, num
-        copy(i).id    = ori(i).id         ! Node ID
-        copy(i).up    = ori(i).up         ! Upward ID
-        copy(i).dn    = ori(i).dn         ! Downward ID
-        copy(i).bp    = ori(i).bp         ! Base pair ID
-        copy(i).sec   = ori(i).sec        ! Cross-section ID
-        copy(i).iniL  = ori(i).iniL       ! Initial line
-        copy(i).croL  = ori(i).croL       ! Crossectional line
-        copy(i).conn  = ori(i).conn       ! Connection type
-        copy(i).ghost = ori(i).ghost      ! Ghost node
+        copy(i).id    = ori(i).id       ! Node ID
+        copy(i).bp    = ori(i).bp       ! Base pair ID
+        copy(i).up    = ori(i).up       ! Upward ID
+        copy(i).dn    = ori(i).dn       ! Downward ID
+        copy(i).sec   = ori(i).sec      ! Cross-section ID
+        copy(i).iniL  = ori(i).iniL     ! Initial line
+        copy(i).croL  = ori(i).croL     ! Crossectional line
+        copy(i).conn  = ori(i).conn     ! Connection type
+        copy(i).ghost = ori(i).ghost    ! Ghost node
 
         ! Position and orientation vector
         do j = 1, 3
-            copy(i).pos(j)      = ori(i).pos(j)
-            copy(i).ori(j, 1:3) = ori(i).ori(j, 1:3)
+            copy(i).pos(j)   = ori(i).pos(j)
+            copy(i).ori(j,:) = ori(i).ori(j,:)
         end do
     end do
 end subroutine
@@ -303,7 +303,7 @@ end subroutine
 ! ---------------------------------------------------------------------------
 
 ! Copy element data from ori to copy with size num
-! Last updated on Monday 11 June 2016 by Hyungmin
+! Last updated on Tue 21 Mar 2017 by Hyungmin
 subroutine Mani_Copy_EleType(ori, copy, num)
     type(EleType), intent(in)    :: ori(:)
     type(EleType), intent(inout) :: copy(:)
@@ -313,7 +313,7 @@ subroutine Mani_Copy_EleType(ori, copy, num)
 
     ! Copy connectivity connectivity
     do i = 1, num
-        copy(i).cn(1:2) = ori(i).cn(1:2)
+        copy(i).cn(:) = ori(i).cn(:)
     end do
 end subroutine
 
