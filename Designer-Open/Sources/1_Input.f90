@@ -40,6 +40,7 @@ module Input
 
     private Input_Read_Parameter
     private Input_Reset_Parameter
+    private Input_Set_Parameter_Dependence
     private Input_Set_Command
     private Input_Print_Problem
     private Input_Print_Section
@@ -122,13 +123,14 @@ subroutine Input_Initialization(prob, geom)
         arg = 3; call getarg(arg, c_edge_len)    ! 3rd argument, edge length
         arg = 4; call getarg(arg, c_stap_break)  ! 4th argument, staple-break rule
 
-        prob.name_file = trim(c_prob)
+        !prob.name_file = trim(c_prob)
+        read(c_prob,     *), n_problem
         read(c_sec,      *), n_section
         read(c_edge_len, *), n_edge_len
 
         ! Set inputs for geometry, section, edge length, stap-break rule
         ! Zero means that it will take arbitrary inputs
-        prob.sel_prob        = 0
+        prob.sel_prob        = n_problem
         prob.sel_sec         = n_section
         prob.sel_bp_edge     = n_edge_len
         para_cut_stap_method = trim(c_stap_break)
@@ -665,6 +667,9 @@ subroutine Input_Read_Parameter
         end if
     end if
 
+    ! Set parameter dependence
+    call Input_Set_Parameter_Dependence
+
     close(unit=1)
 end subroutine Input_Read_Parameter
 
@@ -683,7 +688,7 @@ subroutine Input_Reset_Parameter
     para_fig_bgcolor     = "black"    ! [black, white, all], Background color for figures from UCSF Chimera
     para_fig_view        = "xy"       ! [xy, xz, xyz, all], Viewpoint for figures from UCSF Chimera
     para_n_route_step    = 5          ! [5], The number of steps in routing progress
-    para_type_cndo       = 2          ! [2, 1], CanDo file option, 1 : original format, 2 : updated format
+    para_type_cndo       = 1          ! [1, 2], CanDo file option, 1 : original format, 2 : updated format
     para_path_Chimera    = "C:\Program Files\Chimera 1.10.2\bin\chimera.exe"
 
     ! Parameters for junction modification
@@ -709,7 +714,7 @@ subroutine Input_Reset_Parameter
     para_method_MST      = "prim"     ! [prim, kruskal, greedy], Minimum spanning tree algorithm
     para_method_sort     = "quick"    ! [none, quick, shell], Sorting algorithm to find MST for Prim or Kruskal
     para_adjacent_list   = "off"      ! [off, on], Output for adjacent list for Prim or Kruskal
-    para_all_spanning    = "on"       ! [on, off], Possible all spanning tree when # of edges is less than 12 for Prim or Kruskal
+    para_all_spanning    = "off"      ! [off, on], Possible all spanning tree when # of edges is less than 12 for Prim or Kruskal
 
     para_cut_stap_method = "max"      ! [max, mix, opt, min, mid], Cutting method to make short staple strand, opt - 14nt seeds
     para_set_stap_sxover = "off"      ! [off, on], To make non-circular staple by single crossover (when para_set_stap_sxover is "on")
@@ -723,13 +728,25 @@ subroutine Input_Reset_Parameter
     para_gap_xover_nick1      = 10    ! [10], The minimum gap between xover(scaf/stap)/Tn and first nick
     para_gap_xover_nick       = 3     ! [3 ], The minimum gap between xover and nick, if staple length exceeds 60, redesign with num - 1
 
-    para_max_cut_scaf         = 0     ! [0, -1], The maximum number of nucleotides for one scaffold strand (maximum : 7249nt)
+    para_max_cut_scaf         = 0     ! [0, 7249], Scaffold break - 0 : not breaking, num : breaking over num
     para_min_cut_stap         = 20    ! [20], The minimum number of nucleotides for one staple strand
     para_mid_cut_stap         = 40    ! [40], The optimal number of nucleotides for one staple strand
     para_max_cut_stap         = 60    ! [60], The maximum number of nucleotides for one staple strand
     para_set_seq_scaf         = 0     ! [0, 1, 2], Scaffold sequence, 0 - M13mp18(7249nt), 1 - import sequence from seq.txt, 2 - random
     para_set_start_scaf       = 1     ! [1], Starting nucleotide position of scaffold strand
+
+    ! Set parameter dependence
+    call Input_Set_Parameter_Dependence
 end subroutine Input_Reset_Parameter
+
+! ---------------------------------------------------------------------------------------
+
+! Set parameter dependence
+subroutine Input_Set_Parameter_Dependence
+
+    ! If new version cndo format, cut long scaffold
+    if(para_type_cndo == 2) para_max_cut_scaf = 7247
+end subroutine Input_Set_Parameter_Dependence
 
 ! ---------------------------------------------------------------------------------------
 
@@ -846,16 +863,15 @@ subroutine Input_Print_Num_BP_Edge(prob)
         write(0, "(a)")
         write(0, "(a)"), "   [Honeycomb lattice]"
         write(0, "(a)")
-        write(0, "(a)"), "      1.  31 bp =  3 turn * 10.5 bp/turn ->  31 bp * 0.34nm/bp = 10.71nm"
-        write(0, "(a)"), "   *  2.  42 bp =  4 turn * 10.5 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
-        write(0, "(a)"), "      3.  52 bp =  5 turn * 10.5 bp/turn ->  52 bp * 0.34nm/bp = 17.85nm"
-        write(0, "(a)"), "   *  4.  63 bp =  6 turn * 10.5 bp/turn ->  63 bp * 0.34nm/bp = 21.42nm"
-        write(0, "(a)"), "      5.  73 bp =  7 turn * 10.5 bp/turn ->  73 bp * 0.34nm/bp = 24.99nm"
-        write(0, "(a)"), "   *  6.  84 bp =  8 turn * 10.5 bp/turn ->  84 bp * 0.34nm/bp = 28.56nm"
-        write(0, "(a)"), "      7.  94 bp =  9 turn * 10.5 bp/turn ->  94 bp * 0.34nm/bp = 32.13nm"
-        write(0, "(a)"), "   *  8. 105 bp = 10 turn * 10.5 bp/turn -> 105 bp * 0.34nm/bp = 35.70nm"
-        write(0, "(a)"), "      9. 115 bp = 11 turn * 10.5 bp/turn -> 115 bp * 0.34nm/bp = 39.27nm"
-        write(0, "(a)"), "   * 10. 126 bp = 12 turn * 10.5 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
+        write(0, "(a)"), "   *  1.  42 bp =  4 turn * 10.5 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
+        write(0, "(a)"), "      2.  52 bp =  5 turn * 10.5 bp/turn ->  52 bp * 0.34nm/bp = 17.85nm"
+        write(0, "(a)"), "   *  3.  63 bp =  6 turn * 10.5 bp/turn ->  63 bp * 0.34nm/bp = 21.42nm"
+        write(0, "(a)"), "      4.  73 bp =  7 turn * 10.5 bp/turn ->  73 bp * 0.34nm/bp = 24.99nm"
+        write(0, "(a)"), "   *  5.  84 bp =  8 turn * 10.5 bp/turn ->  84 bp * 0.34nm/bp = 28.56nm"
+        write(0, "(a)"), "      6.  94 bp =  9 turn * 10.5 bp/turn ->  94 bp * 0.34nm/bp = 32.13nm"
+        write(0, "(a)"), "   *  7. 105 bp = 10 turn * 10.5 bp/turn -> 105 bp * 0.34nm/bp = 35.70nm"
+        write(0, "(a)"), "      8. 115 bp = 11 turn * 10.5 bp/turn -> 115 bp * 0.34nm/bp = 39.27nm"
+        write(0, "(a)"), "   *  9. 126 bp = 12 turn * 10.5 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
         write(0, "(a)")
     end if
 
@@ -1279,16 +1295,15 @@ subroutine Input_Set_Num_BP_Edge(prob, geom)
         if(prob.sel_bp_edge == 10) prob.n_bp_edge = 128     ! 10.67bp * 12
     else if(geom.sec.types == "honeycomb") then
 
-        if(prob.sel_bp_edge == 1)  prob.n_bp_edge = 31      ! 10.5bp * 3
-        if(prob.sel_bp_edge == 2)  prob.n_bp_edge = 42      ! 10.5bp * 4
-        if(prob.sel_bp_edge == 3)  prob.n_bp_edge = 52      ! 10.5bp * 5
-        if(prob.sel_bp_edge == 4)  prob.n_bp_edge = 63      ! 10.5bp * 6
-        if(prob.sel_bp_edge == 5)  prob.n_bp_edge = 73      ! 10.5bp * 7
-        if(prob.sel_bp_edge == 6)  prob.n_bp_edge = 84      ! 10.5bp * 8
-        if(prob.sel_bp_edge == 7)  prob.n_bp_edge = 94      ! 10.5bp * 9
-        if(prob.sel_bp_edge == 8)  prob.n_bp_edge = 105     ! 10.5bp * 10
-        if(prob.sel_bp_edge == 9)  prob.n_bp_edge = 115     ! 10.5bp * 11
-        if(prob.sel_bp_edge == 10) prob.n_bp_edge = 126     ! 10.5bp * 12
+        if(prob.sel_bp_edge == 1) prob.n_bp_edge = 42      ! 10.5bp * 4
+        if(prob.sel_bp_edge == 2) prob.n_bp_edge = 52      ! 10.5bp * 5
+        if(prob.sel_bp_edge == 3) prob.n_bp_edge = 63      ! 10.5bp * 6
+        if(prob.sel_bp_edge == 4) prob.n_bp_edge = 73      ! 10.5bp * 7
+        if(prob.sel_bp_edge == 5) prob.n_bp_edge = 84      ! 10.5bp * 8
+        if(prob.sel_bp_edge == 6) prob.n_bp_edge = 94      ! 10.5bp * 9
+        if(prob.sel_bp_edge == 7) prob.n_bp_edge = 105     ! 10.5bp * 10
+        if(prob.sel_bp_edge == 8) prob.n_bp_edge = 115     ! 10.5bp * 11
+        if(prob.sel_bp_edge == 9) prob.n_bp_edge = 126     ! 10.5bp * 12
     end if
 
     ! Increase the number of basepair for self-connection

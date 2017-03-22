@@ -1,14 +1,19 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                                   Module for SeqDesign
+!                               Module for SeqDesign
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
 !                                                            First programed : 2015/11/11
-!                                                            Last  modified  : 2016/11/14
+!                                                            Last  modified  : 2016/03/21
+!
+! Comments: The module is to break staples ranging from 20-bp to 60-bp.
+!
+! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
+!
+! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
+! M.I.T. hereby makes following copyrightable material available to the
+! public under GNU General Public License, version 2 (GPL-2.0). A copy of
+! this license is available at https://opensource.org/licenses/GPL-2.0
 !
 ! ---------------------------------------------------------------------------------------
 !
@@ -39,8 +44,8 @@ module SeqDesign
     private SeqDesign_Make_Noncir_Stap_Nick
     private SeqDesign_Make_Nick_Scaf
     private SeqDesign_Make_Short_Scaf
-    private SeqDesign_Build_Sequence_Design_Max
-    private SeqDesign_Build_Sequence_Design_Opt
+    private SeqDesign_Break_Staples_Length
+    private SeqDesign_Break_Staples_Seeds
     private SeqDesign_Build_Sequence_Design_Mix
     private SeqDesign_Build_Sequence_Design
     private SeqDesign_Avoid_Barrier
@@ -102,28 +107,19 @@ subroutine SeqDesign_Design(prob, geom, mesh, dna)
     ! Build strand data from dnaTop
     call SeqDesign_Build_Strand(dna)
 
-    ! Make non-circular staple strand
+    ! Make non-circular staples by placing the nick
     call SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
 
+    ! Break staples ranging from 20-bp to 60-bp
+    if(para_cut_stap_method == "max") then
 
+        ! Maximized staple length - staple-break rule
+        call SeqDesign_Break_Staples_Length(prob, mesh, dna)
+    else if(para_cut_stap_method == "opt") then
 
-    ! Build sequence design with non-circular staple strands
-    ! ++++++++++++++++++++++++++
-    ! max에 문제가 발생됨
-    ! ++++++++++++++++++++++++++
-    if(para_cut_stap_method == "max") call SeqDesign_Build_Sequence_Design_Max(prob, mesh, dna)
-    if(para_cut_stap_method == "opt") call SeqDesign_Build_Sequence_Design_Opt(prob, mesh, dna)
-
-    ! ==================================================
-    !
-    ! Rebuild strand data from dnaTop
-    !call SeqDesign_Rebuild_Strand(dna)
-
-    ! Chimera sequence design
-    !call SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
-    !stop
-    !
-    ! ==================================================
+        ! Maximized the number of seeds - staple-break rule
+        call SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
+    end if
 
     ! Make nick in scaffold strand
     call SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
@@ -138,7 +134,9 @@ subroutine SeqDesign_Design(prob, geom, mesh, dna)
     call SeqDesign_Order_Staple(dna)
 
     ! Print 14nt region with various representations
-    if(para_max_cut_scaf == 0) call SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
+    if(para_max_cut_scaf == 0) then
+        call SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
+    end if
 
     ! Assign DNA sequence according to para_set_seq_scaf
     call SeqDesign_Assign_Sequence(dna)
@@ -776,8 +774,8 @@ end subroutine SeqDesign_Make_Noncir_Stap_Single_Xover
 
 ! ---------------------------------------------------------------------------------------
 
-! Make non-circular staple strand
-! Last updated on Wednesday 09 August 2016 by Hyungmin
+! Make non-circular staples by placing the nick
+! Last updated on Wed 22 Mar 2017 by Hyungmin
 subroutine SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
     type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
@@ -785,16 +783,16 @@ subroutine SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
     integer :: i, j, base, init_base, across, node, dn_base
     integer :: count, max_count, start_base, max_start_base
 
-    ! Loop to make non-circular staples
+    ! Loop for all staples
     do i = 1, dna.n_strand
 
         ! Only for staple strand
         if(dna.strand(i).types == "scaf") cycle
 
-        ! Find non-circular strand
+        ! Find non-circular staples
         if(dna.strand(i).b_circular == .true.) then
 
-            ! Find first base position in which the double crossover exists
+            ! Find the position in which the double crossover exists
             base = dna.strand(i).base(1)
             do j = 1, dna.strand(i).n_base
                 if( dna.top(base).xover /= -1 .and. &
@@ -807,7 +805,7 @@ subroutine SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
             ! In case of the small or vertex dsDNA region
             init_base = base
 
-            ! Find maximum length region
+            ! Find region with maximum length
             count      = 1
             max_count  = 0
             start_base = base
@@ -817,6 +815,7 @@ subroutine SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
                 across = dna.top(base).across
 
                 if(across == -1) then
+
                     ! For base in Tn-loop
                     if(max_count < count) then
                         max_count      = count
@@ -825,12 +824,15 @@ subroutine SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
                     count      = 0
                     start_base = base
                 else
+
                     ! Check scaffold and staple crossovers
                     if(dna.top(base).xover /= -1 .or. dna.top(across).xover /= -1) then
+
                         if(max_count < count) then
                             max_count      = count
                             max_start_base = start_base
                         end if
+
                         count      = 0
                         start_base = base
                     end if
@@ -880,7 +882,7 @@ subroutine SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
     ! Print progress
     do i = 0, 11, 11
         call Space(i, 6)
-        write(i, "(a)"), "6.3. Make non-circular strand"
+        write(i, "(a)"), "6.3. Make non-circular stapes"
         call Space(i, 11)
         write(i, "(a)"), "* The number of staple strands             : "//trim(adjustl(Int2Str(dna.n_base_stap)))
         write(i, "(a)")
@@ -1274,7 +1276,7 @@ end subroutine SeqDesign_Build_Sequence_Design_Mix
 
 ! Build sequence design with non-circular staple strands with 14nt seeds
 ! Last updated on Thursday 10 November 2016 by Hyungmin
-subroutine SeqDesign_Build_Sequence_Design_Opt(prob, mesh, dna)
+subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
     type(ProbType), intent(inout) :: prob
     type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
@@ -1680,13 +1682,13 @@ subroutine SeqDesign_Build_Sequence_Design_Opt(prob, mesh, dna)
         ! Deallocate memory
         deallocate(region)
     end do
-end subroutine SeqDesign_Build_Sequence_Design_Opt
+end subroutine SeqDesign_Break_Staples_Seeds
 
 ! ---------------------------------------------------------------------------------------
 
-! Build sequence design with maximum cutting
-! Last updated on Wednesday 2 November 2016 by Hyungmin
-subroutine SeqDesign_Build_Sequence_Design_Max(prob, mesh, dna)
+! Maximized staple length - staple-break rule
+! Last updated on Wed 22 Mar 2017 by Hyungmin
+subroutine SeqDesign_Break_Staples_Length(prob, mesh, dna)
     type(ProbType), intent(inout) :: prob
     type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
@@ -1697,7 +1699,7 @@ subroutine SeqDesign_Build_Sequence_Design_Max(prob, mesh, dna)
     integer :: n_region, cn_tn, length, final_length, cen_pos, pre_pos, bgn_pos, base1, base2
     logical :: b_cut, b_ext
 
-    ! Loop for sequence design
+    ! Loop for staples
     do i = 1, dna.n_strand
 
         ! Only for staple strand
@@ -1706,17 +1708,15 @@ subroutine SeqDesign_Build_Sequence_Design_Max(prob, mesh, dna)
         ! For short staple, para_max_cut_stap <= 60
         if(dna.strand(i).n_base <= para_max_cut_stap) cycle
 
-        ! Count unpaired staple nucleotides if it contains Tn loop
+        ! Count unpaired nucleotides for current staple
         cn_tn = 0
         do j = 1, dna.strand(i).n_base
             base = dna.strand(i).base(j)
             if(dna.top(base).across == -1) cn_tn = cn_tn + 1
         end do
 
-        ! For vertex in case of DX tile design
-        !if(cn_tn > 0 .and. prob.sel_sec == 1 .and. dna.strand(i).n_base < 80) cycle
-
-        ! Skip for vertex slightly long staple < 70
+        ! Exception for longer staple in the vertex
+        if(cn_tn > 0 .and. prob.sel_sec == 1 .and. dna.strand(i).n_base < 80) cycle
         if(cn_tn > 0 .and. prob.sel_sec == 3 .and. dna.strand(i).n_base < 70) cycle
 
         ! ==================================================
@@ -1841,7 +1841,7 @@ subroutine SeqDesign_Build_Sequence_Design_Max(prob, mesh, dna)
                 end do
 
                 ! 1 : with single crossover
-                if(1 .and. region(jj).types == 1 .and. region(jj).length <= 9) then
+                if(0 .and. region(jj).types == 1 .and. region(jj).length <= 9) then
 
                     ! Make single crossover
                     if(dna.top(dna.top(region(jj).end_base).up).across == -1) then
@@ -2006,8 +2006,10 @@ subroutine SeqDesign_Build_Sequence_Design_Max(prob, mesh, dna)
         write(0, "(a)"); write(11, "(a)")
 
         deallocate(region)
+        
     end do
-end subroutine SeqDesign_Build_Sequence_Design_Max
+    !stop
+end subroutine SeqDesign_Break_Staples_Length
 
 ! ---------------------------------------------------------------------------------------
 
@@ -2681,12 +2683,6 @@ subroutine SeqDesign_Make_Short_Scaf(mesh, dna)
     ! Exception current subroutine
     if(para_max_cut_scaf == 0) then
         return
-    else if(para_max_cut_scaf == -1) then
-        if(dna.strand(1).n_base > 7249) then
-            para_max_cut_scaf = 3000
-        else
-            return
-        end if
     end if
 
     ! Loop to make short scaffold strand
@@ -6486,7 +6482,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     double precision :: pos_1(3), pos_2(3), vec(3), RGB(3)
     integer :: i, j, k, base, up_base, node, up_node
     integer :: croL, iniL, count_scaf, count_stap
-    logical :: f_axis
+    logical :: f_axis, f_unpaired
     character(15)  :: col_list(16)
     character(200) :: path
 
@@ -6502,7 +6498,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
 
     ! File open for sequence design
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=705, file=trim(path)//"_sequence_design.bild", form="formatted")
+    open(unit=705, file=trim(path)//"_seq_design.bild", form="formatted")
 
     if(para_output_Tecplot == "on") then
         allocate(base_scaf(dna.n_base_scaf*2, 3))
@@ -6533,7 +6529,6 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     ! For bases of the scaffold strand
     !
     ! --------------------------------------------------
-    write(705, "(a)"), ".color steel blue"
     do i = 1, dna.n_strand
 
         ! Only for scaffold strand
@@ -6553,12 +6548,14 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
             up_node = dna.top(up_base).node
 
             ! Draw bases in unpaired nucleotides
+            f_unpaired = .false.
             if(node == -1 .or. up_node == -1) then
                 if(node /= -1 .and. up_node == -1) then
                     do
                         if(up_base == -1) cycle
                         if(dna.top(up_base).node /= -1) exit
-                        up_base = dna.top(up_base).up
+                        up_base    = dna.top(up_base).up
+                        f_unpaired = .true.
                     end do
                 else
                     cycle
@@ -6615,6 +6612,8 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
             !vec_jt2(1:3) = Normalize_Vector(vec - vec_jn)
 
             ! Draw route path
+            if(f_unpaired == .true. ) write(705, "(a)"), ".color red"
+            if(f_unpaired == .false.) write(705, "(a)"), ".color steel blue"
             write(705, "(a$    )"), ".cylinder "
             write(705, "(3f9.3$)"), mesh.node(node).pos    !+ vec_jt1*0.5d0
             write(705, "(3f9.3$)"), mesh.node(up_node).pos !+ vec_jt2*0.5d0

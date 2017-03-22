@@ -333,7 +333,7 @@ subroutine Exam_Open3D_End_Cylinder_Quad(prob, geom)
     para_fig_view = "XY"
 
     ! Set mesh
-    n  = 5
+    n  = 4
     nz = n
     nr = 8
 
