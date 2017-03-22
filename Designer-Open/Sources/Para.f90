@@ -40,7 +40,6 @@ module Para
     character(10)  :: para_const_edge_mesh = "off"      ! [off, on], Constant edge length from polyhedra mesh
     character(10)  :: para_sticky_self     = "off"      ! [off, on], Sticky-end for self connection on henycomb cross-section
     character(10)  :: para_unpaired_scaf   = "on"       ! [on, off], Unpaired scaffold nucleotides
-    character(10)  :: para_unpaired_square = "on"       ! [on, off], Unpaired scaffold and staple nucleotides at the vertex when square lattice
     character(10)  :: para_vertex_modify   = "const"    ! [const, mod], Vertex modification to avoid clash
     character(10)  :: para_vertex_design   = "flat"     ! [flat, beveled], Vertex design
 

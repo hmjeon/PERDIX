@@ -781,7 +781,7 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
     integer :: node_cur, iniL_cur, croL_cur, sec_cur
     integer :: node_com, iniL_com, croL_com, sec_com
     integer :: n_col, start, count, n_scaf, n_stap, n_face, n_conn
-    integer :: i, j, k, m, n, n_add_base_scaf, n_add_base_stap
+    integer :: i, j, k, m, n, n_add_nt_scaf, n_add_nt_stap
     logical :: b_conn
     character(10) :: dir_cur, dir_com
 
@@ -802,8 +802,8 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
     end do
 
     ! The number of added unpaired nucleotides
-    n_add_base_scaf = 0
-    n_add_base_stap = 0
+    n_add_nt_scaf = 0
+    n_add_nt_stap = 0
 
     ! Loop for junction data
     do i = 1, bound.n_junc
@@ -863,47 +863,31 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
 
         ! ==================================================
         !
-        ! Connect nodes between join(j,1) and join(j,2)
-        ! Size j : geom.n_sec * bound.junc(i).n_arm / 2
+        ! Connect join1 with join2 - neighbor connection
         !
         ! ==================================================
-        ! Connect node from join1 to join2
         do j = 1, geom.n_sec * bound.junc(i).n_arm / 2
-            !
-            ! *--------->*         or    *<---------*
-            ! node_cur   node_com        node_cur   node_com
-            !
-            ! Set current and comparing node to be connected
+
+            ! Set current and comparing node to be joined
             node_cur = join(j, 1)
             node_com = join(j, 2)
-//  여기 부터
-            ! ==================================================
-            !
-            ! Neighbor connection
-            ! For scaffold - connect with/without unpaired nucleotides
-            ! For staple - connect with poly Tn loop
-            !
-            ! ==================================================
+
+            ! Connect strand with unpaired nucleotides
             if(geom.sec.conn(mesh.node(node_cur).sec + 1) == -1) then
-                ! Connect scaffold with/without unpaired nucleotides
-                n_add_base_scaf = n_add_base_scaf + &
+                ! Connect two scaffolds with/without unpaired nucleotides
+                n_add_nt_scaf = n_add_nt_scaf + &
                     Route_Connect_Scaf(mesh, dna, node_cur, node_com)
 
-                ! Connect staple with poly Tn loop
-                n_add_base_stap = n_add_base_stap + &
+                ! Connect two staples with poly Tn loop
+                n_add_nt_stap = n_add_nt_stap + &
                     Route_Connect_Stap(mesh, dna, node_cur, node_com)
             end if
         end do
 
+        ! Deallocate memory
         deallocate(join)
     end do
 
-    
-
-    
-    stop
-    
-    
     ! ==================================================
     !
     ! Self connection
@@ -926,72 +910,61 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
                     if(geom.sec.conn(sec_cur+1) /= sec_com) cycle
 
                     ! Connect scaffold strand in the same section without unpaired nucleotides
-                    n_add_base_scaf = n_add_base_scaf + &
+                    n_add_nt_scaf = n_add_nt_scaf + &
                         Route_Connect_Scaf(mesh, dna, node_cur, node_com)
                 end do
             end do
         end do
     end do
 
-    ! Check the closed scaffold strand
-    do i = 1, dna.n_base_scaf
-        if(dna.base_scaf(i).up == -1 .or. dna.base_scaf(i).dn == -1) then
-            write(0, "(a$)"), "Error - Not circular scaffold : "
-            write(0, "(a )"), "Route_Reconnect_Junction"
-            stop
-        end if
-    end do
-
     ! Print progress
     do i = 0, 11, 11
         call Space(i, 11)
-        write(i, "(a)"), "* The number of bases in scaffold strand      : "&
+        write(i, "(a)"), "* The number of nucleotides in the scaffold  : "&
             //trim(adjustl(Int2Str(dna.n_base_scaf)))
         call Space(i, 11)
-        write(i, "(a)"), "* The number of bases in staple strand        : "&
+        write(i, "(a)"), "* The number of nucleotides in staples       : "&
             //trim(adjustl(Int2Str(dna.n_base_stap)))
         call Space(i, 11)
-        write(i, "(a)"), "* The number of unpaired scaffold nucleotides : "&
-            //trim(adjustl(Int2Str(n_add_base_scaf)))
+        write(i, "(a)"), "* The number of unpaired nts in the scaffold : "&
+            //trim(adjustl(Int2Str(n_add_nt_scaf)))
         call Space(i, 11)
-        write(i, "(a)"), "* The number of added bases in poly Tn loop   : "&
-            //trim(adjustl(Int2Str(n_add_base_stap)))
+        write(i, "(a)"), "* The number of unpaired nts in staples      : "&
+            //trim(adjustl(Int2Str(n_add_nt_stap)))
     end do
 
     do j = 1, dna.n_base_scaf
         write(11, "(i20$  )"), dna.base_scaf(j).id
-        write(11, "(a, i7$)"), " th scaf -> node # : ", dna.base_scaf(j).node
-        write(11, "(a, i7$)"), ", up # : ",             dna.base_scaf(j).up
-        write(11, "(a, i7$)"), ", down # : ",           dna.base_scaf(j).dn
-        write(11, "(a, i7$)"), ", xover # : ",          dna.base_scaf(j).xover
-        write(11, "(a, i7 )"), ", across # : ",         dna.base_scaf(j).across
+        write(11, "(a, i5$)"), " th scaf -> node # : ", dna.base_scaf(j).node
+        write(11, "(a, i5$)"), ", up # : ",             dna.base_scaf(j).up
+        write(11, "(a, i5$)"), ", down # : ",           dna.base_scaf(j).dn
+        write(11, "(a, i5$)"), ", xover # : ",          dna.base_scaf(j).xover
+        write(11, "(a, i5 )"), ", across # : ",         dna.base_scaf(j).across
     end do
 
     do j = 1, dna.n_base_stap
         write(11, "(i20$  )"), dna.base_stap(j).id
-        write(11, "(a, i7$)"), " th stap -> node # : ", dna.base_stap(j).node
-        write(11, "(a, i7$)"), ", up # : ",             dna.base_stap(j).up
-        write(11, "(a, i7$)"), ", down # : ",           dna.base_stap(j).dn
-        write(11, "(a, i7$)"), ", xover # : ",          dna.base_stap(j).xover
-        write(11, "(a, i7 )"), ", across # : ",         dna.base_stap(j).across
+        write(11, "(a, i5$)"), " th stap -> node # : ", dna.base_stap(j).node
+        write(11, "(a, i5$)"), ", up # : ",             dna.base_stap(j).up
+        write(11, "(a, i5$)"), ", down # : ",           dna.base_stap(j).dn
+        write(11, "(a, i5$)"), ", xover # : ",          dna.base_stap(j).xover
+        write(11, "(a, i5 )"), ", across # : ",         dna.base_stap(j).across
     end do
-
     write(0, "(a)"); write(11, "(a)")
-
 end subroutine Route_Connect_Strand_Junc
 
 ! ---------------------------------------------------------------------------------------
 
-! Connect scaffold with/without unpaired nucleotides
-! Last updated on Saturday 13 August 2016 by Hyungmin
-function Route_Connect_Scaf(mesh, dna, node_cur, node_com) result(n_add_base)
+! Connect two scaffolds with/without unpaired nucleotides
+! Last updated on Wed 22 Mar 2017 by Hyungmin
+function Route_Connect_Scaf(mesh, dna, node_cur, node_com) result(count)
     type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
     integer,        intent(in)    :: node_cur
     integer,        intent(in)    :: node_com
 
     double precision :: pos_cur(3), pos_com(3), pos(3), length
-    integer :: i, cur, com, ttt, n_add_base
+    integer :: i, cur, com, ttt, count
 
     ! Set current and comparing nodes
     cur = node_cur
@@ -1002,25 +975,16 @@ function Route_Connect_Scaf(mesh, dna, node_cur, node_com) result(n_add_base)
     pos_com(1:3) = dna.base_scaf(com).pos(1:3)
 
     ! Only for modified neighbor connection
-    !if(para_unpaired_scaf == "on") then
-    if(para_unpaired_scaf == "on" .and. mesh.node(cur).conn == 3 .and. mesh.node(com).conn == 3) then
-
-        ! mesh.node(cur).conn = 3 means modified neighbor connection
-        length     = Size_Vector(pos_cur - pos_com)
-        n_add_base = idnint(length/para_dist_pp) - 1
-
-        if(para_unpaired_square == "on") then
-            n_add_base = n_add_base + 2
+    count = 0
+    if(para_unpaired_scaf == "on") then
+        if(mesh.node(cur).conn /= 1 .and. mesh.node(com).conn /= 1) then
+            length = Size_Vector(pos_cur - pos_com)
+            count  = floor((length-para_dist_pp)/dble(para_dist_pp))
+            if(count < 0) count = 0
         end if
-    else if(para_unpaired_square == "on" .and. mesh.node(cur).conn == 1 .and. mesh.node(com).conn == 1) then
-
-        ! mesh.node(cur).conn = 2 means original neighbor connection
-        n_add_base = 2
-    else
-
-        n_add_base = 0
     end if
 
+    ! Connect scaffolds acrossing vertex
     if(dna.base_scaf(cur).up == -1 .and. dna.base_scaf(com).dn == -1) then
         !
         ! --------------------------------------------------
@@ -1035,11 +999,11 @@ function Route_Connect_Scaf(mesh, dna, node_cur, node_com) result(n_add_base)
         dna.base_scaf(com).dn = dna.base_scaf(cur).id
 
         ! Add bases for depending on the distance between two bases
-        do i = 1, n_add_base
+        do i = 1, count
 
             ! Find additional base position
             ! *---#---#---#---#---*     ex)4 bases
-            pos(1:3) = (dble(i)*pos_com(1:3) + dble(n_add_base+1-i)*pos_cur(1:3)) / dble(n_add_base+1)
+            pos(1:3) = (dble(i)*pos_com(1:3) + dble(count+1-i)*pos_cur(1:3)) / dble(count+1)
 
             ! Add one neucleotide
             call Route_Add_Nucleotide(dna.base_scaf, dna.n_base_scaf, pos(1:3))
@@ -1069,10 +1033,10 @@ function Route_Connect_Scaf(mesh, dna, node_cur, node_com) result(n_add_base)
         dna.base_scaf(com).up = dna.base_scaf(cur).id
 
         ! Add bases depending on the distance between two bases
-        do i = 1, n_add_base
+        do i = 1, count
 
             ! Find additional base position
-            pos(1:3) = (dble(i)*pos_com(1:3) + dble(n_add_base+1-i)*pos_cur(1:3)) / dble(n_add_base+1)
+            pos(1:3) = (dble(i)*pos_com(1:3) + dble(count+1-i)*pos_cur(1:3)) / dble(count+1)
 
             ! Add one neucleotide
             call Route_Add_Nucleotide(dna.base_scaf, dna.n_base_scaf, pos(1:3))
@@ -1128,7 +1092,7 @@ function Route_Connect_Stap(mesh, dna, node_cur, node_com) result(n_poly_Tn)
         n_poly_Tn = para_n_base_tn
     end if
 
-    if(para_unpaired_square == "on") n_poly_Tn = n_poly_Tn + 2
+    !if(para_unpaired_square == "on") n_poly_Tn = n_poly_Tn + 2
 
     ! For reference connection without change
     if(mesh.node(cur).conn == 1 .and. mesh.node(com).conn == 1) then

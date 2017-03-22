@@ -251,8 +251,6 @@ subroutine Input_Initialization(prob, geom)
         call Space(i, 11)
         write(i, "(a)"), "* Unpaired scffold nucleotides      : "//trim(para_unpaired_scaf)
         call Space(i, 11)
-        write(i, "(a)"), "* Unpaired nucleotides at vertex    : "//trim(para_unpaired_square)
-        call Space(i, 11)
         write(i, "(a$)"), "* The number of bases in Tn         : "
         if(para_n_base_tn == -1) then
             write(i, "(a)"), "depending on distance"
@@ -520,7 +518,6 @@ subroutine Input_Read_Parameter
         read(1, *), ctemp, para_const_edge_mesh
         read(1, *), ctemp, para_sticky_self
         read(1, *), ctemp, para_unpaired_scaf
-        read(1, *), ctemp, para_unpaired_square
         read(1, *), ctemp, para_vertex_modify
         read(1, *), ctemp, para_vertex_design
 
@@ -694,7 +691,6 @@ subroutine Input_Reset_Parameter
     para_const_edge_mesh = "off"      ! [off, on], Constant edge length from polyhedra mesh
     para_sticky_self     = "off"      ! [off, on], Sticky-end for self connection on henycomb cross-section
     para_unpaired_scaf   = "on"       ! [on, off], Unpaired scffold nucleotides
-    para_unpaired_square = "on"       ! [on, off], Unpaired scffold and staple nucleotides at the vertex
     para_vertex_modify   = "const"    ! [mod, const], Vertex modification to avoid clash
     para_vertex_design   = "flat"     ! [flat, beveled], Vertex design
 
@@ -1293,9 +1289,6 @@ subroutine Input_Set_Num_BP_Edge(prob, geom)
         if(prob.sel_bp_edge == 8)  prob.n_bp_edge = 105     ! 10.5bp * 10
         if(prob.sel_bp_edge == 9)  prob.n_bp_edge = 115     ! 10.5bp * 11
         if(prob.sel_bp_edge == 10) prob.n_bp_edge = 126     ! 10.5bp * 12
-
-        ! Unpaired scaffold and staple nucleotides at the vertex when square lattice
-        para_unpaired_square = "off"
     end if
 
     ! Increase the number of basepair for self-connection

@@ -94,7 +94,7 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
     call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cyl1")
 
     ! Modify the length of the duplex at the junction
-    call Basepair_Modify_Junction(geom, bound, mesh)
+    call Basepair_Modify_Junction(prob, geom, bound, mesh)
 
     ! Delete ghost node from node data
     call Basepair_Delete_Ghost_Node(geom, bound, mesh)
@@ -879,7 +879,8 @@ end subroutine Basepair_Chimera_Cylinder
 
 ! Modify the length of the duplex at the junction
 ! Last updated on Fri 17 Mar 2017 by Hyungmin
-subroutine Basepair_Modify_Junction(geom, bound, mesh)
+subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
+    type(ProbType),  intent(in)    :: prob
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
     type(MeshType),  intent(inout) :: mesh
@@ -1043,7 +1044,7 @@ subroutine Basepair_Modify_Junction(geom, bound, mesh)
 
                 ! ============================================================
                 !
-                ! neighbor-connection modification, increase edge legnth to fill hole
+                ! neighbor-connection to fill the hole by increasing edge legnth
                 !
                 ! ============================================================
                 ! Node and sectional information
@@ -1051,7 +1052,7 @@ subroutine Basepair_Modify_Junction(geom, bound, mesh)
                 node_com = conn(j, 2)
 
                 ! Increase edge length of the duplex to fill junctional gap
-                call Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
+                call Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
             end if
         end do
 
@@ -1309,7 +1310,8 @@ end subroutine Basepair_Make_Ghost_Node
 
 ! Increase edge length of the duplex to fill junctional gap
 ! Last updated on Mon 20 Mar 2017 by Hyungmin
-subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
+subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
+    type(probType),  intent(in)    :: prob
     type(geomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
     type(MeshType),  intent(inout) :: mesh
@@ -1319,7 +1321,7 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
     double precision :: a, b, c, y, angle, len_side
     double precision :: length, pos(3), vec_in(3), vec_out(3)
     integer :: node_in, node_out, node_in_dn, node_out_up
-    integer :: i, count, n_col_bottom
+    integer :: i, count, n_col_bottom, poi_1, poi_2
 
     ! ==================================================
     !     vertex                     vertex
@@ -1395,6 +1397,23 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
     if(dabs(a-b) < 0.001d0 ) then
         mesh.node(node_in ).conn = 1
         mesh.node(node_out).conn = 1
+
+        ! If the length of the multiple line in node_in is changed
+        poi_1  = geom.croL(mesh.node(node_in).croL).poi(1)
+        poi_2  = geom.croL(mesh.node(node_in).croL).poi(2)
+        length = Size_Vector(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
+        if(prob.n_bp_edge-2 /= nint(length / para_dist_bp)) then
+            mesh.node(node_in).conn = 3
+        end if
+
+        ! If the length of the multiple line in node_out is changed
+        poi_1  = geom.croL(mesh.node(node_out).croL).poi(1)
+        poi_2  = geom.croL(mesh.node(node_out).croL).poi(2)
+        length = Size_Vector(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
+        if(prob.n_bp_edge-2 /= nint(length / para_dist_bp)) then
+            mesh.node(node_out).conn = 3
+        end if
+
         return
     end if
 
@@ -1415,6 +1434,28 @@ subroutine Basepair_Increase_Edge(geom, bound, mesh, node_cur, node_com)
             mesh.node(node_out).conn = 3
         end if
     end do
+
+    ! Exception
+    if(count == 0) then
+        mesh.node(node_in ).conn = 1
+        mesh.node(node_out).conn = 1
+
+        ! If the length of the multiple line in node_in is changed
+        poi_1  = geom.croL(mesh.node(node_in).croL).poi(1)
+        poi_2  = geom.croL(mesh.node(node_in).croL).poi(2)
+        length = Size_Vector(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
+        if(prob.n_bp_edge-2 /= nint(length / para_dist_bp)) then
+            mesh.node(node_in).conn = 3
+        end if
+
+        ! If the length of the multiple line in node_out is changed
+        poi_1  = geom.croL(mesh.node(node_out).croL).poi(1)
+        poi_2  = geom.croL(mesh.node(node_out).croL).poi(2)
+        length = Size_Vector(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
+        if(prob.n_bp_edge-2 /= nint(length / para_dist_bp)) then
+            mesh.node(node_out).conn = 3
+        end if
+    end if
 end subroutine Basepair_Increase_Edge
 
 ! ---------------------------------------------------------------------------------------
