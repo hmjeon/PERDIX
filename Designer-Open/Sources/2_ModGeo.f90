@@ -172,8 +172,7 @@ subroutine ModGeo_Set_Neighbor_Point(prob, geom)
         write(i, "(a)"), "2.1. Neighbor points from two faces sharing with the line"
     end do
     do i = 1, geom.n_iniL
-        write(11, "(i20,  a$)"), i, " th edge ("//trim(adjustl(Int2Str(geom.iniL(i).poi(1))))&
-            //"->"//trim(adjustl(Int2Str(geom.iniL(i).poi(2))))//") "
+        write(11, "(i20, a, i3, a, i3, a$)"), i, " th edge (", geom.iniL(i).poi(1), "->", geom.iniL(i).poi(2), ") "
         write(11, "(a,   i3$)"), "| (Poi 1) -> left(+) : ", geom.iniL(i).neiP(1, 1)
         write(11, "(a,   i3$)"), ", right(-) : ",           geom.iniL(i).neiP(1, 2)
         write(11, "(a,   i3$)"), ", (Poi 2) -> left(+) : ", geom.iniL(i).neiP(2, 1)
@@ -1116,7 +1115,7 @@ function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
     integer :: i, j, poi_cur, poi_1, poi_2
 
     ! Scale up to avoid small edge length after modification
-    call ModGeo_Set_Scale_Geometry(geom, 100.0d0/para_init_scale)
+    !call ModGeo_Set_Scale_Geometry(geom, 100.0d0/para_init_scale)
 
     ! To save the position of the seperated points with off-set distance
     allocate(pos_modP(geom.n_modP, 3))

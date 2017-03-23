@@ -150,14 +150,6 @@ subroutine Input_Initialization(prob, geom)
     ! Set problem
     call Input_Set_Problem(prob, geom)
 
-    ! External running
-    if(iargc() /= 0 .and. para_vertex_design == "flat" .and. para_preset == "on") then
-        para_junc_ang        = "max"    ! [opt, max, ave, min], Junction gap modification for different arm angle
-        !para_const_edge_mesh = "off"    ! [off, on], Constant edge length from polyhedra mesh
-        para_unpaired_scaf   = "off"    ! [on, off], Unpaired scaffold nucleotides
-        para_n_base_tn       = 7
-    end if
-
     ! ==================================================
     !
     ! Prepair geometry - line generation and scaling

@@ -716,7 +716,7 @@ subroutine Exam_Antiprism_Heptagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "20_Antiprism Heptagonal"//&
+    prob.name_file = "20_Antiprism_Heptagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
