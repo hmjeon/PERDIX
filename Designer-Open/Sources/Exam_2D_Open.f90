@@ -40,6 +40,7 @@ module Exam_2D_Open
     public Exam_Open2D_Ellipse_Tri_Coarse           !  8. Ellipse with tri coarse mesh
     public Exam_Open2D_Ellipse_Tri_Fine             !  9. Ellipse with tri fine mesh
     public Exam_Open2D_L_Shaped_Region              ! 10. L-shaped region
+    public Exam_Open2D_Hexagonal_Mesh
 
     !public Exam_Open2D_Plate_Distorted_Quad         ! Plate with distorted quad mesh
     !public Exam_Open2D_Plate_Distorted_Tri          ! Plate with distorted tri mesh
@@ -1392,6 +1393,98 @@ subroutine Exam_Open2D_L_Shaped_Region(prob, geom)
     geom.face(155).n_poi = 3; allocate(geom.face(155).poi(3)); geom.face(155).poi(1:3) = [  50,  39,  38 ]
     geom.face(156).n_poi = 3; allocate(geom.face(156).poi(3)); geom.face(156).poi(1:3) = [  50,  51,  39 ]
 end subroutine Exam_Open2D_L_Shaped_Region
+
+! ---------------------------------------------------------------------------------------
+
+! Example of hexagonal mesh
+! Last updated on Thu 23 Mar 2017 by Hyungmin
+subroutine Exam_Open2D_Hexagonal_Mesh(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_file = "11_Hexagonal_Mesh"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_vertex_modify)//&                ! Vertex modification
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    prob.name_prob = "Hexagonal Mesh"
+
+    ! Set geometric type and view
+    prob.color    = [52, 152, 219]
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    para_fig_view = "XY"
+
+    geom.n_iniP = 38
+    geom.n_face = 12
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [  10.0000d0, -82.0445d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [ -40.0000d0, -64.7240d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [ -20.0000d0, -64.7240d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [  20.0000d0, -64.7240d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [  40.0000d0, -64.7240d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [ -50.0000d0, -47.4035d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [ -10.0000d0, -47.4035d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [  10.0000d0, -47.4035d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [  50.0000d0, -47.4035d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [ -40.0000d0, -30.0830d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [ -20.0000d0, -30.0830d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [  20.0000d0, -30.0830d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  40.0000d0, -30.0830d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [ -50.0000d0, -12.7625d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [ -10.0000d0, -12.7625d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [  10.0000d0, -12.7625d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [  50.0000d0, -12.7625d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [ -40.0000d0,   4.5580d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [ -20.0000d0,   4.5580d0, 0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [  20.0000d0,   4.5580d0, 0.0000d0 ]
+    geom.iniP(22).pos(1:3) = [  40.0000d0,   4.5580d0, 0.0000d0 ]
+    geom.iniP(23).pos(1:3) = [ -50.0000d0,  21.8785d0, 0.0000d0 ]
+    geom.iniP(24).pos(1:3) = [ -10.0000d0,  21.8785d0, 0.0000d0 ]
+    geom.iniP(25).pos(1:3) = [  10.0000d0,  21.8785d0, 0.0000d0 ]
+    geom.iniP(26).pos(1:3) = [  50.0000d0,  21.8785d0, 0.0000d0 ]
+    geom.iniP(27).pos(1:3) = [ -40.0000d0,  39.1991d0, 0.0000d0 ]
+    geom.iniP(28).pos(1:3) = [ -20.0000d0,  39.1991d0, 0.0000d0 ]
+    geom.iniP(29).pos(1:3) = [  20.0000d0,  39.1991d0, 0.0000d0 ]
+    geom.iniP(30).pos(1:3) = [  40.0000d0,  39.1991d0, 0.0000d0 ]
+    geom.iniP(31).pos(1:3) = [ -50.0000d0,  56.5196d0, 0.0000d0 ]
+    geom.iniP(32).pos(1:3) = [ -10.0000d0,  56.5196d0, 0.0000d0 ]
+    geom.iniP(33).pos(1:3) = [  10.0000d0,  56.5196d0, 0.0000d0 ]
+    geom.iniP(34).pos(1:3) = [  50.0000d0,  56.5196d0, 0.0000d0 ]
+    geom.iniP(35).pos(1:3) = [ -40.0000d0,  73.8401d0, 0.0000d0 ]
+    geom.iniP(36).pos(1:3) = [ -20.0000d0,  73.8401d0, 0.0000d0 ]
+    geom.iniP(37).pos(1:3) = [  20.0000d0,  73.8401d0, 0.0000d0 ]
+    geom.iniP(38).pos(1:3) = [  40.0000d0,  73.8401d0, 0.0000d0 ]
+
+    ! Set connectivity
+    geom.face( 1).n_poi = 6; allocate(geom.face( 1).poi(6)); geom.face( 1).poi(1:6) = [  1,  2,  5,  9,  8,  4 ]
+    geom.face( 2).n_poi = 6; allocate(geom.face( 2).poi(6)); geom.face( 2).poi(1:6) = [  3,  4,  8, 12, 11,  7 ]
+    geom.face( 3).n_poi = 6; allocate(geom.face( 3).poi(6)); geom.face( 3).poi(1:6) = [  5,  6, 10, 14, 13,  9 ]
+    geom.face( 4).n_poi = 6; allocate(geom.face( 4).poi(6)); geom.face( 4).poi(1:6) = [  8,  9, 13, 17, 16, 12 ]
+    geom.face( 5).n_poi = 6; allocate(geom.face( 5).poi(6)); geom.face( 5).poi(1:6) = [ 11, 12, 16, 20, 19, 15 ]
+    geom.face( 6).n_poi = 6; allocate(geom.face( 6).poi(6)); geom.face( 6).poi(1:6) = [ 13, 14, 18, 22, 21, 17 ]
+    geom.face( 7).n_poi = 6; allocate(geom.face( 7).poi(6)); geom.face( 7).poi(1:6) = [ 16, 17, 21, 25, 24, 20 ]
+    geom.face( 8).n_poi = 6; allocate(geom.face( 8).poi(6)); geom.face( 8).poi(1:6) = [ 19, 20, 24, 28, 27, 23 ]
+    geom.face( 9).n_poi = 6; allocate(geom.face( 9).poi(6)); geom.face( 9).poi(1:6) = [ 21, 22, 26, 30, 29, 25 ]
+    geom.face(10).n_poi = 6; allocate(geom.face(10).poi(6)); geom.face(10).poi(1:6) = [ 24, 25, 29, 33, 32, 28 ]
+    geom.face(11).n_poi = 6; allocate(geom.face(11).poi(6)); geom.face(11).poi(1:6) = [ 27, 28, 32, 36, 35, 31 ]
+    geom.face(12).n_poi = 6; allocate(geom.face(12).poi(6)); geom.face(12).poi(1:6) = [ 29, 30, 34, 38, 37, 33 ]
+end subroutine Exam_Open2D_Hexagonal_Mesh
 
 ! ---------------------------------------------------------------------------------------
 
