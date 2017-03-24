@@ -25,26 +25,28 @@ module Exam_2D_Open
     use Data_Geom
 
     use Para
-    use Mani
     use Math
 
     implicit none
 
-    public Exam_Open2D_Plate_Uniform_Quad           !  1. Plate with uniform quad mesh
-    public Exam_Open2D_Plate_Uniform_Tri            !  2. Plate with uniform tri mesh
-    public Exam_Open2D_Circular_Plate_Quad          !  3. Circular plate with quad mesh
-    public Exam_Open2D_Circle_Hole_Quad             !  4. Circle with hole quad mesh
-    public Exam_Open2D_Circle_Hole_Tri              !  5. Circle with hole tri mesh
-    public Exam_Open2D_Circle_Tri_Coarse            !  6. Circle with tri coarse mesh
-    public Exam_Open2D_Circle_Tri_Fine              !  7. Circle with tri fine mesh
-    public Exam_Open2D_Ellipse_Tri_Coarse           !  8. Ellipse with tri coarse mesh
-    public Exam_Open2D_Ellipse_Tri_Fine             !  9. Ellipse with tri fine mesh
-    public Exam_Open2D_L_Shaped_Region              ! 10. L-shaped region
-    public Exam_Open2D_Hexagonal_Mesh
+    public Exam_Open2D_Plate_Uniform_Quad       !  1. Plate with uniform quad mesh
+    public Exam_Open2D_Plate_Uniform_Tri        !  2. Plate with uniform tri mesh
+    public Exam_Open2D_Quarter_Circle_Quad      !  3. Quarter circle with quad mesh
+    public Exam_Open2D_Quarter_Circle_Tri       !  4. Quarter circle with tri mesh
+    public Exam_Open2D_Disk_Quad                !  5. Disk with quad mesh
+    public Exam_Open2D_Disk_Tri                 !  6. Disk with tri mesh
+    public Exam_Open2D_Circle_Tri_Coarse        !  7. Circle with tri coarse mesh
+    public Exam_Open2D_Circle_Tri_Fine          !  8. Circle with tri fine mesh
+    public Exam_Open2D_Ellipse_Tri_Coarse       !  9. Ellipse with tri coarse mesh
+    public Exam_Open2D_Ellipse_Tri_Fine         ! 10. Ellipse with tri fine mesh
+    public Exam_Open2D_L_Shape_Regular          ! 11. L-shape with regular mesh
+    public Exam_Open2D_L_Shape_Irregular        ! 12. L-shape with irregular mesh
+    public Exam_Open2D_Hexagonal_Mesh           ! 13. Hexagonal mesh
+    public Exam_Open2D_Honeycomb                ! 14. Honeycomb
+    public Exam_Open2D_Stickman                 ! 15. 2D stickman
 
     !public Exam_Open2D_Plate_Distorted_Quad         ! Plate with distorted quad mesh
     !public Exam_Open2D_Plate_Distorted_Tri          ! Plate with distorted tri mesh
-    !public Exam_Open2D_Circular_Plate_Tri           ! Circular plate with tri mesh
     !public Exam_Open2D_Hyperbolic_Paraboloid_Quad   ! Hyperbolic paraboloid with quad mesh
     !public Exam_Open2D_Hyperbolic_Paraboloid_Tri    ! Hyperbolic paraboloid with tri mesh
 
@@ -231,9 +233,9 @@ end subroutine Exam_Open2D_Plate_Uniform_Tri
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of circular plate with quad mesh
+! Example of quarter circle with quad mesh
 ! Last updated on Sat 11 Mar 2017 by Hyungmin
-subroutine Exam_Open2D_Circular_Plate_Quad(prob, geom)
+subroutine Exam_Open2D_Quarter_Circle_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -248,14 +250,14 @@ subroutine Exam_Open2D_Circular_Plate_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "03_Circular_Plate_Quad"//&
+    prob.name_file = "03_Quarter_Circle_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "Circular Plate Quad"
+    prob.name_prob = "Quarter Circle Quad"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -394,13 +396,230 @@ subroutine Exam_Open2D_Circular_Plate_Quad(prob, geom)
 
     ! Deallocate data structure
     deallocate(edge, joint, conn)
-end subroutine Exam_Open2D_Circular_Plate_Quad
+end subroutine Exam_Open2D_Quarter_Circle_Quad
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of circle with hole quad mesh
+! Example of quarter circle with tri mesh
 ! Last updated on Sat 11 Mar 2017 by Hyungmin
-subroutine Exam_Open2D_Circle_Hole_Quad(prob, geom)
+subroutine Exam_Open2D_Quarter_Circle_Tri(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision,allocatable  :: edge(:,:,:), joint(:,:)
+	integer, allocatable :: conn(:,:)
+
+	double precision :: dx, dy
+    integer :: i, j, n, count_n, count_e, count_n_t, count_e_t
+    character :: pn
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_file = "04_Quarter_Circle_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_vertex_modify)//&                ! Vertex modification
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    prob.name_prob = "Quarter Circle Tri"
+
+    ! Set geometric type and view
+    prob.color    = [52, 152, 219]
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    para_fig_view = "XY"
+
+    n  = 2
+    pn = "\"
+
+    geom.n_iniP = (n + 1)*(n + 1) + n*(n + 1) + n*n
+    geom.n_face = 3*n*n*2
+
+    ! Allocate data structures
+    allocate(edge(2, n+1, 2), conn(n*n*2, 4), joint((n+1)**2, 3))
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
+    end do
+
+    ! First mesh, generate positions of edges
+    do i = 1, n + 1
+        ! First edge
+        edge(1, i, 1) = dble(i-1) * 0.5d0 / dble(n)             ! x1
+        edge(1, i, 2) = 0.0d0                                   ! y1
+        ! Second edge
+        edge(2, i, 1) = dble(i-1) * 1.0d0 / 3.0d0 / dble(n)     ! x2
+        edge(2, i, 2) = 0.5d0 - 0.5d0 * edge(2, i, 1)           ! y2
+    end do
+
+    ! Generation of joint
+    count_n = 0
+    do i = 1, n + 1
+        dx = (edge(2, i, 1) - edge(1, i, 1)) / dble(n)
+        dy = (edge(2, i, 2) - edge(1, i, 2)) / dble(n)
+
+        do j = 1, n + 1
+            count_n = count_n + 1
+            geom.iniP(count_n).pos(1) = edge(1, i, 1) + dble(j-1) * dx
+            geom.iniP(count_n).pos(2) = edge(1, i, 2) + dble(j-1) * dy
+            geom.iniP(count_n).pos(3) = 0.0d0
+        end do
+    end do
+
+    ! Generation of connectivities for quadrilaterlar elements
+    count_e = 0
+    do i = 1, n
+        do j = 1, n
+            if(pn == "\") then
+                count_e = count_e + 1
+                geom.face(count_e).poi(1) = (n+1)*(i+0) + (j-1) + 1
+                geom.face(count_e).poi(2) = (n+1)*(i+0) + (j-1) + 2
+                geom.face(count_e).poi(3) = (n+1)*(i-1) + (j-1) + 1
+
+                count_e = count_e + 1
+                geom.face(count_e).poi(1) = (n+1)*(i+0) + (j-1) + 2
+                geom.face(count_e).poi(2) = (n+1)*(i-1) + (j-1) + 2
+                geom.face(count_e).poi(3) = (n+1)*(i-1) + (j-1) + 1
+            else if(pn == "/") then
+                count_e = count_e + 1
+                geom.face(count_e).poi(1) = (n+1)*(i+0) + (j-1) + 1
+                geom.face(count_e).poi(2) = (n+1)*(i-1) + (j-1) + 2
+                geom.face(count_e).poi(3) = (n+1)*(i-1) + (j-1) + 1
+
+                count_e = count_e + 1
+                geom.face(count_e).poi(1) = (n+1)*(i+0) + (j-1) + 1
+                geom.face(count_e).poi(2) = (n+1)*(i+0) + (j-1) + 2
+                geom.face(count_e).poi(3) = (n+1)*(i-1) + (j-1) + 2
+            end if
+        end do
+    end do
+
+    ! Second mesh, generate positions of edges
+    do i = 1, n + 1
+        ! First edge
+        edge(1, n+2-i, 1) = dble(i-1) * 1.0d0 / 3.0d0 / dble(n)     ! x1
+        edge(1, n+2-i, 2) = 0.5d0 - 0.5d0 * edge(1, n+2-i, 1)       ! y1
+        ! Second edge
+        edge(2, n+2-i, 1) = dsin(dble(i-1)*(pi/180.0d0) * 45.d0 / dble(n))    ! x2
+        edge(2, n+2-i, 2) = dcos(dble(i-1)*(pi/180.0d0) * 45.d0 / dble(n))    ! y2
+    end do
+
+    ! Generation of joint
+    count_n_t = 0
+    do i = 1, n + 1
+        dx = (edge(2, i, 1) - edge(1, i, 1)) / dble(n)
+        dy = (edge(2, i, 2) - edge(1, i, 2)) / dble(n)
+
+        do j = 1, n + 1
+            count_n_t = count_n_t + 1
+            joint(count_n_t, 1) = edge(1,i,1) + dble(j-1) * dx
+            joint(count_n_t, 2) = edge(1,i,2) + dble(j-1) * dy
+            joint(count_n_t, 3) = 0.0d0
+        end do
+    end do
+
+    ! Generation of connectivities for quadrilaterlar elements
+    count_e_t = 0
+    do i = 1, n
+        do j = 1, n
+            if(pn == "\") then
+                count_e_t = count_e_t + 1
+                conn(count_e_t, 1) = (n+1)*(i-1) + (j-1) + 1
+                conn(count_e_t, 2) = (n+1)*(i-1) + (j-1) + 2
+                conn(count_e_t, 3) = (n+1)*(i+0) + (j-1) + 1
+
+                count_e_t = count_e_t + 1
+                conn(count_e_t, 1) = (n+1)*(i-1) + (j-1) + 2
+                conn(count_e_t, 2) = (n+1)*(i+0) + (j-1) + 2
+                conn(count_e_t, 3) = (n+1)*(i+0) + (j-1) + 1
+            else if(pn == "/") then
+                count_e_t = count_e_t + 1
+                conn(count_e_t, 1) = (n+1)*(i-1) + (j-1) + 1
+                conn(count_e_t, 2) = (n+1)*(i+0) + (j-1) + 2
+                conn(count_e_t, 3) = (n+1)*(i+0) + (j-1) + 1
+
+                count_e_t = count_e_t + 1
+                conn(count_e_t, 1) = (n+1)*(i-1) + (j-1) + 1
+                conn(count_e_t, 2) = (n+1)*(i-1) + (j-1) + 2
+                conn(count_e_t, 3) = (n+1)*(i+0) + (j-1) + 2
+            end if
+        end do
+    end do
+
+    call Exam_Open2D_Merge_Point_Face_Tri(n, joint, conn, count_n, count_e, geom)
+
+    ! Third mesh, generate positions of edges
+    do i = 1, n + 1
+        ! First edge
+        edge(1,i,1) = 1.0d0/3.d0 + dble(i-1) * (0.5d0 - 1.0d0 / 3.0d0) / dble(n)        ! x1
+        edge(1,i,2) = 1.0d0 - 2.0d0 * edge(1,i,1)                                       ! y1
+        ! Second edge
+        edge(2,i,1) = dsin(pi/180.0d0 * 45.d0 + dble(i-1) * (pi/180.0d0) * 45.d0 / dble(n))   ! x2
+        edge(2,i,2) = dcos(pi/180.0d0 * 45.d0 + dble(i-1) * (pi/180.0d0) * 45.d0 / dble(n))   ! y2
+    end do
+
+    ! Generation of joint
+    count_n_t = 0
+    do i = 1, n + 1
+        dx = (edge(2, i, 1) - edge(1, i, 1)) / dble(n)
+        dy = (edge(2, i, 2) - edge(1, i, 2)) / dble(n)
+
+        do j = 1, n + 1
+            count_n_t = count_n_t + 1
+            joint(count_n_t, 1) = edge(1, i, 1) + dble(j-1) * dx
+            joint(count_n_t, 2) = edge(1, i, 2) + dble(j-1) * dy
+            joint(count_n_t, 3) = 0.0d0
+        end do
+    end do
+
+    ! Generation of connectivities for quadrilaterlar elements
+    count_e_t = 0
+    do i = 1, n
+        do j = 1, n
+            if(pn == "\") then
+                count_e_t = count_e_t + 1
+                conn(count_e_t, 1) = (n+1)*(i+0) + (j-1) + 1
+                conn(count_e_t, 2) = (n+1)*(i-1) + (j-1) + 2
+                conn(count_e_t, 3) = (n+1)*(i-1) + (j-1) + 1
+
+                count_e_t = count_e_t + 1
+                conn(count_e_t, 1) = (n+1)*(i+0) + (j-1) + 1
+                conn(count_e_t, 2) = (n+1)*(i+0) + (j-1) + 2
+                conn(count_e_t, 3) = (n+1)*(i-1) + (j-1) + 2
+            else if(pn == "/") then
+                count_e_t = count_e_t + 1
+                conn(count_e_t, 1) = (n+1)*(i+0) + (j-1) + 1
+                conn(count_e_t, 2) = (n+1)*(i+0) + (j-1) + 2
+                conn(count_e_t, 3) = (n+1)*(i-1) + (j-1) + 1
+
+                count_e_t = count_e_t + 1
+                conn(count_e_t, 1) = (n+1)*(i+0) + (j-1) + 2
+                conn(count_e_t, 2) = (n+1)*(i-1) + (j-1) + 2
+                conn(count_e_t, 3) = (n+1)*(i-1) + (j-1) + 1
+            end if
+        end do
+    end do
+
+    call Exam_Open2D_Merge_Point_Face_Tri(n, joint, conn, count_n, count_e, geom)
+
+    ! Deallocate data structure
+    deallocate(edge, joint, conn)
+end subroutine Exam_Open2D_Quarter_Circle_Tri
+
+! ---------------------------------------------------------------------------------------
+
+! Example of disk with quad mesh
+! Last updated on Sat 11 Mar 2017 by Hyungmin
+subroutine Exam_Open2D_Disk_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -412,14 +631,14 @@ subroutine Exam_Open2D_Circle_Hole_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "04_Circle_Hole_Quad"//&
+    prob.name_file = "05_Disk_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "Cricle Hole Quad"
+    prob.name_prob = "Disk Quad"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -480,13 +699,13 @@ subroutine Exam_Open2D_Circle_Hole_Quad(prob, geom)
             end if
         end do
     end do
-end subroutine Exam_Open2D_Circle_Hole_Quad
+end subroutine Exam_Open2D_Disk_Quad
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of circle with hole tri mesh
+! Example of disk with tri mesh
 ! Last updated on Sat 11 Mar 2017 by Hyungmin
-subroutine Exam_Open2D_Circle_Hole_Tri(prob, geom)
+subroutine Exam_Open2D_Disk_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -499,14 +718,14 @@ subroutine Exam_Open2D_Circle_Hole_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "05_Circle_Hole_Tri"//&
+    prob.name_file = "06_Disk_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "Circle Hole Tri"
+    prob.name_prob = "Disk Tri"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -605,7 +824,7 @@ subroutine Exam_Open2D_Circle_Hole_Tri(prob, geom)
             end if
         end do
     end do
-end subroutine Exam_Open2D_Circle_Hole_Tri
+end subroutine Exam_Open2D_Disk_Tri
 
 ! ---------------------------------------------------------------------------------------
 
@@ -621,7 +840,7 @@ subroutine Exam_Open2D_circle_Tri_Coarse(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "06_Circle_Tri_Coarse"//&
+    prob.name_file = "07_Circle_Tri_Coarse"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -707,7 +926,7 @@ subroutine Exam_Open2D_circle_Tri_Fine(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "07_Circle_Tri_Fine"//&
+    prob.name_file = "08_Circle_Tri_Fine"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -853,7 +1072,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Coarse(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "08_Ellipse_Tri_Coarse"//&
+    prob.name_file = "09_Ellipse_Tri_Coarse"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -959,7 +1178,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Fine(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "09_Ellipse_Tri_Fine"//&
+    prob.name_file = "10_Ellipse_Tri_Fine"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -1098,9 +1317,9 @@ end subroutine Exam_Open2D_Ellipse_Tri_Fine
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of L-shaped region
+! Example of L-shape with regular mesh
 ! Last updated on Fri 10 Mar 2017 by Hyungmin
-subroutine Exam_Open2D_L_Shaped_Region(prob, geom)
+subroutine Exam_Open2D_L_Shape_Regular(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -1110,14 +1329,101 @@ subroutine Exam_Open2D_L_Shaped_Region(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "10_L_Shaped_Region"//&
+    prob.name_file = "11_L_Shape_Regular"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
         "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
 
-    prob.name_prob = "L_Shaped Region"
+    prob.name_prob = "L Shape Regular"
+
+    ! Set geometric type and view
+    prob.color    = [52, 152, 219]
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    para_fig_view = "XY"
+
+    geom.n_iniP =   21
+    geom.n_face =   24
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set point position vectors
+    geom.iniP(      1).pos(1:3) = [   -34.2857d0,   -34.2857d0,     0.0000d0 ]
+    geom.iniP(      2).pos(1:3) = [   -14.2857d0,   -34.2857d0,     0.0000d0 ]
+    geom.iniP(      3).pos(1:3) = [     5.7143d0,   -34.2857d0,     0.0000d0 ]
+    geom.iniP(      4).pos(1:3) = [    25.7143d0,   -34.2857d0,     0.0000d0 ]
+    geom.iniP(      5).pos(1:3) = [    45.7143d0,   -34.2857d0,     0.0000d0 ]
+    geom.iniP(      6).pos(1:3) = [   -34.2857d0,   -14.2857d0,     0.0000d0 ]
+    geom.iniP(      7).pos(1:3) = [   -14.2857d0,   -14.2857d0,     0.0000d0 ]
+    geom.iniP(      8).pos(1:3) = [     5.7143d0,   -14.2857d0,     0.0000d0 ]
+    geom.iniP(      9).pos(1:3) = [    25.7143d0,   -14.2857d0,     0.0000d0 ]
+    geom.iniP(     10).pos(1:3) = [    45.7143d0,   -14.2857d0,     0.0000d0 ]
+    geom.iniP(     11).pos(1:3) = [   -34.2857d0,     5.7143d0,     0.0000d0 ]
+    geom.iniP(     12).pos(1:3) = [   -14.2857d0,     5.7143d0,     0.0000d0 ]
+    geom.iniP(     13).pos(1:3) = [     5.7143d0,     5.7143d0,     0.0000d0 ]
+    geom.iniP(     14).pos(1:3) = [    25.7143d0,     5.7143d0,     0.0000d0 ]
+    geom.iniP(     15).pos(1:3) = [    45.7143d0,     5.7143d0,     0.0000d0 ]
+    geom.iniP(     16).pos(1:3) = [   -34.2857d0,    25.7143d0,     0.0000d0 ]
+    geom.iniP(     17).pos(1:3) = [   -14.2857d0,    25.7143d0,     0.0000d0 ]
+    geom.iniP(     18).pos(1:3) = [     5.7143d0,    25.7143d0,     0.0000d0 ]
+    geom.iniP(     19).pos(1:3) = [   -34.2857d0,    45.7143d0,     0.0000d0 ]
+    geom.iniP(     20).pos(1:3) = [   -14.2857d0,    45.7143d0,     0.0000d0 ]
+    geom.iniP(     21).pos(1:3) = [     5.7143d0,    45.7143d0,     0.0000d0 ]
+
+    ! Set point position vectors
+    geom.face(      1).n_poi =       3; allocate(geom.face(      1).poi(      3)); geom.face(      1).poi(1:      3) = [      1,       2,       6 ]
+    geom.face(      2).n_poi =       3; allocate(geom.face(      2).poi(      3)); geom.face(      2).poi(1:      3) = [      7,       6,       2 ]
+    geom.face(      3).n_poi =       3; allocate(geom.face(      3).poi(      3)); geom.face(      3).poi(1:      3) = [      2,       3,       7 ]
+    geom.face(      4).n_poi =       3; allocate(geom.face(      4).poi(      3)); geom.face(      4).poi(1:      3) = [      8,       7,       3 ]
+    geom.face(      5).n_poi =       3; allocate(geom.face(      5).poi(      3)); geom.face(      5).poi(1:      3) = [      3,       4,       8 ]
+    geom.face(      6).n_poi =       3; allocate(geom.face(      6).poi(      3)); geom.face(      6).poi(1:      3) = [      9,       8,       4 ]
+    geom.face(      7).n_poi =       3; allocate(geom.face(      7).poi(      3)); geom.face(      7).poi(1:      3) = [      4,       5,       9 ]
+    geom.face(      8).n_poi =       3; allocate(geom.face(      8).poi(      3)); geom.face(      8).poi(1:      3) = [     10,       9,       5 ]
+    geom.face(      9).n_poi =       3; allocate(geom.face(      9).poi(      3)); geom.face(      9).poi(1:      3) = [      6,       7,      11 ]
+    geom.face(     10).n_poi =       3; allocate(geom.face(     10).poi(      3)); geom.face(     10).poi(1:      3) = [     12,      11,       7 ]
+    geom.face(     11).n_poi =       3; allocate(geom.face(     11).poi(      3)); geom.face(     11).poi(1:      3) = [      7,       8,      12 ]
+    geom.face(     12).n_poi =       3; allocate(geom.face(     12).poi(      3)); geom.face(     12).poi(1:      3) = [     13,      12,       8 ]
+    geom.face(     13).n_poi =       3; allocate(geom.face(     13).poi(      3)); geom.face(     13).poi(1:      3) = [      8,       9,      13 ]
+    geom.face(     14).n_poi =       3; allocate(geom.face(     14).poi(      3)); geom.face(     14).poi(1:      3) = [     14,      13,       9 ]
+    geom.face(     15).n_poi =       3; allocate(geom.face(     15).poi(      3)); geom.face(     15).poi(1:      3) = [      9,      10,      14 ]
+    geom.face(     16).n_poi =       3; allocate(geom.face(     16).poi(      3)); geom.face(     16).poi(1:      3) = [     15,      14,      10 ]
+    geom.face(     17).n_poi =       3; allocate(geom.face(     17).poi(      3)); geom.face(     17).poi(1:      3) = [     11,      12,      16 ]
+    geom.face(     18).n_poi =       3; allocate(geom.face(     18).poi(      3)); geom.face(     18).poi(1:      3) = [     17,      16,      12 ]
+    geom.face(     19).n_poi =       3; allocate(geom.face(     19).poi(      3)); geom.face(     19).poi(1:      3) = [     12,      13,      17 ]
+    geom.face(     20).n_poi =       3; allocate(geom.face(     20).poi(      3)); geom.face(     20).poi(1:      3) = [     18,      17,      13 ]
+    geom.face(     21).n_poi =       3; allocate(geom.face(     21).poi(      3)); geom.face(     21).poi(1:      3) = [     16,      17,      19 ]
+    geom.face(     22).n_poi =       3; allocate(geom.face(     22).poi(      3)); geom.face(     22).poi(1:      3) = [     20,      19,      17 ]
+    geom.face(     23).n_poi =       3; allocate(geom.face(     23).poi(      3)); geom.face(     23).poi(1:      3) = [     17,      18,      20 ]
+    geom.face(     24).n_poi =       3; allocate(geom.face(     24).poi(      3)); geom.face(     24).poi(1:      3) = [     21,      20,      18 ]
+end subroutine Exam_Open2D_L_Shape_Regular
+
+! ---------------------------------------------------------------------------------------
+
+! Example of L-shape with irregular
+! Last updated on Fri 10 Mar 2017 by Hyungmin
+subroutine Exam_Open2D_L_Shape_Irregular(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_file = "12_L_Shape_Irregular"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_vertex_modify)//&                ! Vertex modification
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    prob.name_prob = "L Shape Irregular"
 
     ! Set geometric type and view
     prob.color    = [52, 152, 219]
@@ -1392,7 +1698,7 @@ subroutine Exam_Open2D_L_Shaped_Region(prob, geom)
     geom.face(154).n_poi = 3; allocate(geom.face(154).poi(3)); geom.face(154).poi(1:3) = [  38,  37,  50 ]
     geom.face(155).n_poi = 3; allocate(geom.face(155).poi(3)); geom.face(155).poi(1:3) = [  50,  39,  38 ]
     geom.face(156).n_poi = 3; allocate(geom.face(156).poi(3)); geom.face(156).poi(1:3) = [  50,  51,  39 ]
-end subroutine Exam_Open2D_L_Shaped_Region
+end subroutine Exam_Open2D_L_Shape_Irregular
 
 ! ---------------------------------------------------------------------------------------
 
@@ -1408,7 +1714,7 @@ subroutine Exam_Open2D_Hexagonal_Mesh(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "11_Hexagonal_Mesh"//&
+    prob.name_file = "13_Hexagonal_Mesh"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
@@ -1485,6 +1791,257 @@ subroutine Exam_Open2D_Hexagonal_Mesh(prob, geom)
     geom.face(11).n_poi = 6; allocate(geom.face(11).poi(6)); geom.face(11).poi(1:6) = [ 27, 28, 32, 36, 35, 31 ]
     geom.face(12).n_poi = 6; allocate(geom.face(12).poi(6)); geom.face(12).poi(1:6) = [ 29, 30, 34, 38, 37, 33 ]
 end subroutine Exam_Open2D_Hexagonal_Mesh
+
+! ---------------------------------------------------------------------------------------
+
+! Example of honeycomb
+! Last updated on Thu 23 Mar 2017 by Hyungmin
+subroutine Exam_Open2D_Honeycomb(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_file = "14_Honeycomb"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_vertex_modify)//&                ! Vertex modification
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    prob.name_prob = "Honeycomb"
+
+    ! Set geometric type and view
+    prob.color    = [52, 152, 219]
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    para_fig_view = "XY"
+
+    ! Allocate point and face structure
+    geom.n_iniP =   30
+    geom.n_face =  36
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set point position vectors
+    geom.iniP(1).pos(1:3) = [   -51.9618d0,    10.0000d0,    0.0000d0 ]
+    geom.iniP(2).pos(1:3) = [   -17.3206d0,   -10.0000d0,    0.0000d0 ]
+    geom.iniP(3).pos(1:3) = [   -34.6411d0,     0.0000d0,    0.0000d0 ]
+    geom.iniP(4).pos(1:3) = [   -51.9618d0,   -10.0000d0,    0.0000d0 ]
+    geom.iniP(5).pos(1:3) = [     0.0000d0,   -20.0001d0,    0.0000d0 ]
+    geom.iniP(6).pos(1:3) = [   -34.6411d0,   -40.0002d0,    0.0000d0 ]
+    geom.iniP(7).pos(1:3) = [   -17.3206d0,   -30.0001d0,    0.0000d0 ]
+    geom.iniP(8).pos(1:3) = [   -34.6411d0,   -20.0001d0,    0.0000d0 ]
+    geom.iniP(9).pos(1:3) = [   -17.3206d0,   -50.0002d0,    0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [   -17.3206d0,    10.0000d0,    0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [   -34.6411d0,    40.0002d0,    0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [   -34.6411d0,    20.0001d0,    0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [   -17.3206d0,    30.0001d0,    0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [     0.0000d0,    20.0001d0,    0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [   -17.3206d0,    50.0002d0,    0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [    17.3205d0,   -50.0002d0,    0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [    34.6412d0,   -40.0002d0,    0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [    34.6412d0,   -20.0001d0,    0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [     0.0000d0,   -40.0002d0,    0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [    17.3205d0,   -30.0001d0,    0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [    51.9618d0,   -10.0000d0,    0.0000d0 ]
+    geom.iniP(22).pos(1:3) = [    51.9618d0,    10.0000d0,    0.0000d0 ]
+    geom.iniP(23).pos(1:3) = [    34.6412d0,    20.0001d0,    0.0000d0 ]
+    geom.iniP(24).pos(1:3) = [    17.3205d0,   -10.0000d0,    0.0000d0 ]
+    geom.iniP(25).pos(1:3) = [    34.6412d0,     0.0000d0,    0.0000d0 ]
+    geom.iniP(26).pos(1:3) = [    34.6412d0,    40.0002d0,    0.0000d0 ]
+    geom.iniP(27).pos(1:3) = [    17.3205d0,    50.0002d0,    0.0000d0 ]
+    geom.iniP(28).pos(1:3) = [     0.0000d0,    40.0002d0,    0.0000d0 ]
+    geom.iniP(29).pos(1:3) = [    17.3205d0,    10.0000d0,    0.0000d0 ]
+    geom.iniP(30).pos(1:3) = [    17.3205d0,    30.0001d0,    0.0000d0 ]
+
+    ! Set point position vectors
+    geom.face( 1).n_poi = 3; allocate(geom.face(     1).poi(      3)); geom.face(     1).poi(1:      3) = [     8,       2,       3 ]
+    geom.face( 2).n_poi = 3; allocate(geom.face(     2).poi(      3)); geom.face(     2).poi(1:      3) = [      2,      10,       3 ]
+    geom.face( 3).n_poi = 3; allocate(geom.face(     3).poi(      3)); geom.face(     3).poi(1:      3) = [     10,      12,       3 ]
+    geom.face( 4).n_poi = 3; allocate(geom.face(     4).poi(      3)); geom.face(     4).poi(1:      3) = [     12,       1,       3 ]
+    geom.face( 5).n_poi = 3; allocate(geom.face(     5).poi(      3)); geom.face(     5).poi(1:      3) = [      1,       4,       3 ]
+    geom.face( 6).n_poi = 3; allocate(geom.face(     6).poi(      3)); geom.face(     6).poi(1:      3) = [      4,      8,       3 ]
+    geom.face( 7).n_poi = 3; allocate(geom.face(     7).poi(      3)); geom.face(     7).poi(1:      3) = [     9,      19,      7 ]
+    geom.face( 8).n_poi = 3; allocate(geom.face(     8).poi(      3)); geom.face(     8).poi(1:      3) = [     19,      5,      7 ]
+    geom.face( 9).n_poi = 3; allocate(geom.face(     9).poi(      3)); geom.face(     9).poi(1:      3) = [     5,       2,      7 ]
+    geom.face(10).n_poi = 3; allocate(geom.face(     10).poi(      3)); geom.face(     10).poi(1:      3) = [      2,      8,      7 ]
+    geom.face(11).n_poi = 3; allocate(geom.face(     11).poi(      3)); geom.face(     11).poi(1:      3) = [     8,      6,      7 ]
+    geom.face(12).n_poi = 3; allocate(geom.face(     12).poi(      3)); geom.face(     12).poi(1:      3) = [     6,      9,      7 ]
+    geom.face(13).n_poi = 3; allocate(geom.face(     13).poi(      3)); geom.face(     13).poi(1:      3) = [     10,      14,      13 ]
+    geom.face(14).n_poi = 3; allocate(geom.face(     14).poi(      3)); geom.face(     14).poi(1:      3) = [     14,      28,      13 ]
+    geom.face(15).n_poi = 3; allocate(geom.face(     15).poi(      3)); geom.face(     15).poi(1:      3) = [     28,      15,      13 ]
+    geom.face(16).n_poi = 3; allocate(geom.face(     16).poi(      3)); geom.face(     16).poi(1:      3) = [     15,      11,      13 ]
+    geom.face(17).n_poi = 3; allocate(geom.face(     17).poi(      3)); geom.face(     17).poi(1:      3) = [     11,      12,      13 ]
+    geom.face(18).n_poi = 3; allocate(geom.face(     18).poi(      3)); geom.face(     18).poi(1:      3) = [     12,      10,      13 ]
+    geom.face(19).n_poi = 3; allocate(geom.face(     19).poi(      3)); geom.face(     19).poi(1:      3) = [     16,      17,      20 ]
+    geom.face(20).n_poi = 3; allocate(geom.face(     20).poi(      3)); geom.face(     20).poi(1:      3) = [     17,      18,      20 ]
+    geom.face(21).n_poi = 3; allocate(geom.face(     21).poi(      3)); geom.face(     21).poi(1:      3) = [     18,      24,      20 ]
+    geom.face(22).n_poi = 3; allocate(geom.face(     22).poi(      3)); geom.face(     22).poi(1:      3) = [     24,      5,      20 ]
+    geom.face(23).n_poi = 3; allocate(geom.face(     23).poi(      3)); geom.face(     23).poi(1:      3) = [     5,      19,      20 ]
+    geom.face(24).n_poi = 3; allocate(geom.face(     24).poi(      3)); geom.face(     24).poi(1:      3) = [     19,      16,      20 ]
+    geom.face(25).n_poi = 3; allocate(geom.face(    25).poi(      3)); geom.face(    25).poi(1:      3) = [     18,      21,      25 ]
+    geom.face(26).n_poi = 3; allocate(geom.face(    26).poi(      3)); geom.face(    26).poi(1:      3) = [     21,      22,      25 ]
+    geom.face(27).n_poi = 3; allocate(geom.face(    27).poi(      3)); geom.face(    27).poi(1:      3) = [     22,      23,      25 ]
+    geom.face(28).n_poi = 3; allocate(geom.face(    28).poi(      3)); geom.face(    28).poi(1:      3) = [     23,      29,      25 ]
+    geom.face(29).n_poi = 3; allocate(geom.face(    29).poi(      3)); geom.face(    29).poi(1:      3) = [     29,      24,      25 ]
+    geom.face(30).n_poi = 3; allocate(geom.face(    30).poi(      3)); geom.face(    30).poi(1:      3) = [     24,      18,      25 ]
+    geom.face(31).n_poi = 3; allocate(geom.face(    31).poi(      3)); geom.face(    31).poi(1:      3) = [     29,      23,      30 ]
+    geom.face(32).n_poi = 3; allocate(geom.face(    32).poi(      3)); geom.face(    32).poi(1:      3) = [     23,      26,      30 ]
+    geom.face(33).n_poi = 3; allocate(geom.face(    33).poi(      3)); geom.face(    33).poi(1:      3) = [     26,      27,      30 ]
+    geom.face(34).n_poi = 3; allocate(geom.face(    34).poi(      3)); geom.face(    34).poi(1:      3) = [     27,      28,      30 ]
+    geom.face(35).n_poi = 3; allocate(geom.face(    35).poi(      3)); geom.face(    35).poi(1:      3) = [     28,      14,      30 ]
+    geom.face(36).n_poi = 3; allocate(geom.face(    36).poi(      3)); geom.face(    36).poi(1:      3) = [     14,      29,      30 ]
+end subroutine Exam_Open2D_Honeycomb
+
+! ---------------------------------------------------------------------------------------
+
+! Example of stickman
+! Last updated on Thu 23 Mar 2017 by Hyungmin
+subroutine Exam_Open2D_Stickman(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_file = "15_Stickman"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_vertex_modify)//&                ! Vertex modification
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    prob.name_prob = "Stickman"
+
+    ! Set geometric type and view
+    prob.color    = [52, 152, 219]
+    prob.scale    = 1.0d0           ! Atomic model
+    prob.size     = 1.0d0           ! Cylindrical model
+    prob.move_x   = 0.0d0           ! Cylindrical model
+    prob.move_y   = 0.0d0           ! Cylindrical model
+    para_fig_view = "XY"
+
+    geom.n_iniP = 48
+    geom.n_face = 52
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -16.42769d0, -18.33558d0, 0.0d0 ]
+    geom.iniP( 2).pos(1:3) = [  -5.47590d0, -18.33558d0, 0.0d0 ]
+    geom.iniP( 3).pos(1:3) = [   5.47590d0, -18.33558d0, 0.0d0 ]
+    geom.iniP( 4).pos(1:3) = [  16.42769d0, -18.33558d0, 0.0d0 ]
+    geom.iniP( 5).pos(1:3) = [ -16.42769d0,  -7.38379d0, 0.0d0 ]
+    geom.iniP( 6).pos(1:3) = [  -5.47590d0,  -7.38379d0, 0.0d0 ]
+    geom.iniP( 7).pos(1:3) = [   5.47590d0,  -7.38379d0, 0.0d0 ]
+    geom.iniP( 8).pos(1:3) = [  16.42769d0,  -7.38379d0, 0.0d0 ]
+    geom.iniP( 9).pos(1:3) = [ -16.42769d0,   3.56800d0, 0.0d0 ]
+    geom.iniP(10).pos(1:3) = [  -5.47590d0,   3.56800d0, 0.0d0 ]
+    geom.iniP(11).pos(1:3) = [   5.47590d0,   3.56800d0, 0.0d0 ]
+    geom.iniP(12).pos(1:3) = [  16.42769d0,   3.56800d0, 0.0d0 ]
+    geom.iniP(13).pos(1:3) = [ -16.42769d0,  14.51980d0, 0.0d0 ]
+    geom.iniP(14).pos(1:3) = [  -5.47590d0,  14.51980d0, 0.0d0 ]
+    geom.iniP(15).pos(1:3) = [   5.47590d0,  14.51980d0, 0.0d0 ]
+    geom.iniP(16).pos(1:3) = [  16.42769d0,  14.51980d0, 0.0d0 ]
+    geom.iniP(17).pos(1:3) = [ -16.42769d0,  25.47159d0, 0.0d0 ]
+    geom.iniP(18).pos(1:3) = [  -5.47590d0,  25.47159d0, 0.0d0 ]
+    geom.iniP(19).pos(1:3) = [   5.47590d0,  25.47159d0, 0.0d0 ]
+    geom.iniP(20).pos(1:3) = [  16.42769d0,  25.47159d0, 0.0d0 ]
+    geom.iniP(21).pos(1:3) = [  -7.38151d0, -29.44070d0, 0.0d0 ]
+    geom.iniP(22).pos(1:3) = [  -9.31998d0, -40.54582d0, 0.0d0 ]
+    geom.iniP(23).pos(1:3) = [ -11.26940d0, -51.63999d0, 0.0d0 ]
+    geom.iniP(24).pos(1:3) = [ -18.32235d0, -28.80550d0, 0.0d0 ]
+    geom.iniP(25).pos(1:3) = [ -20.19511d0, -39.27541d0, 0.0d0 ]
+    geom.iniP(26).pos(1:3) = [ -22.04596d0, -49.74533d0, 0.0d0 ]
+    geom.iniP(27).pos(1:3) = [  18.32235d0, -28.80550d0, 0.0d0 ]
+    geom.iniP(28).pos(1:3) = [  20.19511d0, -39.27541d0, 0.0d0 ]
+    geom.iniP(29).pos(1:3) = [  22.04596d0, -49.74533d0, 0.0d0 ]
+    geom.iniP(30).pos(1:3) = [   7.38151d0, -29.44070d0, 0.0d0 ]
+    geom.iniP(31).pos(1:3) = [   9.31998d0, -40.54582d0, 0.0d0 ]
+    geom.iniP(32).pos(1:3) = [  11.26940d0, -51.63999d0, 0.0d0 ]
+    geom.iniP(33).pos(1:3) = [  26.86475d0,  20.08331d0, 0.0d0 ]
+    geom.iniP(34).pos(1:3) = [  37.26895d0,  25.80014d0, 0.0d0 ]
+    geom.iniP(35).pos(1:3) = [  47.61840d0,  31.68126d0, 0.0d0 ]
+    geom.iniP(36).pos(1:3) = [  24.95914d0,  30.85987d0, 0.0d0 ]
+    geom.iniP(37).pos(1:3) = [  33.52344d0,  36.09483d0, 0.0d0 ]
+    geom.iniP(38).pos(1:3) = [  42.14250d0,  41.16551d0, 0.0d0 ]
+    geom.iniP(39).pos(1:3) = [ -24.95914d0,   9.13151d0, 0.0d0 ]
+    geom.iniP(40).pos(1:3) = [ -33.52344d0,   3.89656d0, 0.0d0 ]
+    geom.iniP(41).pos(1:3) = [ -42.14250d0,  -1.17412d0, 0.0d0 ]
+    geom.iniP(42).pos(1:3) = [ -26.86475d0,  19.90808d0, 0.0d0 ]
+    geom.iniP(43).pos(1:3) = [ -37.26895d0,  14.19124d0, 0.0d0 ]
+    geom.iniP(44).pos(1:3) = [ -47.61840d0,   8.31013d0, 0.0d0 ]
+    geom.iniP(45).pos(1:3) = [  -6.57108d0,  36.42338d0, 0.0d0 ]
+    geom.iniP(46).pos(1:3) = [   6.57108d0,  36.42338d0, 0.0d0 ]
+    geom.iniP(47).pos(1:3) = [  -5.25686d0,  47.37518d0, 0.0d0 ]
+    geom.iniP(48).pos(1:3) = [   5.25686d0,  47.37518d0, 0.0d0 ]
+
+    ! Set face connnectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,   2,   5 ]
+    geom.face( 2).n_poi = 3; allocate(geom.face( 2).poi(3)); geom.face( 2).poi(1:3) = [  5,   2,   6 ]
+    geom.face( 3).n_poi = 3; allocate(geom.face( 3).poi(3)); geom.face( 3).poi(1:3) = [  2,   3,   6 ]
+    geom.face( 4).n_poi = 3; allocate(geom.face( 4).poi(3)); geom.face( 4).poi(1:3) = [  6,   3,   7 ]
+    geom.face( 5).n_poi = 3; allocate(geom.face( 5).poi(3)); geom.face( 5).poi(1:3) = [  3,   4,   7 ]
+    geom.face( 6).n_poi = 3; allocate(geom.face( 6).poi(3)); geom.face( 6).poi(1:3) = [  7,   4,   8 ]
+    geom.face( 7).n_poi = 3; allocate(geom.face( 7).poi(3)); geom.face( 7).poi(1:3) = [  5,   6,   9 ]
+    geom.face( 8).n_poi = 3; allocate(geom.face( 8).poi(3)); geom.face( 8).poi(1:3) = [  9,   6,  10 ]
+    geom.face( 9).n_poi = 3; allocate(geom.face( 9).poi(3)); geom.face( 9).poi(1:3) = [  6,   7,  10 ]
+    geom.face(10).n_poi = 3; allocate(geom.face(10).poi(3)); geom.face(10).poi(1:3) = [ 10,   7,  11 ]
+    geom.face(11).n_poi = 3; allocate(geom.face(11).poi(3)); geom.face(11).poi(1:3) = [  7,   8,  11 ]
+    geom.face(12).n_poi = 3; allocate(geom.face(12).poi(3)); geom.face(12).poi(1:3) = [ 11,   8,  12 ]
+    geom.face(13).n_poi = 3; allocate(geom.face(13).poi(3)); geom.face(13).poi(1:3) = [  9,  10,  13 ]
+    geom.face(14).n_poi = 3; allocate(geom.face(14).poi(3)); geom.face(14).poi(1:3) = [ 13,  10,  14 ]
+    geom.face(15).n_poi = 3; allocate(geom.face(15).poi(3)); geom.face(15).poi(1:3) = [ 10,  11,  14 ]
+    geom.face(16).n_poi = 3; allocate(geom.face(16).poi(3)); geom.face(16).poi(1:3) = [ 14,  11,  15 ]
+    geom.face(17).n_poi = 3; allocate(geom.face(17).poi(3)); geom.face(17).poi(1:3) = [ 11,  12,  15 ]
+    geom.face(18).n_poi = 3; allocate(geom.face(18).poi(3)); geom.face(18).poi(1:3) = [ 15,  12,  16 ]
+    geom.face(19).n_poi = 3; allocate(geom.face(19).poi(3)); geom.face(19).poi(1:3) = [ 13,  14,  17 ]
+    geom.face(20).n_poi = 3; allocate(geom.face(20).poi(3)); geom.face(20).poi(1:3) = [ 17,  14,  18 ]
+    geom.face(21).n_poi = 3; allocate(geom.face(21).poi(3)); geom.face(21).poi(1:3) = [ 14,  15,  18 ]
+    geom.face(22).n_poi = 3; allocate(geom.face(22).poi(3)); geom.face(22).poi(1:3) = [ 18,  15,  19 ]
+    geom.face(23).n_poi = 3; allocate(geom.face(23).poi(3)); geom.face(23).poi(1:3) = [ 15,  16,  19 ]
+    geom.face(24).n_poi = 3; allocate(geom.face(24).poi(3)); geom.face(24).poi(1:3) = [ 19,  16,  20 ]
+    geom.face(25).n_poi = 3; allocate(geom.face(25).poi(3)); geom.face(25).poi(1:3) = [  2,   1,  21 ]
+    geom.face(26).n_poi = 3; allocate(geom.face(26).poi(3)); geom.face(26).poi(1:3) = [ 21,   1,  24 ]
+    geom.face(27).n_poi = 3; allocate(geom.face(27).poi(3)); geom.face(27).poi(1:3) = [ 21,  24,  22 ]
+    geom.face(28).n_poi = 3; allocate(geom.face(28).poi(3)); geom.face(28).poi(1:3) = [ 22,  24,  25 ]
+    geom.face(29).n_poi = 3; allocate(geom.face(29).poi(3)); geom.face(29).poi(1:3) = [ 22,  25,  23 ]
+    geom.face(30).n_poi = 3; allocate(geom.face(30).poi(3)); geom.face(30).poi(1:3) = [ 23,  25,  26 ]
+    geom.face(31).n_poi = 3; allocate(geom.face(31).poi(3)); geom.face(31).poi(1:3) = [  3,  30,   4 ]
+    geom.face(32).n_poi = 3; allocate(geom.face(32).poi(3)); geom.face(32).poi(1:3) = [  4,  30,  27 ]
+    geom.face(33).n_poi = 3; allocate(geom.face(33).poi(3)); geom.face(33).poi(1:3) = [ 30,  31,  27 ]
+    geom.face(34).n_poi = 3; allocate(geom.face(34).poi(3)); geom.face(34).poi(1:3) = [ 27,  31,  28 ]
+    geom.face(35).n_poi = 3; allocate(geom.face(35).poi(3)); geom.face(35).poi(1:3) = [ 31,  32,  28 ]
+    geom.face(36).n_poi = 3; allocate(geom.face(36).poi(3)); geom.face(36).poi(1:3) = [ 28,  32,  29 ]
+    geom.face(37).n_poi = 3; allocate(geom.face(37).poi(3)); geom.face(37).poi(1:3) = [ 16,  33,  20 ]
+    geom.face(38).n_poi = 3; allocate(geom.face(38).poi(3)); geom.face(38).poi(1:3) = [ 20,  33,  36 ]
+    geom.face(39).n_poi = 3; allocate(geom.face(39).poi(3)); geom.face(39).poi(1:3) = [ 33,  34,  36 ]
+    geom.face(40).n_poi = 3; allocate(geom.face(40).poi(3)); geom.face(40).poi(1:3) = [ 36,  34,  37 ]
+    geom.face(41).n_poi = 3; allocate(geom.face(41).poi(3)); geom.face(41).poi(1:3) = [ 34,  35,  37 ]
+    geom.face(42).n_poi = 3; allocate(geom.face(42).poi(3)); geom.face(42).poi(1:3) = [ 37,  35,  38 ]
+    geom.face(43).n_poi = 3; allocate(geom.face(43).poi(3)); geom.face(43).poi(1:3) = [ 17,  42,  13 ]
+    geom.face(44).n_poi = 3; allocate(geom.face(44).poi(3)); geom.face(44).poi(1:3) = [ 13,  42,  39 ]
+    geom.face(45).n_poi = 3; allocate(geom.face(45).poi(3)); geom.face(45).poi(1:3) = [ 42,  43,  39 ]
+    geom.face(46).n_poi = 3; allocate(geom.face(46).poi(3)); geom.face(46).poi(1:3) = [ 39,  43,  40 ]
+    geom.face(47).n_poi = 3; allocate(geom.face(47).poi(3)); geom.face(47).poi(1:3) = [ 43,  44,  40 ]
+    geom.face(48).n_poi = 3; allocate(geom.face(48).poi(3)); geom.face(48).poi(1:3) = [ 40,  44,  41 ]
+    geom.face(49).n_poi = 3; allocate(geom.face(49).poi(3)); geom.face(49).poi(1:3) = [ 18,  19,  45 ]
+    geom.face(50).n_poi = 3; allocate(geom.face(50).poi(3)); geom.face(50).poi(1:3) = [ 45,  19,  46 ]
+    geom.face(51).n_poi = 3; allocate(geom.face(51).poi(3)); geom.face(51).poi(1:3) = [ 45,  46,  47 ]
+    geom.face(52).n_poi = 3; allocate(geom.face(52).poi(3)); geom.face(52).poi(1:3) = [ 47,  46,  48 ]
+end subroutine Exam_Open2D_Stickman
 
 ! ---------------------------------------------------------------------------------------
 
@@ -1724,223 +2281,6 @@ subroutine Exam_Open2D_Plate_Distorted_Tri(prob, geom)
     ! deallocate edge data
     deallocate(edge)
 end subroutine Exam_Open2D_Plate_Distorted_Tri
-
-! ---------------------------------------------------------------------------------------
-
-! Example of circular plate with tri mesh
-! Last updated on Sat 11 Mar 2017 by Hyungmin
-subroutine Exam_Open2D_Circular_Plate_Tri(prob, geom)
-    type(ProbType), intent(inout) :: prob
-    type(GeomType), intent(inout) :: geom
-
-    double precision,allocatable  :: edge(:,:,:), joint(:,:)
-	integer, allocatable :: conn(:,:)
-
-	double precision :: dx, dy
-    integer :: i, j, n, count_n, count_e, count_n_t, count_e_t
-    character :: pn
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_file = "Circular_Plate_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
-    prob.name_prob = "Circular Plate Tri"
-
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
-
-    n  = 2
-    pn = "\"
-
-    geom.n_iniP = (n + 1)*(n + 1) + n*(n + 1) + n*n
-    geom.n_face = 3*n*n*2
-
-    ! Allocate data structures
-    allocate(edge(2, n+1, 2), conn(n*n*2, 4), joint((n+1)**2, 3))
-    allocate(geom.iniP(geom.n_iniP))
-    allocate(geom.face(geom.n_face))
-
-    do i = 1, geom.n_face
-        geom.face(i).n_poi = 3
-        allocate(geom.face(i).poi(3))
-    end do
-
-    ! First mesh, generate positions of edges
-    do i = 1, n + 1
-        ! First edge
-        edge(1, i, 1) = dble(i-1) * 0.5d0 / dble(n)             ! x1
-        edge(1, i, 2) = 0.0d0                                   ! y1
-        ! Second edge
-        edge(2, i, 1) = dble(i-1) * 1.0d0 / 3.0d0 / dble(n)     ! x2
-        edge(2, i, 2) = 0.5d0 - 0.5d0 * edge(2, i, 1)           ! y2
-    end do
-
-    ! Generation of joint
-    count_n = 0
-    do i = 1, n + 1
-        dx = (edge(2, i, 1) - edge(1, i, 1)) / dble(n)
-        dy = (edge(2, i, 2) - edge(1, i, 2)) / dble(n)
-
-        do j = 1, n + 1
-            count_n = count_n + 1
-            geom.iniP(count_n).pos(1) = edge(1, i, 1) + dble(j-1) * dx
-            geom.iniP(count_n).pos(2) = edge(1, i, 2) + dble(j-1) * dy
-            geom.iniP(count_n).pos(3) = 0.0d0
-        end do
-    end do
-
-    ! Generation of connectivities for quadrilaterlar elements
-    count_e = 0
-    do i = 1, n
-        do j = 1, n
-            if(pn == "\") then
-                count_e = count_e + 1
-                geom.face(count_e).poi(1) = (n+1)*(i+0) + (j-1) + 1
-                geom.face(count_e).poi(2) = (n+1)*(i+0) + (j-1) + 2
-                geom.face(count_e).poi(3) = (n+1)*(i-1) + (j-1) + 1
-
-                count_e = count_e + 1
-                geom.face(count_e).poi(1) = (n+1)*(i+0) + (j-1) + 2
-                geom.face(count_e).poi(2) = (n+1)*(i-1) + (j-1) + 2
-                geom.face(count_e).poi(3) = (n+1)*(i-1) + (j-1) + 1
-            else if(pn == "/") then
-                count_e = count_e + 1
-                geom.face(count_e).poi(1) = (n+1)*(i+0) + (j-1) + 1
-                geom.face(count_e).poi(2) = (n+1)*(i-1) + (j-1) + 2
-                geom.face(count_e).poi(3) = (n+1)*(i-1) + (j-1) + 1
-
-                count_e = count_e + 1
-                geom.face(count_e).poi(1) = (n+1)*(i+0) + (j-1) + 1
-                geom.face(count_e).poi(2) = (n+1)*(i+0) + (j-1) + 2
-                geom.face(count_e).poi(3) = (n+1)*(i-1) + (j-1) + 2
-            end if
-        end do
-    end do
-
-    ! Second mesh, generate positions of edges
-    do i = 1, n + 1
-        ! First edge
-        edge(1, n+2-i, 1) = dble(i-1) * 1.0d0 / 3.0d0 / dble(n)     ! x1
-        edge(1, n+2-i, 2) = 0.5d0 - 0.5d0 * edge(1, n+2-i, 1)       ! y1
-        ! Second edge
-        edge(2, n+2-i, 1) = dsin(dble(i-1)*(pi/180.0d0) * 45.d0 / dble(n))    ! x2
-        edge(2, n+2-i, 2) = dcos(dble(i-1)*(pi/180.0d0) * 45.d0 / dble(n))    ! y2
-    end do
-
-    ! Generation of joint
-    count_n_t = 0
-    do i = 1, n + 1
-        dx = (edge(2, i, 1) - edge(1, i, 1)) / dble(n)
-        dy = (edge(2, i, 2) - edge(1, i, 2)) / dble(n)
-
-        do j = 1, n + 1
-            count_n_t = count_n_t + 1
-            joint(count_n_t, 1) = edge(1,i,1) + dble(j-1) * dx
-            joint(count_n_t, 2) = edge(1,i,2) + dble(j-1) * dy
-            joint(count_n_t, 3) = 0.0d0
-        end do
-    end do
-
-    ! Generation of connectivities for quadrilaterlar elements
-    count_e_t = 0
-    do i = 1, n
-        do j = 1, n
-            if(pn == "\") then
-                count_e_t = count_e_t + 1
-                conn(count_e_t, 1) = (n+1)*(i-1) + (j-1) + 1
-                conn(count_e_t, 2) = (n+1)*(i-1) + (j-1) + 2
-                conn(count_e_t, 3) = (n+1)*(i+0) + (j-1) + 1
-
-                count_e_t = count_e_t + 1
-                conn(count_e_t, 1) = (n+1)*(i-1) + (j-1) + 2
-                conn(count_e_t, 2) = (n+1)*(i+0) + (j-1) + 2
-                conn(count_e_t, 3) = (n+1)*(i+0) + (j-1) + 1
-            else if(pn == "/") then
-                count_e_t = count_e_t + 1
-                conn(count_e_t, 1) = (n+1)*(i-1) + (j-1) + 1
-                conn(count_e_t, 2) = (n+1)*(i+0) + (j-1) + 2
-                conn(count_e_t, 3) = (n+1)*(i+0) + (j-1) + 1
-
-                count_e_t = count_e_t + 1
-                conn(count_e_t, 1) = (n+1)*(i-1) + (j-1) + 1
-                conn(count_e_t, 2) = (n+1)*(i-1) + (j-1) + 2
-                conn(count_e_t, 3) = (n+1)*(i+0) + (j-1) + 2
-            end if
-        end do
-    end do
-
-    call Exam_Open2D_Merge_Point_Face_Tri(n, joint, conn, count_n, count_e, geom)
-
-    ! Third mesh, generate positions of edges
-    do i = 1, n + 1
-        ! First edge
-        edge(1,i,1) = 1.0d0/3.d0 + dble(i-1) * (0.5d0 - 1.0d0 / 3.0d0) / dble(n)        ! x1
-        edge(1,i,2) = 1.0d0 - 2.0d0 * edge(1,i,1)                                       ! y1
-        ! Second edge
-        edge(2,i,1) = dsin(pi/180.0d0 * 45.d0 + dble(i-1) * (pi/180.0d0) * 45.d0 / dble(n))   ! x2
-        edge(2,i,2) = dcos(pi/180.0d0 * 45.d0 + dble(i-1) * (pi/180.0d0) * 45.d0 / dble(n))   ! y2
-    end do
-
-    ! Generation of joint
-    count_n_t = 0
-    do i = 1, n + 1
-        dx = (edge(2, i, 1) - edge(1, i, 1)) / dble(n)
-        dy = (edge(2, i, 2) - edge(1, i, 2)) / dble(n)
-
-        do j = 1, n + 1
-            count_n_t = count_n_t + 1
-            joint(count_n_t, 1) = edge(1, i, 1) + dble(j-1) * dx
-            joint(count_n_t, 2) = edge(1, i, 2) + dble(j-1) * dy
-            joint(count_n_t, 3) = 0.0d0
-        end do
-    end do
-
-    ! Generation of connectivities for quadrilaterlar elements
-    count_e_t = 0
-    do i = 1, n
-        do j = 1, n
-            if(pn == "\") then
-                count_e_t = count_e_t + 1
-                conn(count_e_t, 1) = (n+1)*(i+0) + (j-1) + 1
-                conn(count_e_t, 2) = (n+1)*(i-1) + (j-1) + 2
-                conn(count_e_t, 3) = (n+1)*(i-1) + (j-1) + 1
-
-                count_e_t = count_e_t + 1
-                conn(count_e_t, 1) = (n+1)*(i+0) + (j-1) + 1
-                conn(count_e_t, 2) = (n+1)*(i+0) + (j-1) + 2
-                conn(count_e_t, 3) = (n+1)*(i-1) + (j-1) + 2
-            else if(pn == "/") then
-                count_e_t = count_e_t + 1
-                conn(count_e_t, 1) = (n+1)*(i+0) + (j-1) + 1
-                conn(count_e_t, 2) = (n+1)*(i+0) + (j-1) + 2
-                conn(count_e_t, 3) = (n+1)*(i-1) + (j-1) + 1
-
-                count_e_t = count_e_t + 1
-                conn(count_e_t, 1) = (n+1)*(i+0) + (j-1) + 2
-                conn(count_e_t, 2) = (n+1)*(i-1) + (j-1) + 2
-                conn(count_e_t, 3) = (n+1)*(i-1) + (j-1) + 1
-            end if
-        end do
-    end do
-
-    call Exam_Open2D_Merge_Point_Face_Tri(n, joint, conn, count_n, count_e, geom)
-
-    ! Deallocate data structure
-    deallocate(edge, joint, conn)
-end subroutine Exam_Open2D_Circular_Plate_Tri
 
 ! ---------------------------------------------------------------------------------------
 
