@@ -24,15 +24,15 @@
 
 # Executables
 *.exe
-!Designer-Open/Library/sleep.exe
-!Designer-Open/Library/meshconv.exe
+!tools/sleep.exe
+!tools/meshconv.exe
 *.out
 *.app
-Designer-Open/Debug
-Designer-Open/Release
-Designer-Open/x64
+make/Debug
+make/Release
+make/x64
 *.u2d
-Designer-Open/Output
+make/Output
 .vs
 *.11
 *.101
