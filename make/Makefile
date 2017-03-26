@@ -4,17 +4,17 @@ Objects = Data_Bound.obj Data_DNA.obj Data_Geom.obj Data_Mesh.obj Data_Prob.obj 
 		  Exam_1_Platonic.obj Exam_2_Archimedean.obj Exam_3_Johnson.obj Exam_4_Catalan.obj \
 		  Exam_5_Miscellaneous.obj Exam_8_Prism.obj \
 		  3_Section.obj 1_Input.obj 2_ModGeo.obj 4_Basepair.obj 5_Route.obj 6_SeqDesign.obj 7_Output.obj \
-		  Designer-Open.obj
+		  PERDIX-OPEN.obj
 
 #SRCS    = Data_Bound.f90 Data_DNA.f90 Data_Geom.f90 Data_Mesh.f90 Data_Prob.f90 \
 #		  Para.f90 List.f90 Mani.f90 Math.f90 SpanTree.f90 Importer.f90 TecPlot.f90 Chimera.f90 \
 #		  Exam_1_Platonic.f90 Exam_2_Archimedean.f90 Exam_3_Johnson.f90 Exam_4_Catalan.f90 \
 #		  Exam_5_Miscellaneous.f90 Exam_8_Prism.f90 \
 #		  3_Section.f90 1_Input.f90 2_ModGeo.f90 4_Basepair.f90 5_Route.f90 6_SeqDesign.f90 7_Output.f90 \
-#		  Designer-Open.f90
+#		  PERDIX-OPEN.f90
 
-Designer-Open: $(Objects)
-	ifort -o Designer-Open $(Objects)
+PERDIX-OPEN: $(Objects)
+	ifort -o PERDIX-OPEN $(Objects)
 
 #$(Objects): $(SRCS)
 #	ifort -c $(Objects) $(SRCS)
@@ -71,5 +71,5 @@ Exam_8_Prism.obj : Exam_8_Prism.f90
 	ifort -c 6_SeqDesign.obj 6_SeqDesign.f90
 7_Output.obj : 7_Output.f90
 	ifort -c 7_Output.obj 7_Output.f90
-Designer-Open.obj : Designer-Open.f90
-	ifort -c Designer-Open.obj Designer-Open.f90
+PERDIX-OPEN.obj : PERDIX-OPEN.f90
+	ifort -c PERDIX-OPEN.obj PERDIX-OPEN.f90

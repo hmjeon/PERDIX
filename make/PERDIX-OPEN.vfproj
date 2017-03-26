@@ -2,7 +2,7 @@
 <VisualStudioProject ProjectCreator="Intel Fortran" Keyword="Console Application" Version="11.0" ProjectIdGuid="{C8DD52C3-9F34-47A5-B186-43A99A04512F}">
 	<Platforms>
 		<Platform Name="Win32"/>
-		<Platform Name="x86"/></Platforms>
+		<Platform Name="x64"/></Platforms>
 	<Configurations>
 		<Configuration Name="Debug|Win32">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" WarnInterfaces="true" Traceback="true" BoundsCheck="true" StackFrameCheck="true" RuntimeLibrary="rtMultiThreadedDebugDLL"/>
@@ -47,7 +47,7 @@
 	<Files>
 		<Filter Name="Header Files" Filter="fi;fd;h;inc"/>
 		<Filter Name="Resource Files" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
-		<File RelativePath=".\resources\Designer.rc"/></Filter>
+		<File RelativePath=".\resources\PERDIX.rc"/></Filter>
 		<Filter Name="Source Files" Filter="f90;for;f;fpp;ftn;def;odl;idl">
 		<Filter Name="Common">
 		<File RelativePath="..\src\Data_Bound.f90"/>
@@ -78,7 +78,7 @@
 		<Filter Name="Output">
 		<File RelativePath="..\src\Chimera.f90"/>
 		<File RelativePath="..\src\TecPlot.f90"/></Filter>
-		<File RelativePath="..\src\Designer-Open.f90"/>
+		<File RelativePath="..\src\PERDIX-OPEN.f90"/>
 		<File RelativePath=".\env.txt"/>
 		<File RelativePath=".\seq.txt"/></Filter></Files>
 	<Globals/></VisualStudioProject>

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "Designer-Open", "Designer-Open.vfproj", "{C8DD52C3-9F34-47A5-B186-43A99A04512F}"
+Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "PERDIX-OPEN", "PERDIX-OPEN.vfproj", "{C8DD52C3-9F34-47A5-B186-43A99A04512F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
