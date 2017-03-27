@@ -1,5 +1,5 @@
 # PERDIX-OPEN
-Welcome to the PERDIX project! PERDIX is an open-source Fortran library, which allows scientists to build and solve the sequence design.
+Welcome to the PERDIX project! PERDIX is an open-source Fortran library, which allows scientists to build and solve the sequence design of complex DNA nanostructures.
 
 **PERDIX:**
 
@@ -10,21 +10,26 @@ Welcome to the PERDIX project! PERDIX is an open-source Fortran library, which a
 - **I**nverse
 - **X** = as the universal unknown variable for which the software will find the 'solution' as staple sequences
 
-**4 software variants:**
+**Software variants:**
 
-1. **PERDIX-6HB**: Six helix bundle
-2. **PERDIX-OPEN**: Open geometry
-3. **PERDIX-CROSS**: Arbitrary cross-section
-4. **PERDIX-Vebeled**: Beveled vertex
+* **[PERDIX-6HB](https://github.com/hmjeon/PERDIX-6HB)**: Six helix bundle
+* **[PERDIX-OPEN](https://github.com/hmjeon/PERDIX-OPEN)**: Open geometry
+* **[PERDIX-ARBITRARY](https://github.com/hmjeon/PERDIX-ARBITRARY)**: Arbitrary cross-section
+* **[PERDIX-VEBELED](https://github.com/hmjeon/PERDIX-VEBELED)**: Beveled vertex
 
 # Setup
 ```git clone https://github.com/hmjeon/PERDIX-OPEN.git```
 
 # Features
-- User-friendly computation functions
+* Fully automatic procedure for the sequence design of complex DNA nanostructures
+* User-friendly TUI (Text-based User Interface)
+* 3D visualization powered by [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/)
+* Free and open source (GNU General Public License, version 2.0)
+
 
 # Authors
-Hyungmin Jun, Biological engineering, MIT, USA
+Hyungmin Jun (hyungminjun@outlook.com), Laboratory of Computational Biology and Biophysics, MIT
 
 # License
-PERDIX is an open-source software distributed under the GPL license, version 2
+PERDIX framework is an open-source software distributed under the GPL license, version 2
+
