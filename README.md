@@ -2,16 +2,14 @@
 Welcome to the PERDIX project! PERDIX is an open-source Fortran library, which allows scientists to build and solve the sequence design of complex DNA nanostructures.
 
 **PERDIX:**
-
-- **P**urine (Adenine & Guanine) / Pyrimidine (Cytosine & Thymine)
-- **E**ngineered
-- **R**ecombinant
-- **D**esign
-- **I**nverse
-- **X** = as the universal unknown variable for which the software will find the 'solution' as staple sequences
+* **P**urine (Adenine & Guanine) / Pyrimidine (Cytosine & Thymine)
+* **E**ngineered
+* **R**ecombinant
+* **D**esign
+* **I**nverse
+* **X** = as the universal unknown variable for which the software will find the 'solution' as staple sequences
 
 **Software variants:**
-
 * **[PERDIX-6HB](https://github.com/hmjeon/PERDIX-6HB)**: Six helix bundle
 * **[PERDIX-OPEN](https://github.com/hmjeon/PERDIX-OPEN)**: Open geometry
 * **[PERDIX-ARBITRARY](https://github.com/hmjeon/PERDIX-ARBITRARY)**: Arbitrary cross-section
