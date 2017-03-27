@@ -25,7 +25,7 @@ module Input
     use Exam_3D_Open
     use Exam_Johnson
     use Exam_Prism
-    use Exam_Platonic
+    use Exam_Asym_Platonic
 
     use Section
 
@@ -764,7 +764,7 @@ subroutine Input_Print_Problem
     write(0, "(a)")
     write(0, "(a)"), "   +=====================================================================================+"
     write(0, "(a)"), "   |                                                                                     |"
-    write(0, "(a)"), "   |    Designer-Open by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017    |"
+    write(0, "(a)"), "   |           PERDIX-OPEN written by Hyungmin Jun (Hyungminjun@outlook.com)             |"
     write(0, "(a)"), "   |                                                                                     |"
     write(0, "(a)"), "   +=====================================================================================+"
     write(0, "(a)")
@@ -775,31 +775,34 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "      ----------------------"
     write(0, "(a)")
     write(0, "(a)"), "         1. Plate with 4 by 3 Mesh [QUAD],          2. Plate with 3 by 4 Mesh [TRI]"
-    write(0, "(a)"), "         3. Quarter Circle [QUAD],                  4. Quarter Circle [TRI]"
-    write(0, "(a)"), "         5. Disk [QUAD],                            6. Disk [TRI]"
-    write(0, "(a)"), "         7. Circle with Coarse Mesh [TRI],          8. Circle with Fine Mesh [TRI]"
-    write(0, "(a)"), "         9. Ellipse with Coarse Mesh [TRI],        10. Ellipse with Fine Mesh [TRI]"
-    write(0, "(a)"), "        11. L-Shape with Regular mesh [TRI],       12. L-Shape with Irregular Mesh [TRI]"
-    write(0, "(a)"), "        13. Hexagonal Mesh,                        14. Honeycomb"
-    write(0, "(a)"), "        15. 2D Stickman"
+    write(0, "(a)"), "         3. Quarter Circle [QUAD],                  4. Disk [QUAD]"
+    write(0, "(a)"), "         5. Circle with Coarse Mesh [TRI],          6. Ellipse with Coarse Mesh [TRI]"
+    write(0, "(a)"), "         7. L-Shape with Regular mesh [TRI],        8. Hexagonal Mesh"
+    write(0, "(a)"), "         9. Honeycomb,                             10. 2D Stickman"
     write(0, "(a)")
     write(0, "(a)"), "     II - 3D Open Geometries"
     write(0, "(a)"), "     -----------------------"
-    write(0, "(a)"), "        16. Open End Triangular Prism [QUAD],      17. Open End Cube [QUAD]"
-    write(0, "(a)"), "        18. Open End Pentagonal Prism [QUAD],      19. Open End Cylinder [QUAD]"
-    write(0, "(a)"), "        20. Hemisphere [QUAD]"
+    write(0, "(a)"), "        11. Open End Triangular Prism [QUAD],      12. Open End Cube [QUAD]"
+    write(0, "(a)"), "        13. Open End Pentagonal Prism [QUAD],      14. Open End Cylinder [QUAD]"
+    write(0, "(a)"), "        15. Hemisphere [QUAD]"
     write(0, "(a)")
     write(0, "(a)"), "    III - Closed Geometries - Prism and Antiprism"
     write(0, "(a)"), "    ---------------------------------------------"
-    write(0, "(a)"), "        21. Octagonal Prism,                       22. Enneagonal Prism"
-    write(0, "(a)"), "        23. Pentagonal Antiprism,                  24. Hexagonal Antiprism"
-    write(0, "(a)"), "        25. Heptagonal Antiprism"
+    write(0, "(a)"), "        16. Octagonal Prism,                       17. Enneagonal Prism"
+    write(0, "(a)"), "        18. Pentagonal Antiprism,                  19. Hexagonal Antiprism"
+    write(0, "(a)"), "        20. Heptagonal Antiprism"
     write(0, "(a)")
     write(0, "(a)"), "     VI - Closed Geometries - Johnson Solids"
     write(0, "(a)"), "     ---------------------------------------"
-    write(0, "(a)"), "        26. Square Pyramid - J1,                   27. Pentagonal Pyramid - J2"
-    write(0, "(a)"), "        28. Pentagonal Cupola - J5,                29. Gyroelongated Square Cupola - J23"
-    write(0, "(a)"), "        30. Gyroelongated Pentagonal Cupola - J24"
+    write(0, "(a)"), "        21. Square Pyramid - J1,                   22. Pentagonal Pyramid - J2"
+    write(0, "(a)"), "        23. Pentagonal Cupola - J5,                24. Gyroelongated Square Cupola - J23"
+    write(0, "(a)"), "        25. Gyroelongated Pentagonal Cupola - J24"
+    write(0, "(a)")
+    write(0, "(a)"), "    VII - Closed Geometries - Asymmetric solids"
+    write(0, "(a)"), "     ------------------------------------------"
+    write(0, "(a)"), "        26. Asymmetric Tetrahedron,                27. Asymmetric Cube"
+    write(0, "(a)"), "        28. Asymmetric Octahedron,                 29. Asymmetric Dodecahedron"
+    write(0, "(a)"), "        30. Asymmetric Icosahedron"
     write(0, "(a)")
     write(0, "(a)"), "      0. Input from file (*.PLY)"
     write(0, "(a)")

@@ -1,23 +1,18 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                               Module for Exam_Platonic
+!                               Module - Exam_Asym_Platonic
 !
-!                                                             First modified : 2015/08/03
-!                                                             Last  modified : 2016/07/14
+!                                                                    Updated : 2017/03/18
 !
-! Comments: This module contains the geometric definition of platonic solids
+! Comments: 
 !
-! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
-!
-! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
-! M.I.T. hereby makes following copyrightable material available to the
-! public under GNU General Public License, version 2 (GPL-2.0). A copy of
-! this license is available at https://opensource.org/licenses/GPL-2.0
+! Script written by Hyungmin Jun (hyungminjun@outlook.com).
+! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !
-module Exam_Platonic
+module Exam_Asym_Platonic
 
     use Data_Prob
     use Data_Geom
@@ -371,4 +366,4 @@ end subroutine Exam_Platonic_Icosahedron
 
 ! ---------------------------------------------------------------------------------------
 
-end module Exam_Platonic
+end module Exam_Asym_Platonic
