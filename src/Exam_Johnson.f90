@@ -65,13 +65,8 @@ subroutine Exam_Johnson_Square_Pyramid_J1(prob, geom)
 
     prob.name_prob = "Square Pyramid J1"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     geom.n_iniP = 5
     geom.n_face = 5
@@ -117,13 +112,8 @@ subroutine Exam_Johnson_Pentagonal_Pyramid_J2(prob, geom)
 
     prob.name_prob = "Penta Pyramid J2"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 6
@@ -172,13 +162,8 @@ subroutine Exam_Johnson_Triangular_Cupola_J3(prob, geom)
 
     prob.name_prob = "Tri Cupola J3"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 9
@@ -232,13 +217,8 @@ subroutine Exam_Johnson_Square_Cupola_J4(prob, geom)
 
     prob.name_prob = "Square Cupola J4"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 12
@@ -297,13 +277,8 @@ subroutine Exam_Johnson_Pentagonal_Cupola_J5(prob, geom)
 
     prob.name_prob = "Penta Cupola J5"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 15
@@ -367,13 +342,8 @@ subroutine Exam_Johnson_Pentagonal_Rotunda_J6(prob, geom)
 
     prob.name_prob = "Penta Rotunda J6"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 20
@@ -447,13 +417,8 @@ subroutine Exam_Johnson_Elongated_Triangular_Cupola_J18(prob, geom)
 
     prob.name_prob = "Elong Tri Cupola J18"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 15
@@ -519,13 +484,8 @@ subroutine Exam_Johnson_Elongated_Square_Cupola_J19(prob, geom)
 
     prob.name_prob = "Elon Square Cupola J19"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 20
@@ -600,13 +560,8 @@ subroutine Exam_Johnson_Elongated_Pentagonal_Cupola_J20(prob, geom)
 
     prob.name_prob = "Elon Penta Cupola J20"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 25
@@ -690,13 +645,8 @@ subroutine Exam_Johnson_Elongated_Pentagonal_Rotunda_J21(prob, geom)
 
     prob.name_prob = "Elon Penta Rotunda J21"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 30
@@ -790,13 +740,8 @@ subroutine Exam_Johnson_Gyroelongated_Triangular_Cupola_J22(prob, geom)
 
     prob.name_prob = "Gyro Tri Cupola J22"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 15
@@ -868,13 +813,8 @@ subroutine Exam_Johnson_Gyroelongated_Square_Cupola_J23(prob, geom)
 
     prob.name_prob = "Gyro Square Cupola J23"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 20
@@ -957,13 +897,8 @@ subroutine Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24(prob, geom)
 
     prob.name_prob = "Gyro Penta Cupola J24"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 25
@@ -1057,13 +992,8 @@ subroutine Exam_Johnson_Gyroelongated_Pentagonal_Rotunda_J25(prob, geom)
 
     prob.name_prob = "Gyro Penta Rotunda J25"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 30
@@ -1167,13 +1097,8 @@ subroutine Exam_Johnson_Gyrobifastigium_J26(prob, geom)
 
     prob.name_prob = "Gyrobifastigium J26"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set geometric type and view
     geom.n_iniP = 8

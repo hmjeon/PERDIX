@@ -64,13 +64,8 @@ subroutine Exam_Open3D_End_Triangular_Prism_Quad(prob, geom)
 
     prob.name_prob = "End Triangular Prism Quad"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "XYZ", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set mesh
     n  = 2
@@ -149,13 +144,8 @@ subroutine Exam_Open3D_End_Cube_Quad(prob, geom)
 
     prob.name_prob = "End Cube Quad"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "XYZ", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set mesh
     n  = 3
@@ -234,13 +224,8 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Quad(prob, geom)
 
     prob.name_prob = "End Pentagonal Prism Quad"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "XYZ", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set mesh
     n  = 3
@@ -319,13 +304,8 @@ subroutine Exam_Open3D_End_Cylinder_Quad(prob, geom)
 
     prob.name_prob = "End Cylinder Quad"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "XYZ", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set mesh
     n  = 4
@@ -404,13 +384,8 @@ subroutine Exam_Open3D_Hemisphere_Quad(prob, geom)
 
     prob.name_prob = "Hemisphere Quad"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "XYZ", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set mesh
     n  = 3
@@ -490,13 +465,8 @@ subroutine Exam_Open3D_End_Triangular_Prism_Tri(prob, geom)
 
     prob.name_prob = "End Triangular Prism Tri"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "XYZ", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set mesh
     n  = 3
@@ -583,13 +553,8 @@ subroutine Exam_Open3D_End_Cube_Tri(prob, geom)
 
     prob.name_prob = "End Cube Tri"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "XYZ", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set mesh
     n  = 3
@@ -676,13 +641,8 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Tri(prob, geom)
 
     prob.name_prob = "End Pentagonal Prism Tri"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "XYZ", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set mesh
     n  = 3
@@ -769,13 +729,8 @@ subroutine Exam_Open3D_End_Cylinder_Tri(prob, geom)
 
     prob.name_prob = "End Cylinder Tri"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "XYZ", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set mesh
     n  = 5
@@ -862,13 +817,8 @@ subroutine Exam_Open3D_Hemisphere_Tri(prob, geom)
 
     prob.name_prob = "Hemisphere Tri"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "XYZ", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set mesh
     n  = 3

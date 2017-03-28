@@ -66,13 +66,8 @@ subroutine Exam_Prism_Triangular(prob, geom)
 
     prob.name_prob = "Prism Triangular"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 6
@@ -120,13 +115,8 @@ subroutine Exam_Prism_Pentagonal(prob, geom)
 
     prob.name_prob = "Prism Pentagonal"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 10
@@ -180,13 +170,8 @@ subroutine Exam_Prism_Hexagonal(prob, geom)
 
     prob.name_prob = "Prism Hexagonal"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 12
@@ -243,13 +228,8 @@ subroutine Exam_Prism_Heptagonal(prob, geom)
 
     prob.name_prob = "Prism Heptagonal"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 14
@@ -309,13 +289,8 @@ subroutine Exam_Prism_Octagonal(prob, geom)
 
     prob.name_prob = "Prism Octagonal"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 16
@@ -378,13 +353,8 @@ subroutine Exam_Prism_Enneagonal(prob, geom)
 
     prob.name_prob = "Prism Enneagonal"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 18
@@ -450,17 +420,12 @@ subroutine Exam_Prism_Decagonal(prob, geom)
 
     prob.name_prob = "Prism Decagonal"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
-    geom.n_iniP =   20
-    geom.n_face =   12
+    geom.n_iniP = 20
+    geom.n_face = 12
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
@@ -525,13 +490,8 @@ subroutine Exam_Antiprism_Square(prob, geom)
 
     prob.name_prob = "Antiprism Square"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 8
@@ -586,13 +546,8 @@ subroutine Exam_Antiprism_Pentagonal(prob, geom)
 
     prob.name_prob = "Antiprism Pentagonal"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 10
@@ -651,13 +606,8 @@ subroutine Exam_Antiprism_Hexagonal(prob, geom)
 
     prob.name_prob = "Antiprism Hexagonal"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 12
@@ -720,13 +670,8 @@ subroutine Exam_Antiprism_Heptagonal(prob, geom)
 
     prob.name_prob = "Antiprism Heptagonal"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 14
@@ -793,13 +738,8 @@ subroutine Exam_Antiprism_Octagonal(prob, geom)
 
     prob.name_prob = "Antiprism Octagonal"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 16
@@ -870,17 +810,12 @@ subroutine Exam_Antiprism_Enneagonal(prob, geom)
 
     prob.name_prob = "Antiprism Enneagonal"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
-    geom.n_iniP =   18
-    geom.n_face =   20
+    geom.n_iniP = 18
+    geom.n_face = 20
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
@@ -951,13 +886,8 @@ subroutine Exam_Antiprism_Decagonal(prob, geom)
 
     prob.name_prob = "Antiprism Decagonal"
 
-    ! Set geometric type and view
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 20

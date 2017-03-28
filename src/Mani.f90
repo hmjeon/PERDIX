@@ -17,6 +17,7 @@ module Mani
     use Data_Geom
     use Data_Mesh
     use Data_DNA
+    use Data_Prob
 
     use Para
 
@@ -40,7 +41,26 @@ module Mani
     public Mani_Copy_BaseType
     public Mani_Go_Start_Base
 
-contains
+    contains
+
+! ---------------------------------------------------------------------------------------
+
+! Set geometric type and view
+subroutine Mani_Set_View_Color(prob, color, view, scale, size, move_x, move_y)
+    type(ProbType), intent(inout) :: prob
+    double precision, intent(in) :: scale, size, move_x, move_y
+    character(len=*), intent(in) :: view
+    integer, intent(in) :: color(3)
+
+    prob.color  = color
+    prob.scale  = scale     ! Atomic model
+    prob.size   = size      ! Cylindrical model
+    prob.move_x = move_x    ! Cylindrical model
+    prob.move_y = move_y    ! Cylindrical model
+
+    ! Set view points
+    para_fig_view = view
+end subroutine Mani_Set_View_Color
 
 ! ---------------------------------------------------------------------------------------
 
