@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by DNAcs.rc
+// Used by PERDIX.rc
 //
 #define IDI_ICON                        105
 

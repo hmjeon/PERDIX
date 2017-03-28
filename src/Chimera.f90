@@ -3,12 +3,12 @@
 !
 !                                    Module for Chimera
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
-!                                                            First programed : 2015/08/03
-!                                                            Last  modified  : 2016/04/15
+!                                                                    Updated : 2017/03/27
+!
+! Comments: This module is to write outputs by UCSF Chimera. 
+!
+! Script written by Hyungmin Jun (hyungminjun@outlook.com)
+! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !

@@ -1,13 +1,14 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                                   Module for TecPlot
+!                                   Module - TecPlot
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
-!                                                            First programed : 2016/03/17
+!                                                                    Updated : 2017/03/27
+!
+! Comments: This module is to write outputs by Tecplot. 
+!
+! Script written by Hyungmin Jun (hyungminjun@outlook.com)
+! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !
