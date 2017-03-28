@@ -13,8 +13,8 @@ Objects = Data_Bound.obj Data_DNA.obj Data_Geom.obj Data_Mesh.obj Data_Prob.obj 
 #         3_Section.f90 1_Input.f90 2_ModGeo.f90 4_Basepair.f90 5_Route.f90 6_SeqDesign.f90 7_Output.f90 \
 #         PERDIX-OPEN.f90
 
-Designer-OPEN: $(Objects)
-    ifort -o Designer-OPEN $(Objects)
+PERDIX-OPEN: $(Objects)
+    ifort -o PERDIX-OPEN $(Objects)
 
 #$(Objects): $(SRCS)
 #    ifort -c $(Objects) $(SRCS)
@@ -71,5 +71,5 @@ Exam_8_Prism.obj : Exam_8_Prism.f90
     ifort -c 6_SeqDesign.obj 6_SeqDesign.f90
 7_Output.obj : 7_Output.f90
     ifort -c 7_Output.obj 7_Output.f90
-Designer-OPEN.obj : PERDIX-OPEN.f90
+PERDIX-OPEN.obj : PERDIX-OPEN.f90
     ifort -c PERDIX-OPEN.obj PERDIX-OPEN.f90
