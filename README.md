@@ -10,10 +10,10 @@ Welcome to the PERDIX project! PERDIX is an open-source Fortran library, which a
 * **X** = as the universal unknown variable for which the software will find the 'solution' as staple sequences
 
 **Software variants:**
-* **[PERDIX-6HB](https://github.com/hmjeon/PERDIX-6HB)**: Six helix bundle
-* **[PERDIX-OPEN](https://github.com/hmjeon/PERDIX-OPEN)**: Open geometry
-* **[PERDIX-ARBITRARY](https://github.com/hmjeon/PERDIX-ARBITRARY)**: Arbitrary cross-section
-* **[PERDIX-VEBELED](https://github.com/hmjeon/PERDIX-VEBELED)**: Beveled vertex
+* **[PERDIX-6HB](https://github.com/hmjeon/PERDIX-6HB)**: Six helix bundle edge
+* **[PERDIX-OPEN](https://github.com/hmjeon/PERDIX-OPEN)**: 2D/3D Open surfaced geometry 
+* **[PERDIX-VEBELED](https://github.com/hmjeon/PERDIX-VEBELED)**: Beveled vertex design
+* **[PERDIX-X](https://github.com/hmjeon/PERDIX-X)**: Arbitrary cross-section
 
 # Setup
 ```git clone https://github.com/hmjeon/PERDIX-OPEN.git```
