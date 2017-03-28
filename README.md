@@ -12,7 +12,7 @@ Welcome to the PERDIX project! PERDIX is an open-source Fortran library, which a
 **Software variants:**
 * **[PERDIX-6HB](https://github.com/hmjeon/PERDIX-6HB)**: Six helix bundle edge
 * **[PERDIX-OPEN](https://github.com/hmjeon/PERDIX-OPEN)**: 2D/3D Open surfaced geometry 
-* **[PERDIX-VEBELED](https://github.com/hmjeon/PERDIX-VEBELED)**: Beveled vertex design
+* **[PERDIX-VEBELED](https://github.com/hmjeon/PERDIX-BEVELED)**: Beveled vertex design
 * **[PERDIX-X](https://github.com/hmjeon/PERDIX-X)**: Arbitrary cross-section
 
 # Setup
