@@ -80,7 +80,7 @@ subroutine Exam_Open2D_Plate_Uniform_Quad(prob, geom)
     prob.name_prob = "Plate Uniform Quad"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set options
     !n  = 2
@@ -154,7 +154,7 @@ subroutine Exam_Open2D_Plate_Uniform_Tri(prob, geom)
     prob.name_prob = "Plate Uniform Tri"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set options
     !n  = 2
@@ -247,7 +247,7 @@ subroutine Exam_Open2D_Quarter_Circle_Quad(prob, geom)
     prob.name_prob = "Quarter Circle Quad"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     n           = 2
     geom.n_iniP = (n + 1)*(n + 1 ) + n*(n + 1) + n*n
@@ -406,7 +406,7 @@ subroutine Exam_Open2D_Disk_Quad(prob, geom)
     prob.name_prob = "Disk Quad"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     n  = 2
     nx = n
@@ -485,7 +485,7 @@ subroutine Exam_Open2D_circle_Tri_Coarse(prob, geom)
     prob.name_prob = "Circle Tri Coarse"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 19
@@ -566,7 +566,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Coarse(prob, geom)
     prob.name_prob = "Ellipse Tri Coarse"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 27
@@ -667,7 +667,7 @@ subroutine Exam_Open2D_L_Shape_Regular(prob, geom)
     prob.name_prob = "L Shape Regular"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     geom.n_iniP = 21
     geom.n_face = 24
@@ -749,7 +749,7 @@ subroutine Exam_Open2D_Hexagonal_Mesh(prob, geom)
     prob.name_prob = "Hexagonal Mesh"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     geom.n_iniP = 38
     geom.n_face = 12
@@ -836,7 +836,7 @@ subroutine Exam_Open2D_Honeycomb(prob, geom)
     prob.name_prob = "Honeycomb"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Allocate point and face structure
     geom.n_iniP =   30
@@ -940,7 +940,7 @@ subroutine Exam_Open2D_Stickman(prob, geom)
     prob.name_prob = "Stickman"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     geom.n_iniP = 48
     geom.n_face = 52
@@ -1083,7 +1083,7 @@ subroutine Exam_Open2D_Quarter_Circle_Tri(prob, geom)
     prob.name_prob = "Quarter Circle Tri"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     n  = 2
     pn = "\"
@@ -1292,7 +1292,7 @@ subroutine Exam_Open2D_Disk_Tri(prob, geom)
     prob.name_prob = "Disk Tri"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     n  = 2
     nx = n
@@ -1409,7 +1409,7 @@ subroutine Exam_Open2D_circle_Tri_Fine(prob, geom)
     prob.name_prob = "Circle Tri Fine"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 41
@@ -1550,7 +1550,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Fine(prob, geom)
     prob.name_prob = "Ellipse Tri Fine"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 43
@@ -1696,7 +1696,7 @@ subroutine Exam_Open2D_L_Shape_Irregular(prob, geom)
     prob.name_prob = "L Shape Irregular"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     geom.n_iniP =  100
     geom.n_face =  156
@@ -1992,7 +1992,7 @@ subroutine Exam_Open2D_Plate_Distorted_Quad(prob, geom)
     prob.name_prob = "Plate Distorted Quad"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Set options
     n  = 3
@@ -2099,7 +2099,7 @@ subroutine Exam_Open2D_Plate_Distorted_Tri(prob, geom)
     prob.name_prob = "Plate Distorted Tri"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     n  = 3
     pn = "\"
@@ -2220,7 +2220,7 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Quad(prob, geom)
     prob.name_prob = "Hyperbolic Paraboloid Quad"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     n  = 3
     nx = n
@@ -2287,7 +2287,7 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Tri(prob, geom)
     prob.name_prob = "Hyperbolic Paraboloid Tri"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     n  = 3
     nx = n

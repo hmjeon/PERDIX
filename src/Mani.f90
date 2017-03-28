@@ -59,7 +59,7 @@ subroutine Mani_Set_View_Color(prob, color, view, scale, size, move_x, move_y)
     prob.move_y = move_y    ! Cylindrical model
 
     ! Set view points
-    para_fig_view = view
+    para_fig_view = trim(adjustl(view))
 end subroutine Mani_Set_View_Color
 
 ! ---------------------------------------------------------------------------------------

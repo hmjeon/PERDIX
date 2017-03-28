@@ -53,7 +53,7 @@ subroutine Exam_Asym_Tetrahedron(prob, geom)
     prob.name_prob = "Asym Tetrahedron"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     geom.n_iniP = 4
     geom.n_face = 4
@@ -98,7 +98,7 @@ subroutine Exam_Asym_Cube(prob, geom)
     prob.name_prob = "Asym Cube"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "XYZ", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     geom.n_iniP = 8
     geom.n_face = 6
@@ -149,7 +149,7 @@ subroutine Exam_Asym_Octahedron(prob, geom)
     prob.name_prob = "Asym Octahedron"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     geom.n_iniP = 6
     geom.n_face = 8
@@ -200,7 +200,7 @@ subroutine Exam_Asym_Dodecahedron(prob, geom)
     prob.name_prob = "Asym Dodecahedron"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "XZ", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Allocate point and face structure
     geom.n_iniP = 20
@@ -270,7 +270,7 @@ subroutine Exam_Asym_Icosahedron(prob, geom)
     prob.name_prob = "Asym Icosahedron"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "XY", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Allocate point and face structure
     geom.n_iniP = 12
