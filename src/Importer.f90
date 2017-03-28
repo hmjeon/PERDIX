@@ -1,14 +1,14 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                                   Module for Importer
+!                                   Module - Importer
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
-!                                                            First programed : 2015/08/03
-!                                                            Last  modified  : 2016/07/14
+!                                                                    Updated : 2017/03/27
+!
+! Comments: This module is for the import specific file type.
+!
+! Script written by Hyungmin Jun (hyungminjun@outlook.com)
+! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !
@@ -132,7 +132,7 @@ end subroutine Importer_WRL
 
 ! ---------------------------------------------------------------------------------------
 
-! import geom format that is standard for DNAcs
+! import geom format that is standard for PERDIX
 ! Last updated on Monday 7 Mar 2016 by Hyungmin
 subroutine Importer_GEO(prob, geom)
     type(ProbType), intent(inout) :: prob

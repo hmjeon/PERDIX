@@ -1,14 +1,14 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                                    Module for List
+!                                       Module - List
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
-!                                                            First programed : 2015/10/08
-!                                                            Last  modified  : 2016/07/14
+!                                                                    Updated : 2017/03/27
+!
+! Comments: The linked list used
+!
+! Script written by Hyungmin Jun (hyungminjun@outlook.com)
+! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !

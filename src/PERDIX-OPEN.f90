@@ -5,18 +5,19 @@
 !
 !                                                                    Updated : 2017/03/18
 !
-! Comments: 
+! Comments: PERDIX is an open-source Fortran library, which allows scientists
+! to build and solve the sequence design of complex DNA nanostructures.
 !
-! Script written by Hyungmin Jun (hyungminjun@outlook.com).
+! Script written by Hyungmin Jun (hyungminjun@outlook.com)
 ! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !
-program Designer_Open
+program PERDIX_Open
 
     use Ifport
 
-    use Data_Prob       ! Data structure for problem description
+    use Data_Prob       ! Data structure for problem definition
     use Data_Geom       ! Data strucutre for face, edge, point and section
     use Data_Mesh       ! Data structure for basepair
     use Data_DNA        ! Data structure for B-form DNA
@@ -386,7 +387,7 @@ end subroutine Autorun_CHK
 
 ! ---------------------------------------------------------------------------------------
 
-! Print information of the DNAcs
+! Print information of the PERDIX
 ! Last updated on Thursday 14 June 2016 by Hyungmin
 subroutine Print_Information(prob, geom, bound, mesh, dna)
     type(ProbType),  intent(in) :: prob
@@ -644,4 +645,4 @@ end subroutine Print_TimeConsuming
 
 ! ---------------------------------------------------------------------------------------
 
-end program Designer_Open
+end program PERDIX_Open

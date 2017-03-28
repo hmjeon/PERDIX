@@ -1,14 +1,14 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                                    Module for Para
+!                                       Module - Para
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
-!                                                            First programed : 2016/02/03
-!                                                            Last  modified  : 2016/11/21
+!                                                                    Updated : 2017/03/27
+!
+! Comments: The parameters used
+!
+! Script written by Hyungmin Jun (hyungminjun@outlook.com)
+! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !

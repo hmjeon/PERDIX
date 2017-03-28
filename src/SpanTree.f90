@@ -1,14 +1,14 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                                  Module for SpanTree
+!                                   Module - SpanTree
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
-!                                                            First programed : 2016/05/04
-!                                                            Last  modified  : 2016/07/14
+!                                                                    Updated : 2017/03/27
+!
+! Comments: This module is for computing the spanning tree.
+!
+! Script written by Hyungmin Jun (hyungminjun@outlook.com)
+! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !

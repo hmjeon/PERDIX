@@ -1,14 +1,14 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                                   Module for Output
+!                                   Module - Output
 !
-!                                             Programmed by Hyungmin Jun (hmjeon@mit.edu)
-!                                                   Massachusetts Institute of Technology
-!                                                    Department of Biological Engineering
-!                                         Laboratory for computational Biology & Biophics
-!                                                            First programed : 2015/05/12
-!                                                            Last  modified  : 2016/09/21
+!                                                                    Updated : 2017/03/27
+!
+! Comments: This module is for outputs.
+!
+! Script written by Hyungmin Jun (hyungminjun@outlook.com)
+! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !
@@ -684,7 +684,7 @@ subroutine Output_Write_ADINA(prob, mesh)
 
     ! Write of ADINA infile
     write(805, "(a     )"), "*"
-    write(805, "(a     )"), "* Command file created from DNAcs for command import"
+    write(805, "(a     )"), "* Command file created from PERDIX for command import"
     write(805, "(a     )"), "*"
     write(805, "(a$    )"), "*--- Command file created "
     write(805, "(i4, a$)"), time(2), "/"

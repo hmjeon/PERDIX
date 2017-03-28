@@ -1,19 +1,14 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                                   Module for Input
+!                                   Module - Input
 !
-!                                                            First programed : 2015/04/21
-!                                                            Last  modified  : 2017/03/09
+!                                                                    Updated : 2017/03/27
 !
-! Comments: The module is to read three inputs, the geometry, crosssection and edge length.
+! Comments: This module is for the inputs of the geometry and cross-section.
 !
-! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
-!
-! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
-! M.I.T. hereby makes following copyrightable material available to the
-! public under GNU General Public License, version 2 (GPL-2.0). A copy of
-! this license is available at https://opensource.org/licenses/GPL-2.0
+! Script written by Hyungmin Jun (hyungminjun@outlook.com)
+! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !
@@ -185,7 +180,7 @@ subroutine Input_Initialization(prob, geom)
     call Input_Generate_Schlegel_Diagram(prob, geom)
 
     ! Open output progress file (unit 11 is used for global output file)
-    open(unit=11, file=trim(prob.path_work1)//"Designer.txt", form="formatted")
+    open(unit=11, file=trim(prob.path_work1)//"PERDIX.txt", form="formatted")
 
     ! Print progress
     do i = 0, 11, 11
@@ -410,7 +405,7 @@ subroutine Input_Initialization_Autorun(prob, geom, ii, sec, edge, vertex, char_
     call Input_Generate_Schlegel_Diagram(prob, geom)
 
     ! Open output progress file (unit 11 is used for global output file)
-    open(unit=11, file=trim(prob.path_work1)//"DNAcs.txt", form="formatted")
+    open(unit=11, file=trim(prob.path_work1)//"PERDIX.txt", form="formatted")
 
     ! Print progress
     do i = 0, 11, 11
@@ -748,7 +743,7 @@ subroutine Input_Set_Command
     logical :: results
 
     ! Set command environments
-    results = SYSTEMQQ('title DNAcs')                       ! cmd title
+    results = SYSTEMQQ('title PERDIX')                       ! cmd title
     results = SYSTEMQQ('mode con: cols=135 lines=6000')     ! cmd size
     results = SYSTEMQQ('color')                             ! convert color, 02, f0, f1, f2
     results = SYSTEMQQ('date /t')                           ! display time
@@ -959,42 +954,41 @@ subroutine Input_Select_Problem(prob, geom)
         case ( 1); call Exam_Open2D_Plate_Uniform_Quad  (prob, geom)
         case ( 2); call Exam_Open2D_Plate_Uniform_Tri   (prob, geom)
         case ( 3); call Exam_Open2D_Quarter_Circle_Quad (prob, geom)
-        case ( 4); call Exam_Open2D_Quarter_Circle_Tri  (prob, geom)
-        case ( 5); call Exam_Open2D_Disk_Quad           (prob, geom)
-        case ( 6); call Exam_Open2D_Disk_Tri            (prob, geom)
-        case ( 7); call Exam_Open2D_Circle_Tri_Coarse   (prob, geom)
-        case ( 8); call Exam_Open2D_Circle_Tri_Fine     (prob, geom)
-        case ( 9); call Exam_Open2D_Ellipse_Tri_Coarse  (prob, geom)
-        case (10); call Exam_Open2D_Ellipse_Tri_Fine    (prob, geom)
-        case (11); call Exam_Open2D_L_Shape_Regular     (prob, geom)
-        case (12); call Exam_Open2D_L_Shape_Irregular   (prob, geom)
-        case (13); call Exam_Open2D_Hexagonal_Mesh      (prob, geom)
-        case (14); call Exam_Open2D_Honeycomb           (prob, geom)
-        case (15); call Exam_Open2D_Stickman            (prob, geom)
+        case ( 4); call Exam_Open2D_Disk_Quad           (prob, geom)
+        case ( 5); call Exam_Open2D_Circle_Tri_Coarse   (prob, geom)
+        case ( 6); call Exam_Open2D_Ellipse_Tri_Coarse  (prob, geom)
+        case ( 7); call Exam_Open2D_L_Shape_Regular     (prob, geom)
+        case ( 8); call Exam_Open2D_Hexagonal_Mesh      (prob, geom)
+        case ( 9); call Exam_Open2D_Honeycomb           (prob, geom)
+        case (10); call Exam_Open2D_Stickman            (prob, geom)
 
         ! 3D open geometry
-        case (16); call Exam_Open3D_End_Triangular_Prism_Quad (prob, geom)
-        case (17); call Exam_Open3D_End_Cube_Quad             (prob, geom)
-        case (18); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
-        case (19); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
-        case (20); call Exam_Open3D_Hemisphere_Quad           (prob, geom)
+        case (11); call Exam_Open3D_End_Triangular_Prism_Quad (prob, geom)
+        case (12); call Exam_Open3D_End_Cube_Quad             (prob, geom)
+        case (13); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
+        case (14); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
+        case (15); call Exam_Open3D_Hemisphere_Quad           (prob, geom)
 
         ! Prism and antiprism
-        case (21); call Exam_Prism_Octagonal      (prob, geom)
-        case (22); call Exam_Prism_Enneagonal     (prob, geom)
-        case (23); call Exam_Antiprism_Pentagonal (prob, geom)
-        case (24); call Exam_Antiprism_Hexagonal  (prob, geom)
-        case (25); call Exam_Antiprism_Heptagonal (prob, geom)
+        case (16); call Exam_Prism_Octagonal      (prob, geom)
+        case (17); call Exam_Prism_Enneagonal     (prob, geom)
+        case (18); call Exam_Antiprism_Pentagonal (prob, geom)
+        case (19); call Exam_Antiprism_Hexagonal  (prob, geom)
+        case (20); call Exam_Antiprism_Heptagonal (prob, geom)
 
         ! Johnson solids
-        case (26); call Exam_Johnson_Square_Pyramid_J1                   (prob, geom)
-        case (27); call Exam_Johnson_Pentagonal_Pyramid_J2               (prob, geom)
-        case (28); call Exam_Johnson_Pentagonal_Cupola_J5                (prob, geom)
-        case (29); call Exam_Johnson_Gyroelongated_Square_Cupola_J23     (prob, geom)
-        case (30); call Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24 (prob, geom)
+        case (21); call Exam_Johnson_Square_Pyramid_J1                   (prob, geom)
+        case (22); call Exam_Johnson_Pentagonal_Pyramid_J2               (prob, geom)
+        case (23); call Exam_Johnson_Pentagonal_Cupola_J5                (prob, geom)
+        case (24); call Exam_Johnson_Gyroelongated_Square_Cupola_J23     (prob, geom)
+        case (25); call Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24 (prob, geom)
 
-        ! Platonic solids
-        case (99); call Exam_Platonic_Tetrahedron (prob, geom)
+        ! Asymmetric solids
+        case (26); call Exam_Asym_Tetrahedron  (prob, geom)
+        case (27); call Exam_Asym_Cube         (prob, geom)
+        case (28); call Exam_Asym_Octahedron   (prob, geom)
+        case (29); call Exam_Asym_Dodecahedron (prob, geom)
+        case (30); call Exam_Asym_Icosahedron  (prob, geom)
 
         case default
             write(0, "(a$)"), "Error - Not defined problem : "
@@ -1513,11 +1507,11 @@ subroutine Input_Set_Path(prob)
 
     ! Set working directory
     if(para_external == "on") then
-        prob.path_work1 = "Output\"//trim(prob.name_file)//"\"
-        prob.path_work2 = "Output/"//trim(prob.name_file)//"/"
+        prob.path_work1 = "output\"//trim(prob.name_file)//"\"
+        prob.path_work2 = "output/"//trim(prob.name_file)//"/"
     else
-        prob.path_work1 = "Output\"
-        prob.path_work2 = "Output/"
+        prob.path_work1 = "output\"
+        prob.path_work2 = "output/"
     end if
 
     ! Set Chimera path

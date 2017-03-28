@@ -1,19 +1,14 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                               Module for Exam_2D Open
+!                                Module - Exam_2D_Open
 !
-!                                                             First modified : 2017/03/10
-!                                                             Last  modified : 2017/03/24
+!                                                                    Updated : 2017/03/27
 !
-! Comments: This module contains the geometric definition of 2D open structures
+! Comments: 2D open geometry
 !
-! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
-!
-! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
-! M.I.T. hereby makes following copyrightable material available to the
-! public under GNU General Public License, version 2 (GPL-2.0). A copy of
-! this license is available at https://opensource.org/licenses/GPL-2.0
+! Script written by Hyungmin Jun (hyungminjun@outlook.com)
+! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !

@@ -1,19 +1,14 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                                Module for Exam_Johnson
+!                               Module - Exam_Johnson
 !
-!                                                             First modified : 2017/03/13
-!                                                             Last  modified : 2017/03/13
+!                                                                    Updated : 2017/03/27
 !
-! Comments: This module contains the geometric definition of 2D open structures
+! Comments: Johnson solids
 !
-! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
-!
-! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
-! M.I.T. hereby makes following copyrightable material available to the
-! public under GNU General Public License, version 2 (GPL-2.0). A copy of
-! this license is available at https://opensource.org/licenses/GPL-2.0
+! Script written by Hyungmin Jun (hyungminjun@outlook.com)
+! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !
@@ -78,7 +73,6 @@ subroutine Exam_Johnson_Square_Pyramid_J1(prob, geom)
     prob.move_y   = 0.0d0           ! Cylindrical model
     para_fig_view = "XY"
 
-    ! Set geometric type and view
     geom.n_iniP = 5
     geom.n_face = 5
 

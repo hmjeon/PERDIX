@@ -1,19 +1,14 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                                   Module for ModGeo
+!                                   Module - ModGeo
 !
-!                                                            First programed : 2015/04/21
-!                                                            Last  modified  : 2017/03/13
+!                                                                    Updated : 2017/03/27
 !
-! Comments: The module is to generate the seperated line from the vertex.
+! Comments: This module is for geometric modification to generate the seperated lines.
 !
-! by Hyungmin Jun (Hyungminjun@outlook.com), MIT, Bathe Lab, 2017
-!
-! Copyright 2017. Massachusetts Institute of Technology. Rights Reserved.
-! M.I.T. hereby makes following copyrightable material available to the
-! public under GNU General Public License, version 2 (GPL-2.0). A copy of
-! this license is available at https://opensource.org/licenses/GPL-2.0
+! Script written by Hyungmin Jun (hyungminjun@outlook.com)
+! Copyright Hyungmin Jun, 2017. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !
