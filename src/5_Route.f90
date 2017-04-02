@@ -974,7 +974,9 @@ function Route_Connect_Scaf(mesh, dna, node_cur, node_com) result(count)
     if(para_unpaired_scaf == "on") then
         if(mesh.node(cur).conn /= 1 .and. mesh.node(com).conn /= 1) then
             length = Size_Vector(pos_cur - pos_com)
-            count  = floor((length-para_dist_pp)/dble(para_dist_pp))
+            !count = floor((length-para_dist_pp)/dble(para_dist_pp))
+            count = idnint(length/para_dist_pp) - 1
+
             if(count < 0) count = 0
         end if
     end if
@@ -1081,9 +1083,8 @@ function Route_Connect_Stap(mesh, dna, node_cur, node_com) result(n_poly_Tn)
         n_poly_Tn = idnint(length/para_dist_pp) - 1
 
         ! To make region for sequence design
-        if(n_poly_Tn == 0 ) n_poly_Tn = 1
-        !if(n_poly_Tn == 6 ) n_poly_Tn = 7
-    else
+        !if(n_poly_Tn == 0 ) n_poly_Tn = 0
+     else
         n_poly_Tn = para_n_base_tn
     end if
 
