@@ -81,6 +81,9 @@ subroutine Main()
     ! Print information
     call Print_Information(prob, geom, bound, mesh, dna)
 
+    ! Verify solution
+    call Verify_Solution(mesh, dna)
+
     ! Deallocate global dynamic array
     call Deallocate_Variables(geom, bound, mesh, dna)
 
@@ -642,6 +645,50 @@ subroutine Print_TimeConsuming(time_start)
 
     write(0, "(a)")
 end subroutine Print_TimeConsuming
+
+! ---------------------------------------------------------------------------------------
+
+! Verify solution
+! Last updated on Thursday 20 Apr 2017 by Hyungmin
+subroutine Verify_Solution(mesh, dna)
+    type(MeshType), intent(in) :: mesh
+    type(DNAType),  intent(in) :: dna
+
+    double precision :: verify
+    integer :: i
+
+    verify = 0.0d0
+    do i = 1, dna.n_top
+        if( dna.top(i).xover == -1 .or. &
+            dna.top(i).up    == -1 .or. &
+            dna.top(i).dn    == -1 .or. &
+            dna.top(i).node  == -1 ) then
+            verify = verify + dna.top(i).pos(1)
+            verify = verify + dna.top(i).pos(2)
+            verify = verify + dna.top(i).pos(3)
+            verify = verify + dble(dna.top(i).strand) + dble(dna.top(i).address)
+         end if
+
+        verify = verify + dble(dna.top(i).strand) + dble(dna.top(i).address)
+    end do
+
+    verify = verify + dble(dna.n_nt_14nt)/dble(dna.n_base_stap)*100.0d0
+    verify = verify + dble(dna.n_nt_4nt) /dble(dna.n_base_stap)*100.0d0
+    verify = verify + dble(dna.len_ave_stap + dna.n_14nt + dna.n_s14nt + dna.n_4nt + dna.n_only_4nt)
+    verify = verify + dble(dna.n_nt_14nt + dna.n_nt_4nt + dna.n_tot_region + dna.n_tot_14nt + dna.n_tot_4nt)
+    verify = verify + dble(dna.len_min_stap + dna.len_max_stap + dna.n_unpaired_scaf + dna.n_nt_unpaired_scaf)
+    verify = verify + dble(dna.n_unpaired_stap + dna.n_nt_unpaired_stap)
+
+    do i = 1, mesh.n_node
+        verify = verify + mesh.node(i).pos(1)
+        verify = verify + mesh.node(i).pos(2)
+        verify = verify + mesh.node(i).pos(3)
+    end do
+
+    write(0, "(a)")
+    write(0, "(a25, a)"), "7.87538228587238E+06"," - Reference: Plate 42-bp edge length"
+    write(0, "(es25.14)"), verify
+end subroutine Verify_Solution
 
 ! ---------------------------------------------------------------------------------------
 

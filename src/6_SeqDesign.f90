@@ -60,6 +60,7 @@ module SeqDesign
     private SeqDesign_Write_Strand
     private SeqDesign_Write_Graphical_Output
     private SeqDesign_Chimera_Atom
+    private SeqDesign_Chimera_Curved_Cylinder
     private SeqDesign_Chimera_Route
     private SeqDesign_Chimera_Sequence_Design
     private SeqDesign_Chimera_Strand
@@ -141,6 +142,9 @@ subroutine SeqDesign_Design(prob, geom, mesh, dna)
 
     ! Write atom model by dnaTop and strand data
     call SeqDesign_Chimera_Atom(prob, dna)
+
+    ! Write the curved cylindrical model
+    call SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
 
     ! Chimera topology route
     call SeqDesign_Chimera_Route(prob, mesh, dna)
@@ -6171,6 +6175,116 @@ subroutine SeqDesign_Chimera_Atom(prob, dna)
 
     close(unit=702)
 end subroutine SeqDesign_Chimera_Atom
+
+! ---------------------------------------------------------------------------------------
+
+! Write the curved cylinderical model
+! Last updated on Thursday 20 Apr 2016 by Hyungmin
+subroutine SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
+    type(ProbType), intent(in) :: prob
+    type(MeshType), intent(in) :: mesh
+    type(DNAType),  intent(in) :: dna
+
+    double precision :: pos_1(3), pos_2(3)
+    integer :: i, j, base, up, xover, across, last
+    logical :: f_axis, f_unpair
+    character(200) :: path, col_list(16)
+
+    col_list(1:4)   = ["tan",             "salmon",       "orange",        "gold"           ]
+    col_list(5:8)   = ["dark green",      "dark cyan",    "medium purple", "rosy brown"     ]
+    col_list(9:12)  = ["dark slate gray", "dark magenta", "sea green",     "olive drab"     ]
+    col_list(13:16) = ["goldenrod",       "firebrick",    "sienna",        "dark slate blue"]
+
+    if(para_write_702 == .false.) return
+
+    f_axis = para_chimera_axis
+
+    path = trim(prob.path_work1)//trim(prob.name_file)
+    open(unit=702, file=trim(path)//"_curved_cylinder.bild", form="formatted")
+
+    ! For all strands
+    do i = 1, dna.n_strand
+        do j = 1, dna.strand(i).n_base
+
+            ! Select color depending on strand number
+            if(dna.strand(i).types == "scaf") then
+                write(702, "(a)"), ".color gray"
+            else
+                write(702, "(a)"), ".color " // trim(col_list(mod(i-1, 16) + 1))
+            end if
+
+            ! Find base
+            base = dna.strand(i).base(j)
+            up   = dna.top(base).up
+
+            ! Exception 1
+            if(base == -1 .or. up == -1) cycle
+
+            ! Exception 2 - unpaired nucleotides
+            if(dna.top(base).node /= -1 .and. dna.top(up).node == -1) then
+                f_unpair = .true.
+                last     = base
+                cycle
+            else if(dna.top(base).node == -1 .or. dna.top(up).node == -1) then
+                cycle
+            end if
+
+            pos_1 = mesh.node(dna.top(base).node).pos(1:3)
+            pos_2 = mesh.node(dna.top(up).node).pos(1:3)
+
+            write(702, "(a$)"), ".cylinder "
+
+            if(dna.strand(i).types == "scaf") then
+                write(702, "(3f9.3$)"), pos_1(1:3) * 10.0d0
+                write(702, "(3f9.3$)"), pos_2(1:3) * 10.0d0
+            else
+                write(702, "(3f9.3$)"), (7.0d0*dna.top(base).pos + 3.0d0*pos_1) / 10.0d0 * 10.0d0
+                write(702, "(3f9.3$)"), (7.0d0*dna.top(up).pos   + 3.0d0*pos_2) / 10.0d0 * 10.0d0
+            end if
+
+            ! Crossover
+            if(dna.top(base).xover == up) then
+                write(702, "(1f9.3 )"), 0.25d0 * 10.0d0
+            else
+                write(702, "(1f9.3 )"), 0.5d0 * 10.0d0
+            end if
+
+            ! Unpaired nucleotides
+            if(f_unpair == .true.) then
+
+                pos_1 = mesh.node(dna.top(last).node).pos(1:3)
+                pos_2 = mesh.node(dna.top(base).node).pos(1:3)
+
+                write(702, "(a$)"), ".cylinder "
+                if(dna.strand(i).types == "scaf") then
+                    write(702, "(3f9.3$)"), pos_1(1:3) * 10.0d0
+                    write(702, "(3f9.3$)"), pos_2(1:3) * 10.0d0
+                else
+                    write(702, "(3f9.3$)"), (7.0d0*dna.top(last).pos + 3.0d0*pos_1) / 10.0d0 * 10.0d0
+                    write(702, "(3f9.3$)"), (7.0d0*dna.top(base).pos + 3.0d0*pos_2) / 10.0d0 * 10.0d0
+                end if
+                write(702, "(1f9.3 )"), 0.5d0 * 10.0d0
+
+                f_unpair = .false.
+            end if
+        end do
+    end do
+
+    ! Write global axis
+    if(f_axis == .true.) then
+        write(702, "(a)"), ".translate 0.0 0.0 0.0"
+        write(702, "(a)"), ".scale 0.5"
+        write(702, "(a)"), ".color grey"
+        write(702, "(a)"), ".sphere 0 0 0 0.5"      ! Center
+        write(702, "(a)"), ".color red"             ! x-axis
+        write(702, "(a)"), ".arrow 0 0 0 4 0 0 "
+        write(702, "(a)"), ".color blue"            ! y-axis
+        write(702, "(a)"), ".arrow 0 0 0 0 4 0 "
+        write(702, "(a)"), ".color yellow"          ! z-axis
+        write(702, "(a)"), ".arrow 0 0 0 0 0 4 "
+    end if
+    close(unit=702)
+end subroutine SeqDesign_Chimera_Curved_Cylinder
 
 ! ---------------------------------------------------------------------------------------
 
