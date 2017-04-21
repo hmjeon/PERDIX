@@ -6187,8 +6187,10 @@ subroutine SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
 
     double precision :: pos_1(3), pos_2(3)
     integer :: i, j, base, up, xover, across, last
-    logical :: f_axis, f_unpair
+    logical :: f_axis, f_unpair, f_chimera
     character(200) :: path, col_list(16)
+
+    f_chimera = .true.
 
     col_list(1:4)   = ["tan",             "salmon",       "orange",        "gold"           ]
     col_list(5:8)   = ["dark green",      "dark cyan",    "medium purple", "rosy brown"     ]
@@ -6210,6 +6212,7 @@ subroutine SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
             if(dna.strand(i).types == "scaf") then
                 write(702, "(a)"), ".color gray"
             else
+                if(f_chimera == .true.)cycle
                 write(702, "(a)"), ".color " // trim(col_list(mod(i-1, 16) + 1))
             end if
 
@@ -6284,6 +6287,31 @@ subroutine SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
         write(702, "(a)"), ".arrow 0 0 0 0 0 4 "
     end if
     close(unit=702)
+
+    ! Chemera output
+    if(f_chimera == .true.) then
+
+        open(unit=702, file=trim(path)//"_curved_cylinder.cmd", form="formatted")
+        write(702, "(a)"), "@echo off"
+        write(702, "(a)"), '"C:/Program Files/Chimera 1.11.2/bin/chimera.exe" --silent --script '//&
+            trim(prob.name_file)//"_curved_cylinder.py"
+        close(unit=702)
+
+        open(unit=702, file=trim(path)//"_curved_cylinder.py", form="formatted")
+        write(702, "(a)"), "from chimera import runCommand"
+        write(702, "(a)"), "runCommand('open "//trim(prob.name_file)//".pdb')"
+        write(702, "(a)"), "runCommand('windowsize 800 800')"
+        write(702, "(a)"), "runCommand('window')"
+        write(702, "(a)"), "runCommand('~ribbon')"
+        write(702, "(a)"), "runCommand('~display')"
+        write(702, "(a)"), "runCommand('open "//trim(prob.name_file)//"_curved_cylinder.bild')"
+        do i = 2, dna.n_strand
+            write(702, "(a)"), "runCommand('color "//trim(col_list(mod(i-1-1, 16) + 1))//" #0."//trim(adjustl(Int2Str(i)))//"')"
+        end do
+        write(702, "(a)"), "runCommand('pipes #0.2- coilWidth 4.5 coilThickness 4.5 coilColor none')"
+        write(702, "(a)"), "runCommand('scale 0.9')"
+        close(unit=702)
+    end if
 end subroutine SeqDesign_Chimera_Curved_Cylinder
 
 ! ---------------------------------------------------------------------------------------
