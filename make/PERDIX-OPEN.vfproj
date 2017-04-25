@@ -65,10 +65,10 @@
 		<File RelativePath="..\src\Exam_3D_Open.f90"/>
 		<File RelativePath="..\src\Exam_Asym_Platonic.f90"/>
 		<File RelativePath="..\src\Exam_Johnson.f90"/>
-		<File RelativePath="..\src\Exam_Prism.f90"/>
-		<File RelativePath="..\src\Importer.f90"/></Filter>
+		<File RelativePath="..\src\Exam_Prism.f90"/></Filter>
 		<Filter Name="Output">
 		<File RelativePath="..\src\Chimera.f90"/>
+		<File RelativePath="..\src\Importer.f90"/>
 		<File RelativePath="..\src\TecPlot.f90"/></Filter>
 		<Filter Name="PERDIX">
 		<File RelativePath="..\src\1_Input.f90"/>

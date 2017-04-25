@@ -16,18 +16,6 @@ module Data_Bound
 
 ! ---------------------------------------------------------------------------------------
 
-    ! Outer data structure
-    type :: OuterType
-        integer :: typeP    ! Point type, -1:internal, 1:outer
-        integer :: n_neiP   ! The number of neighbor points
-        integer :: n_newP   ! The number of new points
-
-        integer, allocatable, dimension(:)   :: neiP    ! Neighbor point connectivity sorted
-        integer, allocatable, dimension(:,:) :: newP    ! New point connectivity(index, heritage)
-    end type OuterType
-
-! ---------------------------------------------------------------------------------------
-
     ! Junction data structure
     type :: JuncType
         integer :: n_arm                ! The number of arms
@@ -49,11 +37,10 @@ module Data_Bound
 
     ! Boundary data structure
     type :: BoundType
-        integer :: n_outer              ! The number of outers
-        integer :: n_junc               ! The number of juncs
+        integer :: n_outer      ! The number of outers
+        integer :: n_junc       ! The number of juncs
 
-        type(OuterType), allocatable, dimension(:) :: outer
-        type(JuncType),  allocatable, dimension(:) :: junc
+        type(JuncType), allocatable, dimension(:) :: junc
     end type BoundType
 
 ! ---------------------------------------------------------------------------------------

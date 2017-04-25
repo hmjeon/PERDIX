@@ -13,7 +13,7 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-program PERDIX_Open
+program PERDIX_OPEN
 
     use Ifport
 
@@ -35,10 +35,9 @@ program PERDIX_Open
     implicit none
 
     call Main           ! Main module
-    !call Autorun        ! Main module for auto run
-    !call Autorun_CHK    ! Main module for auto run
+    !call Report        ! Main module for auto run
 
-    contains
+contains
 
 ! ---------------------------------------------------------------------------------------
 
@@ -95,160 +94,92 @@ end subroutine Main
 
 ! ---------------------------------------------------------------------------------------
 
-! Autorun to calculate base length in scaffold and staple strands
-! Last updated on Friday 11 November 2016 by Hyungmin
-subroutine Autorun()
+! Autorun to calculate design parameters
+! Last updated on 25 Apr 2017 by Hyungmin
+subroutine Report()
 
     ! Declare variables
     type(ProbType)  :: prob     ! Problem description
     type(GeomType)  :: geom     ! Geometric data(section, point, edge, face)
     type(BoundType) :: bound    ! Boundary data(outer, junction)
-    type(MeshType)  :: mesh     ! Fintie element node data
+    type(MeshType)  :: mesh     ! Base pair model data
     type(DNAType)   :: dna      ! B-form DNA data
 
-    double precision :: time, srt_time, end_time
-    integer :: arg, i, sec, edge, vertex, max_stap, min_stap
-    logical :: results, b_external
-    character(10) :: char_sec, char_edge, char_cut, char_junc, char_vert
+    character(10) :: char_sec, char_edge, char_cut, char_vert
+    integer :: i, arg, sec, edge, max_stap, min_stap
+    logical :: results
 
-    b_external = .true.    ! Flag for external run
-
-    if(b_external == .true.) then
+    if(iargc() /= 0) then
 
         ! Input system by using main argument
         arg = 1; call getarg(arg, char_sec)     ! Argument, section
         arg = 2; call getarg(arg, char_edge)    ! Argument, edge length
-        arg = 3; call getarg(arg, char_cut)     ! Argument, cutting method
-        arg = 4; call getarg(arg, char_junc)    ! Argument, junction
-        arg = 5; call getarg(arg, char_vert)    ! Argument, # of vertex designs
+        arg = 3; call getarg(arg, char_vert)    ! Argument, Flat or beveled vertex
+        arg = 4; call getarg(arg, char_cut)     ! Argument, staple-break
 
         read(char_sec,  *), sec
         read(char_edge, *), edge
-        read(char_vert, *), vertex
+    else
 
-    else if(b_external == .false.) then
-
-        sec       = 2       ! Section number
-        edge      = 3       ! Edge length
-        vertex    = 1       ! Non-beveled and beveled vertex design
-        char_cut  = "mix"
-        char_junc = "opt"
+        sec       = 1       ! Section number
+        edge      = 2       ! Edge length
+        char_vert = "flat"  ! Flat or beveled vertex
+        char_cut  = "max"   ! Staple-break rule
     end if
 
     ! Open file
-    open(unit=90, file="Autorun_"//trim(adjustl(Int2Str(sec)))//&
-        "_"//trim(adjustl(Int2Str(edge)))//"_"//trim(char_cut)//"_"//trim(char_junc)//&
-        "_"//trim(adjustl(Int2Str(vertex)))//".txt", form="formatted")
+    open(unit = 90, file = "Report_"//trim(adjustl(Int2Str(sec)))//&
+        "_"//trim(adjustl(Int2Str(edge)))//"_"//trim(char_vert)//&
+        "_"//trim(char_cut)//".txt", form="formatted")
 
     ! Remove the directory and files
-    results = SYSTEMQQ("rd "//trim("Output")//' /s /q')
+    results = SYSTEMQQ("rd "//trim("output")//' /s /q')
 
-    ! Check time
-    call cpu_time(srt_time)
-
-    ! Section infomation
-    write(90, "(a)"), "================================="
-    if(edge == 2) write(90, "(a)"), "Edge length           : 42bp"
-    if(edge == 3) write(90, "(a)"), "Edge length           : 52bp"
-    if(edge == 4) write(90, "(a)"), "Edge length           : 63bp"
-    write(90, "(a)"), "Staple cutting        : "//trim(char_cut)
-    write(90, "(a)"), "Junction modification : "//trim(char_junc)
-    if(sec == 1)  write(90, "(a)"), "Cross-section         : square"
-    if(sec == 16) write(90, "(a)"), "Cross-section         : DX tile"
-    if(sec == 17) write(90, "(a)"), "Cross-section         : honeycomb"
-    if(sec == 18) write(90, "(a)"), "Cross-section         : honeycomb"
-    write(90, "(a)"), "================================="
-    write(90, "(a)")
-
-    write(90, "(a)"), "L_Scaf - Required scaffold length(nt)"
-    write(90, "(a)"), "L_Stap - Required total staple length(nt)"
-    write(90, "(a)"), "Len_BP - Base paire length(nt)"
-    write(90, "(a)"), "MaxE   - Maximum edge length"
-    write(90, "(a)"), "MinE   - Minimum edge length"
-    write(90, "(a)"), "Sec    - Cross-section number"
-    write(90, "(a)"), "#Stap  - # of staples"
-    write(90, "(a)"), "Min    - Minimum length of staples"
-    write(90, "(a)"), "Max    - Maximum length of staples"
-    write(90, "(a)"), "14nt   - # of 14nt seeds"
-    write(90, "(a)"), "S14    - # of secondary 14nt seeds"
-    write(90, "(a)"), "4nt    - # of 4nt windows"
-    write(90, "(a)"), "R14    - # of 14nt seeds / # of staples"
-    write(90, "(a)"), "RS14   - # of secondary 14nt seeds / # of staples"
-    write(90, "(a)"), "RN14   - # of no 14nt seeds / # of staples"
-    write(90, "(a)"), "#TR    - # of total regions"
-    write(90, "(a)"), "TR14   - # of total 14nt seeds"
-    write(90, "(a)"), "TR4    - # of total 4nt regions"
-    write(90, "(a)"), "a1     - # of paramter changing for minimum staple length"
-    write(90, "(a)"), "a2     - # of paramter changing for maximum staple length"
-    write(90, "(a)"), "b1     - # of scaffold crossovers"
-    write(90, "(a)"), "b2     - # of staple crossovers"
-    write(90, "(a)"), "b3     - # of staple single crossovers"
-    write(90, "(a)"), "c1     - # of unpaired scaffold nucleotides"
-    write(90, "(a)"), "c1     - # of unpaired staple nucleotides"
+    ! Infomation
+    write(90, "(a)"), "========================="
+    if(edge == 1) write(90, "(a)"), "Edge length   : 31bp"
+    if(edge == 2) write(90, "(a)"), "Edge length   : 42bp"
+    if(edge == 3) write(90, "(a)"), "Edge length   : 52bp"
+    if(edge == 4) write(90, "(a)"), "Edge length   : 63bp"
+    write(90, "(a)"), "Staple cutting: "//trim(adjustl(char_cut))
+    write(90, "(a)"), "Cross-section : honeycomb"
+    write(90, "(a)"), "========================="
     write(90, "(a)")
 
     call space (90, 30)
-    write(90, "(a)"), "L_Scaf| L_Stap| Len_BP| MaxE| MinE| Sec| #Stap| Min| Max| 14nt| S14| 4nt|  R14| RS14| RN14|  #TR| TR14|  TR4| a1| a2|   b1|    b2|  b3|   c1|   c2"
-
-    ! Print border
+    write(90, "(a)"), "|============================================================================================================================================|"
+    call space (90, 30)
+    write(90, "(a)"), "|========== TOTAL LENGTH =========|======== STAPLE =======|===== SEED ====|== STRAND RATIO =|= NU RATIO=|= PARA=|=== CROSSOVER ===|=UNPAIRED=|"
+    call space (90, 30)
+    write(90, "(a)"), "L_Scaf| L_Stap|   L_BP| MaxE| MinE| nStap| Min| Max|   ave| 14nt| S14| 4nt| 14nt|  S14|  4nt| 14nt|  4nt| p1| p2| scaf|  stap| one| scaf| stap"
     write(90, "(a$)"), "---------------------------- "
-    write(90, "(a )"), " =================================================================================================================================================="
+    write(90, "(a )"), " |-----|-------|-------|-----|-----|------|---------|------|-----|----|----|-----|-----|-----|-----|-----|---|---|-----|------|----|-----|----|"
 
     min_stap = 10000
     max_stap =-10000
 
-    ! Loop for problem
-    do i = 1, 62
-
-        ! Problem section
-        if( i/=1  .and. i/=2  .and. i/=3  .and. i/=4  .and. i/=5  .and. i/=6  .and. i/=8  .and. i/=10 .and. i/=14 .and. i/=15 .and. &
-            i/=16 .and. i/=17 .and. i/=18 .and. i/=19 .and. i/=20 .and. i/=26 .and. i/=34 .and. i/=35 .and. i/=59 ) then
-
-            !write(90, "(a2, a$)"), trim(adjustl(Int2Str(i))), ". ------------------------, "
-            !write(90, "(a     )"), " -----, ------, ------, ----, ----, ---, -----, ---, ---, ----, ---, ---, ----, ----, ----, ----, ----, ----, --, --, ----, -----, ---, ----, ----"
-            !cycle
-        end if
-
-        ! For main problems
-        if( i >= 46 ) then
-            !write(90, "(a2, a$)"), trim(adjustl(Int2Str(i))), ". ------------------------, "
-            !write(90, "(a     )"), " -----, ------, ------, ----, ----, ---, -----, ---, ---, ----, ---, ---, ----, ----, ----, ----, ----, ----, --, --, ----, -----, ---, ----, ----"
-            !cycle
-        end if
+    ! Problem
+    do i = 1, 30
 
         ! Initialize input
-        call Input_Initialization_Autorun(prob, geom, i, sec, edge, vertex, char_cut, char_junc)
+        call Input_Initialization_Report(prob, geom, mesh, i, sec, edge, char_vert, char_cut)
 
-        ! Set parameters
-        para_write_101   = .false.; para_write_102   = .false.; para_write_103   = .false.
-        para_write_104   = .false.; para_write_301   = .false.; para_write_302   = .false.
-        para_write_303   = .false.; para_write_401   = .false.; para_write_501   = .false.
-        para_write_502   = .false.; para_write_503   = .false.; para_write_504   = .false.
-        para_write_505   = .true. ; para_write_601_1 = .false.; para_write_601_2 = .false.
-        para_write_601_3 = .false.; para_write_601_4 = .false.; para_write_601_5 = .false.
-        para_write_606   = .false.; para_write_607   = .false.; para_write_608   = .false.
-        para_write_609   = .false.; para_write_610   = .false.; para_write_701   = .true.
-        para_write_702   = .false.; para_write_703   = .false.; para_write_705   = .false.
-        para_write_706   = .false.; para_write_710   = .false.; para_write_801   = .false.
-        para_write_802   = .false.; para_write_803   = .false.; para_write_804   = .false.
-        para_write_805   = .false.; para_write_808   = .false.
-
-        ! 3rd step : Modifed geometry seperated from vertex
+        ! 2nd step : Modified geometry seperated from vertex
         call ModGeo_Modification(prob, geom, bound)
 
-        ! 4th step : Cross-sectional geometry
+        ! 3rd step : Cross-sectional geometry
         call Section_Generation(prob, geom, bound)
 
-        ! 5th step : Basepair generation from cross-sectional geometry
+        ! 4th step : Basepair generation from cross-sectional geometry
         call Basepair_Discretize(prob, geom, bound, mesh)
 
-        ! 6th step : B-form DNA generation and scaffold route
+        ! 5th step : B-form DNA and scaffold route
         call Route_Generation(prob, geom, bound, mesh, dna)
 
-        ! 7th step : Sequence design
+        ! 6th step : Sequence design
         call SeqDesign_Design(prob, geom, mesh, dna)
 
-        ! Generate outputs and run post-processing tools
+        ! 7th step : Generate outputs and run post-processing tools
         call Output_Generation(prob, mesh, dna)
 
         ! Print information
@@ -261,30 +192,29 @@ subroutine Autorun()
         write(90, "(a4, a24, a$)"), trim(adjustl(Int2Str(i)))//". ", trim(prob.name_prob), ","
 
         ! Print information
-        write(90, "(a8$)"), trim(adjustl(Int2Str(dna.n_base_scaf)))//","
-        write(90, "(a8$)"), trim(adjustl(Int2Str(dna.n_base_stap)))//","
-        write(90, "(a8$)"), trim(adjustl(Int2Str(mesh.n_node)))//","
-        write(90, "(a6$)"), trim(adjustl(Int2Str(geom.max_edge_length)))//","
-        write(90, "(a6$)"), trim(adjustl(Int2Str(geom.min_edge_length)))//","
-        write(90, "(a5$)"), trim(adjustl(Int2Str(prob.sel_sec)))//","
-        write(90, "(a7$)"), trim(adjustl(Int2Str(dna.n_stap)))//","
-        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.len_min_stap)))//","
-        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.len_max_stap)))//","
-        write(90, "(a6$)"), trim(adjustl(Int2Str(dna.n_14nt)))//","
-        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.n_s14nt)))//","
-        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.n_4nt)))//","
-        write(90, "(a6$)"), trim(adjustl(Dble2Str2(dble(dna.n_14nt)/dble(dna.n_stap))))//","
-        write(90, "(a6$)"), trim(adjustl(Dble2Str2(dble(dna.n_s14nt)/dble(dna.n_stap))))//","
-        write(90, "(a6$)"), trim(adjustl(Dble2Str2(dble(dna.n_stap-dna.n_14nt)/dble(dna.n_stap))))//","
-        write(90, "(a6$)"), trim(adjustl(Int2Str(dna.n_tot_region)))//","
-        write(90, "(a6$)"), trim(adjustl(Int2Str(dna.n_tot_14nt)))//","
-        write(90, "(a6$)"), trim(adjustl(Int2Str(dna.n_tot_4nt)))//","
-        write(90, "(a4$)"), trim(adjustl(Int2Str(prob.n_cng_min_stap)))//","
-        write(90, "(a4$)"), trim(adjustl(Int2Str(prob.n_cng_max_stap)))//","
-        write(90, "(a6$)"), trim(adjustl(Int2Str(dna.n_xover_scaf)))//","
-        write(90, "(a7$)"), trim(adjustl(Int2Str(dna.n_xover_stap)))//","
-        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.n_sxover_stap)))//","
-        write(90, "(a6$)"), trim(adjustl(Int2Str(dna.n_nt_unpaired_scaf)))//","
+        write(90, "(a8$)"), trim(adjustl(Int2Str(dna.n_base_scaf)))//"|"
+        write(90, "(a8$)"), trim(adjustl(Int2Str(dna.n_base_stap)))//"|"
+        write(90, "(a8$)"), trim(adjustl(Int2Str(mesh.n_node)))//"|"
+        write(90, "(a6$)"), trim(adjustl(Int2Str(geom.max_edge_length)))//"|"
+        write(90, "(a6$)"), trim(adjustl(Int2Str(geom.min_edge_length)))//"|"
+        write(90, "(a7$)"), trim(adjustl(Int2Str(dna.n_stap)))//"|"
+        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.len_min_stap)))//"|"
+        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.len_max_stap)))//"|"
+        write(90, "(a7$)"), trim(adjustl(Dble2Str2(dna.len_ave_stap)))//"|"
+        write(90, "(a6$)"), trim(adjustl(Int2Str(dna.n_14nt)))//"|"
+        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.n_s14nt)))//"|"
+        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.n_4nt)))//"|"
+        write(90, "(a6$)"), trim(adjustl(Dble2Str(dble(dna.n_14nt)/dble(dna.n_stap))))//"|"
+        write(90, "(a6$)"), trim(adjustl(Dble2Str(dble(dna.n_s14nt)/dble(dna.n_stap))))//"|"
+        write(90, "(a6$)"), trim(adjustl(Dble2Str(dble(dna.n_4nt)/dble(dna.n_stap))))//"|"
+        write(90, "(a6$)"), trim(adjustl(Dble2Str(dble(dna.n_nt_14nt)/dble(dna.n_base_stap))))//"|"
+        write(90, "(a6$)"), trim(adjustl(Dble2Str(dble(dna.n_nt_4nt)/dble(dna.n_base_stap))))//"|"
+        write(90, "(a4$)"), trim(adjustl(Int2Str(prob.n_cng_min_stap)))//"|"
+        write(90, "(a4$)"), trim(adjustl(Int2Str(prob.n_cng_max_stap)))//"|"
+        write(90, "(a6$)"), trim(adjustl(Int2Str(dna.n_xover_scaf)))//"|"
+        write(90, "(a7$)"), trim(adjustl(Int2Str(dna.n_xover_stap)))//"|"
+        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.n_sxover_stap)))//"|"
+        write(90, "(a6$)"), trim(adjustl(Int2Str(dna.n_nt_unpaired_scaf)))//"|"
         write(90, "(a5 )"), trim(adjustl(Int2Str(dna.n_nt_unpaired_stap)))
 
         if(max_stap < dna.len_max_stap) max_stap = dna.len_max_stap
@@ -295,98 +225,9 @@ subroutine Autorun()
     write(90, "(a)"), "Minimum staple length   : "//trim(adjustl(Int2Str(min_stap)))
     write(90, "(a)"), "Maximum staple length   : "//trim(adjustl(Int2Str(max_stap)))
 
-    ! Set end time
-    call cpu_time(end_time)
-    time = end_time - srt_time
-    write(90, "(a)"), "Time consuming for test : "// trim(adjustl(Dble2Str(time/60.0d0)))//" [min]"
-    write(90, "(a)"); write(90, "(a)")
-
     ! Close file
-    close(unit=90)
-end subroutine Autorun
-
-! ---------------------------------------------------------------------------------------
-
-! Autorun to calculate base length in scaffold and staple strands
-! Last updated on Monday 12 December 2016 by Hyungmin
-subroutine Autorun_CHK()
-
-    ! Declare variables
-    type(ProbType)  :: prob     ! Problem description
-    type(GeomType)  :: geom     ! Geometric data(section, point, edge, face)
-    type(BoundType) :: bound    ! Boundary data(outer, junction)
-    type(MeshType)  :: mesh     ! Fintie element node data
-    type(DNAType)   :: dna      ! B-form DNA data
-
-    integer :: i, j, sec
-    character(10) :: char_cut, char_junc
-
-    ! Open file
-    open(unit=90, file="Autorun_Output.txt", form="formatted")
-
-    ! Loop for problem
-    do i = 1, 45
-        if(i == 5 .or. i == 6) then
-
-            ! Edge length
-            do j = 2, 6, 2
-
-                sec       = 3
-                char_cut  = "max"
-                char_junc = "opt"
-
-                ! Initialize input
-                call Input_Initialization_Autorun(prob, geom, i, sec, j, 1, char_cut, char_junc)
-
-                ! Set parameters
-                para_write_101   = .false.; para_write_102   = .false.; para_write_103   = .false.
-                para_write_104   = .false.; para_write_301   = .false.; para_write_302   = .false.
-                para_write_303   = .false.; para_write_401   = .false.; para_write_501   = .false.
-                para_write_502   = .false.; para_write_503   = .false.; para_write_504   = .false.
-                para_write_505   = .true. ; para_write_601_1 = .false.; para_write_601_2 = .false.
-                para_write_601_3 = .false.; para_write_601_4 = .false.; para_write_601_5 = .false.
-                para_write_606   = .false.; para_write_607   = .false.; para_write_608   = .false.
-                para_write_609   = .false.; para_write_610   = .false.; para_write_701   = .true.
-                para_write_702   = .false.; para_write_703   = .false.; para_write_705   = .false.
-                para_write_706   = .false.; para_write_710   = .false.; para_write_801   = .false.
-                para_write_802   = .false.; para_write_803   = .false.; para_write_804   = .false.
-                para_write_805   = .false.; para_write_808   = .false.
-
-                ! 3rd step : Modifed geometry seperated from vertex
-                call ModGeo_Modification(prob, geom, bound)
-
-                ! 4th step : Cross-sectional geometry
-                call Section_Generation(prob, geom, bound)
-
-                ! 5th step : Basepair generation from cross-sectional geometry
-                call Basepair_Discretize(prob, geom, bound, mesh)
-
-                ! 6th step : B-form DNA generation and scaffold route
-                call Route_Generation(prob, geom, bound, mesh, dna)
-
-                ! 7th step : Sequence design
-                call SeqDesign_Design(prob, geom, mesh, dna)
-
-                ! Generate outputs and run post-processing tools
-                call Output_Generation(prob, mesh, dna)
-
-                ! Print information
-                call Print_Information(prob, geom, bound, mesh, dna)
-
-                ! Deallocate global dynamic array
-                call Deallocate_Variables(geom, bound, mesh, dna)
-
-                ! Print problem
-                write(90, "(i6, i6, a)"), i, j, "   "//trim(adjustl(Dble2Str(dble(dna.n_14nt)/dble(dna.n_stap)*100.0d0)))
-                write(90, "(i6, i6, a)"), i, j, "   "//trim(adjustl(Dble2Str(dble(dna.n_nt_14nt)/dble(dna.n_base_stap)*100.0d0)))
-                write(90, "(a)")
-            end do
-        end if
-    end do
-
-    ! Close file
-    close(unit=90)
-end subroutine Autorun_CHK
+    close(unit = 90)
+end subroutine Report
 
 ! ---------------------------------------------------------------------------------------
 
@@ -589,11 +430,6 @@ subroutine Deallocate_Variables(geom, bound, mesh, dna)
     if(allocated(geom.face))     deallocate(geom.face)
 
     ! Deallocate bound array
-    do i = 1, bound.n_outer
-        deallocate(bound.outer(i).neiP)
-        deallocate(bound.outer(i).newP)
-    end do
-
     do i = 1, bound.n_junc
         deallocate(bound.junc(i).iniL)
         deallocate(bound.junc(i).modP)
@@ -603,7 +439,6 @@ subroutine Deallocate_Variables(geom, bound, mesh, dna)
         deallocate(bound.junc(i).type_conn)
     end do
 
-    if(allocated(bound.outer)) deallocate(bound.outer)
     if(allocated(bound.junc))  deallocate(bound.junc)
 
     ! Deallocate mesh arrays
@@ -692,4 +527,4 @@ end subroutine Verify_Solution
 
 ! ---------------------------------------------------------------------------------------
 
-end program PERDIX_Open
+end program PERDIX_OPEN

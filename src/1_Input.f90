@@ -31,7 +31,7 @@ module Input
     implicit none
 
     public  Input_Initialization
-    public  Input_Initialization_Autorun
+    public  Input_Initialization_Report
 
     private Input_Read_Parameter
     private Input_Reset_Parameter
@@ -179,10 +179,119 @@ subroutine Input_Initialization(prob, geom)
     ! Generate Schlegel diagram
     call Input_Generate_Schlegel_Diagram(prob, geom)
 
+    ! Print progress
+    call Input_Print_Parameters(prob, geom)
+end subroutine Input_Initialization
+
+! ---------------------------------------------------------------------------------------
+
+! Initialize all parameter
+! Last updated on 25 Apr 2017 by Hyungmin
+subroutine Input_Initialization_Report(prob, geom, mesh, ii, sec, edge, char_vert, char_cut)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+    type(MeshType), intent(inout) :: mesh
+    integer,        intent(inout) :: sec
+    integer,        intent(in)    :: ii, edge
+    character(10),  intent(in)    :: char_vert, char_cut
+
+    integer :: i
+
+    ! Reset parameters
+    call Input_Reset_Parameter
+    para_external        = "on"
+    para_vertex_design   = char_vert    ! Flat or beveled vertex
+    para_cut_stap_method = char_cut     ! Staple-break
+
+    ! Reset data structures
+    prob.n_cng_min_stap = 0
+    prob.n_cng_max_stap = 0
+    mesh.n_node         = 0
+    mesh.n_ele          = 0
+
+    ! Set command environment
+    call Input_Set_Command
+
+    ! Set parameters of problem
+    prob.sel_prob    = ii
+    prob.sel_sec     = sec
+    prob.sel_bp_edge = edge
+
+    ! ==================================================
+    !
+    ! Set problem, cross-section and edge length
+    !
+    ! ==================================================
+    ! Set cross-section
+    call Input_Set_Section(prob, geom)
+
+    ! Set the minimum edge length
+    call Input_Set_Num_BP_Edge(prob, geom)
+
+    ! Set problem
+    call Input_Set_Problem(prob, geom)
+
+    ! ==================================================
+    !
+    ! Prepair geometry - line generation and scaling
+    !
+    ! ==================================================
+    ! Convert surface to line connectivity
+    call Input_Convert_Face_To_Line(geom)
+
+    ! Set geometric scale with initial minimum length
+    call Input_Scale_Init_Geometry(geom)
+
+    ! ==================================================
+    !
+    ! Set environment and write initial geometry
+    !
+    ! ==================================================
+    ! Set working and Chimera path
+    call Input_Set_Path(prob)
+
+    ! Remove previous working directory and make new one
+    call Input_Set_Workplace(prob)
+
+    ! Write *.geo file
+    call Input_Write_GEO_File(prob, geom)
+
+    ! Write initial geometry
+    call Input_Chimera_Init_Geometry(prob, geom)
+
+    ! Generate Schlegel diagram
+    call Input_Generate_Schlegel_Diagram(prob, geom)
+
+    ! Set parameters
+    para_write_101   = .false.; para_write_102   = .false.; para_write_103   = .false.
+    para_write_104   = .false.; para_write_301   = .false.; para_write_302   = .false.
+    para_write_303   = .false.; para_write_401   = .false.; para_write_501   = .false.
+    para_write_502   = .false.; para_write_503   = .false.; para_write_504   = .false.
+    para_write_505   = .true. ; para_write_601_1 = .false.; para_write_601_2 = .false.
+    para_write_601_3 = .false.; para_write_601_4 = .false.; para_write_601_5 = .false.
+    para_write_606   = .false.; para_write_607   = .false.; para_write_608   = .false.
+    para_write_609   = .false.; para_write_610   = .false.; para_write_701   = .true.
+    para_write_702   = .false.; para_write_703   = .false.; para_write_705   = .false.
+    para_write_706   = .false.; para_write_710   = .false.; para_write_801   = .false.
+    para_write_802   = .false.; para_write_803   = .false.; para_write_804   = .false.
+    para_write_805   = .false.; para_write_808   = .false.
+
+    ! Print progress
+    call Input_Print_Parameters(prob, geom)
+end subroutine Input_Initialization_Report
+
+! ---------------------------------------------------------------------------------------
+
+! Print progress
+subroutine Input_Print_Parameters(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    integer :: i
+
     ! Open output progress file (unit 11 is used for global output file)
     open(unit=11, file=trim(prob.path_work1)//"PERDIX.txt", form="formatted")
 
-    ! Print progress
     do i = 0, 11, 11
         write(i, "(a )"), "   +--------------------------------------------------------------------+"
         write(i, "(a )"), "   |                                                                    |"
@@ -298,178 +407,7 @@ subroutine Input_Initialization(prob, geom)
         end if
         write(i, "(a)")
     end do
-end subroutine Input_Initialization
-
-! ---------------------------------------------------------------------------------------
-
-! Initialize all inputs for autorun
-! Last updated on Friday 11 November 2016 by Hyungmin
-subroutine Input_Initialization_Autorun(prob, geom, ii, sec, edge, vertex, char_cut, char_junc)
-    type(ProbType), intent(inout) :: prob
-    type(GeomType), intent(inout) :: geom
-    integer,        intent(inout) :: sec
-    integer,        intent(in)    :: ii, edge, vertex
-    character(10),  intent(in)    :: char_cut, char_junc
-
-    integer :: i
-
-    ! Reset parameters
-    call Input_Reset_Parameter
-    para_external = "on"
-
-    ! Reset data structures
-    prob.n_cng_min_stap = 0
-    prob.n_cng_max_stap = 0
-
-    ! Set command environment
-    call Input_Set_Command
-
-    ! Set staple cutting and junction modification
-    para_cut_stap_method = char_cut
-    para_junc_ang        = char_junc
-
-    ! Set parameters of problem
-    prob.sel_prob = ii
-
-    ! Set vertex design
-    if(vertex == 1) para_vertex_design = "flat"
-    if(vertex == 2) para_vertex_design = "beveled"
-
-    ! Set junction modification
-    para_vertex_modify = "const"
-
-    ! For honeycomb section
-    if(sec == 2 .or. sec == 3 .or. sec == 4) then
-
-        ! Tetrahedron, cube, octahedron, triangular bipyramid, double helix, nested octahedron, torus
-        if(ii == 1 .or. ii == 2 .or. ii == 3 .or. ii == 17 .or. ii == 18 .or. ii == 41 .or. ii == 43 .or. ii == 44 .or. ii ==59 .or. ii == 60 .or. ii == 61 .or. ii == 64) then
-            sec = 2
-            para_vertex_modify = "const"
-        !else if(ii == 39) then
-        !    sec = 3
-        !    para_vertex_modify = "mod"
-        else
-            if(sec == 3) sec = 3
-            if(sec == 4) sec = 4
-            para_vertex_modify = "const"
-        end if
-    end if
-
-    prob.sel_sec     = sec
-    prob.sel_bp_edge = edge
-    para_start_bp_ID = -1
-
-    ! ==================================================
-    !
-    ! Set problem, cross-section and edge length
-    !
-    ! ==================================================
-    ! Set cross-section
-    call Input_Set_Section(prob, geom)
-
-    ! Set the minimum edge length
-    call Input_Set_Num_BP_Edge(prob, geom)
-
-    ! Set problem
-    call Input_Set_Problem(prob, geom)
-
-    ! ==================================================
-    !
-    ! Prepair geometry - line generation and scaling
-    !
-    ! ==================================================
-    ! Convert surface to line connectivity
-    call Input_Convert_Face_To_Line(geom)
-
-    ! Set geometric scale with initial minimum length
-    call Input_Scale_Init_Geometry(geom)
-
-    ! ==================================================
-    !
-    ! Set environment and write initial geometry
-    !
-    ! ==================================================
-    ! Set working and Chimera path
-    call Input_Set_Path(prob)
-
-    ! Remove previous working directory and make new one
-    call Input_Set_Workplace(prob)
-
-    ! Write *.geo file
-    call Input_Write_GEO_File(prob, geom)
-
-    ! Write initial geometry
-    call Input_Chimera_Init_Geometry(prob, geom)
-
-    ! Generate Schlegel diagram
-    call Input_Generate_Schlegel_Diagram(prob, geom)
-
-    ! Open output progress file (unit 11 is used for global output file)
-    open(unit=11, file=trim(prob.path_work1)//"PERDIX.txt", form="formatted")
-
-    ! Print progress
-    do i = 0, 11, 11
-        write(i, "(a )"), "   ----------------------------------------------------------------------"
-        write(i, "(a )"), "   |                                                                    |"
-        write(i, "(a )"), "   |              1. Inputs of Geometry and Cross-Section               |"
-        write(i, "(a )"), "   |                                                                    |"
-        write(i, "(a )"), "   ----------------------------------------------------------------------"
-        write(i, "(a )")
-        call Space(i, 6)
-        write(i, "(a )"), "1.1. Geometric data"
-        call Space(i, 11)
-        write(i, "(a )"), "* Geometric name             :   "//trim(prob.name_file)
-        call Space(i, 11)
-        write(i, "(a )"), "* Geometric type             :   "//trim(prob.type_file)
-        call Space(i, 11)
-        write(i, "(a$)"), "* The number of BPs on edge  :  "
-        write(i, "(i7)"), prob.n_bp_edge
-        write(i, "(a )")
-
-        call Space(i, 6)
-        write(i, "(a )"), "1.2. Geometric information"
-        call Space(i, 11)
-        write(i, "(a$)"), "* The number of points       : "
-        write(i, "(i7)"), geom.n_iniP
-        call Space(i, 11)
-        write(i, "(a$)"), "* The number of edges        : "
-        write(i, "(i7)"), geom.n_iniL
-        call Space(i, 11)
-        write(i, "(a$)"), "* The number of faces        : "
-        write(i, "(i7)"), geom.n_face
-        write(i, "(a )")
-
-        call Space(i, 6)
-        write(i, "(a )"), "1.3. Cross-section information"
-        call Space(i, 11)
-        write(i, "(a )"), "* Section type               :   "//trim(geom.sec.types)
-        call Space(i, 11)
-        write(i, "(a$)"), "* The number of helixes      : "
-        write(i, "(i7)"), geom.n_sec
-        call Space(i, 11)
-        write(i, "(a$)"), "* The number of rows         : "
-        write(i, "(i7)"), geom.sec.maxR
-        call Space(i, 11)
-        write(i, "(a$)"), "* The number of columns      : "
-        write(i, "(i7)"), geom.sec.maxC
-        write(i, "(a )")
-
-        call Space(i, 6)
-        write(i, "(a )"), "1.4. Design type"
-        call Space(i, 11)
-        write(i, "(a )"), "* Vertex design              :   "//trim(para_vertex_design)//" vertex"
-        call Space(i, 11)
-        write(i, "(a$)"), "* The number of bases in Tn  : "
-        write(i, "(i7)"), para_n_base_tn
-        call Space(i, 11)
-        write(i, "(a$)"), "* No crossover region (stap) : "
-        write(i, "(i7)"), para_gap_xover_bound_stap
-        call Space(i, 11)
-        write(i, "(a$)"), "* Starting base pair ID      : "
-        write(i, "(i7)"), para_start_bp_ID
-        write(i, "(a )")
-    end do
-end subroutine Input_Initialization_Autorun
+end subroutine Input_Print_Parameters
 
 ! ---------------------------------------------------------------------------------------
 
@@ -606,10 +544,11 @@ end subroutine Input_Read_Parameter
 ! ---------------------------------------------------------------------------------------
 
 ! Reset paramters as default values
-! Last updated on Thursday 15 September 2016 by Hyungmin
+! Last updated on 25 Apr 2017 by Hyungmin
 subroutine Input_Reset_Parameter
 
     ! Program parameters
+    para_preset          = "on"       ! [on, off], Preset parameter defined in pre-defined examples
     para_output_Tecplot  = "off"      ! [off, on], Output files for Tecplot(http://www.tecplot.com/) to draw vector image
     para_cmd_Tecplot     = "off"      ! [off, on], Command file to run TecPlot automatically
     para_cmd_Chimera     = "off"      ! [off, on], Command file to run UCSF Chimera(https://www.cgl.ucsf.edu/chimera/) automatically
@@ -619,51 +558,53 @@ subroutine Input_Reset_Parameter
     para_fig_view        = "xy"       ! [xy, xz, xyz, all], Viewpoint for figures from UCSF Chimera
     para_n_route_step    = 5          ! [5], The number of steps in routing progress
     para_type_cndo       = 1          ! [1, 2], CanDo file option, 1 : original format, 2 : updated format
-    para_path_Chimera    = "C:\Program Files\Chimera 1.10.2\bin\chimera.exe"
+    para_path_Chimera    = &          ! UCSF Chimera program path
+        "C:\Program Files\Chimera 1.10.2\bin\chimera.exe"
 
     ! Parameters for junction modification
     para_junc_ang        = "opt"      ! [opt, max, ave, min], Junction gap modification for different arm angle
     para_const_edge_mesh = "off"      ! [off, on], Constant edge length from polyhedra mesh
     para_sticky_self     = "off"      ! [off, on], Sticky-end for self connection on henycomb cross-section
-    para_unpaired_scaf   = "on"       ! [on, off], Unpaired scffold nucleotides
-    para_vertex_modify   = "const"    ! [mod, const], Vertex modification to avoid clash
-    para_vertex_design   = "flat"     ! [flat, beveled], Vertex design
+    para_unpaired_scaf   = "on"       ! [on, off], Unpaired scaffold nucleotides
+    para_vertex_modify   = "const"    ! [const, mod], Vertex modification to avoid clash
+    !para_vertex_design   = "flat"     ! [flat, beveled], Vertex design
 
     ! Paramters for B-from DNA generation
-    para_dist_pp         = 0.42d0     ! [0.42, 0.6], distance between adjacent phosphate groups, nm
-    para_dist_bp         = 0.34d0     ! [0.34 ], Axial rise distance, nm
-    para_rad_helix       = 1.0d0      ! [1.0  ], The radius of the DNA helix, nm
-    para_gap_helix       = 0.25d0     ! [0.25 ], The Gap between two helixes, nm
-    para_ang_minor       = 150.0d0    ! [150.0], An angle of minor groove, degree
-    para_ang_correct     = 0.0d0      ! [0.0  ], Correction factor to adjust orientation, degree
-    para_n_base_tn       = -1         ! [-1   ], The number of nucleotides in poly Tn loop, -1 : depending on distance
-    para_start_bp_ID     = -1         ! [-1   ], Starting base pair ID for the reference, -1 : pre-defined starting BP
+    para_dist_pp       = 0.42d0     ! [0.42, 0.6], distance between adjacent phosphate groups, nm
+    para_dist_bp       = 0.34d0     ! [0.34 ], Axial rise distance, nm
+    para_rad_helix     = 1.0d0      ! [1.0  ], The radius of the DNA helix, nm
+    para_gap_helix     = 0.25d0     ! [0.25 ], The gap between two helixes, nm
+    para_ang_minor     = 150.0d0    ! [150.0], An angle of minor groove, degree
+    para_ang_correct   = 0.0d0      ! [0.0  ], Correction factor to adjust orientation, degree
+    para_n_base_tn     = -1         ! [-1   ], The number of nucleotides in poly T loop, -1 : depending on distance
+    para_start_bp_ID   = -1         ! [-1   ], Starting base pair ID for the reference, -1 : pre-defined starting BP
 
     ! Paramters for scaffold route
-    para_weight_edge     = "on"       ! [on, off], Assign weight factor into edges of dual graph
-    para_method_MST      = "prim"     ! [prim, kruskal, greedy], Minimum spanning tree algorithm
-    para_method_sort     = "quick"    ! [none, quick, shell], Sorting algorithm to find MST for Prim or Kruskal
-    para_adjacent_list   = "off"      ! [off, on], Output for adjacent list for Prim or Kruskal
-    para_all_spanning    = "off"      ! [off, on], Possible all spanning tree when # of edges is less than 12 for Prim or Kruskal
+    para_weight_edge   = "on"       ! [on, off], Assign weight factor into edges of dual graph
+    para_method_MST    = "prim"     ! [prim, kruskal, greedy], Minimum spanning tree algorithm
+    para_method_sort   = "quick"    ! [none, quick, shell], Sorting algorithm to find MST for Prim or Kruskal
+    para_adjacent_list = "off"      ! [off, on], Output for adjacent list for Prim or Kruskal
+    para_all_spanning  = "off"      ! [off, on], All possible spanning trees when # of edges is less than 12 for Prim or Kruskal
 
-    para_cut_stap_method = "max"      ! [max, mix, opt, min, mid], Cutting method to make short staple strand, opt - 14nt seeds
-    para_set_stap_sxover = "off"      ! [off, on], To make non-circular staple by single crossover (when para_set_stap_sxover is "on")
-    para_output_design   = "arrow"    ! [arrow, seq, strand], Graphical output type for sequence design
-    para_set_xover_scaf  = "split"    ! [split, center], Setting possible scaffold strand
+    ! Parameter for sequence design
+    !para_cut_stap_method  = "max"      ! [max, mix, opt, min, mid], Cutting method to make short staple strand, opt - 14nt seeds
+    para_set_stap_sxover  = "off"      ! [off, on], To make non-circular staple by single crossover (when para_set_stap_sxover is "on")
+    para_output_design    = "arrow"    ! [arrow, seq, strand], Graphical output type for sequence design
+    para_set_xover_scaf   = "split"    ! [split, center], Setting possible scaffold strand
 
-    para_gap_xover_two_scaf   = 3     ! [3 ], The minimum gap between two scaffold crossovers
-    para_gap_xover_bound_scaf = 7     ! [7 ], The mimimum gap between scaffold crossover and vertex boundary
-    para_gap_xover_bound_stap = 6     ! [6 ], The mimimum gap between staple crossover and vertex boundary
-    para_gap_xover_two        = 6     ! [6 ], The minimum gap between scaffold and staple crossovers
-    para_gap_xover_nick1      = 10    ! [10], The minimum gap between xover(scaf/stap)/Tn and first nick
-    para_gap_xover_nick       = 3     ! [3 ], The minimum gap between xover and nick, if staple length exceeds 60, redesign with num - 1
+    para_gap_xover_two_scaf   = 3          ! [3 ], The minimum gap between two scaffold crossovers
+    para_gap_xover_bound_scaf = 7          ! [7 ], The mimimum gap between scaffold crossover and vertex boundary
+    para_gap_xover_bound_stap = 6          ! [6 ], The mimimum gap between staple crossover and vertex boundary
+    para_gap_xover_two        = 6          ! [6 ], The minimum gap between scaffold and staple crossovers
+    para_gap_xover_nick1      = 10         ! [10], The minimum gap between xover(scaf/stap)/Tn and first nick
+    para_gap_xover_nick       = 3          ! [3 ], The minimum gap between xover and nick, if staple length exceeds 60, redesign with num - 1
 
-    para_max_cut_scaf         = 0     ! [0, 7249], Scaffold break - 0 : not breaking, num : breaking over num
-    para_min_cut_stap         = 20    ! [20], The minimum number of nucleotides for one staple strand
-    para_mid_cut_stap         = 40    ! [40], The optimal number of nucleotides for one staple strand
-    para_max_cut_stap         = 60    ! [60], The maximum number of nucleotides for one staple strand
-    para_set_seq_scaf         = 0     ! [0, 1, 2], Scaffold sequence, 0 - M13mp18(7249nt), 1 - import sequence from seq.txt, 2 - random
-    para_set_start_scaf       = 1     ! [1], Starting nucleotide position of scaffold strand
+    para_max_cut_scaf         = 0          ! [0, 7249], Scaffold break - 0 : not breaking, num : breaking over num
+    para_min_cut_stap         = 20         ! [20], The minimum number of nucleotides for one staple strand
+    para_mid_cut_stap         = 40         ! [40], The optimal number of nucleotides for one staple strand
+    para_max_cut_stap         = 60         ! [60], The maximum number of nucleotides for one staple strand
+    para_set_seq_scaf         = 0          ! [0, 1, 2], Scaffold sequence, 0 - M13mp18(7249nt), 1 - import sequence from seq.txt, 2 - random
+    para_set_start_scaf       = 7217       ! [7217, 4141], Starting nucleotide position of scaffold strand
 
     ! Set parameter dependence
     call Input_Set_Parameter_Dependence
@@ -856,15 +797,16 @@ subroutine Input_Print_Num_BP_Edge(prob)
         write(0, "(a)")
         write(0, "(a)"), "   [Honeycomb lattice]"
         write(0, "(a)")
-        write(0, "(a)"), "   *  1.  42 bp =  4 turn * 10.5 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
-        write(0, "(a)"), "      2.  52 bp =  5 turn * 10.5 bp/turn ->  52 bp * 0.34nm/bp = 17.85nm"
-        write(0, "(a)"), "   *  3.  63 bp =  6 turn * 10.5 bp/turn ->  63 bp * 0.34nm/bp = 21.42nm"
-        write(0, "(a)"), "      4.  73 bp =  7 turn * 10.5 bp/turn ->  73 bp * 0.34nm/bp = 24.99nm"
-        write(0, "(a)"), "   *  5.  84 bp =  8 turn * 10.5 bp/turn ->  84 bp * 0.34nm/bp = 28.56nm"
-        write(0, "(a)"), "      6.  94 bp =  9 turn * 10.5 bp/turn ->  94 bp * 0.34nm/bp = 32.13nm"
-        write(0, "(a)"), "   *  7. 105 bp = 10 turn * 10.5 bp/turn -> 105 bp * 0.34nm/bp = 35.70nm"
-        write(0, "(a)"), "      8. 115 bp = 11 turn * 10.5 bp/turn -> 115 bp * 0.34nm/bp = 39.27nm"
-        write(0, "(a)"), "   *  9. 126 bp = 12 turn * 10.5 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
+        write(0, "(a)"), "      1.  31 bp =  3 turn * 10.5 bp/turn ->  31 bp * 0.34nm/bp = 10.54nm"
+        write(0, "(a)"), "   *  2.  42 bp =  4 turn * 10.5 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
+        write(0, "(a)"), "      3.  52 bp =  5 turn * 10.5 bp/turn ->  52 bp * 0.34nm/bp = 17.85nm"
+        write(0, "(a)"), "   *  4.  63 bp =  6 turn * 10.5 bp/turn ->  63 bp * 0.34nm/bp = 21.42nm"
+        write(0, "(a)"), "      5.  73 bp =  7 turn * 10.5 bp/turn ->  73 bp * 0.34nm/bp = 24.99nm"
+        write(0, "(a)"), "   *  6.  84 bp =  8 turn * 10.5 bp/turn ->  84 bp * 0.34nm/bp = 28.56nm"
+        write(0, "(a)"), "      7.  94 bp =  9 turn * 10.5 bp/turn ->  94 bp * 0.34nm/bp = 32.13nm"
+        write(0, "(a)"), "   *  8. 105 bp = 10 turn * 10.5 bp/turn -> 105 bp * 0.34nm/bp = 35.70nm"
+        write(0, "(a)"), "      9. 115 bp = 11 turn * 10.5 bp/turn -> 115 bp * 0.34nm/bp = 39.27nm"
+        write(0, "(a)"), "   * 10. 126 bp = 12 turn * 10.5 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
         write(0, "(a)")
     end if
 
@@ -1292,15 +1234,16 @@ subroutine Input_Set_Num_BP_Edge(prob, geom)
         if(prob.sel_bp_edge == 10) prob.n_bp_edge = 128     ! 10.67bp * 12
     else if(geom.sec.types == "honeycomb") then
 
-        if(prob.sel_bp_edge == 1) prob.n_bp_edge = 42      ! 10.5bp * 4
-        if(prob.sel_bp_edge == 2) prob.n_bp_edge = 52      ! 10.5bp * 5
-        if(prob.sel_bp_edge == 3) prob.n_bp_edge = 63      ! 10.5bp * 6
-        if(prob.sel_bp_edge == 4) prob.n_bp_edge = 73      ! 10.5bp * 7
-        if(prob.sel_bp_edge == 5) prob.n_bp_edge = 84      ! 10.5bp * 8
-        if(prob.sel_bp_edge == 6) prob.n_bp_edge = 94      ! 10.5bp * 9
-        if(prob.sel_bp_edge == 7) prob.n_bp_edge = 105     ! 10.5bp * 10
-        if(prob.sel_bp_edge == 8) prob.n_bp_edge = 115     ! 10.5bp * 11
-        if(prob.sel_bp_edge == 9) prob.n_bp_edge = 126     ! 10.5bp * 12
+        if(prob.sel_bp_edge ==  1) prob.n_bp_edge =  31     ! 10.5bp *  3
+        if(prob.sel_bp_edge ==  2) prob.n_bp_edge =  42     ! 10.5bp *  4
+        if(prob.sel_bp_edge ==  3) prob.n_bp_edge =  52     ! 10.5bp *  5
+        if(prob.sel_bp_edge ==  4) prob.n_bp_edge =  63     ! 10.5bp *  6
+        if(prob.sel_bp_edge ==  5) prob.n_bp_edge =  73     ! 10.5bp *  7
+        if(prob.sel_bp_edge ==  6) prob.n_bp_edge =  84     ! 10.5bp *  8
+        if(prob.sel_bp_edge ==  7) prob.n_bp_edge =  94     ! 10.5bp *  9
+        if(prob.sel_bp_edge ==  8) prob.n_bp_edge = 105     ! 10.5bp * 10
+        if(prob.sel_bp_edge ==  9) prob.n_bp_edge = 115     ! 10.5bp * 11
+        if(prob.sel_bp_edge == 10) prob.n_bp_edge = 126     ! 10.5bp * 12
     end if
 
     ! Increase the number of basepair for self-connection
