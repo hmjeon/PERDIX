@@ -6302,8 +6302,12 @@ subroutine SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
         write(702, "(a)"), "runCommand('open "//trim(prob.name_file)//".pdb')"
         write(702, "(a)"), "runCommand('windowsize 800 800')"
         write(702, "(a)"), "runCommand('window')"
+        write(702, "(a)"), "runCommand('preset apply publication 3')"
         write(702, "(a)"), "runCommand('~ribbon')"
         write(702, "(a)"), "runCommand('~display')"
+        write(702, "(a)"), "runCommand('~set depthCue')"
+        write(702, "(a)"), "runCommand('lighting mode three-point')"
+        write(702, "(a)"), "runCommand('set projection orthogonal')"
         write(702, "(a)"), "runCommand('open "//trim(prob.name_file)//"_curved_cylinder.bild')"
         do i = 2, dna.n_strand
             write(702, "(a)"), "runCommand('color "//trim(col_list(mod(i-1-1, 16) + 1))//" #0."//trim(adjustl(Int2Str(i)))//"')"
