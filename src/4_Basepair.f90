@@ -53,7 +53,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Discretize multiple lines to basepairs
-! Last updated on Fri 17 Mar 2017 by Hyungmin
 subroutine Basepair_Discretize(prob, geom, bound, mesh)
     type(ProbType),  intent(in)    :: prob
     type(GeomType),  intent(inout) :: geom
@@ -116,7 +115,6 @@ end subroutine Basepair_Discretize
 ! ---------------------------------------------------------------------------------------
 
 ! Count the number of basepairs
-! Last updated on Fri 17 Mar 2017 by Hyungmin
 subroutine Basepair_Count_Basepair(prob, geom, mesh)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(in)    :: geom
@@ -164,7 +162,6 @@ end subroutine Basepair_Count_Basepair
 ! ---------------------------------------------------------------------------------------
 
 ! Generate the basepair model
-! Last updated on Fri 17 Mar 2017 by Hyungmin
 subroutine Basepair_Generate_Basepair(geom, bound, mesh)
     type(GeomType),  intent(in)    :: geom
     type(BoundType), intent(inout) :: bound
@@ -297,7 +294,6 @@ end subroutine Basepair_Generate_Basepair
 ! ---------------------------------------------------------------------------------------
 
 ! Set sectional connection at the junction
-! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -473,7 +469,6 @@ end subroutine Basepair_Set_Conn_Junction
 ! ---------------------------------------------------------------------------------------
 
 ! Print bound data
-! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine Basepair_Print_Bound_Data(geom, bound)
     type(GeomType),  intent(in) :: geom
     type(BoundType), intent(in) :: bound
@@ -545,7 +540,6 @@ end subroutine Basepair_Print_Bound_Data
 ! ---------------------------------------------------------------------------------------
 
 ! Get direction, inward or outward to the junction
-! Last updated on Sunday 20 Mar 2016 by Hyungmin
 function Basepair_Get_Direction_IniL(geom, mesh, node) result (direction)
     Type(GeomType), intent(in) :: geom
     type(MeshType), intent(in) :: mesh
@@ -577,7 +571,6 @@ end function Basepair_Get_Direction_IniL
 ! ---------------------------------------------------------------------------------------
 
 ! Write cylindrial model with orientation
-! Last updated on Fri 17 Mar 2017 by Hyungmin
 subroutine Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, mode)
     type(ProbType),  intent(in) :: prob
     type(GeomType),  intent(in) :: geom
@@ -728,7 +721,6 @@ end subroutine Basepair_Chimera_Cylinder_Ori
 ! ---------------------------------------------------------------------------------------
 
 ! Write cylindrial model
-! Last updated on Fri 17 Mar 2017 by Hyungmin
 subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     type(ProbType),  intent(in) :: prob
     type(GeomType),  intent(in) :: geom
@@ -873,7 +865,6 @@ end subroutine Basepair_Chimera_Cylinder
 ! ---------------------------------------------------------------------------------------
 
 ! Modify the length of the duplex at the junction
-! Last updated on Fri 17 Mar 2017 by Hyungmin
 subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
     type(ProbType),  intent(in)    :: prob
     type(GeomType),  intent(inout) :: geom
@@ -1061,7 +1052,6 @@ end subroutine Basepair_Modify_Junction
 ! ---------------------------------------------------------------------------------------
 
 ! Find crossovers nearby from current and comparing nodes
-! Last updated on Friday 05 August 2016 by Hyungmin
 function Basepair_Find_Xover_Nearby(geom, bound, mesh, node_cur, node_com) result(n_move)
     type(geomType),  intent(in) :: geom
     type(BoundType), intent(in) :: bound
@@ -1167,7 +1157,6 @@ end function Basepair_Find_Xover_Nearby
 ! ---------------------------------------------------------------------------------------
 
 ! Increase basepair with certain size, n_move
-! Last updated on Thursday 04 August 2016 by Hyungmin
 subroutine Basepair_Increase_Basepair(geom, bound, mesh, node_cur, node_com, n_move)
     type(geomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -1212,7 +1201,6 @@ end subroutine Basepair_Increase_Basepair
 ! ---------------------------------------------------------------------------------------
 
 ! Decrease basepair with certain size making ghost nodes
-! Last updated on Thursday 04 August 2016 by Hyungmin
 subroutine Basepair_Decrease_Basepair(geom, bound, mesh, node_cur, node_com, n_move)
     type(geomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -1253,7 +1241,6 @@ end subroutine Basepair_Decrease_Basepair
 ! ---------------------------------------------------------------------------------------
 
 ! Check ghost node to be deleted
-! Last updated on Thursday 28 July 2016 by Hyungmin
 subroutine Basepair_Make_Ghost_Node(geom, bound, mesh, node_cur, node_com)
     type(geomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -1304,7 +1291,6 @@ end subroutine Basepair_Make_Ghost_Node
 ! ---------------------------------------------------------------------------------------
 
 ! Increase edge length of the duplex to fill junctional gap
-! Last updated on Mon 20 Mar 2017 by Hyungmin
 subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
     type(probType),  intent(in)    :: prob
     type(geomType),  intent(inout) :: geom
@@ -1456,7 +1442,6 @@ end subroutine Basepair_Increase_Edge
 ! ---------------------------------------------------------------------------------------
 
 ! Add one bp at the end indicating vector, vec_in and return newly node ID
-! Last updated on Thu 21 Mar 2017 by Hyungmin
 subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     type(GeomType),   intent(inout) :: geom
     type(BoundType),  intent(inout) :: bound
@@ -1620,7 +1605,6 @@ end subroutine Basepair_Add_Basepair
 ! ---------------------------------------------------------------------------------------
 
 ! Delete ghost node from node data
-! Last updated on Thursday 28 July 2016 by Hyungmin
 subroutine Basepair_Delete_Ghost_Node(geom, bound, mesh)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -1811,7 +1795,6 @@ end subroutine Basepair_Delete_Ghost_Node
 ! ---------------------------------------------------------------------------------------
 
 ! Delete node from min to max ID
-! Last updated on Thursday 28 July 2016 by Hyungmin
 subroutine Basepair_Delete_Nodes(mesh, min, max)
     type(MeshType), intent(inout) :: mesh
     integer,        intent(in)    :: min
@@ -1930,7 +1913,6 @@ end subroutine Basepair_Delete_Nodes
 ! ---------------------------------------------------------------------------------------
 
 ! Add one base to 5'-end
-! Last updated on Tue 21 Mar 2017 by Hyungmin
 subroutine Basepair_Make_Sticky_End(geom, bound, mesh)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -2153,7 +2135,6 @@ end subroutine Basepair_Make_Sticky_End
 ! ---------------------------------------------------------------------------------------
 
 ! Write Chimera FE mesh
-! Last updated on Monday 15 Feb 2016 by Hyungmin
 subroutine Basepair_Chimera_Mesh(prob, geom, mesh)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -2252,7 +2233,6 @@ end subroutine Basepair_Chimera_Mesh
 ! ---------------------------------------------------------------------------------------
 
 ! Write cross-sectional geometry
-! Last updated on Saturday 16 July 2016 by Hyungmin
 subroutine Basepair_Chimera_Cross_Geometry(prob, geom)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(inout) :: geom
@@ -2419,7 +2399,6 @@ end subroutine Basepair_Chimera_Cross_Geometry
 ! ---------------------------------------------------------------------------------------
 
 ! Write edge length
-! Last updated on Friday 23 September 2016 by Hyungmin
 subroutine Basepair_Write_Edge_Length(prob, geom)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(inout) :: geom

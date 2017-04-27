@@ -86,7 +86,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Make command file to run outputs by Chimera
-! Last updated on Friday 15 Apr 2016 by Hyungmin
 subroutine Chimera_Command_Output(prob)
     type(ProbType), intent(in) :: prob
 
@@ -302,7 +301,6 @@ end subroutine Chimera_Command_Output
 ! ---------------------------------------------------------------------------------------
 
 ! Make figures from outputs
-! Last updated on Friday 15 Apr 2016 by Hyungmin
 subroutine Chimera_Figure_Output(prob)
     type(ProbType), intent(in) :: prob
 
@@ -353,7 +351,6 @@ end subroutine Chimera_Figure_Output
 ! ---------------------------------------------------------------------------------------
 
 ! Make Figures from route step
-! Last updated on Monday 14 Mar 2016 by Hyungmin
 subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
     type(ProbType), intent(in) :: prob
     character(200), intent(in) :: name_file
@@ -562,7 +559,6 @@ end subroutine Chimera_Figure_Route_Step
 ! ---------------------------------------------------------------------------------------
 
 ! Initialize ChimeraType
-! Last updated on Wendesday 16 Mar 2016 by Hyungmin
 subroutine Chimera_Init_ChimeraType(Chimera)
     type(ChimeraType), intent(inout) :: Chimera
 
@@ -592,7 +588,6 @@ end subroutine Chimera_Init_ChimeraType
 ! ---------------------------------------------------------------------------------------
 
 ! Make Python script to make figures
-! Last updated on Wendesday 16 Mar 2016 by Hyungmin
 subroutine Chimera_Make_Python_Figure(prob, chi)
     type(ProbType),    intent(in)    :: prob
     type(ChimeraType), intent(inout) :: chi

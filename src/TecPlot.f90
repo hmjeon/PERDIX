@@ -43,7 +43,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Print 3 orientation vectors with bp
-! Last updated on Thuesday 8 Mar 2016 by Hyungmin
 subroutine TecPlot_Command_Orientation(prob)
     type(ProbType), intent(in) :: prob
 
@@ -66,7 +65,6 @@ end subroutine TecPlot_Command_Orientation
 ! ---------------------------------------------------------------------------------------
 
 ! Write layout in TecPlot
-! Last updated on Thuesday 8 Mar 2016 by Hyungmin
 subroutine Tecplot_Write_Layout(prob, TecPlot)
     type(ProbType),    intent(in) :: prob
     type(TecPlotType), intent(in) :: TecPlot

@@ -55,7 +55,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Insert list for connection
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function List_Insert_Conn(head, elem) result(list)
     type(ListConn), pointer, intent(in) :: head
     type(ListConn), pointer, intent(inout) :: elem
@@ -72,7 +71,6 @@ end function List_Insert_Conn
 ! ---------------------------------------------------------------------------------------
 
 ! Insert list for junction
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function List_Insert_Junc(head, elem) result(list)
     type(ListJunc), pointer, intent(in) :: head
     type(ListJunc), pointer, intent(in) :: elem
@@ -89,7 +87,6 @@ end function List_Insert_Junc
 ! ---------------------------------------------------------------------------------------
 
 ! Insert list for base
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function List_Insert_Base(head, elem) result(list)
     type(ListBase), pointer, intent(in) :: head
     type(ListBase), pointer, intent(in) :: elem
@@ -106,7 +103,6 @@ end function List_Insert_Base
 ! ---------------------------------------------------------------------------------------
 
 ! Insert list for scaffold strand
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function List_Insert_Scaf(head, elem) result(list)
     type(ListScaf), pointer, intent(in) :: head
     type(ListScaf), pointer, intent(in) :: elem
@@ -123,7 +119,6 @@ end function List_Insert_Scaf
 ! ---------------------------------------------------------------------------------------
 
 ! Delete list for connection
-! Last updated on Thursday 7 June 2016 by Hyungmin
 subroutine List_Delete_Conn(self)
     type(ListConn), pointer :: self
     type(ListConn), pointer :: current
@@ -146,7 +141,6 @@ end subroutine List_Delete_Conn
 ! ---------------------------------------------------------------------------------------
 
 ! Delete list for junction
-! Last updated on Thursday 7 June 2016 by Hyungmin
 subroutine List_Delete_Junc(self)
     type(ListJunc), pointer :: self
     type(ListJunc), pointer :: current
@@ -169,7 +163,6 @@ end subroutine List_Delete_Junc
 ! ---------------------------------------------------------------------------------------
 
 ! Delete list for base
-! Last updated on Thursday 7 June 2016 by Hyungmin
 subroutine List_Delete_Base(self)
     type(ListBase), pointer :: self
     type(ListBase), pointer :: current
@@ -191,7 +184,6 @@ end subroutine List_Delete_Base
 ! ---------------------------------------------------------------------------------------
 
 ! Delete list for scaffold
-! Last updated on Thursday 7 June 2016 by Hyungmin
 subroutine List_Delete_Scaf(self)
     type(ListScaf), pointer :: self
     type(ListScaf), pointer :: current
@@ -214,7 +206,6 @@ end subroutine List_Delete_Scaf
 ! ---------------------------------------------------------------------------------------
 
 ! Count junction list
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function List_Count_Junc(head) result(count)
     type(ListJunc), pointer, intent(in) :: head
 
@@ -234,7 +225,6 @@ end function List_Count_Junc
 ! ---------------------------------------------------------------------------------------
 
 ! Count base list
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function List_Count_Base(head) result(count)
     type(ListBase), pointer, intent(in) :: head
 
@@ -254,7 +244,6 @@ end function List_Count_Base
 ! ---------------------------------------------------------------------------------------
 
 ! Count scaffold list
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function List_Count_Scaf(head) result(count)
     type(ListScaf), pointer, intent(in) :: head
 

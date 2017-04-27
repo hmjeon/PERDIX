@@ -42,7 +42,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Main subroutine
-! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Main()
 
     ! Declare variables
@@ -95,7 +94,6 @@ end subroutine Main
 ! ---------------------------------------------------------------------------------------
 
 ! Autorun to calculate design parameters
-! Last updated on 25 Apr 2017 by Hyungmin
 subroutine Report()
 
     ! Declare variables
@@ -232,7 +230,6 @@ end subroutine Report
 ! ---------------------------------------------------------------------------------------
 
 ! Print information of the PERDIX
-! Last updated on Thursday 14 June 2016 by Hyungmin
 subroutine Print_Information(prob, geom, bound, mesh, dna)
     type(ProbType),  intent(in) :: prob
     type(GeomType),  intent(in) :: geom
@@ -404,7 +401,6 @@ end subroutine Print_Information
 ! ---------------------------------------------------------------------------------------
 
 ! Deallocate global dynamic array
-! Last updated on Wednesday 24 Feb 2016 by Hyungmin
 subroutine Deallocate_Variables(geom, bound, mesh, dna)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -460,7 +456,6 @@ end subroutine Deallocate_Variables
 ! ---------------------------------------------------------------------------------------
 
 ! Print time consuming
-! Last updated on Thursday 18 Feb 2016 by Hyungmin
 subroutine Print_TimeConsuming(time_start)
     real, intent(in) :: time_start
 
@@ -484,7 +479,6 @@ end subroutine Print_TimeConsuming
 ! ---------------------------------------------------------------------------------------
 
 ! Verify solution
-! Last updated on Thursday 20 Apr 2017 by Hyungmin
 subroutine Verify_Solution(mesh, dna)
     type(MeshType), intent(in) :: mesh
     type(DNAType),  intent(in) :: dna

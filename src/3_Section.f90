@@ -44,7 +44,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Cross-section generation
-! Last updated on Thuesday 8 Mar 2016 by Hyungmin
 subroutine Section_Generation(prob, geom, bound)
     type(ProbType),  intent(in)    :: prob
     type(GeomType),  intent(inout) :: geom
@@ -76,7 +75,6 @@ end subroutine Section_Generation
 ! ---------------------------------------------------------------------------
 
 ! Determine the section connection for scaffold strand
-! Last updated on Thursday 25 Feb 2016 by Hyungmin
 function Section_Connection_Scaf(geom, sec_cur, sec_com, bp_id) result(b_connect)
     type(GeomType), intent(in) :: geom
     integer, intent(in) :: sec_cur
@@ -377,7 +375,6 @@ end function Section_Connection_Scaf
 ! ---------------------------------------------------------------------------
 
 ! determine the section connection for staple strand
-! Last updated on Thursday 25 Feb 2016 by Hyungmin
 function Section_Connection_Stap(geom, sec_cur, sec_com, bp_id) result(b_connect)
     type(GeomType), intent(in) :: geom
     integer,        intent(in) :: sec_cur, sec_com, bp_id
@@ -671,7 +668,6 @@ end function Section_Connection_Stap
 ! ---------------------------------------------------------------------------------------
 
 ! Set crosssectional data, croP and croL and update junction data
-! Last updated on Monday 7 Mar 2016 by Hyungmin
 subroutine Section_Set_Sectional_Data(geom, bound)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -781,7 +777,6 @@ end subroutine Section_Set_Sectional_Data
 ! ---------------------------------------------------------------------------------------
 
 ! Generate cross-sectional geometry
-! Last updated on Monday 7 Mar 2016 by Hyungmin
 subroutine Section_Generate_Section_Geometry(geom)
     type(GeomType), intent(inout) :: geom
 
@@ -815,7 +810,6 @@ end subroutine Section_Generate_Section_Geometry
 ! ---------------------------------------------------------------------------------------
 
 ! Generate cross-sectional geometry defined by square lattice
-! Last updated on Friday 18 Mar 2016 by Hyungmin
 subroutine Section_Generate_Square(geom)
     type(GeomType), intent(inout) :: geom
 
@@ -871,7 +865,6 @@ end subroutine Section_Generate_Square
 ! ---------------------------------------------------------------------------------------
 
 ! Generate cross-sectional geometry defined by honeycomb lattice
-! Last updated on Monday 7 Mar 2016 by Hyungmin
 subroutine Section_Generate_Honeycomb(geom)
     type(GeomType), intent(inout) :: geom
 
@@ -943,11 +936,10 @@ end subroutine Section_Generate_Honeycomb
 ! ---------------------------------------------------------------------------------------
 
 ! Get position vector using natural coordinate system
-! Last updated on Monday 7 Mar 2016 by Hyungmin
 function Section_Get_Position(geom, r, s, t, num, n_row, n_col) result(pos)
-    type(GeomType),   intent(in)  :: geom
-    double precision, intent(in)  :: r, s, t
-    integer,          intent(in)  :: num, n_row, n_col
+    type(GeomType),   intent(in) :: geom
+    double precision, intent(in) :: r, s, t
+    integer,          intent(in) :: num, n_row, n_col
 
     double precision :: pos(3), yz_bar(2), Vs(3), Vt(3)
     double precision :: hr(2), hst(4)
@@ -981,7 +973,6 @@ end function Section_Get_Position
 ! ---------------------------------------------------------------------------------------
 
 ! Get 1D and 2D finite element shape function
-! Last updated on Monday 7 Mar 2016 by Hyungmin
 subroutine Section_Get_Shape_Function(r, s, t, hr, hst)
     double precision, intent(in)  :: r, s, t
     double precision, intent(out) :: hr(2), hst(4)
@@ -1000,7 +991,6 @@ end subroutine Section_Get_Shape_Function
 ! ---------------------------------------------------------------------------------------
 
 ! Get director vectors, local coordinate system
-! Last updated on Monday 7 Mar 2016 by Hyungmin
 subroutine Section_Get_Director(geom, line, Vs, Vt)
     type(GeomType),   intent(in)  :: geom
     integer,          intent(in)  :: line
@@ -1013,7 +1003,6 @@ end subroutine Section_Get_Director
 ! ---------------------------------------------------------------------------------------
 
 ! Get parameter y and z bar
-! Last updated on Monday 25 Apr 2016 by Hyungmin
 subroutine Section_Get_Parameter(type_sec, hst, n_row, n_col, yz_bar)
     character(10),    intent(in)  :: type_sec
     double precision, intent(in)  :: hst(4)
@@ -1079,7 +1068,6 @@ end subroutine Section_Get_Parameter
 ! ---------------------------------------------------------------------------------------
 
 ! Reset local coordinates according to section ID
-! Last updated on Thuesday 8 Mar 2016 by Hyungmin
 subroutine Section_Reset_Local_Coordinate(geom)
     type(GeomType), intent(inout) :: geom
 
@@ -1117,7 +1105,6 @@ end subroutine Section_Reset_Local_Coordinate
 ! ---------------------------------------------------------------------------------------
 
 ! Write cross-sectional geometry
-! Last updated on Saturday 16 July 2016 by Hyungmin
 subroutine Section_Chimera_Cro_Geometry(prob, geom)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(inout) :: geom

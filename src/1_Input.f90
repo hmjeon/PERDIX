@@ -61,7 +61,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Initialize parameters and inputs
-! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Initialization(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -185,8 +184,7 @@ end subroutine Input_Initialization
 
 ! ---------------------------------------------------------------------------------------
 
-! Initialize all parameter
-! Last updated on 25 Apr 2017 by Hyungmin
+! Initialize all parameters
 subroutine Input_Initialization_Report(prob, geom, mesh, ii, sec, edge, char_vert, char_cut)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -412,7 +410,6 @@ end subroutine Input_Print_Parameters
 ! ---------------------------------------------------------------------------------------
 
 ! Read parameters from external txt file, env.txt
-! Last updated on Thursday 14 June 2016 by Hyungmin
 subroutine Input_Read_Parameter
     character(200) :: ctemp
     integer :: i
@@ -544,7 +541,6 @@ end subroutine Input_Read_Parameter
 ! ---------------------------------------------------------------------------------------
 
 ! Reset paramters as default values
-! Last updated on 25 Apr 2017 by Hyungmin
 subroutine Input_Reset_Parameter
 
     ! Program parameters
@@ -679,7 +675,6 @@ end subroutine Input_Set_Parameter_Dependence
 ! ---------------------------------------------------------------------------------------
 
 ! Set command environment
-! Last updated on Saturday 20 Feb 2016 by Hyungmin
 subroutine Input_Set_Command
     logical :: results
 
@@ -695,7 +690,6 @@ end subroutine Input_Set_Command
 ! ---------------------------------------------------------------------------------------
 
 ! Print pre-defined problems
-! Last updated on Wednesday 24 Feb 2016 by Hyungmin
 subroutine Input_Print_Problem
     write(0, "(a)")
     write(0, "(a)"), "   +=====================================================================================+"
@@ -748,7 +742,6 @@ end subroutine Input_Print_Problem
 ! ---------------------------------------------------------------------------------------
 
 ! Print pre-defined cross-sections
-! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Print_Section
     write(0, "(a)")
     write(0, "(a)"), "   B. Second input - Pre-defined cross-sections"
@@ -768,7 +761,6 @@ end subroutine Input_Print_Section
 ! ---------------------------------------------------------------------------------------
 
 ! Print pre-defined minimum edge lengths
-! Last updated on Fri 10 Mar 2017 by Hyungmin
 subroutine Input_Print_Num_BP_Edge(prob)
     type(ProbType), intent(in) :: prob
 
@@ -816,7 +808,6 @@ end subroutine Input_Print_Num_BP_Edge
 ! ---------------------------------------------------------------------------------------
 
 ! Set problem
-! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Set_Problem(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -829,7 +820,6 @@ end subroutine Input_Set_Problem
 ! ---------------------------------------------------------------------------------------
 
 ! Select geometry file
-! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Select_File(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -881,7 +871,6 @@ end subroutine Input_Select_File
 ! ---------------------------------------------------------------------------------------
 
 ! Select the pre-defined geometry
-! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Select_Problem(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -910,6 +899,7 @@ subroutine Input_Select_Problem(prob, geom)
         case (13); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
         case (14); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
         case (15); call Exam_Open3D_Hemisphere_Quad           (prob, geom)
+        case (99); call Exam_Open3D_Cooling_Tower_Tri         (prob, geom)
 
         ! Prism and antiprism
         case (16); call Exam_Prism_Octagonal      (prob, geom)
@@ -942,7 +932,6 @@ end subroutine Input_Select_Problem
 ! ---------------------------------------------------------------------------------------
 
 ! Set cross-section
-! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Set_Section(prob, geom)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(inout) :: geom
@@ -1101,7 +1090,6 @@ end subroutine Input_Set_Section
 ! ---------------------------------------------------------------------------------------
 
 ! Find maximum and minimum sectional row and column
-! Last updated on Wednesday 24 Feb 2016 by Hyungmin
 subroutine Input_Find_Max_Min_Section(geom)
     type(GeomType), intent(inout) :: geom
 
@@ -1133,7 +1121,6 @@ end subroutine Input_Find_Max_Min_Section
 ! ---------------------------------------------------------------------------------------
 
 ! Set section connectivity in the defined initial section
-! Last updated on Wednesday 03 August 2016 by Hyungmin
 subroutine Input_Set_Section_Connectivity(prob, geom)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(inout) :: geom
@@ -1214,7 +1201,6 @@ end subroutine Input_Set_Section_Connectivity
 ! ---------------------------------------------------------------------------------------
 
 ! Set the minimum edge length
-! Last updated on Sun 12 Mar 2017 by Hyungmin
 subroutine Input_Set_Num_BP_Edge(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(in)    :: geom
@@ -1255,7 +1241,6 @@ end subroutine Input_Set_Num_BP_Edge
 ! ---------------------------------------------------------------------------------------
 
 ! Convert surface to line connectivity
-! Last updated on Thursday 25 Feb 2016 by Hyungmin
 subroutine Input_Convert_Face_To_Line(geom)
     type(GeomType), intent(inout) :: geom
     
@@ -1391,7 +1376,6 @@ end subroutine Input_Convert_Face_To_Line
 ! ---------------------------------------------------------------------------------------
 
 ! Set geometric scale, initial minimum length of edge is set up 20 nm
-! Last updated on Thuesday 12 Apr 2016 by Hyungmin
 subroutine Input_Scale_Init_Geometry(geom)
     type(GeomType), intent(inout) :: geom
 
@@ -1444,7 +1428,6 @@ end subroutine Input_Scale_Init_Geometry
 ! ---------------------------------------------------------------------------------------
 
 ! Set working and Chimera path
-! Last updated on Wednesday 16 Mar 2016 by Hyungmin
 subroutine Input_Set_Path(prob)
     type(ProbType), intent(inout) :: prob
 
@@ -1464,7 +1447,6 @@ end subroutine Input_Set_Path
 ! ---------------------------------------------------------------------------------------
 
 ! Remove previous working directory and make new one
-! Last updated on Saturday 20 Feb 2016 by Hyungmin
 subroutine Input_Set_Workplace(prob)
     type(ProbType), intent(in) :: prob
 
@@ -1488,7 +1470,6 @@ end subroutine Input_Set_Workplace
 ! ---------------------------------------------------------------------------------------
 
 ! Write geo file file
-! Last updated on Friday 4 Mar 2016 by Hyungmin
 subroutine Input_Write_GEO_File(prob, geom)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -1594,7 +1575,6 @@ end subroutine Input_Write_GEO_File
 ! ---------------------------------------------------------------------------------------
 
 ! Write initial geometry for Chimera
-! Last updated on Monday 12 September 2016 by Hyungmin
 subroutine Input_Chimera_Init_Geometry(prob, geom)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -1730,7 +1710,6 @@ end subroutine Input_Chimera_Init_Geometry
 ! ---------------------------------------------------------------------------------------
 
 ! Write initial geometry for Tecplot
-! Last updated on Monday 12 September 2016 by Hyungmin
 subroutine Input_Tecplot_Init_Geometry(prob, geom)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -1818,7 +1797,6 @@ end subroutine Input_Tecplot_Init_Geometry
 ! ---------------------------------------------------------------------------------------
 
 ! Generate Schlegel diagram
-! Last updated on Sunday 30 May 2016 by Hyungmin
 subroutine Input_Generate_Schlegel_Diagram(prob, geom)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -1934,7 +1912,6 @@ end subroutine Input_Generate_Schlegel_Diagram
 ! ---------------------------------------------------------------------------------------
 
 ! Write Schlegel diagram
-! Last updated on Sunday 30 May 2016 by Hyungmin
 subroutine Input_Chimera_Schlegel_Diagram(prob, geom, pos_xy)
     type(ProbType),   intent(in) :: prob
     type(GeomType),   intent(in) :: geom

@@ -63,7 +63,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! The number of spanning trees using Kirchhoff's matrix tree theorem
-! Last updated on Sunday 8 May 2016 by Hyungmin
 function SpanTree_Count_Spanning_Trees(adj) result(count)
     integer, allocatable, intent(in) :: adj(:,:)
 
@@ -115,7 +114,6 @@ end function SpanTree_Count_Spanning_Trees
 ! ---------------------------------------------------------------------------------------
 
 ! Count the number of the spanning trees of a graph
-! Last updated on Sunday 8 May 2016 by Hyungmin
 function SpanTree_Count_Spanning_Trees2(adj) result(count)
     integer, allocatable, intent(in) :: adj(:,:)
 
@@ -168,7 +166,6 @@ end function SpanTree_Count_Spanning_Trees2
 ! ---------------------------------------------------------------------------------------
 
 ! Generate all spanning trees for an undirected graph
-! Last updated on Monday 9 May 2016 by Hyungmin
 subroutine SpanTree_Generate_Spanning_Trees(adj, idx, src, dst)
     integer, allocatable, intent(inout) :: adj(:,:)
     integer, allocatable, intent(inout) :: idx(:,:)
@@ -389,7 +386,6 @@ end subroutine SpanTree_Generate_Spanning_Trees
 ! ---------------------------------------------------------------------------------------
 
 ! Kruskal's Algorithm to find minimal spanning tree
-! Last updated on Sunday 8 May 2016 by Hyungmin
 subroutine SpanTree_Kruskal_Algorithm(tail, head, cost, tree, n_node, n_edge, length, mode)
     integer, allocatable, intent(inout) :: tail(:)
     integer, allocatable, intent(inout) :: head(:)
@@ -503,7 +499,6 @@ end subroutine SpanTree_Kruskal_Algorithm
 ! ---------------------------------------------------------------------------------------
 
 ! Prim's Algorithm, version 1 with quick or shell sort, or without sort
-! Last updated on Friday 6 May 2016 by Hyungmin
 subroutine SpanTree_Prim_Algorithm_1(tail, head, cost, tree, n_node, n_edge, length, mode)
     integer, allocatable, intent(inout) :: tail(:)
     integer, allocatable, intent(inout) :: head(:)
@@ -603,7 +598,6 @@ end subroutine SpanTree_Prim_Algorithm_1
 ! ---------------------------------------------------------------------------------------
 
 ! Prim's Algorithm Version 2 with quick or shell sort, or without sort
-! Last updated on Friday 6 May 2016 by Hyungmin
 subroutine SpanTree_Prim_Algorithm_2(tail, head, cost, tree, n_node, n_edge, length, mode)
     integer, allocatable, intent(inout) :: tail(:)
     integer, allocatable, intent(inout) :: head(:)
@@ -714,7 +708,6 @@ end subroutine SpanTree_Prim_Algorithm_2
 ! ---------------------------------------------------------------------------------------
 
 ! Convert from list to adjacent matrix
-! Last updated on Saturday 7 May 2016 by Hyungmin
 subroutine SpanTree_List2Adj(adj, tail, head, cost, n_node, n_edge)
     integer, allocatable, intent(inout) :: adj(:,:)
     integer, allocatable, intent(in)    :: tail(:)
@@ -744,7 +737,6 @@ end subroutine SpanTree_List2Adj
 ! ---------------------------------------------------------------------------------------
 
 ! Convert from adjacent matrix to list
-! Last updated on Friday 6 May 2016 by Hyungmin
 subroutine SpanTree_Adj2List(adj, tail, head, cost, n_node, n_edge)
     integer, allocatable, intent(in)    :: adj(:,:)
     integer, allocatable, intent(inout) :: tail(:)
@@ -790,7 +782,6 @@ end subroutine SpanTree_Adj2List
 ! ---------------------------------------------------------------------------------------
 
 ! Print all spanning tree
-! Last updated on Thursday 5 May 2016 by Hyungmin
 subroutine SpanTree_Print_All_Trees(idx, src, dst)
     integer, allocatable, intent(in) :: idx(:,:)
     integer, allocatable, intent(in) :: src(:)
@@ -827,7 +818,6 @@ end subroutine SpanTree_Print_All_Trees
 ! ---------------------------------------------------------------------------------------
 
 ! Print matrix
-! Last updated on Thursday 5 May 2016 by Hyungmin
 subroutine SpanTree_Print_Matrix(adj, str)
     integer, allocatable, intent(in) :: adj(:,:)
     character(*), intent(in) :: str
@@ -850,7 +840,6 @@ end subroutine SpanTree_Print_Matrix
 ! ---------------------------------------------------------------------------------------
 
 ! Print vector
-! Last updated on Thursday 5 May 2016 by Hyungmin
 subroutine SpanTree_Print_Vector(adj, str)
     integer, allocatable, intent(in) :: adj(:)
     character(*), intent(in) :: str
@@ -870,7 +859,6 @@ end subroutine SpanTree_Print_Vector
 ! ---------------------------------------------------------------------------------------
 
 ! Check if the adjacency matrix
-! Last updated on Thursday 5 May 2016 by Hyungmin
 subroutine SpanTree_Check_Undirected_Graph(adj)
     integer, allocatable, intent(in) :: adj(:,:)
 
@@ -918,7 +906,6 @@ end subroutine SpanTree_Check_Undirected_Graph
 ! ---------------------------------------------------------------------------------------
 
 ! This function generates the data for the undirected simple graph
-! Last updated on Thursday 5 May 2016 by Hyungmin
 subroutine SpanTree_Generate_Graph_Data(adj, n_vert, n_edge, d, t, n, p, mate, src, dst, idx_map)
     integer, allocatable, intent(in)    :: adj(:,:)
     integer,              intent(inout) :: n_vert, n_edge
@@ -1059,7 +1046,6 @@ end subroutine SpanTree_Generate_Graph_Data
 ! ---------------------------------------------------------------------------------------
 
 ! Find index if there is entity
-! Last updated on Thursday 5 May 2016 by Hyungmin
 subroutine SpanTree_Find_Index(adj, dst, src)
     integer, allocatable, intent(in)    :: adj(:,:)
     integer, allocatable, intent(inout) :: dst(:)
@@ -1099,7 +1085,6 @@ end subroutine SpanTree_Find_Index
 ! ---------------------------------------------------------------------------------------
 
 ! Delete
-! Last updated on Thursday 5 May 2016 by Hyungmin
 subroutine SpanTree_Delete(a, p, n)
     integer,              intent(in)    :: a
     integer, allocatable, intent(inout) :: n(:), p(:)
@@ -1111,7 +1096,6 @@ end subroutine SpanTree_Delete
 ! ---------------------------------------------------------------------------------------
 
 ! Undelete
-! Last updated on Thursday 5 May 2016 by Hyungmin
 subroutine SpanTree_Undelete(a, p, n)
     integer,              intent(in)    :: a
     integer, allocatable, intent(inout) :: n(:), p(:)
@@ -1123,7 +1107,6 @@ end subroutine SpanTree_Undelete
 ! ---------------------------------------------------------------------------------------
 
 ! Generates a spanning tree
-! Last updated on Thursday 5 May 2016 by Hyungmin
 subroutine SpanTree_Get_Spanning_Tree(n_vert, t, n, a)
     integer,              intent(in)    :: n_vert
     integer, allocatable, intent(in)    :: t(:), n(:)
@@ -1196,7 +1179,6 @@ end subroutine SpanTree_Get_Spanning_Tree
 ! ---------------------------------------------------------------------------------------
 
 ! The bridge test for edge 'e' (v -> u), for which 'e_mate' is its mate
-! Last updated on Thursday 5 May 2016 by Hyungmin
 function SpanTree_Is_Bridge(e_mate, u, vv, n_vert, t, n) result(flag)
     integer,              intent(in) :: e_mate, u, vv, n_vert
     integer, allocatable, intent(in) :: t(:), n(:)
@@ -1251,7 +1233,6 @@ end function SpanTree_Is_Bridge
 ! ---------------------------------------------------------------------------------------
 
 ! Count the degree of each node
-! Last updated on Sunday 8 May 2016 by Hyungmin
 subroutine SpanTree_Count_Degree_Node(adj, deg)
     integer, intent(in)    :: adj(:,:)
     integer, intent(inout) :: deg(:)
@@ -1276,7 +1257,6 @@ end subroutine SpanTree_Count_Degree_Node
 
 ! Factor a general matrix
 ! n : the order of the matrix, piv : a vector of pivot indices
-! Last updated on Thursday 5 May 2016 by Hyungmin
 function SpanTree_Factor_Matrix(mat, piv, n) result(info)
     double precision, intent(inout) :: mat(:,:)
     integer,          intent(inout) :: piv(:)
@@ -1333,7 +1313,6 @@ end function SpanTree_Factor_Matrix
 ! ---------------------------------------------------------------------------------------
 
 ! Swaps two double precision values
-! Last updated on Thursday 5 May 2016 by Hyungmin
 subroutine SpanTree_Swap(x, y)
     double precision, intent(inout) :: x
     double precision, intent(inout) :: y
@@ -1347,7 +1326,6 @@ end subroutine SpanTree_Swap
 ! ---------------------------------------------------------------------------------------
 
 ! Get the determinant of a matrix factored
-! Last updated on Thursday 5 May 2016 by Hyungmin
 function SpanTree_Get_Determinant(mat, piv, lda, n) result(det)
     integer (kind = 4) lda
     integer (kind = 4) n
@@ -1373,7 +1351,6 @@ end function SpanTree_Get_Determinant
 ! ---------------------------------------------------------------------------------------
 
 ! Sorting's interface 1
-! Last updated on Friday 6 May 2016 by Hyungmin
 subroutine SpanTree_Interface_1_Sort(tail, head, cost, up, down, listup, listdn, mode)
     integer, allocatable, intent(inout) :: tail(:)
     integer, allocatable, intent(inout) :: head(:)
@@ -1428,7 +1405,6 @@ end subroutine SpanTree_Interface_1_Sort
 ! Sorting's interface 2
 ! The data structure used in the code is dynamic; however, arcs that forms a circuit 
 ! with the (actual) spanning tree are marked to be removed as soon as "they are the cheapest arc"
-! Last updated on Friday 6 May 2016 by Hyungmin
 subroutine SpanTree_Interface_2_Sort(tail, head, cost, up, list, mode)
     integer, allocatable, intent(inout)               :: tail(:)
     integer, allocatable, intent(inout)               :: head(:)
@@ -1464,7 +1440,6 @@ end subroutine SpanTree_Interface_2_Sort
 ! ---------------------------------------------------------------------------------------
 
 ! Iterative quick sort algorithm
-! Last updated on Friday 6 May 2016 by Hyungmin
 subroutine SpanTree_Quick_Sort(tail, head, cost, n_edge)
     integer, allocatable, intent(inout) :: tail(:)
     integer, allocatable, intent(inout) :: head(:)
@@ -1535,7 +1510,6 @@ end subroutine SpanTree_Quick_Sort
 ! ---------------------------------------------------------------------------------------
 
 ! Shell sort algorithm
-! Last updated on Sunday 8 May 2016 by Hyungmin
 subroutine SpanTree_Shell_Sort(tail, head, cost, n_edge)
     integer, allocatable, intent(inout) :: tail(:)
     integer, allocatable, intent(inout) :: head(:)
@@ -1572,7 +1546,6 @@ end subroutine SpanTree_Shell_Sort
 
 ! ---------------------------------------------------------------------------------------
 
-! Last updated on Friday 6 May 2016 by Hyungmin
 subroutine SpanTree_Remove(ant, arc, up, down, listup, listd, node, posicao, fim)
     integer, intent(in) :: ant, arc
     integer, allocatable, intent(inout) :: up(:)

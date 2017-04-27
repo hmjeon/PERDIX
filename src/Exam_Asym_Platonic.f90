@@ -32,7 +32,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Example of asymmetric tetrahedron
-! Last updated on Mon 27 Mar 2017 by Hyungmin
 subroutine Exam_Asym_Tetrahedron(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -77,7 +76,6 @@ end subroutine Exam_Asym_Tetrahedron
 ! ---------------------------------------------------------------------------------------
 
 ! Example of asymmetric cube
-! Last updated on Mon 27 Mar 2017 by Hyungmin
 subroutine Exam_Asym_Cube(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -128,7 +126,6 @@ end subroutine Exam_Asym_Cube
 ! ---------------------------------------------------------------------------------------
 
 ! Example of asymmetric octahedron
-! Last updated on Mon 27 Mar 2017 by Hyungmin
 subroutine Exam_Asym_Octahedron(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -179,7 +176,6 @@ end subroutine Exam_Asym_Octahedron
 ! ---------------------------------------------------------------------------------------
 
 ! Example of asymmetric dodecahedron
-! Last updated on Mon 27 Mar 2017 by Hyungmin
 subroutine Exam_Asym_Dodecahedron(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -249,7 +245,6 @@ end subroutine Exam_Asym_Dodecahedron
 ! ---------------------------------------------------------------------------------------
 
 ! Example of asymmetric icosahedron
-! Last updated on Mon 27 Mar 2017 by Hyungmin
 subroutine Exam_Asym_Icosahedron(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom

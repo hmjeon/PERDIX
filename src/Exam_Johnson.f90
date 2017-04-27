@@ -45,7 +45,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Example of square pyramid - J1
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Square_Pyramid_J1(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -92,7 +91,6 @@ end subroutine Exam_Johnson_Square_Pyramid_J1
 ! ---------------------------------------------------------------------------------------
 
 ! Example of pentagonal pyramid - J2
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Pentagonal_Pyramid_J2(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -142,7 +140,6 @@ end subroutine Exam_Johnson_Pentagonal_Pyramid_J2
 ! ---------------------------------------------------------------------------------------
 
 ! Example of triangular cupola - J3
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Triangular_Cupola_J3(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -197,7 +194,6 @@ end subroutine Exam_Johnson_Triangular_Cupola_J3
 ! ---------------------------------------------------------------------------------------
 
 ! Example of square cupola - J4
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Square_Cupola_J4(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -257,7 +253,6 @@ end subroutine Exam_Johnson_Square_Cupola_J4
 ! ---------------------------------------------------------------------------------------
 
 ! Example of pentagonal cupola - J5
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Pentagonal_Cupola_J5(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -322,7 +317,6 @@ end subroutine Exam_Johnson_Pentagonal_Cupola_J5
 ! ---------------------------------------------------------------------------------------
 
 ! Example of pentagonal rotunda - J6
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Pentagonal_Rotunda_J6(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -397,7 +391,6 @@ end subroutine Exam_Johnson_Pentagonal_Rotunda_J6
 ! ---------------------------------------------------------------------------------------
 
 ! Example of elongated triangular cupola - J18
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Elongated_Triangular_Cupola_J18(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -464,7 +457,6 @@ end subroutine Exam_Johnson_Elongated_Triangular_Cupola_J18
 ! ---------------------------------------------------------------------------------------
 
 ! Example of elongated square cupola - J19
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Elongated_Square_Cupola_J19(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -540,7 +532,6 @@ end subroutine Exam_Johnson_Elongated_Square_Cupola_J19
 ! ---------------------------------------------------------------------------------------
 
 ! Example of elongated pentagonal cupola - J20
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Elongated_Pentagonal_Cupola_J20(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -625,7 +616,6 @@ end subroutine Exam_Johnson_Elongated_Pentagonal_Cupola_J20
 ! ---------------------------------------------------------------------------------------
 
 ! Example of elongated pentagonal rotunda - J21
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Elongated_Pentagonal_Rotunda_J21(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -720,7 +710,6 @@ end subroutine Exam_Johnson_Elongated_Pentagonal_Rotunda_J21
 ! ---------------------------------------------------------------------------------------
 
 ! Example of gyroelongated triangular cupola - J22
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Gyroelongated_Triangular_Cupola_J22(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -793,7 +782,6 @@ end subroutine Exam_Johnson_Gyroelongated_Triangular_Cupola_J22
 ! ---------------------------------------------------------------------------------------
 
 ! Example of gyroelongated square cupola - J23
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Gyroelongated_Square_Cupola_J23(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -877,7 +865,6 @@ end subroutine Exam_Johnson_Gyroelongated_Square_Cupola_J23
 ! ---------------------------------------------------------------------------------------
 
 ! Example of gyroelongated pentagonal cupola - J24
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -972,7 +959,6 @@ end subroutine Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24
 ! ---------------------------------------------------------------------------------------
 
 ! Example of gyroelongated pentagonal rotunda - J25
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Gyroelongated_Pentagonal_Rotunda_J25(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -1077,7 +1063,6 @@ end subroutine Exam_Johnson_Gyroelongated_Pentagonal_Rotunda_J25
 ! ---------------------------------------------------------------------------------------
 
 ! Example of gyrobifastigium - J26
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Johnson_Gyrobifastigium_J26(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom

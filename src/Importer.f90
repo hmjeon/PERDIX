@@ -33,7 +33,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! import PLY format that has surface mesh information
-! Last updated on Monday 7 Mar 2016 by Hyungmin
 subroutine Importer_PLY(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -99,7 +98,6 @@ end subroutine Importer_PLY
 ! ---------------------------------------------------------------------------------------
 
 ! import STL format using meshconv
-! Last updated on Monday 7 Mar 2016 by Hyungmin
 subroutine Importer_STL(prob)
     type(ProbType), intent(inout) :: prob
 
@@ -116,7 +114,6 @@ end subroutine Importer_STL
 ! ---------------------------------------------------------------------------------------
 
 ! import WRL format using meshconv
-! Last updated on Monday 7 Mar 2016 by Hyungmin
 subroutine Importer_WRL(prob)
     type(ProbType), intent(inout) :: prob
 
@@ -133,7 +130,6 @@ end subroutine Importer_WRL
 ! ---------------------------------------------------------------------------------------
 
 ! import geom format that is standard for PERDIX
-! Last updated on Monday 7 Mar 2016 by Hyungmin
 subroutine Importer_GEO(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom

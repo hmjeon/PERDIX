@@ -163,7 +163,6 @@ end subroutine Route_Generation
 ! ---------------------------------------------------------------------------------------
 
 ! Initialize base connectivity from mesh data
-! Last updated on Wednesday 12 May 2016 by Hyungmin
 subroutine Route_Init_Base_Connectivity(mesh, dna)
     type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
@@ -235,7 +234,6 @@ end subroutine Route_Init_Base_Connectivity
 ! ---------------------------------------------------------------------------------------
 
 ! Set base position vector
-! Last updated on Friday 19 Feb 2016 by Hyungmin
 subroutine Route_Set_Base_Position(geom, mesh, dna)
     type(GeomType), intent(in)    :: geom
     type(MeshType), intent(in)    :: mesh
@@ -375,7 +373,6 @@ end subroutine Route_Set_Base_Position
 ! ---------------------------------------------------------------------------------------
 
 ! Write scaffold or staple route for Chimera
-! Last updated on Saturday 16 July 2016 by Hyungmin
 subroutine Route_Chimera_Route(prob, geom, mesh, dna, step_route)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -763,7 +760,6 @@ end subroutine Route_Chimera_Route
 ! ---------------------------------------------------------------------------------------
 
 ! Connect strands at the junction by unpaired nucleotides
-! Last updated on Tue 21 Mar 2017 by Hyungmin
 subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
     type(GeomType),  intent(in)    :: geom
     type(BoundType), intent(in)    :: bound
@@ -951,7 +947,6 @@ end subroutine Route_Connect_Strand_Junc
 ! ---------------------------------------------------------------------------------------
 
 ! Connect two scaffolds with/without unpaired nucleotides
-! Last updated on Wed 22 Mar 2017 by Hyungmin
 function Route_Connect_Scaf(mesh, dna, node_cur, node_com) result(count)
     type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
@@ -1058,7 +1053,6 @@ end function Route_Connect_Scaf
 ! ---------------------------------------------------------------------------------------
 
 ! Connect staple nucleotides by buiding poly T loop
-! Last updated on Monday 08 August 2016 by Hyungmin
 function Route_Connect_Stap(mesh, dna, node_cur, node_com) result(n_poly_Tn)
     type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
@@ -1171,7 +1165,6 @@ end function Route_Connect_Stap
 ! ---------------------------------------------------------------------------------------
 
 ! Add one neucleotide to make single strand(scaffold) or poly Tn loop(staple)
-! Last updated on Thuesday 9 August 2016 by Hyungmin
 subroutine Route_Add_Nucleotide(base, n_base, pos)
     type(BaseType), allocatable, intent(inout) :: base(:)
     integer,                     intent(inout) :: n_base
@@ -1210,7 +1203,6 @@ end subroutine Route_Add_Nucleotide
 ! ---------------------------------------------------------------------------------------
 
 ! Set the strand ID in scaffold
-! Last updated on Wednesday 3 May 2016 by Hyungmin
 subroutine Route_Set_Strand_ID_Scaf(dna)
     type(DNAType), intent(inout) :: dna
 
@@ -1279,7 +1271,6 @@ end subroutine Route_Set_Strand_ID_Scaf
 ! ---------------------------------------------------------------------------------------
 
 ! Find center scaffold crossovers with splitted algorithm
-! Last updated on Saturday 9 June 2016 by Hyungmin
 subroutine Route_Find_Centered_Scaf_Xover(prob, geom, mesh, dna)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(in)    :: geom
@@ -1539,7 +1530,6 @@ end subroutine Route_Find_Centered_Scaf_Xover
 ! ---------------------------------------------------------------------------------------
 
 ! Check whether nighbor crossover exists or not
-! Last updated on Friday 8 June 2016 by Hyungmin
 function Route_Check_Nei_Xover(geom, mesh, dna, cur, com) result(n_gap)
     type(GeomType), intent(in) :: geom    
     type(MeshType), intent(in) :: mesh
@@ -1613,7 +1603,6 @@ end function Route_Check_Nei_Xover
 ! ---------------------------------------------------------------------------------------
 
 ! Split crossover to avoid existing one, return crossover position
-! Last updated on Monday 15 August 2016 by Hyungmin
 function Route_Split_Centered_Scaf_Xover(geom, mesh, cur, com, min_bp1, max_bp1, min_bp2, max_bp2, step) result(b_fail)
     type(GeomType), intent(in)    :: geom
     type(MeshType), intent(in)    :: mesh
@@ -1787,7 +1776,6 @@ end function Route_Split_Centered_Scaf_Xover
 ! ---------------------------------------------------------------------------------------
 
 ! Write centered scaffold crossovers
-! Last updated on Friday 15 July 2016 by Hyungmin
 subroutine Route_Write_Centered_Scaf_Xover(prob, geom, mesh, dna)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -2032,7 +2020,6 @@ end subroutine Route_Write_Centered_Scaf_Xover
 ! ---------------------------------------------------------------------------------------
 
 ! Modify scaffold crossovers to avoid duplicated indication
-! Last updated on Thuesday 12 June 2016 by Hyungmin
 subroutine Route_Modify_Scaf_Xover(geom, mesh, dna)
     type(GeomType), intent(in)    :: geom
     type(MeshType), intent(in)    :: mesh
@@ -2178,7 +2165,6 @@ end subroutine Route_Modify_Scaf_Xover
 ! ---------------------------------------------------------------------------------------
 
 ! Build scaffold DNA origami
-! Last updated on Tuesday 10 Mar 2016 by Hyungmin
 subroutine Route_Graph_Build_Origami(prob, mesh, dna)
     type(ProbType), intent(in)    :: prob
     type(Meshtype), intent(in)    :: mesh
@@ -2303,7 +2289,6 @@ end subroutine Route_Graph_Build_Origami
 ! ---------------------------------------------------------------------------------------
 
 ! Allocate graph data
-! Last updated on Tuesday 10 May 2016 by Hyungmin
 subroutine Route_Graph_Allocate_Data(pos_node, tail, head, cost, n_node, n_edge)
     double precision, allocatable, intent(inout) :: pos_node(:,:)
     integer,          allocatable, intent(inout) :: tail(:)
@@ -2328,7 +2313,6 @@ end subroutine Route_Graph_Allocate_Data
 ! ---------------------------------------------------------------------------------------
     
 ! Set node and edge for dual graph
-! Last updated on Thursday 10 November 2016 by Hyungmin
 subroutine Route_Graph_Set_Data(prob, mesh, dna, pos_node, tail, head, cost)
     type(ProbType),   intent(in)    :: prob
     type(MeshType),   intent(in)    :: mesh
@@ -2463,7 +2447,6 @@ end subroutine Route_Graph_Set_Data
 ! ---------------------------------------------------------------------------------------
 
 ! Write Adjacent matrix
-! Last updated on Wednesday 4 May 2016 by Hyungmin
 subroutine Route_Graph_Write_Adjacent(prob, adj)
     type(ProbType),   intent(in) :: prob
     integer,          intent(in) :: adj(:,:)
@@ -2511,7 +2494,6 @@ end subroutine Route_Graph_Write_Adjacent
 ! ---------------------------------------------------------------------------------------
 
 ! Write all spanning trees
-! Last updated on Friday 22 July 2016 by Hyungmin
 subroutine Route_Graph_Chimera_All_Spanning_Tree(prob, pos_node, tail, head, idx, src, dst)
     type(ProbType),   intent(in) :: prob
     double precision, intent(in) :: pos_node(:,:)
@@ -2668,7 +2650,6 @@ end subroutine Route_Graph_Chimera_All_Spanning_Tree
 ! ---------------------------------------------------------------------------------------
 
 ! Write edge list
-! Last updated on Tuesday 10 May 2016 by Hyungmin
 subroutine Route_Graph_Write_List(prob, tail, head, tree)
     type(ProbType), intent(in) :: prob
     integer,        intent(in) :: tail(:)
@@ -2728,7 +2709,6 @@ end subroutine Route_Graph_Write_List
 ! ---------------------------------------------------------------------------------------
 
 ! Write Chimera for the spanning tree
-! Last updated on Saturday 16 July 2016 by Hyungmin
 subroutine Route_Graph_Chimera_Spanning_Tree(prob, pos_node, tail, head, tree)
     type(ProbType),   intent(in) :: prob
     double precision, intent(in) :: pos_node(:,:)
@@ -2880,7 +2860,6 @@ end subroutine Route_Graph_Chimera_Spanning_Tree
 ! ---------------------------------------------------------------------------------------
 
 ! Delete non-spanning scaffold crossover
-! Last updated on Tuesday 10 Mar 2016 by Hyungmin
 subroutine Route_Graph_Delete_Scaf_Xover(dna, tail, head, tree)
     type(DNAType), intent(inout) :: dna
     integer,       intent(in)    :: tail(:)
@@ -2943,7 +2922,6 @@ end subroutine Route_Graph_Delete_Scaf_Xover
 ! ---------------------------------------------------------------------------------------
 
 ! Make scaffold strand origami
-! Last updated on Thursday 24 Mar 2016 by Hyungmin
 subroutine Route_Make_Scaf_Origami(prob, mesh, dna)
     type(ProbType), intent(in)    :: prob
     type(MeshType), intent(in)    :: mesh
@@ -3104,7 +3082,6 @@ end subroutine Route_Make_Scaf_Origami
 ! ---------------------------------------------------------------------------------------
 
 ! Find possible staple crossovers
-! Last updated on Friday 15 June 2016 by Hyungmin
 subroutine Route_Find_Possible_Stap_Xover(geom, mesh, dna)
     type(GeomType), intent(in)    :: geom
     type(MeshType), intent(in)    :: mesh
@@ -3270,7 +3247,6 @@ end subroutine Route_Find_Possible_Stap_Xover
 ! ---------------------------------------------------------------------------------------
 
 ! Set staple crossover
-! Last updated on Thursday 18 Feb 2016 by Hyungmin
 subroutine Route_Set_Stap_Crossover(prob, dna)
     type(ProbType), intent(in)    :: prob
     type(DNAType),  intent(inout) :: dna
@@ -3337,7 +3313,6 @@ end subroutine Route_Set_Stap_Crossover
 ! ---------------------------------------------------------------------------------------
 
 ! Set three orientation vectors based on 3DNA convention
-! Last updated on Thursday 26 May 2016 by Hyungmin
 subroutine Route_Set_Orientation(mesh, dna)
     type(MeshType), intent(inout) :: mesh
     type(DNAType),  intent(in)    :: dna
@@ -3418,7 +3393,6 @@ end subroutine Route_Set_Orientation
 ! ---------------------------------------------------------------------------------------
 
 ! Write crossovers based on base pairs
-! Last updated on Friday 05 August 2016 by Hyungmin
 subroutine Route_Chimera_Crossovers(prob, geom, bound, mesh, dna)
     type(ProbType),  intent(in) :: prob
     type(GeomType),  intent(in) :: geom
@@ -3613,7 +3587,6 @@ end subroutine Route_Chimera_Crossovers
 ! ---------------------------------------------------------------------------------------
 
 ! Write 3 orientation vectors based on 3DNA convention
-! Last updated on Saturday 16 July 2016 by Hyungmin
 subroutine Route_Chimera_Orientation(prob, mesh, dna)
     type(ProbType), intent(in) :: prob
     type(MeshType), intent(in) :: mesh
@@ -3769,7 +3742,6 @@ end subroutine Route_Chimera_Orientation
 ! ---------------------------------------------------------------------------------------
 
 ! Write atomic model
-! Last updated on Thuesday 9 August 2016 by Hyungmin
 subroutine Route_Chimera_Atom(prob, geom, dna)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -3944,7 +3916,6 @@ end subroutine Route_Chimera_Atom
 ! ---------------------------------------------------------------------------------------
 
 ! Delete possible scaffold crossovers near the junction
-! Last updated on Wednesday 2 Mar 2016 by Hyungmin
 subroutine Route_Delete_End_Pos_Xover_Scaf(prob, geom, mesh, dna)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(in)    :: geom
@@ -4072,7 +4043,6 @@ end subroutine Route_Delete_End_Pos_Xover_Scaf
 ! ---------------------------------------------------------------------------------------
 
 ! Delete possible staple crossovers near the junction
-! Last updated on Wednesday 2 Mar 2016 by Hyungmin
 subroutine Route_Delete_End_Pos_Xover_Stap(prob, geom, mesh, dna)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(in)    :: geom
@@ -4203,7 +4173,6 @@ end subroutine Route_Delete_End_Pos_Xover_Stap
 ! ---------------------------------------------------------------------------------------
     
 ! Centered scaffold crossover
-! Last updated on Monday 11 Apr 2016 by Hyungmin
 subroutine Route_Center_Scaf_Crossover(geom, mesh, dna)
     type(GeomType), intent(in)    :: geom
     type(MeshType), intent(in)    :: mesh

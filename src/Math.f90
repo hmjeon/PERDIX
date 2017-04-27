@@ -51,7 +51,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Rotate V2 orientation vector using 3D finite rotation
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 subroutine Rotate_Vector(vec, pseudo, angle)
     double precision, intent(inout) :: vec(3)
     double precision, intent(in)    :: pseudo(3), angle
@@ -94,7 +93,6 @@ end subroutine Rotate_Vector
 ! ---------------------------------------------------------------------------------------
 
 ! Size vector
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function Size_Vector(vec) result(size)
     double precision, intent(in) :: vec(3)
 
@@ -106,7 +104,6 @@ end function Size_Vector
 ! ---------------------------------------------------------------------------------------
 
 ! Normalize vector
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function Normalize_Vector(vec) result(vector)
     double precision, intent(in) :: vec(3)
 
@@ -119,7 +116,6 @@ end function Normalize_Vector
 ! ---------------------------------------------------------------------------------------
 
 ! Cross product
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 subroutine Cross_Product_General(vec1, vec2, vec_cross)
     double precision, intent(in)  :: vec1(3), vec2(3)
     double precision, intent(out) :: vec_cross(3)
@@ -132,7 +128,6 @@ end subroutine Cross_Product_General
 ! ---------------------------------------------------------------------------------------
 
 ! Cross product
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function Cross_Product_Exception(vec1, vec2) result(cross)
     double precision, intent(in) :: vec1(3), vec2(3)
 
@@ -153,7 +148,6 @@ end function Cross_Product_Exception
 ! ---------------------------------------------------------------------------------------
 
 ! Cross product
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function Cross_Product(vec1, vec2) result(cross)
     double precision, intent(in)  :: vec1(3), vec2(3)
 
@@ -167,7 +161,6 @@ end function Cross_Product
 ! ---------------------------------------------------------------------------------------
 
 ! Cross product
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 subroutine Cross_Product_Sub(vec1, vec2, vec3)
     double precision, intent(in)    :: vec1(3), vec2(3)
     double precision, intent(inout) :: vec3(3)
@@ -180,7 +173,6 @@ end subroutine Cross_Product_Sub
 ! ---------------------------------------------------------------------------------------
 
 ! Inverse matrix
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function Inverse_Matrix(mat) result(inv_mat)
     double precision, intent(in) :: mat(3, 3)
 
@@ -206,7 +198,6 @@ end function Inverse_Matrix
 ! ---------------------------------------------------------------------------------------
 
 ! Determinant
-! Last updated on Wednesday 7 Apr 2016 by Hyungmin
 function Determinant_Matrix(mat) result(deter)
     double precision, intent(in)  :: mat(3,3)
 
@@ -221,7 +212,6 @@ end function Determinant_Matrix
 ! ---------------------------------------------------------------------------------------
 
 ! Return the location of the minimum in the section between start and end
-! Last updated on Tuesday 26 Apr 2016 by Hyungmin
 function Find_Minimum(array, start, end) result(value)
     integer, dimension(1:), intent(in) :: array
     integer,                intent(in) :: start
@@ -251,7 +241,6 @@ end function Find_Minimum
 ! ---------------------------------------------------------------------------------------
 
 ! Swap the values of its two formal arguments
-! Last updated on Tuesday 26 Apr 2016 by Hyungmin
 subroutine Swap(entity_a, entity_b)
     integer, intent(inout) :: entity_a
     integer, intent(inout) :: entity_b
@@ -266,7 +255,6 @@ end subroutine Swap
 ! ---------------------------------------------------------------------------------------
 
 ! Receives an array() and sorts it into ascending order
-! Last updated on Tuesday 26 Apr 2016 by Hyungmin
 subroutine Sort(array, size)
     integer, dimension(1:), intent(inout) :: array
     integer,                intent(in)    :: size
@@ -287,7 +275,6 @@ end subroutine Sort
 ! ---------------------------------------------------------------------------------------
 
 ! Receives an array() and sorts it into ascending order
-! Last updated on Tuesday 26 Apr 2016 by Hyungmin
 subroutine Sort2(array1, array2, size)
     integer, dimension(1:), intent(inout) :: array1
     integer, dimension(1:), intent(inout) :: array2
@@ -310,7 +297,6 @@ end subroutine Sort2
 ! ---------------------------------------------------------------------------------------
 
 ! Radian to degree
-! Last updated on Friday 29 Apr 2016 by Hyungmin
 function Rad2Deg(rad) result(deg)
     double precision, intent(in) :: rad
     
@@ -321,7 +307,6 @@ end function Rad2Deg
 ! ---------------------------------------------------------------------------------------
 
 ! Degree to radian
-! Last updated on Monday 2 May 2016 by Hyungmin
 function Deg2Rad(deg) result(rad)
     double precision, intent(in) :: deg
     
@@ -332,7 +317,6 @@ end function Deg2Rad
 ! ---------------------------------------------------------------------------------------
 
 ! Integer to string
-! Last updated on Wendesday 4 May 2016 by Hyungmin
 function Int2Str(int) result(str)
     integer, intent(in) :: int
 
@@ -344,7 +328,6 @@ end function Int2Str
 ! ---------------------------------------------------------------------------------------
 
 ! Double precision to string
-! Last updated on Wendesday 4 May 2016 by Hyungmin
 function Dble2Str(dbl) result(str)
     double precision, intent(in) :: dbl
 
@@ -356,7 +339,6 @@ end function Dble2Str
 ! ---------------------------------------------------------------------------------------
 
 ! Double precision to string
-! Last updated on Thursday 20 October 2016 by Hyungmin
 function Dble2Str1(dbl) result(str)
     double precision, intent(in) :: dbl
 
@@ -368,7 +350,6 @@ end function Dble2Str1
 ! ---------------------------------------------------------------------------------------
 
 ! Double precision to string
-! Last updated on Thursday 20 October 2016 by Hyungmin
 function Dble2Str2(dbl) result(str)
     double precision, intent(in) :: dbl
 
@@ -380,7 +361,6 @@ end function Dble2Str2
 ! ---------------------------------------------------------------------------------------
 
 ! Reallocate integer 1D array
-! Last updated on Wendesday 4 May 2016 by Hyungmin
 subroutine Reallocate_Int_1D(array, num_new)
     integer, allocatable, intent(inout) :: array(:)
     integer, intent(in) :: num_new
@@ -400,7 +380,6 @@ end subroutine Reallocate_Int_1D
 ! ---------------------------------------------------------------------------------------
 
 ! Reallocate integer 2D array
-! Last updated on Wendesday 4 May 2016 by Hyungmin
 subroutine Reallocate_Int_2D(array, num_i_new, num_j_new)
     integer, allocatable, intent(inout) :: array(:,:)
     integer, intent(in) :: num_i_new
@@ -422,7 +401,6 @@ end subroutine Reallocate_Int_2D
 ! ---------------------------------------------------------------------------------------
 
 ! The determinant of a real square matrix mat by Gauss method with full pivoting
-! Last updated on Sunday 8 May 2016 by Hyungmin
 function Math_Determinant(mat, eps) result(det)
     double precision, intent(in) :: mat(:,:)
     double precision, intent(in) :: eps
@@ -472,7 +450,6 @@ end function Math_Determinant
 ! ---------------------------------------------------------------------------------------
 
 ! The upper triangularization algorithm of Gauss method with full pivoting
-! Last updated on Sunday 8 May 2016 by Hyungmin
 function Math_Triangularization(mat, eps, diag, kp, lp) result(flag)
     double precision, intent(in)    :: mat(:,:)
     double precision, intent(in)    :: eps
@@ -539,7 +516,6 @@ end function Math_Triangularization
 ! ---------------------------------------------------------------------------------------
 
 ! Get lower triangular matrix
-! Last updated on Sunday 8 May 2016 by Hyungmin
 subroutine Math_Get_Low_Tri(mat)
     integer, intent(inout) :: mat(:,:)
 
@@ -558,7 +534,6 @@ end subroutine Math_Get_Low_Tri
 ! ---------------------------------------------------------------------------------------
 
 ! Set matrix entity one
-! Last updated on Thursday 5 May 2016 by Hyungmin
 subroutine Math_Set_Entity_One(adj)
     integer, allocatable, intent(inout) :: adj(:,:)
 

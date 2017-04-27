@@ -65,7 +65,6 @@ end subroutine Mani_Set_View_Color
 ! ---------------------------------------------------------------------------------------
 
 ! Print space
-! Last updated on Wednesday 6 Apr 2016 by Hyungmin
 subroutine Space(n_unit, num)
     integer, intent(in) :: n_unit, num
 
@@ -79,7 +78,6 @@ end subroutine Space
 ! ---------------------------------------------------------------------------------------
 
 ! Adapted from http://www.star.le.ac.uk/~cgp/fortran.html (1 Mar 2016)
-! Last updated on Wednesday 6 Apr 2016 by Hyungmin
 function Mani_To_Upper(strIn) result(strOut)
     character(len=*), intent(in) :: strIn
     character(len=len(strIn))    :: strOut
@@ -99,7 +97,6 @@ end function Mani_To_Upper
 ! ---------------------------------------------------------------------------------------   
     
 ! Print progress bar
-! Last updated on Sunday 14 Feb 2016 by Hyungmin
 subroutine Mani_Progress_Bar(index, max)
     integer, intent(in) :: index, max
 
@@ -142,7 +139,6 @@ end subroutine Mani_Progress_Bar
 ! ---------------------------------------------------------------------------
 
 ! Initialize line data type
-! Last updated on Wednesday 6 Apr 2016 by Hyungmin
 subroutine Mani_Init_LineType(line, n_line)
     type(LineType), allocatable, dimension(:), intent(inout) :: line
     integer, intent(in) :: n_line
@@ -168,10 +164,9 @@ end subroutine Mani_Init_LineType
 ! ---------------------------------------------------------------------------
 
 ! Allocate section type data
-! Last updated on Wednesday 17 Feb 2016 by Hyungmin
 subroutine Mani_Allocate_SecType(sec, n_sec)
     type(SecType), intent(inout) :: sec
-    integer, intent(in)    :: n_sec
+    integer,       intent(in)    :: n_sec
 
     allocate(sec.id(n_sec))     ! Section ID, start from 0
     allocate(sec.posR(n_sec))   ! Row position number, start from 1
@@ -182,7 +177,6 @@ end subroutine Mani_Allocate_SecType
 ! ---------------------------------------------------------------------------
 
 ! Initialize section type data
-! Last updated on Wednesday 17 Feb 2016 by Hyungmin
 subroutine Mani_Init_SecType(sec, n_sec, types)
     type(SecType), intent(inout) :: sec
     integer,       intent(in)    :: n_sec
@@ -214,7 +208,6 @@ end subroutine Mani_Init_SecType
 ! ---------------------------------------------------------------------------
 
 ! Initialize mesh type data
-! Last updated on Monday 11 June 2016 by Hyungmin
 subroutine Mani_Init_MeshType(mesh)
     type(MeshType), intent(inout) :: mesh
 
@@ -247,7 +240,6 @@ end subroutine Mani_Init_MeshType
 ! ---------------------------------------------------------------------------
 
 ! Initialize node type data
-! Last updated on Monday 11 June 2016 by Hyungmin
 subroutine Mani_Init_Node(node, n_node)
     type(NodeType), intent(inout) :: node(:)
     integer,        intent(in)    :: n_node
@@ -276,7 +268,6 @@ end subroutine Mani_Init_Node
 ! ---------------------------------------------------------------------------
 
 ! Initialize mesh type data
-! Last updated on Monday 11 June 2016 by Hyungmin
 subroutine Mani_Init_Ele(ele, n_ele)
     type(EleType), intent(inout) :: ele(:)
     integer,       intent(in)    :: n_ele
@@ -292,7 +283,6 @@ end subroutine Mani_Init_Ele
 ! ---------------------------------------------------------------------------
 
 ! Copy node data from ori to copy with size num
-! Last updated on Tue 21 Mar 2017 by Hyungmin
 subroutine Mani_Copy_NodeType(ori, copy, num)
     type(NodeType), intent(in)    :: ori(:)
     type(NodeType), intent(inout) :: copy(:)
@@ -323,7 +313,6 @@ end subroutine
 ! ---------------------------------------------------------------------------
 
 ! Copy element data from ori to copy with size num
-! Last updated on Tue 21 Mar 2017 by Hyungmin
 subroutine Mani_Copy_EleType(ori, copy, num)
     type(EleType), intent(in)    :: ori(:)
     type(EleType), intent(inout) :: copy(:)
@@ -340,7 +329,6 @@ end subroutine
 ! ---------------------------------------------------------------------------
 
 ! Initialize base type
-! Last updated on Sunday 14 Feb 2016 by Hyungmin
 subroutine Mani_Init_BaseType(base, n_base)
     type(BaseType), intent(inout) :: base(:)
     integer,        intent(in)    :: n_base
@@ -363,9 +351,8 @@ end subroutine Mani_Init_BaseType
 ! ---------------------------------------------------------------------------
 
 ! Initialize strand type data
-! Last updated on Sunday 14 Feb 2016 by Hyungmin
 subroutine Mani_Init_StrandType(strand, n_strand)
-    type(StrandType), allocatable, dimension(:), intent(inout) :: strand
+    type(StrandType), allocatable, intent(inout) :: strand(:)
     integer, intent(in) :: n_strand
 
     integer :: i
@@ -380,7 +367,6 @@ end subroutine Mani_Init_StrandType
 ! ---------------------------------------------------------------------------
 
 ! Copy base type
-! Last updated on Tuesday 9 August 2016 by Hyungmin
 subroutine Mani_Copy_BaseType(ori, copy, num)
     type(BaseType), intent(in)    :: ori(:)
     type(BaseType), intent(inout) :: copy(:)
@@ -404,7 +390,6 @@ end subroutine Mani_Copy_BaseType
 ! ---------------------------------------------------------------------------
 
 ! Go to starting point (down = -1)
-! Last updated on Thursday 23 June 2016 by Hyungmin
 function Mani_Go_Start_Base(dna, strand) result(base)
     type(DNAType), intent(in) :: dna
     integer,       intent(in) :: strand

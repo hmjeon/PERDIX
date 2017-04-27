@@ -124,7 +124,6 @@ end subroutine ModGeo_Modification
 ! ---------------------------------------------------------------------------------------
 
 ! Set neighbor points from two faces sharing with the line
-! Last updated on Wed 08 Mar 2017 by Hyungmin
 subroutine ModGeo_Set_Neighbor_Point(prob, geom)
     type(ProbType),  intent(inout) :: prob
     type(GeomType),  intent(inout) :: geom
@@ -179,7 +178,6 @@ end subroutine ModGeo_Set_Neighbor_Point
 ! ---------------------------------------------------------------------------------------
 
 ! Find faces sharing with the current line
-! Last updated on Wed 08 Mar 2017 by Hyungmin
 function ModGeo_Find_Neighbor_Face(geom, line) result(nei_face)
     type(GeomType), intent(in) :: geom
     integer,        intent(in) :: line
@@ -223,7 +221,6 @@ end function ModGeo_Find_Neighbor_Face
 ! ---------------------------------------------------------------------------------------
 
 ! Find neighbor points from the face sharing the line
-! Last updated on Wed 08 Mar 2017 by Hyungmin
 function ModGeo_Find_Neighbor_Points(geom, line, face) result(nei_poi)
     type(GeomType), intent(in) :: geom
     integer,        intent(in) :: line
@@ -315,7 +312,6 @@ end function ModGeo_Find_Neighbor_Points
 ! ---------------------------------------------------------------------------------------
 
 ! Set neighbor lines from neighbor points
-! Last updated on Wed 08 Mar 2017 by Hyungmin
 subroutine ModGeo_Set_Neighbor_Line(prob, geom, bound)
     type(ProbType),  intent(in)    :: prob
     type(GeomType),  intent(inout) :: geom
@@ -355,7 +351,6 @@ end subroutine ModGeo_Set_Neighbor_Line
 ! ---------------------------------------------------------------------------------------
 
 ! Find neighbor line from neighbor points
-! Last updated on Wed 08 Mar 2017 by Hyungmin
 subroutine ModGeo_Find_Neighbor_Line(geom, line, nei_line)
     type(GeomType), intent(in)  :: geom
     integer,        intent(in)  :: line
@@ -397,7 +392,6 @@ end subroutine ModGeo_Find_Neighbor_Line
 ! ---------------------------------------------------------------------------------------
 
 ! Write Chimera check geometry
-! Last updated on Thur 09 Mar 2017 by Hyungmin
 subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -579,7 +573,6 @@ end subroutine ModGeo_Chimera_Check_Geometry
 ! ---------------------------------------------------------------------------------------
 
 ! Set arm junction data
-! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine ModGeo_Set_Junction_Data(geom, bound)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -684,7 +677,6 @@ end subroutine ModGeo_Set_Junction_Data
 ! ---------------------------------------------------------------------------------------
 
 ! Set local coordinate system on each edge
-! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine ModGeo_Set_Local_Coorindate(geom)
     type(GeomType), intent(inout) :: geom
 
@@ -721,7 +713,6 @@ end subroutine ModGeo_Set_Local_Coorindate
 ! ---------------------------------------------------------------------------------------
 
 ! Set local vecotrs on each edge
-! Last updated on Thu 09 Mar 2017 by Hyungmin
 function ModGeo_Set_Local_Vectors(geom, line) result(local)
     type(GeomType), intent(in) :: geom
     integer,        intent(in) :: line
@@ -807,7 +798,6 @@ end function ModGeo_Set_Local_Vectors
 ! ---------------------------------------------------------------------------------------
 
 ! Write initial geometry with the local coordinate system
-! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -1008,7 +998,6 @@ end subroutine ModGeo_Chimera_Init_Geometry_Local
 ! ---------------------------------------------------------------------------------------
 
 ! Seperate the line from the vertex without off-set distance
-! Last updated on Thu 16 Feb 2017 by Hyungmin
 subroutine ModGeo_Seperate_Line(geom, bound)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -1097,7 +1086,6 @@ end subroutine ModGeo_Seperate_Line
 ! ---------------------------------------------------------------------------------------
 
 ! Find the factor to scale the geometry
-! Last updated on Thu 16 Mar 2017 by Hyungmin
 function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
     type(ProbType),  intent(in)    :: prob
     type(GeomType),  intent(inout) :: geom
@@ -1224,7 +1212,6 @@ end function ModGeo_Find_Scale_Factor
 ! ---------------------------------------------------------------------------------------
 
 ! Set the angle between two adjacent lines sharing the same faces
-! Last updated on Thu 16 Mar 2017 by Hyungmin
 subroutine ModGeo_Set_Angle_Junction(geom, bound)
     type(GeomType),  intent(in)    :: geom
     type(BoundType), intent(inout) :: bound
@@ -1338,7 +1325,6 @@ end subroutine ModGeo_Set_Angle_Junction
 ! ---------------------------------------------------------------------------------------
 
 ! Set width cross-section
-! Last updated on Thu 09 Mar 2017 by Hyungmin
 function ModGeo_Set_Width_Section(geom) result(width)
     type(GeomType), intent(in) :: geom
 
@@ -1364,7 +1350,6 @@ end function ModGeo_Set_Width_Section
 ! ---------------------------------------------------------------------------------------
 
 ! Set the geometric size with the scale factor
-! Last updated on Thu 09 Mar 2017 by Hyungmin
 subroutine ModGeo_Set_Scale_Geometry(geom, scale)
     type(GeomType),   intent(inout) :: geom
     double precision, intent(in)    :: scale
@@ -1386,7 +1371,6 @@ end subroutine ModGeo_Set_Scale_Geometry
 ! ---------------------------------------------------------------------------------------
 
 ! Write seperated geometry
-! Last updated on Thu 16 Mar 2017 by Hyungmin
 subroutine ModGeo_Chimera_Sep_Geometry(prob, geom, mode)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -1591,7 +1575,6 @@ end subroutine ModGeo_Chimera_Sep_Geometry
 ! ---------------------------------------------------------------------------------------
 
 ! Set the gap distance between the junction and end of edges
-! Last updated on Tuesday 26 Apr 2016 by Hyungmin
 subroutine ModGeo_Set_Gap_Junction(geom, bound)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
@@ -1665,7 +1648,6 @@ end subroutine ModGeo_Set_Gap_Junction
 ! ---------------------------------------------------------------------------------------
 
 ! Set constant modified edge ratio based on original geometry
-! Last updated on Thursday 13 October 2016 by Hyungmin
 subroutine ModGeo_Set_Const_Geometric_Ratio(geom)
     type(GeomType), intent(inout) :: geom
 

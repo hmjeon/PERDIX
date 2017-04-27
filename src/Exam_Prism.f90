@@ -46,7 +46,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Example of triangular prism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Prism_Triangular(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -95,7 +94,6 @@ end subroutine Exam_Prism_Triangular
 ! ---------------------------------------------------------------------------------------
 
 ! Example of pentagonal prism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Prism_Pentagonal(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -150,7 +148,6 @@ end subroutine Exam_Prism_Pentagonal
 ! ---------------------------------------------------------------------------------------
 
 ! Example of hexagonal prism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Prism_Hexagonal(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -208,7 +205,6 @@ end subroutine Exam_Prism_Hexagonal
 ! ---------------------------------------------------------------------------------------
 
 ! Example of hetagonal prism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Prism_Heptagonal(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -269,7 +265,6 @@ end subroutine Exam_Prism_Heptagonal
 ! ---------------------------------------------------------------------------------------
 
 ! Example of octagonal prism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Prism_Octagonal(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -333,7 +328,6 @@ end subroutine Exam_Prism_Octagonal
 ! ---------------------------------------------------------------------------------------
 
 ! Example of enneagonal prism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Prism_Enneagonal(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -400,7 +394,6 @@ end subroutine Exam_Prism_Enneagonal
 ! ---------------------------------------------------------------------------------------
 
 ! Example of decagonal prism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Prism_Decagonal(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -470,7 +463,6 @@ end subroutine Exam_Prism_Decagonal
 ! ---------------------------------------------------------------------------------------
 
 ! Example of square antiprism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Antiprism_Square(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -526,7 +518,6 @@ end subroutine Exam_Antiprism_Square
 ! ---------------------------------------------------------------------------------------
 
 ! Example of pentagonal antiprism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Antiprism_Pentagonal(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -586,7 +577,6 @@ end subroutine Exam_Antiprism_Pentagonal
 ! ---------------------------------------------------------------------------------------
 
 ! Example of hexagonal antiprism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Antiprism_Hexagonal(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -650,7 +640,6 @@ end subroutine Exam_Antiprism_Hexagonal
 ! ---------------------------------------------------------------------------------------
 
 ! Example of heptagonal antiprism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Antiprism_Heptagonal(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -718,7 +707,6 @@ end subroutine Exam_Antiprism_Heptagonal
 ! ---------------------------------------------------------------------------------------
 
 ! Example of octagonal antiprism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Antiprism_Octagonal(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -790,7 +778,6 @@ end subroutine Exam_Antiprism_Octagonal
 ! ---------------------------------------------------------------------------------------
 
 ! Example of enneagonal antiprism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Antiprism_Enneagonal(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -866,7 +853,6 @@ end subroutine Exam_Antiprism_Enneagonal
 ! ---------------------------------------------------------------------------------------
 
 ! Example of decagonal antiprism
-! Last updated on Mon 13 Mar 2017 by Hyungmin
 subroutine Exam_Antiprism_Decagonal(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom

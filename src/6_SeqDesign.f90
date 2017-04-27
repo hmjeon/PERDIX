@@ -90,7 +90,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Design topology
-! Last updated on Saturday 17 September 2016 by Hyungmin
 subroutine SeqDesign_Design(prob, geom, mesh, dna)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -159,7 +158,6 @@ end subroutine SeqDesign_Design
 ! ---------------------------------------------------------------------------------------
 
 ! Reset possible staple crossovers
-! Last updated on Sunday 21 August 2016 by Hyungmin
 subroutine SeqDesign_Reset_Possible_Stap_Xover(geom, mesh, dna)
     type(GeomType), intent(in)    :: geom
     type(MeshType), intent(in)    :: mesh
@@ -347,7 +345,6 @@ end subroutine SeqDesign_Reset_Possible_Stap_Xover
 ! ---------------------------------------------------------------------------------------
 
 ! Build dnaTop data from dna base data
-! Last updated on Thursday 12 May 2016 by Hyungmin
 subroutine SeqDesign_Build_dnaTop(dna)
     type(DNAType), intent(inout) :: dna
 
@@ -457,7 +454,6 @@ end subroutine SeqDesign_Build_dnaTop
 ! ---------------------------------------------------------------------------------------
 
 ! Get random sequence
-! Last updated on Sunday 28 Feb 2016 by Hyungmin
 function SeqDesign_Get_Rand_Sequence result(seq)
     character :: seq
     integer :: random
@@ -479,7 +475,6 @@ end function SeqDesign_Get_Rand_Sequence
 ! ---------------------------------------------------------------------------------------
 
 ! Get complementary sequence
-! Last updated on Sunday 27 Mar 2016 by Hyungmin
 function SeqDesign_Get_Comp_Sequence(seq) result(com_seq)
     character, intent(in) :: seq
 
@@ -503,7 +498,6 @@ end function SeqDesign_Get_Comp_Sequence
 ! ---------------------------------------------------------------------------------------
 
 ! Build strand data from dnaTop
-! Last updated on Saturday 26 Feb 2016 by Hyungmin
 subroutine SeqDesign_Build_Strand(dna)
     type(DNAType), intent(inout) :: dna
 
@@ -714,7 +708,6 @@ end subroutine SeqDesign_Build_Strand
 ! ---------------------------------------------------------------------------------------
 
 ! Make non-circular staple strand by single crossover
-! Last updated on Saturday 17 September 2016 by Hyungmin
 subroutine SeqDesign_Make_Noncir_Stap_Single_Xover(mesh, dna)
     type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
@@ -774,7 +767,6 @@ end subroutine SeqDesign_Make_Noncir_Stap_Single_Xover
 ! ---------------------------------------------------------------------------------------
 
 ! Make non-circular staples by placing the nick
-! Last updated on Wed 22 Mar 2017 by Hyungmin
 subroutine SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
     type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
@@ -891,7 +883,6 @@ end subroutine SeqDesign_Make_Noncir_Stap_Nick
 ! ---------------------------------------------------------------------------------------
 
 ! Build sequence design combined maximum and optimal cutting
-! Last updated on Thursday 10 November 2016 by Hyungmin
 subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
     type(ProbType), intent(inout) :: prob
     type(MeshType), intent(in)    :: mesh
@@ -1274,7 +1265,6 @@ end subroutine SeqDesign_Build_Sequence_Design_Mix
 ! ---------------------------------------------------------------------------------------
 
 ! Build sequence design with non-circular staple strands with 14nt seeds
-! Last updated on Thursday 10 November 2016 by Hyungmin
 subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
     type(ProbType), intent(inout) :: prob
     type(MeshType), intent(in)    :: mesh
@@ -1686,7 +1676,6 @@ end subroutine SeqDesign_Break_Staples_Seeds
 ! ---------------------------------------------------------------------------------------
 
 ! Maximized staple length - staple-break rule
-! Last updated on Wed 22 Mar 2017 by Hyungmin
 subroutine SeqDesign_Break_Staples_Length(prob, mesh, dna)
     type(ProbType), intent(inout) :: prob
     type(MeshType), intent(in)    :: mesh
@@ -2013,7 +2002,6 @@ end subroutine SeqDesign_Break_Staples_Length
 ! ---------------------------------------------------------------------------------------
 
 ! Build staple region without crossovers and unpaired nucleotides
-! Last updated on Wednesday 2 November 2016 by Hyungmin
 subroutine SeqDesign_Build_Region_Staple(dna, i, region, n_region)
     type(DNAType),    intent(inout) :: dna
     type(RegionType), intent(inout) :: region(:)
@@ -2148,7 +2136,6 @@ end subroutine SeqDesign_Build_Region_Staple
 ! ---------------------------------------------------------------------------------------
 
 ! Build sequence design with non-circular staple strands
-! Last updated on Thursday 7 June 2016 by Hyungmin
 subroutine SeqDesign_Build_Sequence_Design(prob, mesh, dna)
     type(ProbType), intent(in)    :: prob
     type(MeshType), intent(in)    :: mesh
@@ -2516,7 +2503,6 @@ end subroutine SeqDesign_Build_Sequence_Design
 ! ---------------------------------------------------------------------------------------
 
 ! Make nick in scaffold strand
-! Last updated on Thuesday 9 August 2016 by Hyungmin
 subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
     type(GeomType), intent(in)    :: geom
     type(MeshType), intent(in)    :: mesh
@@ -2657,7 +2643,6 @@ end subroutine SeqDesign_Make_Nick_Scaf
 ! ---------------------------------------------------------------------------------------
 
 ! Make short scaffold strand
-! Last updated on Thuesday 28 June 2016 by Hyungmin
 subroutine SeqDesign_Make_Short_Scaf(mesh, dna)
     type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
@@ -2858,7 +2843,6 @@ end subroutine SeqDesign_Make_Short_Scaf
 ! ---------------------------------------------------------------------------------------
 
 ! Move cur_base to avoid node without ID and crossovers
-! Last updated on Tuesday 24 May 2016 by Hyungmin
 function SeqDesign_Avoid_Barrier(mesh, dna, base, gap) result(cur_base)
     type(MeshType), intent(in) :: mesh
     type(DNAType),  intent(in) :: dna
@@ -2975,7 +2959,6 @@ end function SeqDesign_Avoid_Barrier
 ! ---------------------------------------------------------------------------------------
 
 ! Make short strand
-! Last updated on Monday 4 Apr 2016 by Hyungmin
 subroutine SeqDesign_Make_Short_Strand(mesh, dna)
     type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
@@ -3071,7 +3054,6 @@ end subroutine SeqDesign_Make_Short_Strand
 ! ---------------------------------------------------------------------------------------
 
 ! Count the number of remainder bases, strand should be non-circular
-! Last updated on Monday 4 Apr 2016 by Hyungmin
 function SeqDesign_Count_Remainder(dna, cur_base) result(count)
     type(DNAType), intent(in) :: dna
     integer, intent(in) :: cur_base
@@ -3095,7 +3077,6 @@ end function SeqDesign_Count_Remainder
 ! ---------------------------------------------------------------------------------------
 
 ! Rebuild strand data from dnaTop data
-! Last updated on Wednesday 30 Mar 2016 by Hyungmin
 subroutine SeqDesign_Rebuild_Strand(dna)
     type(DNAType), intent(inout) :: dna
 
@@ -3299,7 +3280,6 @@ end subroutine SeqDesign_Rebuild_Strand
 ! ---------------------------------------------------------------------------------------
 
 ! List in long length order of the staple
-! Last updated on Wednesday 23 November 2016 by Hyungmin
 subroutine SeqDesign_Order_Staple(dna)
     type(DNAType), intent(inout) :: dna
 
@@ -3337,7 +3317,6 @@ end subroutine SeqDesign_Order_Staple
 ! ---------------------------------------------------------------------------------------
 
 ! Print 14nt region with various representations
-! Last updated on Wednesday 7 November 2016 by Hyungmin
 subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(in)    :: geom
@@ -3886,7 +3865,6 @@ end subroutine SeqDesign_Print_14nt_Region
 ! ---------------------------------------------------------------------------------------
 
 ! Count the total number of regions for all staples
-! Last updated on Tuesday 8 November 2016 by Hyungmin
 function SeqDesign_CirGraph_Count_Edge(dna) result(n_edge)
     type(DNAType), intent(inout) :: dna
 
@@ -3913,7 +3891,6 @@ end function SeqDesign_CirGraph_Count_Edge
 ! ---------------------------------------------------------------------------------------
 
 ! Allocate and initialize variables for the circular graph
-! Last updated on Tuesday 8 November 2016 by Hyungmin
 subroutine SeqDesign_CirGraph_Init_Variable(dna, graph, n_edge)
     type(DNAType),   intent(in)    :: dna
     type(GraphType), intent(inout) :: graph
@@ -3935,7 +3912,6 @@ end subroutine SeqDesign_CirGraph_Init_Variable
 ! ---------------------------------------------------------------------------------------
 
 ! Assign DNA sequence according to para_set_seq_scaf
-! Last updated on Tuesday 9 August 2016 by Hyungmin
 subroutine SeqDesign_Assign_Sequence(dna)
     type(DNAType), intent(inout) :: dna
 
@@ -4004,7 +3980,6 @@ end subroutine SeqDesign_Assign_Sequence
 ! ---------------------------------------------------------------------------------------
 
 ! Set M13mp18 DNA sequence
-! Last updated on Tuesday 9 August 2016 by Hyungmin
 subroutine SeqDesign_Set_M13mp18(dna)
     type(DNAType), intent(inout) :: dna
 
@@ -4065,7 +4040,6 @@ end subroutine SeqDesign_Set_M13mp18
 ! ---------------------------------------------------------------------------------------
 
 ! Get M13mp18 DNA sequence
-! Last updated on Monday 28 Mar 2016 by Hyungmin
 function SeqDesign_Get_M13mp18(len_M13) result(M13_seq)
     integer, intent(in) :: len_M13
 
@@ -4415,7 +4389,6 @@ end function SeqDesign_Get_M13mp18
 ! ---------------------------------------------------------------------------------------
 
 ! Import sequence from txt file
-! Last updated on Saturday 9 Apr 2016 by Hyungmin
 subroutine SeqDesign_Import_Sequence(dna)
     type(DNAType), intent(inout) :: dna
 
@@ -4500,7 +4473,6 @@ end subroutine SeqDesign_Import_Sequence
 ! ---------------------------------------------------------------------------------------
 
 ! Set random sequence
-! Last updated on Saturday 9 Apr 2016 by Hyungmin
 subroutine SeqDesign_Set_Rand_Sequence(dna)
     type(DNAType), intent(inout) :: dna
 
@@ -4554,7 +4526,6 @@ end subroutine SeqDesign_Set_Rand_Sequence
 ! ---------------------------------------------------------------------------------------
 
 ! Write txt file for strand data
-! Last updated on Thuesday 9 August 2016 by Hyungmin
 subroutine SeqDesign_Write_Strand(prob, geom, mesh, dna)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(in)    :: geom
@@ -4826,7 +4797,6 @@ end subroutine SeqDesign_Write_Strand
 ! ---------------------------------------------------------------------------------------
 
 ! Write graphical output
-! Last updated on Tuesday 9 August 2016 by Hyungmin
 subroutine SeqDesign_Write_Graphical_Output(prob, geom, mesh, dna, unit)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -6032,7 +6002,6 @@ end subroutine SeqDesign_Write_Graphical_Output
 ! ---------------------------------------------------------------------------------------
 
 ! Write atom model by dnaTop and strand data
-! Last updated on Wednesday 25 May 2016 by Hyungmin
 subroutine SeqDesign_Chimera_Atom(prob, dna)
     type(ProbType), intent(in) :: prob
     type(DNAType),  intent(in) :: dna
@@ -6179,7 +6148,6 @@ end subroutine SeqDesign_Chimera_Atom
 ! ---------------------------------------------------------------------------------------
 
 ! Write the curved cylinderical model
-! Last updated on Thursday 20 Apr 2016 by Hyungmin
 subroutine SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
     type(ProbType), intent(in) :: prob
     type(MeshType), intent(in) :: mesh
@@ -6321,7 +6289,6 @@ end subroutine SeqDesign_Chimera_Curved_Cylinder
 ! ---------------------------------------------------------------------------------------
 
 ! Write scaffold or staple route for Chimera
-! Last updated on Tur 21 Mar 2017 by Hyungmin
 subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
     type(ProbType), intent(in) :: prob
     type(MeshType), intent(in) :: mesh
@@ -6609,7 +6576,6 @@ end subroutine SeqDesign_Chimera_Route
 ! ---------------------------------------------------------------------------------------
 
 ! Chimera sequence design
-! Last updated on Thursday 23 June 2016 by Hyungmin
 subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(inout) :: geom
@@ -6997,7 +6963,6 @@ end subroutine SeqDesign_Chimera_Sequence_Design
 ! ---------------------------------------------------------------------------------------
 
 ! Write Chimera file for strand and sequence
-! Last updated on Thuesday 1 Mar 2016 by Hyungmin
 subroutine SeqDesign_Chimera_Strand(prob, dna)
     type(ProbType), intent(in) :: prob
     type(DNAType),  intent(in) :: dna

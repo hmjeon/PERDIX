@@ -47,7 +47,6 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Generate output files and run postprocessing tools
-! Last updated on Thursday 3 Mar 2016 by Hyungmin
 subroutine Output_Generation(prob, mesh, dna)
     type(ProbType), intent(in) :: prob
     type(MeshType), intent(in) :: mesh
@@ -102,7 +101,6 @@ end subroutine Output_Generation
 ! ---------------------------------------------------------------------------------------
 
 ! Check connectivity in dna data
-! Last updated on Tuesday 19 Apr 2016 by Hyungmin
 subroutine Output_Check_Output(dna)
     type(DNAType), intent(in) :: dna
 
@@ -222,7 +220,6 @@ end subroutine Output_Check_Output
 ! ---------------------------------------------------------------------------------------
 
 ! Write information related with basepair
-! Last updated on Thursday 3 Mar 2016 by Hyungmin
 subroutine Output_Write_Basepair(prob, mesh, dna)
     type(ProbType), intent(in) :: prob
     type(MeshType), intent(in) :: mesh
@@ -272,7 +269,6 @@ end subroutine Output_Write_Basepair
 ! ---------------------------------------------------------------------------------------
 
 ! Write information related with base
-! Last updated on Thursday 3 Mar 2016 by Hyungmin
 subroutine Output_Write_Base(prob, dna)
     type(ProbType), intent(in) :: prob
     type(DNAType),  intent(in) :: dna
@@ -312,7 +308,6 @@ end subroutine Output_Write_Base
 ! ---------------------------------------------------------------------------------------
 
 ! Write cndo file for PDB atom generation and CanDo simulation
-! Last updated on Tursday 11 August 2016 by Hyungmin
 subroutine Output_Write_CanDo(prob, mesh, dna)
     type(ProbType), intent(in) :: prob
     type(MeshType), intent(in) :: mesh
@@ -495,7 +490,6 @@ end subroutine Output_Write_CanDo
 ! ---------------------------------------------------------------------------------------
 
 ! Write cndo file for PDB atom generation and CanDo simulation
-! Last updated on Tuesday 12 Apr 2016 by Hyungmin
 subroutine Output_Write_CanDo_New(prob, mesh, dna)
     type(ProbType), intent(in) :: prob
     type(MeshType), intent(in) :: mesh
@@ -585,7 +579,6 @@ end subroutine Output_Write_CanDo_New
 ! ---------------------------------------------------------------------------------------
 
 ! Write basepair and nucleotide information
-! Last updated on Tuesday 13 December 2016 by Hyungmin
 subroutine Output_Write_DNA_Info(prob, dna)
     type(ProbType), intent(in) :: prob
     type(DNAType),  intent(in) :: dna
@@ -618,7 +611,6 @@ end subroutine Output_Write_DNA_Info
 ! ---------------------------------------------------------------------------------------
 
 ! Write TecPlot input file
-! Last updated on Thursday 3 Mar 2016 by Hyungmin
 subroutine Output_Write_TecPlot(prob, mesh)
     type(ProbType), intent(in) :: prob
     type(MeshType), intent(in) :: mesh
@@ -665,7 +657,6 @@ end subroutine Output_Write_TecPlot
 ! ---------------------------------------------------------------------------------------
 
 ! Write ADINA input file
-! Last updated on Monday 15 Feb 2016 by Hyungmin
 subroutine Output_Write_ADINA(prob, mesh)
     type(ProbType), intent(in) :: prob
     type(MeshType), intent(in) :: mesh
@@ -764,7 +755,6 @@ end subroutine Output_Write_ADINA
 ! ---------------------------------------------------------------------------------------
 
 ! Make route step using Chimera
-! Last updated on Wednesday 25 May 2016 by Hyungmin
 subroutine Output_Make_Route_Step(prob, mesh, dna)
     type(ProbType), intent(in) :: prob
     type(MeshType), intent(in) :: mesh
@@ -813,7 +803,6 @@ end subroutine Output_Make_Route_Step
 ! ---------------------------------------------------------------------------------------
 
 ! Write Chimera for route progress
-! Last updated on Wednesday 25 May 2016 by Hyungmin
 subroutine Output_Chimera_Route_Step(prob, mesh, dna, stop_base, str)
     type(ProbType),  intent(in) :: prob
     type(MeshType),  intent(in) :: mesh
@@ -894,7 +883,6 @@ end subroutine Output_Chimera_Route_Step
 ! ---------------------------------------------------------------------------------------
 
 ! Make figures from route step
-! Last updated on Thursday 17 Mar 2016 by Hyungmin
 subroutine Output_Figure_Route_Step(prob, n_progress)
     type(ProbType), intent(in) :: prob
     integer,  intent(in) :: n_progress
@@ -985,7 +973,6 @@ end subroutine Output_Figure_Route_Step
 ! ---------------------------------------------------------------------------------------
 
 ! Write sequence based on cross-sectional line
-! Last updated on Thursday 7 Apr 2016 by Hyungmin
 subroutine Output_Write_Sequence_CroL(prob, mesh, dna)
     type(ProbType), intent(in) :: prob
     type(MeshType), intent(in) :: mesh
