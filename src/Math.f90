@@ -16,6 +16,7 @@ module Math
 
     implicit none
 
+    public Is_Same_Vector
     public Rotate_Vector
     public Normalize_Vector
     public Size_Vector
@@ -47,6 +48,25 @@ module Math
     double precision, parameter :: epsilon = 0.00000001d0       ! floating point comparison
 
 contains
+
+! ---------------------------------------------------------------------------------------
+
+! Compare two vectors
+function Is_Same_Vector(pos_1, pos_2) result(flag)
+    double precision, intent(in) :: pos_1(3)
+    double precision, intent(in) :: pos_2(3)
+
+    logical :: flag
+
+    flag = .false.
+
+    if( dabs(dabs(pos_1(1)) - dabs(pos_2(1))) < 0.001d0 .and. &
+        dabs(dabs(pos_1(2)) - dabs(pos_2(2))) < 0.001d0 .and. &
+        dabs(dabs(pos_1(3)) - dabs(pos_2(3))) < 0.001d0 ) then
+
+    flag = .true.
+    end if
+end function Is_Same_Vector
 
 ! ---------------------------------------------------------------------------------------
 

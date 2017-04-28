@@ -39,6 +39,7 @@ module Data_Geom
     ! Point type data structure
     type :: PointType
         double precision :: pos(3)      ! Position vector
+        double precision :: ori_pos(3)  ! Original position vector
     end type PointType
 
 ! ---------------------------------------------------------------------------------------

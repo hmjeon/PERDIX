@@ -730,14 +730,15 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
 
     double precision :: pos_1(3), pos_2(3), radius
     integer :: i, j, node, node_1, node_2
-    logical :: f_axis, f_ori
+    logical :: f_axis, f_ori, f_beveled
     character(200) :: path
 
     if(para_write_502 == .false.) return
 
     ! Set flag for drawing option
-    f_axis = para_chimera_axis
-    f_ori  = para_chimera_502_ori
+    f_axis    = para_chimera_axis
+    f_ori     = para_chimera_502_ori
+    f_beveled = .true.
 
     path = trim(prob.path_work1)//trim(prob.name_file)//"_"
     open(unit=502, file=trim(path)//trim(mode)//".bild", form="formatted")
@@ -746,16 +747,58 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     radius = para_rad_helix + para_gap_helix / 2.0d0
 
     ! Write cylinder model base on edges
-    write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
-    do i = 1, geom.n_croL
-        pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
-        pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
+    if(mode == "cyl1" .or. (mode == "cyl2" .and. f_beveled == .false.)) then
 
-        write(502, "(a$    )"), ".cylinder "
-        write(502, "(3f9.3$)"), pos_1(1:3)
-        write(502, "(3f9.3$)"), pos_2(1:3)
-        write(502, "(1f9.3 )"), radius
-    end do
+        write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
+
+        do i = 1, geom.n_croL
+
+            pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
+            pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
+
+            write(502, "(a$    )"), ".cylinder "
+            write(502, "(3f9.3$)"), pos_1(1:3)
+            write(502, "(3f9.3$)"), pos_2(1:3)
+            write(502, "(1f9.3 )"), radius
+        end do
+    else if(mode == "cyl2" .and. f_beveled == .true.) then
+
+        do i = 1, geom.n_croL
+
+            ! Draw cylinder before the beveled design
+            pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).ori_pos(1:3)
+            pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).ori_pos(1:3)
+
+            write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
+            write(502, "(a$    )"), ".cylinder "
+            write(502, "(3f9.3$)"), pos_1(1:3)
+            write(502, "(3f9.3$)"), pos_2(1:3)
+            write(502, "(1f9.3 )"), radius
+
+            ! Draw cylinder for the beveled parts
+            pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
+            pos_2(1:3) = geom.croP(geom.croL(i).poi(1)).ori_pos(1:3)
+
+            if(Is_Same_Vector(pos_1, pos_2) == .false. .and. Size_Vector(pos_1 - pos_2) > 0.35d0) then
+                write(502, "(a     )"), ".color red"
+                write(502, "(a$    )"), ".cylinder "
+                write(502, "(3f12.5$)"), pos_1(1:3)
+                write(502, "(3f12.5$)"), pos_2(1:3)
+                write(502, "(1f9.3 )"), radius
+            end if
+
+            pos_1(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
+            pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).ori_pos(1:3)
+
+            if(Is_Same_Vector(pos_1, pos_2) ==.false. .and. Size_Vector(pos_1 - pos_2) > 0.35d0) then
+                write(502, "(a     )"), ".color red"
+                write(502, "(a$    )"), ".cylinder "
+                write(502, "(3f12.5$)"), pos_1(1:3)
+                write(502, "(3f12.5$)"), pos_2(1:3)
+                write(502, "(1f9.3 )"), radius
+            end if
+        end do
+    end if
 
     ! Write connection on the section
     do i = 1, bound.n_junc
@@ -888,6 +931,11 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
         write(i, "(a)"), "* Update junction data with updated nodes"
         call Space(i, 11)
         write(i, "(a)"), "* Detailed information on junction connectivity"
+    end do
+
+    ! Save original cross-sectional points
+    do i = 1, geom.n_croP
+        geom.croP(i).ori_pos(:) = geom.croP(i).pos(:)
     end do
 
     ! Loop for junction
