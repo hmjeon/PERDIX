@@ -33,6 +33,7 @@ module Input
     public  Input_Initialization
     public  Input_Initialization_Report
 
+    private Input_Print_Parameters
     private Input_Read_Parameter
     private Input_Reset_Parameter
     private Input_Set_Parameter_Dependence
@@ -81,8 +82,6 @@ subroutine Input_Initialization(prob, geom)
         ! Running from Win32 console interface menu
         ! ==================================================
 
-        prob.run_type = "console"
-
         ! Print pre-defined problems
         call Input_Print_Problem
         read(*, *) prob.sel_prob
@@ -112,10 +111,10 @@ subroutine Input_Initialization(prob, geom)
         ! Running from a command shell with options
         ! ==================================================
 
-        arg = 1; call getarg(arg, c_prob)        ! 1st argument, problem
-        arg = 2; call getarg(arg, c_sec)         ! 2nd argument, section
-        arg = 3; call getarg(arg, c_edge_len)    ! 3rd argument, edge length
-        arg = 4; call getarg(arg, c_stap_break)  ! 4th argument, staple-break rule
+        arg = 1; call getarg(arg, c_prob)       ! 1st argument, problem
+        arg = 2; call getarg(arg, c_sec)        ! 2nd argument, section
+        arg = 3; call getarg(arg, c_edge_len)   ! 3rd argument, edge length
+        arg = 4; call getarg(arg, c_stap_break) ! 4th argument, staple-break rule
 
         !prob.name_file = trim(c_prob)
         read(c_prob,     *), n_problem
