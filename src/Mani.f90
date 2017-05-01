@@ -23,6 +23,7 @@ module Mani
 
     implicit none
 
+    public Mani_Set_View_Color
     public Space
     public Mani_To_Upper
     public Mani_Progress_Bar
@@ -41,15 +42,15 @@ module Mani
     public Mani_Copy_BaseType
     public Mani_Go_Start_Base
 
-    contains
+contains
 
 ! ---------------------------------------------------------------------------------------
 
 ! Set geometric type and view
 subroutine Mani_Set_View_Color(prob, color, view, scale, size, move_x, move_y)
     type(ProbType), intent(inout) :: prob
-    double precision, intent(in) :: scale, size, move_x, move_y
-    character(len=*), intent(in) :: view
+    double precision, intent(in)  :: scale, size, move_x, move_y
+    character(len=*), intent(in)  :: view
     integer, intent(in) :: color(3)
 
     prob.color  = color
