@@ -1,11 +1,11 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                                   Module - Math
+!                                       Math
 !
-!                                                                    Updated : 2017/03/27
+!                                                                    Updated : 2017/04/29
 !
-! Comments: This module is for the manipulation of vectors and matrix.
+! Comments: This module is to define mathematical function for vectors and matrix.
 !
 ! Script written by Hyungmin Jun (hyungminjun@outlook.com)
 ! Copyright Hyungmin Jun, 2017. All rights reserved.
@@ -16,16 +16,18 @@ module Math
 
     implicit none
 
+    double precision, parameter :: pi  = 3.141592653589793d0
+    double precision, parameter :: eps = 0.0000001d0
+
+    public Find_Intersection
+    public Check_Intersection
+    public Find_Cloest_Point
     public Is_Same_Vector
     public Rotate_Vector
-    public Normalize_Vector
-    public Size_Vector
-    public Cross_Product_General
-    public Cross_Product_Exception
-    public Cross_Product
-    public Cross_Product_Sub
-    public Inverse_Matrix
-    public Determinant_Matrix
+    public Normalize
+    public Norm
+    public Cross
+    public Inverse_22
 
     public Find_Minimum
     public Swap
@@ -44,10 +46,121 @@ module Math
         module procedure Reallocate_Int_2D
     end interface
 
-    double precision, parameter :: pi      = 3.1415926535898d0  ! pi
-    double precision, parameter :: epsilon = 0.00000001d0       ! floating point comparison
+    public Math_Determinant
+    public Math_Triangularization
+    public Math_Get_Low_Tri
+    public Math_Set_Entity_One
 
 contains
+
+! ---------------------------------------------------------------------------------------
+
+! Find intersection point in two 3D vectors
+! http://mathforum.org/library/drmath/view/63719.html
+function Find_Intersection(a1, a2, b1, b2) result(pos)
+    double precision, intent(in) :: a1(3)
+    double precision, intent(in) :: a2(3)
+    double precision, intent(in) :: b1(3)
+    double precision, intent(in) :: b2(3)
+
+    double precision :: pos(3), mat(2,2), invmat(2,2), t1, t2
+    logical :: ok
+
+    ok = Check_Intersection(a1, a2, b1, b2)
+    print *, ok
+
+    mat(1,:) = [a2(1) - a1(1), -(b2(1)-b1(1))]
+    mat(2,:) = [a2(2) - a1(2), -(b2(2)-b1(2))]
+
+    invmat = Inverse_22(mat)
+
+    t1 = invmat(1,1) * (b1(1) - a1(1)) + invmat(1,2) * (b1(2) - a1(2))
+    t2 = invmat(2,1) * (b1(1) - a1(1)) + invmat(2,2) * (b1(2) - a1(2))
+
+    pos(1) = a1(1) + (a2(1) - a1(1)) * t1
+    pos(2) = a1(2) + (a2(2) - a1(2)) * t1
+    pos(3) = a1(3) + (a2(3) - a1(3)) * t1
+end function Find_Intersection
+
+! ---------------------------------------------------------------------------------------
+
+! Check intersection between two 3D vectors
+! http://stackoverflow.com/questions/2316490/the-algorithm-to-find-the-point-of-intersection-of-two-3d-line-segment
+function Check_Intersection(a1, a2, b1, b2) result(ok)
+    double precision, intent(in) :: a1(3)
+    double precision, intent(in) :: a2(3)
+    double precision, intent(in) :: b1(3)
+    double precision, intent(in) :: b2(3)
+
+    double precision :: da(3), db(3), dc(3)
+    logical :: ok
+
+    da = a2 - a1
+    db = b2 - b1
+    dc = b1 - a1
+
+    if(dabs(dot_product(dc, Cross(da, db))) > 0.00001d0) then
+        ok = .true.
+    else
+        ok = .false.
+    end if
+end function Check_Intersection
+
+! ---------------------------------------------------------------------------------------
+
+! Distance between lines
+! http://geomalgorithms.com/a07-_distance.html#dist3D_Segment_to_Segment()
+function Find_Cloest_Point(a1, a2, b1, b2) result(pos)
+    double precision, intent(in) :: a1(3)
+    double precision, intent(in) :: a2(3)
+    double precision, intent(in) :: b1(3)
+    double precision, intent(in) :: b2(3)
+
+    double precision, parameter :: SMALL_NUM = 0.00000001d0
+    double precision :: pos_u(3), pos_v(3), pos(3), u(3), v(3), w(3), dp(3)
+    double precision :: a, b, c, d, e, dd, sc, tc, dist
+
+    u = a2(1:3) - a1(1:3)
+    v = b2(1:3) - b1(1:3)
+    w = a1(1:3) - b1(1:3)
+    a = dot_product(u, u)   ! Always >= 0
+    b = dot_product(u, v)
+    c = dot_product(v, v)   ! Always >= 0
+    d = dot_product(u, w)
+    e = dot_product(v, w)
+
+    ! Always >= 0
+    dd = a*c - b*b
+
+    ! Compute the line parameters of the two closest points
+    if(dd < SMALL_NUM) then
+
+        ! Lines are almost parallel
+        sc = 0.0d0
+
+        ! Use the largest denominator
+        if(b > c) then
+            tc = d / b
+        else
+            tc = e / c
+        end if
+    else
+
+        sc = (b*e - c*d) / dd
+        tc = (a*e - b*d) / dd
+    end if
+
+    ! Get the difference of the two closest points
+    dP = w + (sc * u) - (tc * v)
+
+    ! The closest distance
+    dist = Norm(dP)
+
+    ! The position at the closet point
+    pos_u = a1 + u * sc
+    pos_v = b1 + v * tc
+    pos   = 0.5d0 * (pos_u + pos_v)
+end function Find_Cloest_Point
 
 ! ---------------------------------------------------------------------------------------
 
@@ -60,9 +173,9 @@ function Is_Same_Vector(pos_1, pos_2) result(flag)
 
     flag = .false.
 
-    if( dabs(dabs(pos_1(1)) - dabs(pos_2(1))) < 0.001d0 .and. &
-        dabs(dabs(pos_1(2)) - dabs(pos_2(2))) < 0.001d0 .and. &
-        dabs(dabs(pos_1(3)) - dabs(pos_2(3))) < 0.001d0 ) then
+    if( dabs(dabs(pos_1(1)) - dabs(pos_2(1))) < 0.00001d0 .and. &
+        dabs(dabs(pos_1(2)) - dabs(pos_2(2))) < 0.00001d0 .and. &
+        dabs(dabs(pos_1(3)) - dabs(pos_2(3))) < 0.00001d0 ) then
 
     flag = .true.
     end if
@@ -105,7 +218,7 @@ subroutine Rotate_Vector(vec, pseudo, angle)
     vec_new(2) = R(2,1)*vec(1) + R(2,2)*vec(2) + R(2,3)*vec(3)
     vec_new(3) = R(3,1)*vec(1) + R(3,2)*vec(2) + R(3,3)*vec(3)
 
-    vec_new = Normalize_Vector(vec_new)
+    vec_new = Normalize(vec_new)
 
     vec(1:3) = vec_new(1:3)
 end subroutine Rotate_Vector
@@ -113,134 +226,69 @@ end subroutine Rotate_Vector
 ! ---------------------------------------------------------------------------------------
 
 ! Size vector
-function Size_Vector(vec) result(size)
+function Norm(vec) result(size)
     double precision, intent(in) :: vec(3)
 
     double precision :: size
 
     size = dsqrt(vec(1)**2.0d0 + vec(2)**2.0d0 + vec(3)**2.0d0)
-end function Size_Vector
+end function Norm
 
 ! ---------------------------------------------------------------------------------------
 
 ! Normalize vector
-function Normalize_Vector(vec) result(vector)
+function Normalize(vec) result(vector)
     double precision, intent(in) :: vec(3)
 
     double precision :: length, vector(3)
 
     length = dsqrt(vec(1)**2.0d0 + vec(2)**2.0d0 + vec(3)**2.0d0)
     vector = vec(1:3) / length
-end function Normalize_Vector
+end function Normalize
 
 ! ---------------------------------------------------------------------------------------
 
 ! Cross product
-subroutine Cross_Product_General(vec1, vec2, vec_cross)
-    double precision, intent(in)  :: vec1(3), vec2(3)
-    double precision, intent(out) :: vec_cross(3)
+function Cross(vec1, vec2) result(vec_cross)
+    double precision, intent(in) :: vec1(3), vec2(3)
+
+    double precision :: vec_cross(3)
 
     vec_cross(1) = vec1(2)*vec2(3) - vec1(3)*vec2(2)
     vec_cross(2) = vec1(3)*vec2(1) - vec1(1)*vec2(3)
     vec_cross(3) = vec1(1)*vec2(2) - vec1(2)*vec2(1)
-end subroutine Cross_Product_General
-
-! ---------------------------------------------------------------------------------------
-
-! Cross product
-function Cross_Product_Exception(vec1, vec2) result(cross)
-    double precision, intent(in) :: vec1(3), vec2(3)
-
-    double precision :: cross(3)
-
-    ! If vec1 is equal to ey
-    if( dabs(vec1(1)) == dabs(vec2(1)) .and. dabs(vec1(2)) == dabs(vec2(2)) .and. dabs(vec1(3)) == dabs(vec2(3)) ) then
-        cross(1) = 0.0d0
-        cross(2) = 0.0d0
-        cross(3) = 1.0d0
-    else
-        cross(1) = vec1(2)*vec2(3) - vec1(3)*vec2(2)
-        cross(2) = vec1(3)*vec2(1) - vec1(1)*vec2(3)
-        cross(3) = vec1(1)*vec2(2) - vec1(2)*vec2(1)
-    end if
-end function Cross_Product_Exception
-
-! ---------------------------------------------------------------------------------------
-
-! Cross product
-function Cross_Product(vec1, vec2) result(cross)
-    double precision, intent(in)  :: vec1(3), vec2(3)
-
-    double precision :: cross(3)
-
-    cross(1) = vec1(2)*vec2(3) - vec1(3)*vec2(2)
-    cross(2) = vec1(3)*vec2(1) - vec1(1)*vec2(3)
-    cross(3) = vec1(1)*vec2(2) - vec1(2)*vec2(1)
-end function Cross_Product
-
-! ---------------------------------------------------------------------------------------
-
-! Cross product
-subroutine Cross_Product_Sub(vec1, vec2, vec3)
-    double precision, intent(in)    :: vec1(3), vec2(3)
-    double precision, intent(inout) :: vec3(3)
-
-    vec3(1) = vec1(2)*vec2(3) - vec1(3)*vec2(2)
-    vec3(2) = vec1(3)*vec2(1) - vec1(1)*vec2(3)
-    vec3(3) = vec1(1)*vec2(2) - vec1(2)*vec2(1)
-end subroutine Cross_Product_Sub
+end function Cross
 
 ! ---------------------------------------------------------------------------------------
 
 ! Inverse matrix
-function Inverse_Matrix(mat) result(inv_mat)
-    double precision, intent(in) :: mat(3, 3)
+function Inverse_22(mat) result (inv_mat)
+    double precision, intent(in)  :: mat(2,2)
 
-    double precision :: det, inv_mat(3, 3)
+    double precision :: inv_mat(2,2), cofactor(2,2), det
 
-    inv_mat(1,1) = mat(2,2)*mat(3,3) - mat(2,3)*mat(3,2)
-    inv_mat(1,2) = mat(1,3)*mat(3,2) - mat(1,2)*mat(3,3)
-    inv_mat(1,3) = mat(1,2)*mat(2,3) - mat(1,3)*mat(2,2)
-    inv_mat(2,1) = mat(2,3)*mat(3,1) - mat(2,1)*mat(3,3)
-    inv_mat(2,2) = mat(1,1)*mat(3,3) - mat(1,3)*mat(3,1)
-    inv_mat(2,3) = mat(1,3)*mat(2,1) - mat(1,1)*mat(2,3)
-    inv_mat(3,1) = mat(2,1)*mat(3,2) - mat(2,2)*mat(3,1)
-    inv_mat(3,2) = mat(1,2)*mat(3,1) - mat(1,1)*mat(3,2)
-    inv_mat(3,3) = mat(1,1)*mat(2,2) - mat(1,2)*mat(2,1)
+    det = mat(1,1)*mat(2,2) - mat(1,2)*mat(2,1)
 
-    det = mat(1,1) * (mat(2,2)*mat(3,3) - mat(2,3)*mat(3,2)) &
-        - mat(1,2) * (mat(2,1)*mat(3,3) - mat(2,3)*mat(3,1)) &
-        + mat(1,3) * (mat(2,1)*mat(3,2) - mat(2,2)*mat(3,1))
+    cofactor(1,1) = +mat(2,2)
+    cofactor(1,2) = -mat(2,1)
+    cofactor(2,1) = -mat(1,2)
+    cofactor(2,2) = +mat(1,1)
 
-    inv_mat(:,:) = inv_mat(:,:) / det
-end function Inverse_Matrix
-
-! ---------------------------------------------------------------------------------------
-
-! Determinant
-function Determinant_Matrix(mat) result(deter)
-    double precision, intent(in)  :: mat(3,3)
-
-    double precision :: deter
-
-    deter &
-        = mat(1,1) * (mat(2,2)*mat(3,3) - mat(2,3)*mat(3,2)) &
-        - mat(1,2) * (mat(2,1)*mat(3,3) - mat(2,3)*mat(3,1)) &
-        + mat(1,3) * (mat(2,1)*mat(3,2) - mat(2,2)*mat(3,1))
-end function Determinant_Matrix
+    inv_mat = transpose(cofactor) / det
+end function Inverse_22
 
 ! ---------------------------------------------------------------------------------------
 
 ! Return the location of the minimum in the section between start and end
 function Find_Minimum(array, start, end) result(value)
-    integer, dimension(1:), intent(in) :: array
-    integer,                intent(in) :: start
-    integer,                intent(in) :: end
+    integer, intent(in) :: array(:)
+    integer, intent(in) :: start
+    integer, intent(in) :: end
 
     integer :: i, min, loc, value
 
-    min = array(start)  ! assume the first is the min
-    loc = start			! record its position
+    min = array(start)  ! Assume the first is the min
+    loc = start         ! Record its position
 
     ! Start with next elements
     do i = start+1, end
@@ -276,8 +324,8 @@ end subroutine Swap
 
 ! Receives an array() and sorts it into ascending order
 subroutine Sort(array, size)
-    integer, dimension(1:), intent(inout) :: array
-    integer,                intent(in)    :: size
+    integer, intent(inout) :: array(:)
+    integer, intent(in)    :: size
 
     integer :: i, loc
 
@@ -296,9 +344,9 @@ end subroutine Sort
 
 ! Receives an array() and sorts it into ascending order
 subroutine Sort2(array1, array2, size)
-    integer, dimension(1:), intent(inout) :: array1
-    integer, dimension(1:), intent(inout) :: array2
-    integer,                intent(in)    :: size
+    integer, intent(inout) :: array1(:)
+    integer, intent(inout) :: array2(:)
+    integer, intent(in)    :: size
 
     integer :: i, loc
 
@@ -309,8 +357,8 @@ subroutine Sort2(array1, array2, size)
         loc = Find_Minimum(array1, i, size)
 
         ! Swap this and the minimum
-        call  Swap(array1(i), array1(loc))
-        call  Swap(array2(i), array2(loc))
+        call Swap(array1(i), array1(loc))
+        call Swap(array2(i), array2(loc))
     end do
 end subroutine Sort2
 
@@ -385,7 +433,7 @@ subroutine Reallocate_Int_1D(array, num_new)
     integer, allocatable, intent(inout) :: array(:)
     integer, intent(in) :: num_new
 
-    integer, allocatable, dimension(:) :: temp
+    integer, allocatable :: temp(:)
     integer :: num_old
 
     num_old = SIZE(array)
@@ -405,7 +453,7 @@ subroutine Reallocate_Int_2D(array, num_i_new, num_j_new)
     integer, intent(in) :: num_i_new
     integer, intent(in) :: num_j_new
 
-    integer, allocatable, dimension(:,:) :: temp
+    integer, allocatable :: temp(:,:)
     integer :: num_i_old, num_j_old
 
     num_i_old = ubound(array, 1)

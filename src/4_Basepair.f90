@@ -128,7 +128,7 @@ subroutine Basepair_Count_Basepair(prob, geom, mesh)
         pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
         pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
 
-        length = Size_Vector(pos_2(1:3) - pos_1(1:3))
+        length = Norm(pos_2(1:3) - pos_1(1:3))
         count  = nint(length / para_dist_bp)
 
         ! Increase the number of nodes and conns
@@ -191,7 +191,7 @@ subroutine Basepair_Generate_Basepair(geom, bound, mesh)
 
         pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
         pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
-        length     = Size_Vector(pos_2(:) - pos_1(:))
+        length     = Norm(pos_2(:) - pos_1(:))
         count      = nint(length / para_dist_bp)
 
         ! Set the first base pair position
@@ -779,23 +779,33 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
             pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
             pos_2(1:3) = geom.croP(geom.croL(i).poi(1)).ori_pos(1:3)
 
-            if(Is_Same_Vector(pos_1, pos_2) == .false. .and. Size_Vector(pos_1 - pos_2) > 0.35d0) then
-                write(502, "(a     )"), ".color red"
-                write(502, "(a$    )"), ".cylinder "
+            if(Is_Same_Vector(pos_1, pos_2) == .false.) then
+                if(Norm(pos_1 - pos_2) > 0.4d0) then
+                    write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/200.0d0
+                    write(502, "(a)"), ".color orange"
+                else
+                    write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
+                end if
+                write(502, "(a$     )"), ".cylinder "
                 write(502, "(3f12.5$)"), pos_1(1:3)
                 write(502, "(3f12.5$)"), pos_2(1:3)
-                write(502, "(1f9.3 )"), radius
+                write(502, "(1f9.3  )"), radius
             end if
 
             pos_1(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
             pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).ori_pos(1:3)
 
-            if(Is_Same_Vector(pos_1, pos_2) ==.false. .and. Size_Vector(pos_1 - pos_2) > 0.35d0) then
-                write(502, "(a     )"), ".color red"
-                write(502, "(a$    )"), ".cylinder "
+            if(Is_Same_Vector(pos_1, pos_2) ==.false.) then
+                if(Norm(pos_1 - pos_2) > 0.4d0) then
+                    write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/200.0d0
+                    write(502, "(a)"), ".color orange"
+                else
+                    write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
+                end if
+                write(502, "(a$     )"), ".cylinder "
                 write(502, "(3f12.5$)"), pos_1(1:3)
                 write(502, "(3f12.5$)"), pos_2(1:3)
-                write(502, "(1f9.3 )"), radius
+                write(502, "(1f9.3  )"), radius
             end if
         end do
     end if
@@ -1395,8 +1405,8 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
     ! x  => Length
     !
     ! Equations
-    ! 1. b = Size_Vector(node_in-node_out)
-    ! 2. c = Size_Vector(node_in_down-node_out_up)
+    ! 1. b = Norm(node_in-node_out)
+    ! 2. c = Norm(node_in_down-node_out_up)
     ! 3. ha/x = hb/y
     ! 4. x^2  = ha^2 + (1/2(b-a))^2
     ! 5. y^2  = hb^2 + (1/2(c-b))^2
@@ -1411,15 +1421,15 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
     ! Set inward and outward vector and find angle bewteen them
     vec_in(1:3)  = mesh.node(node_in).pos  - mesh.node(node_in_dn).pos
     vec_out(1:3) = mesh.node(node_out).pos - mesh.node(node_out_up).pos
-    angle        = datan2(Size_Vector(Cross_Product(vec_in, vec_out)), dot_product(vec_in, vec_out))
+    angle        = datan2(Norm(Cross(vec_in, vec_out)), dot_product(vec_in, vec_out))
 
     ! 2nd cosine law to find the length, a
     len_side = para_rad_helix + para_gap_helix / 2.0d0
     a = dsqrt(2.0d0*len_side**2.0d0 - 2.0d0*len_side*len_side*dcos(pi-angle))
 
     ! Solving the above equation
-    b = Size_Vector(mesh.node(node_in).pos    - mesh.node(node_out).pos)
-    c = Size_Vector(mesh.node(node_in_dn).pos - mesh.node(node_out_up).pos)
+    b = Norm(mesh.node(node_in).pos    - mesh.node(node_out).pos)
+    c = Norm(mesh.node(node_in_dn).pos - mesh.node(node_out_up).pos)
     y = para_dist_bp
 
     ! If two nodes are close, skip this subroutine
@@ -1430,7 +1440,7 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
         ! If the length of the multiple line in node_in is changed
         poi_1  = geom.croL(mesh.node(node_in).croL).poi(1)
         poi_2  = geom.croL(mesh.node(node_in).croL).poi(2)
-        length = Size_Vector(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
+        length = Norm(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
         if(prob.n_bp_edge-2 /= nint(length / para_dist_bp)) then
             mesh.node(node_in).conn = 3
         end if
@@ -1438,7 +1448,7 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
         ! If the length of the multiple line in node_out is changed
         poi_1  = geom.croL(mesh.node(node_out).croL).poi(1)
         poi_2  = geom.croL(mesh.node(node_out).croL).poi(2)
-        length = Size_Vector(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
+        length = Norm(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
         if(prob.n_bp_edge-2 /= nint(length / para_dist_bp)) then
             mesh.node(node_out).conn = 3
         end if
@@ -1472,7 +1482,7 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
         ! If the length of the multiple line in node_in is changed
         poi_1  = geom.croL(mesh.node(node_in).croL).poi(1)
         poi_2  = geom.croL(mesh.node(node_in).croL).poi(2)
-        length = Size_Vector(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
+        length = Norm(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
         if(prob.n_bp_edge-2 /= nint(length / para_dist_bp)) then
             mesh.node(node_in).conn = 3
         end if
@@ -1480,7 +1490,7 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
         ! If the length of the multiple line in node_out is changed
         poi_1  = geom.croL(mesh.node(node_out).croL).poi(1)
         poi_2  = geom.croL(mesh.node(node_out).croL).poi(2)
-        length = Size_Vector(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
+        length = Norm(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
         if(prob.n_bp_edge-2 /= nint(length / para_dist_bp)) then
             mesh.node(node_out).conn = 3
         end if
@@ -2109,7 +2119,7 @@ subroutine Basepair_Make_Sticky_End(geom, bound, mesh)
                 mesh.node(mesh.n_node).ghost = t_node(node).ghost
 
                 pos(1:3) = t_node(node).pos + (t_node(node).pos - t_node(pre).pos) &
-                    / Size_Vector(t_node(node).pos - t_node(pre).pos) * dble(para_dist_bp)
+                    / Norm(t_node(node).pos - t_node(pre).pos) * dble(para_dist_bp)
                 mesh.node(mesh.n_node).pos(1:3) = pos(1:3)
 
                 ! Set element connectivity for the newly added node
@@ -2233,9 +2243,9 @@ subroutine Basepair_Chimera_Mesh(prob, geom, mesh)
         do i = 1, geom.n_iniL
             pos_1(1:3) = geom.modP(geom.iniL(i).poi(1)).pos(1:3)
             pos_2(1:3) = geom.modP(geom.iniL(i).poi(2)).pos(1:3)
-            pos_c(1:3) = Normalize_Vector(pos_2(1:3) - pos_1(1:3))
+            pos_c(1:3) = Normalize(pos_2(1:3) - pos_1(1:3))
 
-            length = Size_Vector(pos_2(1:3) - pos_1(1:3))
+            length = Norm(pos_2(1:3) - pos_1(1:3))
             iter   = length / 2
 
             do j = 1, iter * 2
@@ -2335,9 +2345,9 @@ subroutine Basepair_Chimera_Cross_Geometry(prob, geom)
         do i = 1, geom.n_iniL
             pos_1(1:3) = geom.modP(geom.iniL(i).poi(1)).pos(1:3)
             pos_2(1:3) = geom.modP(geom.iniL(i).poi(2)).pos(1:3)
-            pos_c(1:3) = Normalize_Vector(pos_2(1:3) - pos_1(1:3))
+            pos_c(1:3) = Normalize(pos_2(1:3) - pos_1(1:3))
 
-            length = Size_Vector(pos_2(1:3) - pos_1(1:3))
+            length = Norm(pos_2(1:3) - pos_1(1:3))
             iter   = length / 2
 
             do j = 1, iter * 2
@@ -2478,7 +2488,7 @@ subroutine Basepair_Write_Edge_Length(prob, geom)
     do i = 1, size(geom.croL)
         poi_1  = geom.croL(i).poi(1)
         poi_2  = geom.croL(i).poi(2)
-        length = Size_Vector(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
+        length = Norm(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
         n_bp   = nint(length / para_dist_bp) + 1
         tot_bp = tot_bp + n_bp
 

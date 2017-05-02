@@ -448,7 +448,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
         ! Find orientation
         vec_a(1:3) = geom.iniP(geom.face(i).poi(1)).pos - pos_c
         vec_b(1:3) = geom.iniP(geom.face(i).poi(2)).pos - pos_c
-        vec(1:3)   = Normalize_Vector(Cross_Product(vec_a, vec_b))
+        vec(1:3)   = Normalize(Cross(vec_a, vec_b))
 
         ! Draw the orientation of the outward vector of the face
         write(301, "(a     )"), ".color salmon"
@@ -472,7 +472,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
             pos_1(1:3)  = geom.iniP(point_1).pos(1:3)
             pos_2(1:3)  = geom.iniP(point_2).pos(1:3)
             pos_c(1:3)  = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
-            vec(1:3)    = Normalize_Vector(pos_2(1:3) - pos_1(1:3))
+            vec(1:3)    = Normalize(pos_2(1:3) - pos_1(1:3))
             pos_c2(1:3) = (6.0d0*pos_2 + 4.0d0*pos_1) / (6.0d0 + 4.0d0)
             pos_c1(1:3) = (6.0d0*pos_1 + 4.0d0*pos_2) / (6.0d0 + 4.0d0)
 
@@ -492,7 +492,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
             ! Write the positive(left) sign at point 1 from line connectivity
             if(geom.iniL(i).neiL(1, 1) /= -1) then
                 vec(1:3) = geom.iniP(geom.iniL(i).neiP(1, 1)).pos - pos_c1
-                vec(1:3) = Normalize_Vector(vec)
+                vec(1:3) = Normalize(vec)
                 write(301, "(a$   )"), ".cmov "
                 write(301, "(3f9.3)"), pos_c1(1:3) + 2.0d0*vec(1:3)
                 write(301, "(a    )"), ".color red"
@@ -502,7 +502,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
             ! Write the negative(right) sign at point 1 from line connectivity
             if(geom.iniL(i).neiL(1, 2) /= -1) then
                 vec(1:3) = geom.iniP(geom.iniL(i).neiP(1, 2)).pos - pos_c1
-                vec(1:3) = Normalize_Vector(vec)
+                vec(1:3) = Normalize(vec)
                 write(301, "(a$   )"), ".cmov "
                 write(301, "(3f9.3)"), pos_c1(1:3) + 2.0d0*vec(1:3)
                 write(301, "(a    )"), ".color red"
@@ -512,7 +512,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
             ! Write the positive(left) sign at point 2 from line connectivity
             if(geom.iniL(i).neiL(2, 1) /= -1) then
                 vec(1:3) = geom.iniP(geom.iniL(i).neiP(2, 1)).pos - pos_c2
-                vec(1:3) = Normalize_Vector(vec)
+                vec(1:3) = Normalize(vec)
                 write(301, "(a$   )"), ".cmov "
                 write(301, "(3f9.3)"), pos_c2(1:3) + 2.0d0*vec(1:3)
                 write(301, "(a    )"), ".color red"
@@ -522,7 +522,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
             ! Write the negative(right) sign at point 2 from line connectivity
             if(geom.iniL(i).neiL(2, 2) /= -1) then
                 vec(1:3) = geom.iniP(geom.iniL(i).neiP(2, 2)).pos - pos_c2
-                vec(1:3) = Normalize_Vector(vec)
+                vec(1:3) = Normalize(vec)
                 write(301, "(a$   )"), ".cmov "
                 write(301, "(3f9.3)"), pos_c2(1:3) + 2.0d0*vec(1:3)
                 write(301, "(a    )"), ".color red"
@@ -730,7 +730,7 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
     poi_2 = geom.iniL(line).poi(2)
     pos_1(1:3) = geom.iniP(poi_1).pos(1:3)
     pos_2(1:3) = geom.iniP(poi_2).pos(1:3)
-    local(1,:) = Normalize_Vector(pos_2 - pos_1)
+    local(1,:) = Normalize(pos_2 - pos_1)
 
     ! ==================================================
     !
@@ -743,7 +743,7 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
         ! Find outward vector of the face 1
         vec_a(1:3) = geom.iniP(geom.face(face1).poi(2)).pos - geom.iniP(geom.face(face1).poi(1)).pos
         vec_b(1:3) = geom.iniP(geom.face(face1).poi(3)).pos - geom.iniP(geom.face(face1).poi(2)).pos
-        vec_face1(1:3) = Normalize_Vector(Cross_Product(vec_a, vec_b))
+        vec_face1(1:3) = Normalize(Cross(vec_a, vec_b))
     else
 
         ! If the neighbor face 1 is boundary
@@ -756,7 +756,7 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
         ! Find outward vector of the face 2
         vec_a(1:3) = geom.iniP(geom.face(face2).poi(2)).pos - geom.iniP(geom.face(face2).poi(1)).pos
         vec_b(1:3) = geom.iniP(geom.face(face2).poi(3)).pos - geom.iniP(geom.face(face2).poi(2)).pos
-        vec_face2(1:3) = Normalize_Vector(Cross_Product(vec_a, vec_b))
+        vec_face2(1:3) = Normalize(Cross(vec_a, vec_b))
     else
 
         ! If the neighbor face 2 is boundary
@@ -769,26 +769,26 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
     else
         local(2,:) = 0.5d0*(vec_face1 + vec_face2)
     end if
-    local(2,:) = Normalize_Vector(local(2,:))
+    local(2,:) = Normalize(local(2,:))
 
     ! ==================================================
     !
     ! Set third local vector, t3
     !
     ! ==================================================
-    local(3,:) = Cross_Product(local(1,:), local(2,:))
-    local(3,:) = Normalize_Vector(local(3,:))
+    local(3,:) = Cross(local(1,:), local(2,:))
+    local(3,:) = Normalize(local(3,:))
 
     ! Check local vector
-    if(dabs(Size_Vector(local(1, 1:3)) - 1.0d0) > epsilon) then
+    if(dabs(Norm(local(1, 1:3)) - 1.0d0) > eps) then
         write(0, "(a$)"), "Error - The t1 local vector was not defined : "
         write(0, "(a$)"), "ModGeo_Set_Local_Vectors"
         stop
-    else if(dabs(Size_Vector(local(2, 1:3)) - 1.0d0) > epsilon) then
+    else if(dabs(Norm(local(2, 1:3)) - 1.0d0) > eps) then
         write(0, "(a$)"), "Error - The t2 local vector was not defined : "
         write(0, "(a$)"), "ModGeo_Set_Local_Vectors"
         stop
-    else if(dabs(Size_Vector(local(3, 1:3)) - 1.0d0) > epsilon) then
+    else if(dabs(Norm(local(3, 1:3)) - 1.0d0) > eps) then
         write(0, "(a$)"), "Error - The t3 local vector was not defined : "
         write(0, "(a$)"), "ModGeo_Set_Local_Vectors"
         stop
@@ -1159,7 +1159,7 @@ function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
             end if
 
             ! Total length
-            length = Size_Vector(pos_opp(1:3) - pos_cur(1:3))
+            length = Norm(pos_opp(1:3) - pos_cur(1:3))
 
             ! Find modified position due to off-set distance
             vec_a(1:3) = bound.junc(i).gap * pos_opp(1:3)
@@ -1176,12 +1176,12 @@ function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
         poi_2 = geom.iniL(i).poi(2)
 
         ! Length of the modified edge
-        length = Size_Vector(pos_modP(poi_1,:) - pos_modP(poi_2,:))
+        length = Norm(pos_modP(poi_1,:) - pos_modP(poi_2,:))
 
         ! Find modified edge with minimum length
         if(i == 1 .or. min_length > length) then
             min_length = length
-            cur_length = Size_Vector(geom.modP(poi_1).pos - geom.modP(poi_2).pos)
+            cur_length = Norm(geom.modP(poi_1).pos - geom.modP(poi_2).pos)
             diff       = cur_length - min_length
         end if
     end do
@@ -1270,7 +1270,7 @@ subroutine ModGeo_Set_Angle_Junction(geom, bound)
             vec_2(1:3) = pos_next(1:3) - pos_cur(1:3)
 
             ! Find angle between two vectors in 3D
-            ang = datan2(Size_Vector(Cross_Product(vec_1, vec_2)), dot_product(vec_1, vec_2))
+            ang = datan2(Norm(Cross(vec_1, vec_2)), dot_product(vec_1, vec_2))
 
             junc(poi_c).n_arm = junc(poi_c).n_arm + 1
             junc(poi_c).ang(junc(poi_c).n_arm) = ang
@@ -1425,7 +1425,7 @@ subroutine ModGeo_Chimera_Sep_Geometry(prob, geom, mode)
             pos_1(1:3) = geom.modP(geom.iniL(i).poi(1)).pos(1:3)
             pos_2(1:3) = geom.modP(geom.iniL(i).poi(2)).pos(1:3)
             pos_c(1:3) = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
-            length     = Size_Vector(pos_2 - pos_1)
+            length     = Norm(pos_2 - pos_1)
 
             write(303, "(a$   )"), ".cmov "
             write(303, "(3f9.3)"), pos_c(1:3) + 0.4d0
@@ -1611,7 +1611,7 @@ subroutine ModGeo_Set_Gap_Junction(geom, bound)
             end if
 
             ! Original edge length
-            length = Size_Vector(pos_opp(1:3) - pos_cur(1:3))
+            length = Norm(pos_opp(1:3) - pos_cur(1:3))
 
             ! Find modified position vector
             vec_a(1:3) = dist_gap*pos_opp(1:3)
@@ -1629,7 +1629,7 @@ subroutine ModGeo_Set_Gap_Junction(geom, bound)
     do i = 1, geom.n_iniL
         poi_1  = geom.iniL(i).poi(1)
         poi_2  = geom.iniL(i).poi(2)
-        length = Size_Vector(geom.modP(poi_1).pos - geom.modP(poi_2).pos)
+        length = Norm(geom.modP(poi_1).pos - geom.modP(poi_2).pos)
         n_bp   = nint(length / para_dist_bp) + 1
         remain = dmod(length, para_dist_bp)
 
@@ -1663,7 +1663,7 @@ subroutine ModGeo_Set_Const_Geometric_Ratio(geom)
     do i = 1, geom.n_iniL
         iniP1  = geom.iniL(i).poi(1)
         iniP2  = geom.iniL(i).poi(2)
-        length = Size_Vector(geom.modP(iniP1).pos - geom.modP(iniP2).pos)
+        length = Norm(geom.modP(iniP1).pos - geom.modP(iniP2).pos)
 
         ! Find reference edge
         if(i == 1 .or. ref_length > length) then
@@ -1677,8 +1677,8 @@ subroutine ModGeo_Set_Const_Geometric_Ratio(geom)
     modP2   = geom.iniL(ref_edge).poi(2)
     iniP1   = geom.iniL(ref_edge).iniP(1)
     iniP2   = geom.iniL(ref_edge).iniP(2)
-    len_ini = Size_Vector(geom.iniP(iniP1).pos - geom.iniP(iniP2).pos)
-    len_mod = Size_Vector(geom.modP(modP1).pos - geom.modP(modP2).pos)
+    len_ini = Norm(geom.iniP(iniP1).pos - geom.iniP(iniP2).pos)
+    len_mod = Norm(geom.modP(modP1).pos - geom.modP(modP2).pos)
     len_ref = len_ini
     ratio   = (len_mod + magic) / len_ini
 
@@ -1692,17 +1692,17 @@ subroutine ModGeo_Set_Const_Geometric_Ratio(geom)
         pos_1(1:3) = geom.iniP(iniP1).pos(1:3)
         pos_2(1:3) = geom.iniP(iniP2).pos(1:3)
         pos_c(1:3) = 0.5d0 * (pos_1 + pos_2)
-        len_ini    = Size_Vector(geom.iniP(iniP1).pos - geom.iniP(iniP2).pos)
-        len_mod    = Size_Vector(geom.modP(modP1).pos - geom.modP(modP2).pos)
+        len_ini    = Norm(geom.iniP(iniP1).pos - geom.iniP(iniP2).pos)
+        len_mod    = Norm(geom.modP(modP1).pos - geom.modP(modP2).pos)
 
-        vec_a(1:3) = Normalize_Vector(pos_1(1:3) - pos_c(1:3))
-        vec_b(1:3) = Normalize_Vector(pos_2(1:3) - pos_c(1:3))
+        vec_a(1:3) = Normalize(pos_1(1:3) - pos_c(1:3))
+        vec_b(1:3) = Normalize(pos_2(1:3) - pos_c(1:3))
 
         ! Recalculate point position
         geom.modP(modP1).pos(1:3) = pos_c(1:3) + vec_a(1:3) * (ratio * len_ini / 2.0d0 - magic/2.0d0 + 0.05d0)
         geom.modP(modP2).pos(1:3) = pos_c(1:3) + vec_b(1:3) * (ratio * len_ini / 2.0d0 - magic/2.0d0 + 0.05d0)
 
-        len_new = Size_Vector(geom.modP(modP1).pos - geom.modP(modP2).pos)
+        len_new = Norm(geom.modP(modP1).pos - geom.modP(modP2).pos)
 
         ! Print progress
         call space(0, 11)

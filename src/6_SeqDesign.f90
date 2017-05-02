@@ -4692,7 +4692,7 @@ subroutine SeqDesign_Write_Strand(prob, geom, mesh, dna)
                 end_iniL = mesh.node(dna.top(base).node).iniL
                 end_sec  = mesh.node(dna.top(base).node).sec
                 end_base = dna.top(base).id
-                length   = Size_Vector(dna.top(strt_base).pos - dna.top(end_base).pos)
+                length   = Norm(dna.top(strt_base).pos - dna.top(end_base).pos)
 
                 write(701, "(i10, a$        )"), n_base, "th "//trim(types)
                 write(701, "(a, i3, a, f5.2$)"), ", # of bases : ", count, ", Total length : ", length
@@ -6365,7 +6365,7 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
             if(down_base == -1 .and. cur_node /= -1 .and. up_node /= -1) then
                 pos_1(1:3) = mesh.node(cur_node).pos(1:3)
                 pos_2(1:3) = mesh.node(up_node).pos(1:3)
-                vec(1:3)   = Normalize_Vector(pos_2 - pos_1)
+                vec(1:3)   = Normalize(pos_2 - pos_1)
 
                 if(f_opt == .true.) then
                     write(703, "(a     )"), ".color dark green"
@@ -6454,7 +6454,7 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
             if(down_base == -1 .and. cur_node /= -1 .and. up_node /= -1) then
                 pos_1(1:3) = mesh.node(cur_node).pos(1:3)
                 pos_2(1:3) = mesh.node(up_node).pos(1:3)
-                vec(1:3)   = Normalize_Vector(pos_2 - pos_1)
+                vec(1:3)   = Normalize(pos_2 - pos_1)
 
                 if(f_opt == .true.) then
                     write(704, "(a     )"), ".color dark green"
@@ -6688,12 +6688,12 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
 
             ! Find third local vector, t3
             !vec(1:3) = mesh.node(node).pos(1:3) - pos_2(1:3)
-            !vec(1:3) = Normalize_Vector(vec(1:3))
+            !vec(1:3) = Normalize(vec(1:3))
 
             ! Vector projection
-            !vec_n(1:3)   = Normalize_Vector(pos_2 - pos_1)
+            !vec_n(1:3)   = Normalize(pos_2 - pos_1)
             !vec_jn(1:3)  = dot_product(vec, vec_n) * vec_n
-            !vec_jt1(1:3) = Normalize_Vector(vec - vec_jn)
+            !vec_jt1(1:3) = Normalize(vec - vec_jn)
 
             ! Get cross-sectional line #1
             !pos_1(1:3) = 0.0d0
@@ -6711,12 +6711,12 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
 
             ! Find third local vector, t3
             !vec(1:3) = mesh.node(up_node).pos(1:3) - pos_2(1:3)
-            !vec(1:3) = Normalize_Vector(vec(1:3))
+            !vec(1:3) = Normalize(vec(1:3))
 
             ! Vector projection
-            !vec_n(1:3)   = Normalize_Vector(pos_2 - pos_1)
+            !vec_n(1:3)   = Normalize(pos_2 - pos_1)
             !vec_jn(1:3)  = dot_product(vec, vec_n) * vec_n
-            !vec_jt2(1:3) = Normalize_Vector(vec - vec_jn)
+            !vec_jt2(1:3) = Normalize(vec - vec_jn)
 
             ! Draw route path
             if(f_unpaired == .true. ) write(705, "(a)"), ".color red"
@@ -6814,12 +6814,12 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
 
             ! Find third local vector, t3
             vec(1:3) = mesh.node(node).pos(1:3) - pos_2(1:3)
-            vec(1:3) = Normalize_Vector(vec(1:3))
+            vec(1:3) = Normalize(vec(1:3))
 
             ! Vector projection
-            vec_n(1:3)   = Normalize_Vector(pos_2 - pos_1)
+            vec_n(1:3)   = Normalize(pos_2 - pos_1)
             vec_jn(1:3)  = dot_product(vec, vec_n) * vec_n
-            vec_jt1(1:3) = Normalize_Vector(vec - vec_jn)
+            vec_jt1(1:3) = Normalize(vec - vec_jn)
 
             ! Get cross-sectional line #1
             !pos_1(1:3) = 0.0d0
@@ -6837,12 +6837,12 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
 
             ! Find third local vector, t3
             vec(1:3) = mesh.node(up_node).pos(1:3) - pos_2(1:3)
-            vec(1:3) = Normalize_Vector(vec(1:3))
+            vec(1:3) = Normalize(vec(1:3))
 
             ! Vector projection
-            vec_n(1:3)   = Normalize_Vector(pos_2 - pos_1)
+            vec_n(1:3)   = Normalize(pos_2 - pos_1)
             vec_jn(1:3)  = dot_product(vec, vec_n) * vec_n
-            vec_jt2(1:3) = Normalize_Vector(vec - vec_jn)
+            vec_jt2(1:3) = Normalize(vec - vec_jn)
 
             ! Draw route path
             write(705, "(a$    )"), ".cylinder "
@@ -7056,10 +7056,10 @@ subroutine SeqDesign_Chimera_Strand(prob, dna)
 
             if(dna.strand(i).b_circular == .true.) then
                 down = dna.strand(i).base(1)
-                vec  = Normalize_Vector(dna.top(down).pos - dna.top(base).pos)
+                vec  = Normalize(dna.top(down).pos - dna.top(base).pos)
             else
                 up  = dna.strand(i).base(dna.strand(i).n_base - 1)
-                vec = Normalize_Vector(dna.top(base).pos - dna.top(up).pos)
+                vec = Normalize(dna.top(base).pos - dna.top(up).pos)
             end if
         else
             vec = [1.0d0, 0.0d0, 0.0d0]

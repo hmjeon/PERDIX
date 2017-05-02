@@ -1085,14 +1085,14 @@ subroutine Section_Reset_Local_Coordinate(geom)
         ! Reset local coordinate t1, t2, t3
         if(mod(geom.croL(i).sec, 2) == 0) then
             ! + z-direction
-            t(1,:) = Normalize_Vector(pos_2 - pos_1)
+            t(1,:) = Normalize(pos_2 - pos_1)
             t(2,:) = geom.croL(i).t(2,:)
-            t(3,:) = Cross_Product(t(1,:), t(2,:))
+            t(3,:) = Cross(t(1,:), t(2,:))
         else
             ! - z-direction
-            t(1,:) = Normalize_Vector(pos_1 - pos_2)
+            t(1,:) = Normalize(pos_1 - pos_2)
             t(2,:) = geom.croL(i).t(2,:)
-            t(3,:) = Cross_Product(t(1,:), t(2,:))
+            t(3,:) = Cross(t(1,:), t(2,:))
         end if
 
         ! Update local coordinate system
@@ -1159,9 +1159,9 @@ subroutine Section_Chimera_Cro_Geometry(prob, geom)
         do i = 1, geom.n_iniL
             pos_1(1:3) = geom.modP(geom.iniL(i).poi(1)).pos(1:3)
             pos_2(1:3) = geom.modP(geom.iniL(i).poi(2)).pos(1:3)
-            pos_c(1:3) = Normalize_Vector(pos_2(1:3) - pos_1(1:3))
+            pos_c(1:3) = Normalize(pos_2(1:3) - pos_1(1:3))
 
-            length = Size_Vector(pos_2(1:3) - pos_1(1:3))
+            length = Norm(pos_2(1:3) - pos_1(1:3))
             iter   = length / 2
 
             do j = 1, iter * 2

@@ -607,7 +607,7 @@ subroutine Route_Chimera_Route(prob, geom, mesh, dna, step_route)
             end if
 
             ! Find direction vector for scaffolds
-            vec(1:3) = Normalize_Vector(pos_2 - pos_1)
+            vec(1:3) = Normalize(pos_2 - pos_1)
 
             write(601, "(a     )"), ".color red"
             write(601, "(a$    )"), ".arrow "
@@ -624,7 +624,7 @@ subroutine Route_Chimera_Route(prob, geom, mesh, dna, step_route)
             pos_c(1:3) = pos_1(1:3)
             pos_1(1:3) = pos_2(1:3)
             pos_2(1:3) = pos_c(1:3)
-            vec(1:3)   = Normalize_Vector(pos_2 - pos_1)
+            vec(1:3)   = Normalize(pos_2 - pos_1)
 
             write(602, "(a     )"), ".color red"
             write(602, "(a$    )"), ".arrow "
@@ -649,7 +649,7 @@ subroutine Route_Chimera_Route(prob, geom, mesh, dna, step_route)
 
     !pos_1(1:3) = mesh.node(1).pos(1:3)
     !pos_2(1:3) = mesh.node(mesh.node(1).up).pos(1:3)
-    !vec(1:3)   = Normalize_Vector(pos_2 - pos_1)
+    !vec(1:3)   = Normalize(pos_2 - pos_1)
 
     !write(601, "(a$    )"), ".arrow "
     !write(601, "(3f8.2$)"), pos_1(1:3)
@@ -968,7 +968,7 @@ function Route_Connect_Scaf(mesh, dna, node_cur, node_com) result(count)
     count = 0
     if(para_unpaired_scaf == "on") then
         if(mesh.node(cur).conn /= 1 .and. mesh.node(com).conn /= 1) then
-            length = Size_Vector(pos_cur - pos_com)
+            length = Norm(pos_cur - pos_com)
             !count = floor((length-para_dist_pp)/dble(para_dist_pp))
             count = idnint(length/para_dist_pp) - 1
 
@@ -1073,7 +1073,7 @@ function Route_Connect_Stap(mesh, dna, node_cur, node_com) result(n_poly_Tn)
     ! Add bases for Tn loop depending on distance between two bases
     if(para_n_base_tn == -1) then
 
-        length    = Size_Vector(pos_cur - pos_com)
+        length    = Norm(pos_cur - pos_com)
         n_poly_Tn = idnint(length/para_dist_pp) - 1
 
         ! To make region for sequence design
@@ -3335,15 +3335,15 @@ subroutine Route_Set_Orientation(mesh, dna)
 
         ! Third orientation vector, e3
         ! Along the duplex axis towards the 3'-direction of the strand with the preferred nucleotide
-        mesh.node(i).ori(3,:) = Normalize_Vector(pos_2 - pos_1)
+        mesh.node(i).ori(3,:) = Normalize(pos_2 - pos_1)
 
         ! Second orientation vector, e2 which indicates the preferred nucleotide
         mesh.node(i).ori(2,:) = dna.base_scaf(i).pos - mesh.node(i).pos
-        mesh.node(i).ori(2,:) = Normalize_Vector(mesh.node(i).ori(2,:))
+        mesh.node(i).ori(2,:) = Normalize(mesh.node(i).ori(2,:))
 
         ! First orientation vector, e1 which indicates the mojor groove
-        mesh.node(i).ori(1,:) = Cross_Product(mesh.node(i).ori(2,:), mesh.node(i).ori(3,:))
-        mesh.node(i).ori(1,:) = Normalize_Vector(mesh.node(i).ori(1,:))
+        mesh.node(i).ori(1,:) = Cross(mesh.node(i).ori(2,:), mesh.node(i).ori(3,:))
+        mesh.node(i).ori(1,:) = Normalize(mesh.node(i).ori(1,:))
     end do
 
     return
@@ -3364,11 +3364,11 @@ subroutine Route_Set_Orientation(mesh, dna)
 
             ! Third orientation vector, e3
             ! Along the duplex axis towards the 3'-direction of the strand with the preferred nucleotide
-            mesh.node(i).ori(3,:) = Normalize_Vector(pos_2 - pos_1)
+            mesh.node(i).ori(3,:) = Normalize(pos_2 - pos_1)
 
             ! Second orientation vector, e2 which indicates the preferred nucleotide
             !mesh.node(i).ori(2,:) = dna.base_scaf(i).pos - mesh.node(i).pos
-            !mesh.node(i).ori(2,:) = Normalize_Vector(mesh.node(i).ori(2,:))
+            !mesh.node(i).ori(2,:) = Normalize(mesh.node(i).ori(2,:))
 
             id = mesh.node(i).id
             if(mesh.node(i).dn == -1) then
@@ -3384,8 +3384,8 @@ subroutine Route_Set_Orientation(mesh, dna)
             mesh.node(i).ori(2,:) = mesh.node(id).ori(2,:)
 
             ! First orientation vector, e1 which indicates the mojor groove
-            mesh.node(i).ori(1,:) = Cross_Product(mesh.node(i).ori(2,:), mesh.node(i).ori(3,:))
-            mesh.node(i).ori(1,:) = Normalize_Vector(mesh.node(i).ori(1,:))
+            mesh.node(i).ori(1,:) = Cross(mesh.node(i).ori(2,:), mesh.node(i).ori(3,:))
+            mesh.node(i).ori(1,:) = Normalize(mesh.node(i).ori(1,:))
         end if
     end do
 end subroutine Route_Set_Orientation

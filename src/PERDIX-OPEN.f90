@@ -53,7 +53,7 @@ subroutine Main()
     real            :: time     ! Computational time
 
     ! 1st step : Initialize input
-    call Input_Initialization(prob, geom)
+    call Input_Initialize(prob, geom)
 
     ! Check time
     call cpu_time(time)
@@ -112,7 +112,7 @@ subroutine Report()
         ! Input system by using main argument
         arg = 1; call getarg(arg, char_sec)     ! Argument, section
         arg = 2; call getarg(arg, char_edge)    ! Argument, edge length
-        arg = 3; call getarg(arg, char_vert)    ! Argument, Flat or beveled vertex
+        arg = 3; call getarg(arg, char_vert)    ! Argument, flat or beveled vertex
         arg = 4; call getarg(arg, char_cut)     ! Argument, staple-break
 
         read(char_sec,  *), sec
@@ -160,7 +160,7 @@ subroutine Report()
     do i = 1, 30
 
         ! Initialize input
-        call Input_Initialization_Report(prob, geom, mesh, i, sec, edge, char_vert, char_cut)
+        call Input_Initialize_Report(prob, geom, mesh, i, sec, edge, char_vert, char_cut)
 
         ! 2nd step : Modified geometry seperated from vertex
         call ModGeo_Modification(prob, geom, bound)

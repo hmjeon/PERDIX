@@ -30,8 +30,8 @@ module Input
 
     implicit none
 
-    public  Input_Initialization
-    public  Input_Initialization_Report
+    public  Input_Initialize
+    public  Input_Initialize_Report
 
     private Input_Print_Parameters
     private Input_Read_Parameter
@@ -62,7 +62,7 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Initialize parameters and inputs
-subroutine Input_Initialization(prob, geom)
+subroutine Input_Initialize(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -81,7 +81,6 @@ subroutine Input_Initialization(prob, geom)
         ! ==================================================
         ! Running from Win32 console interface menu
         ! ==================================================
-
         ! Print pre-defined problems
         call Input_Print_Problem
         read(*, *) prob.sel_prob
@@ -110,7 +109,6 @@ subroutine Input_Initialization(prob, geom)
         ! ==================================================
         ! Running from a command shell with options
         ! ==================================================
-
         arg = 1; call getarg(arg, c_prob)       ! 1st argument, problem
         arg = 2; call getarg(arg, c_sec)        ! 2nd argument, section
         arg = 3; call getarg(arg, c_edge_len)   ! 3rd argument, edge length
@@ -130,9 +128,7 @@ subroutine Input_Initialization(prob, geom)
     end if
 
     ! ==================================================
-    !
     ! Set problem, cross-section and edge length
-    !
     ! ==================================================
     ! Set cross-section
     call Input_Set_Section(prob, geom)
@@ -144,9 +140,7 @@ subroutine Input_Initialization(prob, geom)
     call Input_Set_Problem(prob, geom)
 
     ! ==================================================
-    !
     ! Prepair geometry - line generation and scaling
-    !
     ! ==================================================
     ! Convert surface to line connectivity
     call Input_Convert_Face_To_Line(geom)
@@ -155,9 +149,7 @@ subroutine Input_Initialization(prob, geom)
     call Input_Scale_Init_Geometry(geom)
 
     ! ==================================================
-    !
     ! Set environment and write initial geometry
-    !
     ! ==================================================
     ! Set working and Chimera path
     call Input_Set_Path(prob)
@@ -179,12 +171,12 @@ subroutine Input_Initialization(prob, geom)
 
     ! Print progress
     call Input_Print_Parameters(prob, geom)
-end subroutine Input_Initialization
+end subroutine Input_Initialize
 
 ! ---------------------------------------------------------------------------------------
 
 ! Initialize all parameters
-subroutine Input_Initialization_Report(prob, geom, mesh, ii, sec, edge, char_vert, char_cut)
+subroutine Input_Initialize_Report(prob, geom, mesh, ii, sec, edge, char_vert, char_cut)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
     type(MeshType), intent(inout) :: mesh
@@ -215,9 +207,7 @@ subroutine Input_Initialization_Report(prob, geom, mesh, ii, sec, edge, char_ver
     prob.sel_bp_edge = edge
 
     ! ==================================================
-    !
     ! Set problem, cross-section and edge length
-    !
     ! ==================================================
     ! Set cross-section
     call Input_Set_Section(prob, geom)
@@ -229,9 +219,7 @@ subroutine Input_Initialization_Report(prob, geom, mesh, ii, sec, edge, char_ver
     call Input_Set_Problem(prob, geom)
 
     ! ==================================================
-    !
     ! Prepair geometry - line generation and scaling
-    !
     ! ==================================================
     ! Convert surface to line connectivity
     call Input_Convert_Face_To_Line(geom)
@@ -240,9 +228,7 @@ subroutine Input_Initialization_Report(prob, geom, mesh, ii, sec, edge, char_ver
     call Input_Scale_Init_Geometry(geom)
 
     ! ==================================================
-    !
     ! Set environment and write initial geometry
-    !
     ! ==================================================
     ! Set working and Chimera path
     call Input_Set_Path(prob)
@@ -275,7 +261,7 @@ subroutine Input_Initialization_Report(prob, geom, mesh, ii, sec, edge, char_ver
 
     ! Print progress
     call Input_Print_Parameters(prob, geom)
-end subroutine Input_Initialization_Report
+end subroutine Input_Initialize_Report
 
 ! ---------------------------------------------------------------------------------------
 
@@ -655,7 +641,7 @@ subroutine Input_Set_Parameter_Dependence
             para_write_609   = .false.      ! Atomic model without sequence design,    Route_Chimera_Atom,               "_atom.bild"
             para_write_610   = .false.      ! Possible centered scaffold crossovers,   Route_Write_Centered_Scaf_Xover,  "_scaf_xover.txt"
             para_write_701   = .false.      ! Txt on sequence design data,             SeqDesign_Write_Strand,           "strand.txt"
-            para_write_711   = .false.      ! Csv file for sequence data,              SeqDesign_Write_Strand,           "sequence.csv"
+            para_write_711   = .false.      ! CSV file for sequence data,              SeqDesign_Write_Strand,           "sequence.csv"
             para_write_702   = .false.      ! Atomic model with sequence design,       SeqDesign_Chimera_Atom,           "_atom_nick.bild"
             para_write_703   = .false.      ! Route 6, strand route with nick,         SeqDesign_Chimera_Route,          "_route6_scaf.bild", "_route6_stap.bild"
             para_write_705   = .false.      ! Sequence model,                          SeqDesign_Chimera_Sequence,       "_sequence_design.bild"
@@ -1396,13 +1382,13 @@ subroutine Input_Scale_Init_Geometry(geom)
     ! Find minimum length of line
     poi_1 = geom.iniL(1).poi(1)
     poi_2 = geom.iniL(1).poi(2)
-    min_len = Size_Vector(geom.iniP(poi_1).pos - geom.iniP(poi_2).pos)
+    min_len = Norm(geom.iniP(poi_1).pos - geom.iniP(poi_2).pos)
 
     do i = 2, geom.n_iniL
 
         poi_1  = geom.iniL(i).poi(1)
         poi_2  = geom.iniL(i).poi(2)
-        length = Size_Vector(geom.iniP(poi_1).pos - geom.iniP(poi_2).pos)
+        length = Norm(geom.iniP(poi_1).pos - geom.iniP(poi_2).pos)
 
         ! If short edge exists
         if(length < min_len) then
@@ -1419,7 +1405,7 @@ subroutine Input_Scale_Init_Geometry(geom)
     !do i = 1, geom.n_iniL
     !    poi_1  = geom.iniL(i).poi(1)
     !    poi_2  = geom.iniL(i).poi(2)
-    !    length = Size_Vector(geom.iniP(poi_1).pos - geom.iniP(poi_2).pos)
+    !    length = Norm(geom.iniP(poi_1).pos - geom.iniP(poi_2).pos)
     !    write(0, "(i, f15.5)"), i, length
     !end do
 end subroutine Input_Scale_Init_Geometry
@@ -1630,7 +1616,7 @@ subroutine Input_Chimera_Init_Geometry(prob, geom)
             pos_1(1:3) = geom.iniP(geom.iniL(i).poi(1)).pos(1:3)
             pos_2(1:3) = geom.iniP(geom.iniL(i).poi(2)).pos(1:3)
             pos_c(1:3) = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
-            length     = Size_Vector(pos_2 - pos_1)
+            length     = Norm(pos_2 - pos_1)
 
             write(102, "(a$   )"), ".cmov "
             write(102, "(3f9.2)"), pos_c(1:3) + 0.5d0

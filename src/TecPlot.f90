@@ -34,7 +34,7 @@ module TecPlot
         character(10) :: show_vector3       ! YES, NO
 
         double precision :: size_scatter
-        double precision :: size_vector
+        double precision :: Norm
         double precision :: scale
     end type TecPlotType
 
@@ -55,7 +55,7 @@ subroutine TecPlot_Command_Orientation(prob)
     TecPlot.show_vector2   = "YES"
     TecPlot.show_vector3   = "YES"
     TecPlot.size_scatter   = 0.5d0
-    TecPlot.size_vector    = 1.0d0
+    TecPlot.Norm    = 1.0d0
     TecPlot.scale          = 50.0d0
 
     ! Write layout file in TecPlot
@@ -121,7 +121,7 @@ subroutine Tecplot_Write_Layout(prob, TecPlot)
     write(2001, "(a)"), "   UVAR = 4"
     write(2001, "(a)"), "   VVAR = 5"
     write(2001, "(a)"), "   WVAR = 6"
-    write(2001, "(a, e)"), "   RELATIVELENGTH = ", TecPlot.size_vector
+    write(2001, "(a, e)"), "   RELATIVELENGTH = ", TecPlot.Norm
 
     ! Setvalue command that assigns zone attributes for field plots
     write(2001, "(a)"), "$!FIELDMAP  [1]"
