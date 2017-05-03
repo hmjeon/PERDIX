@@ -119,10 +119,10 @@ subroutine Report()
         read(char_edge, *), edge
     else
 
-        sec       = 1       ! Section number
-        edge      = 2       ! Edge length
-        char_vert = "flat"  ! Flat or beveled vertex
-        char_cut  = "max"   ! Staple-break rule
+        sec       = 1           ! Section number
+        edge      = 2           ! Edge length
+        char_vert = "beveled"   ! Flat or beveled vertex
+        char_cut  = "max"       ! Staple-break rule
     end if
 
     ! Open file
@@ -332,63 +332,92 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         call Space(i, 11)
         write(i, "(a)"), "* Gap btw xover and vertex [staple] : "//trim(adjustl(Int2Str(para_gap_xover_bound_stap)))
         call Space(i, 11)
-        write(i, "(a)"), "* # of basepairs                    : "//trim(adjustl(Int2Str(mesh.n_node)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of nucleotides in scaffold      : "//trim(adjustl(Int2Str(dna.n_base_scaf)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of nucleotides in staple        : "//trim(adjustl(Int2Str(dna.n_base_stap)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of scaffold crossovers          : "//trim(adjustl(Int2Str(dna.n_xover_scaf)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of all staple crossovers        : "//trim(adjustl(Int2Str(dna.n_xover_stap)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of single staple crossovers     : "//trim(adjustl(Int2Str(dna.n_sxover_stap)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of nucleotides in scaffold      : "//trim(adjustl(Int2Str(dna.n_base_scaf)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of unpaired scaffolds           : "//trim(adjustl(Int2Str(dna.n_unpaired_scaf)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of unpaired nt in scaffolds     : "//trim(adjustl(Int2Str(dna.n_nt_unpaired_scaf)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of unpaired staples             : "//trim(adjustl(Int2Str(dna.n_unpaired_stap)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of unpaired nt in staples       : "//trim(adjustl(Int2Str(dna.n_nt_unpaired_stap)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Minimum staple length             : "//trim(adjustl(Int2Str(dna.len_min_stap)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Maximum staple length             : "//trim(adjustl(Int2Str(dna.len_max_stap)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Average staple length             : "//trim(adjustl(Dble2Str(dna.len_ave_stap)))
-        call Space(i, 11)
         write(i, "(a)"), "* # of changing for min staple      : "//trim(adjustl(Int2Str(prob.n_cng_min_stap)))
         call Space(i, 11)
         write(i, "(a)"), "* # of changing for max staple      : "//trim(adjustl(Int2Str(prob.n_cng_max_stap)))
+        write(i, "(a)")
+
+        ! ============================================================
+        ! Base pair information
+        ! ============================================================
         call Space(i, 11)
-        write(i, "(a)"), "* # of scaffold strands             : "//trim(adjustl(Int2Str(dna.n_scaf)))
+        write(i, "(a)"), "[ BASE PAIR ]"
+        call Space(i, 16)
+        write(i, "(a)"), "* # of basepairs            : "//trim(adjustl(Int2Str(mesh.n_node)))
+        call Space(i, 16)
+        write(i, "(a)"), "* # of beveled nucleotides  : "//&
+            trim(adjustl(Int2Str(mesh.n_beveled)))//" ["//&
+            trim(adjustl(Dble2Str(dble(mesh.n_beveled)/dble(mesh.n_node)*100.0d0)))//" %]"
+        call Space(i, 16)
+        write(i, "(a)"), "* Edge length [ min - max ] : ["//&
+            trim(adjustl(Int2Str(geom.min_edge_length)))//" - "// &
+            trim(adjustl(Int2Str(geom.max_edge_length)))//"]"
+        write(i, "(a)")
+
+        ! ============================================================
+        ! Scaffold information
+        ! ============================================================
         call Space(i, 11)
-        write(i, "(a)"), "* # of staple strands               : "//trim(adjustl(Int2Str(dna.n_stap)))
+        write(i, "(a)"), "[ SCAFFOLD ]"
+        call Space(i, 16)
+        write(i, "(a)"), "* # of scaffold strands     : "//trim(adjustl(Int2Str(dna.n_scaf)))
+        call Space(i, 16)
+        write(i, "(a)"), "* # of total nucleotides    : "//trim(adjustl(Int2Str(dna.n_base_scaf)))
+        !call Space(i, 16)
+        !write(i, "(a)"), "* # of unpaired regions     : "//trim(adjustl(Int2Str(dna.n_unpaired_scaf)))
+        call Space(i, 16)
+        write(i, "(a)"), "* # of unpaired nucleotides : "//trim(adjustl(Int2Str(dna.n_nt_unpaired_scaf)))
+        call Space(i, 16)
+        write(i, "(a)"), "* # of double-crossovers    : "//trim(adjustl(Int2Str(dna.n_xover_scaf/2)))
+        write(i, "(a)")
+
+        ! ============================================================
+        ! Staple information
+        ! ============================================================
         call Space(i, 11)
-        write(i, "(a)"), "* # of strands with 4nt seeds       : "//trim(adjustl(Int2Str(dna.n_4nt)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of strands with 14nt seeds      : "//trim(adjustl(Int2Str(dna.n_14nt)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The ratio - #strand_4nts/#staps   : "//trim(adjustl(Dble2Str(dble(dna.n_4nt)/dble(dna.n_stap)*100.0d0)))//" %"
-        call Space(i, 11)
-        write(i, "(a)"), "* The ratio - #strand_14nts/#staps  : "//trim(adjustl(Dble2Str(dble(dna.n_14nt)/dble(dna.n_stap)*100.0d0)))//" %"
-        call Space(i, 11)
-        write(i, "(a)"), "* # of total regions in staples     : "//trim(adjustl(Int2Str(dna.n_tot_region)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of total 14nt seeds             : "//trim(adjustl(Int2Str(dna.n_tot_14nt)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of total 4nt seeds              : "//trim(adjustl(Int2Str(dna.n_tot_4nt)))
-        call Space(i, 11)
-        write(i, "(a)"), "* # of total nucleotides in 14nt    : "//trim(adjustl(Int2Str(dna.n_nt_14nt)))//" ["//trim(adjustl(Dble2Str(dble(dna.n_nt_14nt)/dble(dna.n_base_stap)*100.0d0)))//" %]"
-        call Space(i, 11)
-        write(i, "(a)"), "* # of total nucleotides in 4nt     : "//trim(adjustl(Int2Str(dna.n_nt_4nt)))//" ["//trim(adjustl(Dble2Str(dble(dna.n_nt_4nt)/dble(dna.n_base_stap)*100.0d0)))//" %]"
-        call Space(i, 11)
-        write(i, "(a)"), "* Minimum edge length               : "//trim(adjustl(Int2Str(geom.min_edge_length)))//" bp"
-        call Space(i, 11)
-        write(i, "(a)"), "* Maximum edge length               : "//trim(adjustl(Int2Str(geom.max_edge_length)))//" bp"
+        write(i, "(a)"), "[ STAPLE ]"
+        call Space(i, 16)
+        write(i, "(a)"), "* # of staples               : "//trim(adjustl(Int2Str(dna.n_stap)))
+        call Space(i, 21)
+        write(i, "(a)"), "* with the 4nt dsDNA domain  - "//&
+            trim(adjustl(Int2Str(dna.n_4nt)))//" ["//&
+            trim(adjustl(Dble2Str(dble(dna.n_4nt)/dble(dna.n_stap)*100.0d0)))//" %]"
+        call Space(i, 21)
+        write(i, "(a)"), "* with the 14nt dsDNA domain - "//&
+            trim(adjustl(Int2Str(dna.n_14nt)))//" ["//&
+            trim(adjustl(Dble2Str(dble(dna.n_14nt)/dble(dna.n_stap)*100.0d0)))//" %]"
+        call Space(i, 16)
+        write(i, "(a)"), "* # of nucleotides          : "//trim(adjustl(Int2Str(dna.n_base_stap)))
+        call Space(i, 21)
+        write(i, "(a)"), "* in 4nt dsDNA domains       - "//&
+            trim(adjustl(Int2Str(dna.n_nt_4nt)))//" ["//&
+            trim(adjustl(Dble2Str(dble(dna.n_nt_4nt)/dble(dna.n_base_stap)*100.0d0)))//" %]"
+        call Space(i, 21)
+        write(i, "(a)"), "* in 14nt dsDNA domains      - "//&
+            trim(adjustl(Int2Str(dna.n_nt_14nt)))//" ["//&
+            trim(adjustl(Dble2Str(dble(dna.n_nt_14nt)/dble(dna.n_base_stap)*100.0d0)))//" %]"
+        !call Space(i, 16)
+        !write(i, "(a)"), "* # of unpaired regions     : "//trim(adjustl(Int2Str(dna.n_unpaired_stap)))
+        call Space(i, 16)
+        write(i, "(a)"), "* # of unpaired nucleotides : "//trim(adjustl(Int2Str(dna.n_nt_unpaired_stap)))
+        call Space(i, 16)
+        write(i, "(a)"), "* # of total crossovers     : "//trim(adjustl(Int2Str(dna.n_xover_stap)))
+        call Space(i, 16)
+        write(i, "(a)"), "* # of single-crossovers    : "//trim(adjustl(Int2Str(dna.n_sxover_stap)))
+        call Space(i, 16)
+        write(i, "(a)"), "* # of double-crossovers    : "//trim(adjustl(Int2Str((dna.n_xover_stap-dna.n_sxover_stap)/2)))
+        call Space(i, 16)
+        write(i, "(a)"), "* Length [min - max- ave]   : ["//&
+            trim(adjustl(Int2Str(dna.len_min_stap)))//" - "//&
+            trim(adjustl(Int2Str(dna.len_max_stap)))//" - "//&
+            trim(adjustl(Dble2Str(dna.len_ave_stap)))//"]"
+        !call Space(i, 16)
+        !write(i, "(a)"), "* # of total regions            : "//trim(adjustl(Int2Str(dna.n_tot_region)))
+        !call Space(i, 16)
+        !write(i, "(a)"), "* # of total 14nt dsDNA domains : "//trim(adjustl(Int2Str(dna.n_tot_14nt)))
+        !call Space(i, 16)
+        !write(i, "(a)"), "* # of total 4nt dsDNA domains  : "//trim(adjustl(Int2Str(dna.n_tot_4nt)))
+
         write(i, "(a)")
         write(i, "(a)"), "   --------------------------------------------------------------------------------"
         write(i, "(a)")

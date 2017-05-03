@@ -24,19 +24,18 @@ module Exam_3D_Open
     implicit none
 
     ! Quad mesh
-    public Exam_Open3D_End_Triangular_Prism_Quad    ! 11. Open end triangular prism with quad mesh
-    public Exam_Open3D_End_Cube_Quad                ! 12. Open end cube with quad mesh
-    public Exam_Open3D_End_Pentagonal_Prism_Quad    ! 13. Open end pentagonal prism with quad mesh
-    public Exam_Open3D_End_Cylinder_Quad            ! 14. Open end cylinder with quad mesh
-    public Exam_Open3D_Hemisphere_Quad              ! 15. Hemisphere with quad mesh
-    !public Exam_Open3D_Cooling_Tower_Quad           ! Cooling tower with quad mesh
+    public Exam_Open3D_End_Triangular_Prism_Quad    ! Open end triangular prism with quad mesh
+    public Exam_Open3D_End_Cube_Quad                ! Open end cube with quad mesh
+    public Exam_Open3D_End_Pentagonal_Prism_Quad    ! Open end pentagonal prism with quad mesh
+    public Exam_Open3D_End_Cylinder_Quad            ! Open end cylinder with quad mesh
+    public Exam_Open3D_Hemisphere_Quad              ! Hemisphere with quad mesh
 
     ! Tri mesh
-    public Exam_Open3D_End_Triangular_Prism_Tri     ! 11. Open end triangular prism with tri mesh
-    public Exam_Open3D_End_Cube_Tri                 ! 12. Open end cube with tri mesh
-    public Exam_Open3D_End_Pentagonal_Prism_Tri     ! 13. Open end pentagonal prism with tri mesh
-    public Exam_Open3D_End_Cylinder_Tri             ! 14. Open end cylinder with tri mesh
-    public Exam_Open3D_Hemisphere_Tri               ! 15. Hemisphere with tri mesh
+    public Exam_Open3D_End_Triangular_Prism_Tri     ! Open end triangular prism with tri mesh
+    public Exam_Open3D_End_Cube_Tri                 ! Open end cube with tri mesh
+    public Exam_Open3D_End_Pentagonal_Prism_Tri     ! Open end pentagonal prism with tri mesh
+    public Exam_Open3D_End_Cylinder_Tri             ! Open end cylinder with tri mesh
+    public Exam_Open3D_Hemisphere_Tri               ! Hemisphere with tri mesh
     public Exam_Open3D_Cooling_Tower_Tri            ! Cooling tower with tri mesh
 
 contains
@@ -56,14 +55,12 @@ subroutine Exam_Open3D_End_Triangular_Prism_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "11_End_Triangular_Prism_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "End Triangular Prism Quad"
+    prob.name_file = "End_Triangular_Prism_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -77,6 +74,7 @@ subroutine Exam_Open3D_End_Triangular_Prism_Quad(prob, geom)
     rad    = 1.0d0
     length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
+    ! The number of points and faces
     geom.n_face = nz * nr
     geom.n_iniP = (nz + 1) * nr
 
@@ -135,14 +133,12 @@ subroutine Exam_Open3D_End_Cube_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "12_End_Cube_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "End Cube Quad"
+    prob.name_file = "11_End_Cube_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -156,6 +152,7 @@ subroutine Exam_Open3D_End_Cube_Quad(prob, geom)
     rad    = 1.0d0
     length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
+    ! The number of points and faces
     geom.n_face = nz * nr
     geom.n_iniP = (nz + 1) * nr
 
@@ -214,14 +211,12 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "13_End_Pentagonal_Prism_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "End Pentagonal Prism Quad"
+    prob.name_file = "12_End_Pentagonal_Prism_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -235,6 +230,7 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Quad(prob, geom)
     rad    = 1.0d0
     length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
+    ! The number of points and faces
     geom.n_face = nz * nr
     geom.n_iniP = (nz + 1) * nr
 
@@ -293,14 +289,12 @@ subroutine Exam_Open3D_End_Cylinder_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "14_End_Cylinder_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "End Cylinder Quad"
+    prob.name_file = "13_End_Cylinder_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -314,6 +308,7 @@ subroutine Exam_Open3D_End_Cylinder_Quad(prob, geom)
     rad    = 1.0d0
     length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
+    ! The number of points and faces
     geom.n_face = nz * nr
     geom.n_iniP = (nz + 1) * nr
 
@@ -372,14 +367,12 @@ subroutine Exam_Open3D_Hemisphere_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "15_Hemisphere_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Hemisphere Quad"
+    prob.name_file = "14_Hemisphere_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -392,6 +385,7 @@ subroutine Exam_Open3D_Hemisphere_Quad(prob, geom)
     ! Set dimension
     rad =  10.0d0
 
+    ! The number of points and faces
     geom.n_face = nz * nr
     geom.n_iniP = (nz + 1) * nr
 
@@ -452,14 +446,12 @@ subroutine Exam_Open3D_End_Triangular_Prism_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "11_End_Triangular_Prism_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "End Triangular Prism Tri"
+    prob.name_file = "End_Triangular_Prism_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -473,6 +465,7 @@ subroutine Exam_Open3D_End_Triangular_Prism_Tri(prob, geom)
     rad    = 1.0d0
     length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
+    ! The number of points and faces
     geom.n_face = nz * nr * 2
     geom.n_iniP = (nz + 1) * nr
 
@@ -539,14 +532,12 @@ subroutine Exam_Open3D_End_Cube_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "12_End_Cube_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "End Cube Tri"
+    prob.name_file = "End_Cube_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -560,6 +551,7 @@ subroutine Exam_Open3D_End_Cube_Tri(prob, geom)
     rad    = 1.0d0
     length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
+    ! The number of points and faces
     geom.n_face = nz * nr * 2
     geom.n_iniP = (nz + 1) * nr
 
@@ -626,14 +618,12 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "13_End_Pentagonal_Prism_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "End Pentagonal Prism Tri"
+    prob.name_file = "End_Pentagonal_Prism_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -647,6 +637,7 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Tri(prob, geom)
     rad    = 1.0d0
     length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
+    ! The number of points and faces
     geom.n_face = nz * nr * 2
     geom.n_iniP = (nz + 1) * nr
 
@@ -713,14 +704,12 @@ subroutine Exam_Open3D_End_Cylinder_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "14_End_Cylinder_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "End Cylinder Tri"
+    prob.name_file = "End_Cylinder_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -734,6 +723,7 @@ subroutine Exam_Open3D_End_Cylinder_Tri(prob, geom)
     rad    = 1.0d0
     length = 2.0d0 * rad * dsin(pi/dble(nr)) * dble(nz)
 
+    ! The number of points and faces
     geom.n_face = nz * nr * 2
     geom.n_iniP = (nz + 1) * nr
 
@@ -800,14 +790,12 @@ subroutine Exam_Open3D_Hemisphere_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "15_Hemisphere_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Hemisphere Tri"
+    prob.name_file = "Hemisphere_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -818,8 +806,9 @@ subroutine Exam_Open3D_Hemisphere_Tri(prob, geom)
     nr = n * 3
 
     ! Set dimension
-    rad =  10.0d0
+    rad = 10.0d0
 
+    ! The number of points and faces
     geom.n_face = nz * nr * 2
     geom.n_iniP = (nz + 1) * nr
 
@@ -880,23 +869,31 @@ subroutine Exam_Open3D_Cooling_Tower_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: x_width, y_width, del_x, del_y
-    integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
+    double precision :: length, angle, radius, x_width, y_width, del_x, del_y
+    integer :: i, j, jj(6), n_jnt, n_con, index, n_i_poi, n_j_poi, n, nx, ny
     character(10) :: char_sec, char_bp, char_start_bp
 
     double precision, allocatable :: jnt(:,:)
     integer, allocatable :: con(:,:), out_con(:,:)
 
-    double precision :: length, angle, radius
-    integer :: jj(6), n_jnt, n_con
-
     !jj(:) = [1, 2, 3, 4, 3, 2]      ! "/" mesh
     jj(:) = [2, 4, 1, 3, 1, 4]      ! "\" mesh
 
-    write(0, "(a)"), "[COOLING TOWER UNIFORM]"
-    write(0, "(a)")
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    n       = 10
+    prob.name_prob = "Cooling Tower Tri"
+    prob.name_file = "15_Cooling_Tower_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    n = 5
 
     ! Allocate memories
     allocate(con(n*n, 4), jnt((n+1)*n, 3))
@@ -909,9 +906,9 @@ subroutine Exam_Open3D_Cooling_Tower_Tri(prob, geom)
             n_jnt = n_jnt + 1
             angle = (360.0d0 - dble(j-1)*(360.0d0/dble(n)))*(pi/180.0d0)
 
-            jnt(n_jnt,2) = 1.0d0 - dble(i-1)*(2.0d0/dble(n))
+            jnt(n_jnt,2) = 3.0d0 - dble(i-1)*(6.0d0/dble(n))
 
-            radius = dsqrt(0.5d0 + jnt(n_jnt,2)*jnt(n_jnt,2))
+            radius = dsqrt(1.0d0 + jnt(n_jnt,2)*jnt(n_jnt,2))
             jnt(n_jnt,1) = radius * dcos(angle)
             jnt(n_jnt,3) = radius * dsin(angle)
         end do
@@ -942,23 +939,7 @@ subroutine Exam_Open3D_Cooling_Tower_Tri(prob, geom)
     allocate(out_con(2*n_con, 3))
     call Prob_Elem_Mesh(jj, con, n_con, out_con, 3)
 
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_file = "02_Plate_Uniform_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
-    prob.name_prob = "Plate Uniform Tri"
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
-
+    ! The number of points and faces
     geom.n_iniP = n_jnt
     geom.n_face = n_con
     

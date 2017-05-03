@@ -25,16 +25,16 @@ module Exam_2D_Open
 
     implicit none
 
-    public Exam_Open2D_Plate_Uniform_Quad       !  1. Plate with uniform quad mesh
-    public Exam_Open2D_Plate_Uniform_Tri        !  2. Plate with uniform tri mesh
-    public Exam_Open2D_Quarter_Circle_Quad      !  3. Quarter circle with quad mesh
-    public Exam_Open2D_Disk_Quad                !  4. Disk with quad mesh
-    public Exam_Open2D_Circle_Tri_Coarse        !  5. Circle with tri coarse mesh
-    public Exam_Open2D_Ellipse_Tri_Coarse       !  6. Ellipse with tri coarse mesh
-    public Exam_Open2D_L_Shape_Regular          !  7. L-shape with regular mesh
-    public Exam_Open2D_Hexagonal_Mesh           !  8. Hexagonal mesh
-    public Exam_Open2D_Honeycomb                !  9. Honeycomb
-    public Exam_Open2D_Stickman                 ! 10. 2D stickman
+    public Exam_Open2D_Plate_Uniform_Quad       ! Plate with uniform quad mesh
+    public Exam_Open2D_Plate_Uniform_Tri        ! Plate with uniform tri mesh
+    public Exam_Open2D_Quarter_Circle_Quad      ! Quarter circle with quad mesh
+    public Exam_Open2D_Disk_Quad                ! Disk with quad mesh
+    public Exam_Open2D_Circle_Tri_Coarse        ! Circle with tri coarse mesh
+    public Exam_Open2D_Ellipse_Tri_Coarse       ! Ellipse with tri coarse mesh
+    public Exam_Open2D_L_Shape_Regular          ! L-shape with regular mesh
+    public Exam_Open2D_Hexagonal_Mesh           ! Hexagonal mesh
+    public Exam_Open2D_Honeycomb                ! Honeycomb
+    public Exam_Open2D_Stickman                 ! 2D stickman
 
     public Exam_Open2D_Quarter_Circle_Tri           ! Quarter circle with tri mesh
     public Exam_Open2D_Disk_Tri                     ! Disk with tri mesh
@@ -69,14 +69,12 @@ subroutine Exam_Open2D_Plate_Uniform_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "01_Plate_Uniform_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Plate Uniform Quad"
+    prob.name_file = "01_Plate_Uniform_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -93,6 +91,7 @@ subroutine Exam_Open2D_Plate_Uniform_Quad(prob, geom)
     del_x   = x_width / dble(n_i_poi - 1)
     del_y   = y_width / dble(n_j_poi - 1)
 
+    ! The number of points and faces
     geom.n_iniP = n_i_poi * n_j_poi
     geom.n_face = nx * ny
 
@@ -142,14 +141,12 @@ subroutine Exam_Open2D_Plate_Uniform_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "02_Plate_Uniform_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Plate Uniform Tri"
+    prob.name_file = "02_Plate_Uniform_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -167,6 +164,7 @@ subroutine Exam_Open2D_Plate_Uniform_Tri(prob, geom)
     del_x   = x_width / dble(n_i_poi - 1)
     del_y   = y_width / dble(n_j_poi - 1)
 
+    ! The number of points and faces
     geom.n_iniP = n_i_poi * n_j_poi
     geom.n_face = nx  * ny * 2
     
@@ -234,19 +232,19 @@ subroutine Exam_Open2D_Quarter_Circle_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "03_Quarter_Circle_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Quarter Circle Quad"
+    prob.name_file = "03_Quarter_Circle_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    n           = 2
+    n = 2
+
+    ! The number of points and faces
     geom.n_iniP = (n + 1)*(n + 1 ) + n*(n + 1) + n*n
     geom.n_face = 3*n*n
 
@@ -392,14 +390,12 @@ subroutine Exam_Open2D_Disk_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "04_Disk_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Disk Quad"
+    prob.name_file = "04_Disk_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -411,6 +407,7 @@ subroutine Exam_Open2D_Disk_Quad(prob, geom)
     o_rad = 4.0d0       ! Outer radius
     i_rad = 1.8d0       ! Internal radius
 
+    ! The number of points and faces
     geom.n_iniP = (nx + 1) * nr
     geom.n_face = nx * nr
 
@@ -470,14 +467,12 @@ subroutine Exam_Open2D_circle_Tri_Coarse(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "05_Circle_Tri_Coarse"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Circle Tri Coarse"
+    prob.name_file = "05_Circle_Tri_Coarse"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -550,14 +545,12 @@ subroutine Exam_Open2D_Ellipse_Tri_Coarse(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "06_Ellipse_Tri_Coarse"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Ellipse Tri Coarse"
+    prob.name_file = "06_Ellipse_Tri_Coarse"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -650,18 +643,17 @@ subroutine Exam_Open2D_L_Shape_Regular(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "07_L_Shape_Regular"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "L Shape Regular"
+    prob.name_file = "07_L_Shape_Regular"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
+    ! The number of points and faces
     geom.n_iniP = 21
     geom.n_face = 24
 
@@ -731,18 +723,17 @@ subroutine Exam_Open2D_Hexagonal_Mesh(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "08_Hexagonal_Mesh"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Hexagonal Mesh"
+    prob.name_file = "08_Hexagonal_Mesh"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
+    ! The number of points and faces
     geom.n_iniP = 38
     geom.n_face = 12
 
@@ -817,21 +808,19 @@ subroutine Exam_Open2D_Honeycomb(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "09_Honeycomb"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Honeycomb"
+    prob.name_file = "09_Honeycomb"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Allocate point and face structure
-    geom.n_iniP =   30
-    geom.n_face =  36
+    ! The number of points and faces
+    geom.n_iniP = 30
+    geom.n_face = 36
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
@@ -920,18 +909,17 @@ subroutine Exam_Open2D_Stickman(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "10_Stickman"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Stickman"
+    prob.name_file = "10_Stickman"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
+    ! The number of points and faces
     geom.n_iniP = 48
     geom.n_face = 52
 
@@ -1062,14 +1050,12 @@ subroutine Exam_Open2D_Quarter_Circle_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "04_Quarter_Circle_Tri"//&
+    prob.name_prob = "Quarter Circle Tri"
+    prob.name_file = "Quarter_Circle_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
         "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
         "_"//trim(para_cut_stap_method)                 ! Cutting method
-
-    prob.name_prob = "Quarter Circle Tri"
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -1077,6 +1063,7 @@ subroutine Exam_Open2D_Quarter_Circle_Tri(prob, geom)
     n  = 2
     pn = "\"
 
+    ! The number of points and faces
     geom.n_iniP = (n + 1)*(n + 1) + n*(n + 1) + n*n
     geom.n_face = 3*n*n*2
 
@@ -1270,14 +1257,12 @@ subroutine Exam_Open2D_Disk_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "06_Disk_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Disk Tri"
+    prob.name_file = "Disk_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -1290,6 +1275,7 @@ subroutine Exam_Open2D_Disk_Tri(prob, geom)
     o_rad = 4.0d0       ! Outer radius
     i_rad = 1.8d0       ! Internal radius
 
+    ! The number of points and faces
     geom.n_iniP = (nx + 1) * nr
     geom.n_face = nx * nr * 2
 
@@ -1386,14 +1372,12 @@ subroutine Exam_Open2D_circle_Tri_Fine(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "08_Circle_Tri_Fine"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Circle Tri Fine"
+    prob.name_file = "Circle_Tri_Fine"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -1526,14 +1510,12 @@ subroutine Exam_Open2D_Ellipse_Tri_Fine(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "10_Ellipse_Tri_Fine"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Ellipse Tri Fine"
+    prob.name_file = "Ellipse_Tri_Fine"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -1671,20 +1653,19 @@ subroutine Exam_Open2D_L_Shape_Irregular(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "12_L_Shape_Irregular"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "L Shape Irregular"
+    prob.name_file = "L_Shape_Irregular"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    geom.n_iniP =  100
-    geom.n_face =  156
+    ! The number of points and faces
+    geom.n_iniP = 100
+    geom.n_face = 156
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
@@ -1966,14 +1947,12 @@ subroutine Exam_Open2D_Plate_Distorted_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Plate_Distorted_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Plate Distorted Quad"
+    prob.name_file = "Plate_Distorted_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -1991,6 +1970,7 @@ subroutine Exam_Open2D_Plate_Distorted_Quad(prob, geom)
     del_x   = x_width / dble(n_i_poi - 1)
     del_y   = y_width / dble(n_j_poi - 1)
 
+    ! The number of points and faces
     geom.n_iniP = n_i_poi * n_j_poi
     geom.n_face = nx  * ny
 
@@ -2072,14 +2052,12 @@ subroutine Exam_Open2D_Plate_Distorted_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Plate_Distorted_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Plate Distorted Tri"
+    prob.name_file = "Plate_Distorted_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -2097,6 +2075,7 @@ subroutine Exam_Open2D_Plate_Distorted_Tri(prob, geom)
     del_x   = x_width / dble(n_i_poi - 1)
     del_y   = y_width / dble(n_j_poi - 1)
 
+    ! The number of points and faces
     geom.n_iniP = n_i_poi * n_j_poi
     geom.n_face = nx  * ny * 2
 
@@ -2192,14 +2171,12 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Hyperbolic_Paraboloid_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Hyperbolic Paraboloid Quad"
+    prob.name_file = "Hyperbolic_Paraboloid_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -2208,6 +2185,7 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Quad(prob, geom)
     nx = n
     ny = n
 
+    ! The number of points and faces
     geom.n_iniP = (nx + 1) * (ny + 1)
     geom.n_face = nx * ny
 
@@ -2258,14 +2236,12 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Hyperbolic_Paraboloid_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Hyperbolic Paraboloid Tri"
+    prob.name_file = "Hyperbolic_Paraboloid_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
@@ -2275,6 +2251,7 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Tri(prob, geom)
     ny = n
     pn = "\"
 
+    ! The number of points and faces
     geom.n_iniP = (nx + 1) * (ny + 1)
     geom.n_face = nx * ny * 2
 

@@ -55,18 +55,17 @@ subroutine Exam_Johnson_Square_Pyramid_J1(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "21_Square_Pyramid_J1"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Square Pyramid J1"
+    prob.name_file = "21_Square_Pyramid_J1"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
+    ! The number of points and faces
     geom.n_iniP = 5
     geom.n_face = 5
 
@@ -101,19 +100,17 @@ subroutine Exam_Johnson_Pentagonal_Pyramid_J2(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "22_Penta_Pyramid_J2"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Penta Pyramid J2"
+    prob.name_file = "22_Penta_Pyramid_J2"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 6
     geom.n_face = 6
 
@@ -150,19 +147,17 @@ subroutine Exam_Johnson_Triangular_Cupola_J3(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Trir_Cupola_J3"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Tri Cupola J3"
+    prob.name_file = "Tri_Cupola_J3"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 9
     geom.n_face = 8
 
@@ -204,19 +199,17 @@ subroutine Exam_Johnson_Square_Cupola_J4(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Square_Cupola_J4"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Square Cupola J4"
+    prob.name_file = "Square_Cupola_J4"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 12
     geom.n_face = 10
 
@@ -263,19 +256,17 @@ subroutine Exam_Johnson_Pentagonal_Cupola_J5(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "23_Penta_Cupola_J5"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Penta Cupola J5"
+    prob.name_file = "23_Penta_Cupola_J5"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 15
     geom.n_face = 12
 
@@ -327,19 +318,17 @@ subroutine Exam_Johnson_Pentagonal_Rotunda_J6(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Penta_Rotunda_J6"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Penta Rotunda J6"
+    prob.name_file = "Penta_Rotunda_J6"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 20
     geom.n_face = 17
 
@@ -401,19 +390,17 @@ subroutine Exam_Johnson_Elongated_Triangular_Cupola_J18(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Elon_Tri_Cupola_J18"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Elong Tri Cupola J18"
+    prob.name_file = "Elon_Tri_Cupola_J18"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 15
     geom.n_face = 14
 
@@ -467,19 +454,17 @@ subroutine Exam_Johnson_Elongated_Square_Cupola_J19(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Elong_Square_Cupola_J19"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Elon Square Cupola J19"
+    prob.name_file = "Elong_Square_Cupola_J19"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 20
     geom.n_face = 18
 
@@ -542,19 +527,17 @@ subroutine Exam_Johnson_Elongated_Pentagonal_Cupola_J20(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Elon_Penta_Cupola_J20"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Elon Penta Cupola J20"
+    prob.name_file = "Elon_Penta_Cupola_J20"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 25
     geom.n_face = 22
 
@@ -626,19 +609,17 @@ subroutine Exam_Johnson_Elongated_Pentagonal_Rotunda_J21(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Elon_Penta_Rotunda_J21"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Elon Penta Rotunda J21"
+    prob.name_file = "Elon_Penta_Rotunda_J21"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 30
     geom.n_face = 27
 
@@ -720,19 +701,17 @@ subroutine Exam_Johnson_Gyroelongated_Triangular_Cupola_J22(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Gyro_Tri_Cupola_J22"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Gyro Tri Cupola J22"
+    prob.name_file = "Gyro_Tri_Cupola_J22"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 15
     geom.n_face = 20
 
@@ -792,19 +771,17 @@ subroutine Exam_Johnson_Gyroelongated_Square_Cupola_J23(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "24_Gyro_Square_Cupola_J23"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Gyro Square Cupola J23"
+    prob.name_file = "24_Gyro_Square_Cupola_J23"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 20
     geom.n_face = 26
 
@@ -875,19 +852,17 @@ subroutine Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "25_Gyro_Penta_Cupola_J24"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Gyro Penta Cupola J24"
+    prob.name_file = "25_Gyro_Penta_Cupola_J24"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 25
     geom.n_face = 32
 
@@ -969,19 +944,17 @@ subroutine Exam_Johnson_Gyroelongated_Pentagonal_Rotunda_J25(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Gyro_Penta_Rotunda_J25"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Gyro Penta Rotunda J25"
+    prob.name_file = "Gyro_Penta_Rotunda_J25"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 30
     geom.n_face = 37
 
@@ -1073,19 +1046,17 @@ subroutine Exam_Johnson_Gyrobifastigium_J26(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_file = "Gyrobifastigium_J26"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
-
     prob.name_prob = "Gyrobifastigium J26"
+    prob.name_file = "Gyrobifastigium_J26"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
-    ! Set geometric type and view
+    ! The number of points and faces
     geom.n_iniP = 8
     geom.n_face = 8
 

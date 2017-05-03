@@ -924,8 +924,8 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
     type(BoundType), intent(inout) :: bound
     type(MeshType),  intent(inout) :: mesh
 
-    integer, allocatable, dimension(:,:) :: conn
-    integer, allocatable, dimension(:)   :: t_conn
+    integer, allocatable :: conn(:,:)
+    integer, allocatable :: type_conn(:)
 
     integer :: node_cur, node_com, sec, col, row
     integer :: i, j, k, cn, n_conn, n_move
@@ -947,6 +947,7 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
     do i = 1, geom.n_croP
         geom.croP(i).ori_pos(:) = geom.croP(i).pos(:)
     end do
+    mesh.n_beveled = 0
 
     ! Loop for junction
     do i = 1, bound.n_junc
@@ -954,10 +955,11 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
         ! Print progress bar
         call Mani_Progress_Bar(i, bound.n_junc)
 
-        ! Allocate conn wihout duplicated data, which is the half of connection data
+        ! Allocate conn that is not inlcuded duplicated data
+        ! The size of this array is the half of connection data
         n_conn = geom.n_sec * bound.junc(i).n_arm / 2
         allocate(conn(n_conn, 2))
-        allocate(t_conn(n_conn))
+        allocate(type_conn(n_conn))
 
         ! Loop for junction nodes
         cn = 0
@@ -981,34 +983,28 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
             if(b_con == .false.) then
                 cn            = cn + 1
                 conn(cn, 1:2) = bound.junc(i).conn(j, 1:2)
-                t_conn(cn)    = bound.junc(i).type_conn(j)
+                type_conn(cn) = bound.junc(i).type_conn(j)
             end if
         end do
 
         ! Print progress
-        ! The data conn contains information on which node is connected to the current node
-        ! The data t_conn contains connection type, 1 - neighboring 2 - self connection
         write(11, "(i20$)"), i
-        write(11, "(a$  )"), " th junc -> # of arms : "
+        write(11, "(a$  )"), " th junc -> # of nodes to be connected : "
         write(11, "(i7  )"), n_conn
-        do j = 1, n_conn
-            write(11, "(i30, a$)"), conn(j, 1), " th node --> "
-            write(11, "(i7,  a$)"), conn(j, 2), " th node,"
-            write(11, "(a12, i5)"), "type :", t_conn(j)
-        end do
 
         ! Modify the edge length
         do j = 1, n_conn
 
+            write(11, "(i30, a$)"), conn(j, 1), " th node --> "
+            write(11, "(i7,  a$)"), conn(j, 2), " th node,"
+            write(11, "(a12, i5)"), "type :", type_conn(j)
+
             ! Modify junction depending on connection type
-            if(t_conn(j) == 2) then
+            if(type_conn(j) == 2) then
 
                 ! ============================================================
-                !
                 ! Self-connection modification
-                !
                 ! ============================================================
-
                 ! Assign node from node connection data
                 node_cur = conn(j, 1)
                 node_com = conn(j, 2)
@@ -1082,28 +1078,30 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
                         ! Decrease basepair with certain size making ghost nodes
                         call Basepair_Decrease_Basepair(geom, bound, mesh, node_cur, node_com, abs(n_move))
                     end if
-
                 end if
-            else if(t_conn(j) == 1) then
+            else if(type_conn(j) == 1) then
 
                 ! ============================================================
-                !
-                ! neighbor-connection to fill the hole by increasing edge legnth
-                !
+                ! BEVELED vertex design
+                ! For neighbor-connection, increase edge legnth to fill hole
                 ! ============================================================
                 ! Node and sectional information
                 node_cur = conn(j, 1)
                 node_com = conn(j, 2)
 
-                ! Increase edge length of the duplex to fill junctional gap
-                call Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
+                if(para_vertex_design == "beveled") then
+
+                    ! Increase edge length of the duplex to fill junctional gap
+                    call Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
+                end if
             end if
         end do
 
         ! Deallocate memory
         deallocate(conn)
-        deallocate(t_conn)
+        deallocate(type_conn)
     end do
+
     write(0, "(a)"); write(11, "(a)")
 end subroutine Basepair_Modify_Junction
 
@@ -1658,6 +1656,7 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
 
     ! Return value, newly added node ID
     node = mesh.n_node
+    mesh.n_beveled = mesh.n_beveled + 1
 end subroutine Basepair_Add_Basepair
 
 ! ---------------------------------------------------------------------------------------

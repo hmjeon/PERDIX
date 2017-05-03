@@ -63,7 +63,7 @@
 		<Filter Name="Input">
 		<File RelativePath="..\src\Exam_2D_Open.f90"/>
 		<File RelativePath="..\src\Exam_3D_Open.f90"/>
-		<File RelativePath="..\src\Exam_Asym_Platonic.f90"/>
+		<File RelativePath="..\src\Exam_Chiral.f90"/>
 		<File RelativePath="..\src\Exam_Johnson.f90"/>
 		<File RelativePath="..\src\Exam_Prism.f90"/></Filter>
 		<Filter Name="Output">

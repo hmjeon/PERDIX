@@ -20,7 +20,7 @@ module Input
     use Exam_3D_Open
     use Exam_Johnson
     use Exam_Prism
-    use Exam_Asym_Platonic
+    use Exam_Chiral
 
     use Section
 
@@ -713,11 +713,11 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "        23. Pentagonal Cupola - J5,                24. Gyroelongated Square Cupola - J23"
     write(0, "(a)"), "        25. Gyroelongated Pentagonal Cupola - J24"
     write(0, "(a)")
-    write(0, "(a)"), "    VII - Closed Geometries - Asymmetric solids"
+    write(0, "(a)"), "    VII - Closed Geometries - Biscribed Chiral solids"
     write(0, "(a)"), "     ------------------------------------------"
-    write(0, "(a)"), "        26. Asymmetric Tetrahedron,                27. Asymmetric Cube"
-    write(0, "(a)"), "        28. Asymmetric Octahedron,                 29. Asymmetric Dodecahedron"
-    write(0, "(a)"), "        30. Asymmetric Icosahedron"
+    write(0, "(a)"), "        26. Biscribed Propello Tetrahedron,        27. Biscribed Propello Cube"
+    write(0, "(a)"), "        28. Biscribed Propello Octahedron,         29. Biscribed Snub Cube"
+    write(0, "(a)"), "        30. Biscribed Pentagonal Icositetrahedron"
     write(0, "(a)")
     write(0, "(a)"), "      0. Input from file (*.PLY)"
     write(0, "(a)")
@@ -839,11 +839,10 @@ subroutine Input_Select_File(prob, geom)
 
     prob.name_prob = prob.name_file
     prob.name_file = trim(prob.name_file)//&
-        "_"//trim(adjustl(trim(c_sec)))//"cs"//&        ! Cross-section
-        "_"//trim(adjustl(trim(c_bp)))//"bp"//&         ! Edge length
-        "_"//trim(para_vertex_design)//&                ! Vertex design
-        "_"//trim(para_vertex_modify)//&                ! Vertex modification
-        "_"//trim(para_cut_stap_method)                 ! Cutting method
+        "_"//trim(adjustl(trim(c_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(c_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
 
     ! Print filename and type
     do i = 0, 11, 11
@@ -879,12 +878,11 @@ subroutine Input_Select_Problem(prob, geom)
         case (10); call Exam_Open2D_Stickman            (prob, geom)
 
         ! 3D open geometry
-        case (11); call Exam_Open3D_End_Triangular_Prism_Quad (prob, geom)
-        case (12); call Exam_Open3D_End_Cube_Quad             (prob, geom)
-        case (13); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
-        case (14); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
-        case (15); call Exam_Open3D_Hemisphere_Quad           (prob, geom)
-        case (99); call Exam_Open3D_Cooling_Tower_Tri         (prob, geom)
+        case (11); call Exam_Open3D_End_Cube_Quad             (prob, geom)
+        case (12); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
+        case (13); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
+        case (14); call Exam_Open3D_Hemisphere_Quad           (prob, geom)
+        case (15); call Exam_Open3D_Cooling_Tower_Tri         (prob, geom)
 
         ! Prism and antiprism
         case (16); call Exam_Prism_Octagonal      (prob, geom)
@@ -900,12 +898,18 @@ subroutine Input_Select_Problem(prob, geom)
         case (24); call Exam_Johnson_Gyroelongated_Square_Cupola_J23     (prob, geom)
         case (25); call Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24 (prob, geom)
 
-        ! Asymmetric solids
-        case (26); call Exam_Asym_Tetrahedron  (prob, geom)
-        case (27); call Exam_Asym_Cube         (prob, geom)
-        case (28); call Exam_Asym_Octahedron   (prob, geom)
-        case (29); call Exam_Asym_Dodecahedron (prob, geom)
-        case (30); call Exam_Asym_Icosahedron  (prob, geom)
+        ! Chiral solids
+        case (26); call Exam_Chiral_Biscribed_Propello_Tetrahedron        (prob, geom)
+        case (27); call Exam_Chiral_Biscribed_Propello_Cube               (prob, geom)
+        case (28); call Exam_Chiral_Biscribed_Propello_Octahedron         (prob, geom)
+        case (29); call Exam_Chiral_Biscribed_Snub_Cube                   (prob, geom)
+        case (30); call Exam_Chiral_Biscribed_Pentagonal_Icositetrahedron (prob, geom)
+
+        case (31); call Exam_Chiral_Asym_Tetrahedron  (prob, geom)
+        case (32); call Exam_Chiral_Asym_Cube         (prob, geom)
+        case (33); call Exam_Chiral_Asym_Octahedron   (prob, geom)
+        case (34); call Exam_Chiral_Asym_Dodecahedron (prob, geom)
+        case (35); call Exam_Chiral_Asym_Icosahedron  (prob, geom)
 
         case default
             write(0, "(a$)"), "Error - Not defined problem : "
