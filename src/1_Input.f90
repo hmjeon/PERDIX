@@ -608,12 +608,9 @@ end subroutine Input_Reset_Parameter
 ! Set parameter dependence
 subroutine Input_Set_Parameter_Dependence
 
-    ! If new version cndo format, cut long scaffold
-    if(para_type_cndo == 2) para_max_cut_scaf = 7247
-
     ! For auto generation of output figures
     if(para_fig_output == "on" .or. para_cmd_Chimera == "on") then
-        para_fig_bgcolor      = "white"     ! [black, white, all], Background colo
+        para_fig_bgcolor      = "white"     ! [black, white, all], Background color
         para_chimera_axis     = .false.     ! Plot with axis at the ceneter of geometry (*.bild)
         para_chimera_102_info = .false.     ! Plot with edge and point number (_init_geo.bild)
         para_chimera_301_info = .false.     ! Plot with edge and point number (_check_geo.bild)
@@ -629,44 +626,49 @@ subroutine Input_Set_Parameter_Dependence
 
         ! UCSF Chimera output control
         if(para_fig_output == "on") then
-            para_write_101   = .false.      ! GEO file,                                Input_Write_GEO_File,             ".geo"
-            para_write_102   = .false.      ! Initial geometry,                        Input_Chimera_Init_Geometry,      "init_geo.bild"
-            para_write_103   = .false.      ! Faced initial geometry,                  Input_Tecplot_Init_Geometry,      "init_geo_face.dat"
-            para_write_104   = .false.      ! Schlegel diagram,                        Input_Chimera_Schlegel_Diagram,   "_schlegel.bild"
-            para_write_301   = .false.      ! Initial geometry with face orientation,  ModGeo_Chimera_Check_Geometry,    "_check_geo.bild"
-            para_write_302   = .false.      ! Initial geometry with local vector,      ModGeo_Chimera_Init_Geometry_L,   "_init_geo_local.bild"
-            para_write_303   = .false.      ! Modified geometry seperated from vertex, ModGeo_Chimera_Mod_Geometry,      "_mod_geo.bild"
-            para_write_401   = .false.      ! Cross-sectional geometry,                Section_Chimera_Cross_Geometry,   "_cross_geo.bild"
-            para_write_501   = .false.      ! Cylindrical model with orientation,      Basepair_Chimera_Cylinder_Ori,    "_cyl_ori1.bild"
-            para_write_502   = .true.       ! Cylindrical model,                       Basepair_Chimera_Cylinder,        "_cyl1.bild", "_cyl2.bild"
-            para_write_503   = .false.      ! Basepair model,                          Basepair_Chimera_Mesh,            "_mesh.bild"
-            para_write_504   = .false.      ! Cross-sectional geometry,                Basepair_Chimera_Cross_Geometry,  "_cross_geo_mod.bild"
-            para_write_505   = .true.       ! Txt file on edge length,                 Basepair_Write_Edge_Length,       "_edge_length_1.txt", "_edge_length_2.txt"
-            para_write_601_1 = .false.      ! Route 1, seperated edges,                Route_Chimera_Route, step 1,      "_route1_scaf.bild", "_route1_stap.bild"
-            para_write_601_2 = .false.      ! Route 2, contruction closed loop,        Route_Chimera_Route, step 2,      "_route2_scaf.bild", "_route2_stap.bild"
-            para_write_601_3 = .false.      ! Route 3, centered crossovers             Route_Chimera_Route, step 3,      "_route3_scaf.bild", "_route3_stap.bild"
-            para_write_601_4 = .false.      ! Route 4, modified centered crossovers,   Route_Chimera_Route, step 4,      "_route4_scaf.bild", "_route4_stap.bild"
-            para_write_601_5 = .false.      ! Route 5, scaffold route,                 Route_Chimera_Route, step 5,      "_route5_scaf.bild", "_route5_stap.bild"
-            para_write_606   = .false.      ! Sapnning tree for dual-graph,            Route_Graph_Chimera_Spanning_Tre, "_spantree.bild"
-            para_write_607   = .false.      ! Crossovers based on basepair model,      Route_Chimera_Crossovers,         "_crossovers.bild"
-            para_write_608   = .false.      ! 3-orientation vectors,                   Route_Chimera_Orientation,        "_orientation.bild"
-            para_write_609   = .false.      ! Atomic model without sequence design,    Route_Chimera_Atom,               "_atom.bild"
-            para_write_610   = .false.      ! Possible centered scaffold crossovers,   Route_Write_Centered_Scaf_Xover,  "_scaf_xover.txt"
-            para_write_701   = .false.      ! Txt on sequence design data,             SeqDesign_Write_Strand,           "strand.txt"
-            para_write_711   = .false.      ! CSV file for sequence data,              SeqDesign_Write_Strand,           "sequence.csv"
-            para_write_702   = .false.      ! Atomic model with sequence design,       SeqDesign_Chimera_Atom,           "_atom_nick.bild"
-            para_write_703   = .false.      ! Route 6, strand route with nick,         SeqDesign_Chimera_Route,          "_route6_scaf.bild", "_route6_stap.bild"
-            para_write_705   = .false.      ! Sequence model,                          SeqDesign_Chimera_Sequence,       "_sequence_design.bild"
-            para_write_706   = .false.      ! Atomic model bases on strands/sequence,  SeqDesign_Chimera_Strand,         "_strand.bild", "_sequence.bild"
-            para_write_710   = .false.      ! Edge-based sequence design,              SeqDesign_Write_Graphical_Output, "_design_edgeX"
-            para_write_801   = .false.      ! Txt on basepair based data,              Output_Write_Basepair,            "_basepair.txt"
-            para_write_802   = .false.      ! Txt on nucleotide based data,            Output_Write_Base,                "_base.txt"
-            para_write_803   = .true.       ! CanDo input file,                        Output_Write_CanDo,               ".cndo"
-            para_write_804   = .false.      ! Tecplot input file,                      Output_Write_TecPlot,             "_tecplot.dat"
-            para_write_805   = .false.      ! ADINA input file,                        Output_Write_ADINA,               "_adina.in"
-            para_write_808   = .false.      ! Txt on sectional edges based sequence,   Output_Write_Sequence_CroL,       "_seq_line.txt"
+            para_write_101   = .false.      !  GEO file,                                Input_Write_GEO_File,             ".geo"
+            para_write_102   = .false.      !  Initial geometry,                        Input_Chimera_Init_Geometry,      "init_geo.bild"
+            para_write_103   = .false.      !  Faced initial geometry,                  Input_Tecplot_Init_Geometry,      "init_geo_face.dat"
+            para_write_104   = .false.      !  Schlegel diagram,                        Input_Chimera_Schlegel_Diagram,   "_schlegel.bild"
+            para_write_301   = .false.      !  Initial geometry with face orientation,  ModGeo_Chimera_Check_Geometry,    "_check_geo.bild"
+            para_write_302   = .false.      !  Initial geometry with local vector,      ModGeo_Chimera_Init_Geometry_L,   "_init_geo_local.bild"
+            para_write_303   = .false.      !  Modified geometry seperated from vertex, ModGeo_Chimera_Mod_Geometry,      "_mod_geo.bild"
+            para_write_401   = .false.      !  Cross-sectional geometry,                Section_Chimera_Cross_Geometry,   "_cross_geo.bild"
+            para_write_501   = .false.      !  Cylindrical model with orientation,      Basepair_Chimera_Cylinder_Ori,    "_cyl_ori1.bild"
+            para_write_502   = .true.       ! *Cylindrical model,                       Basepair_Chimera_Cylinder,        "_cyl1.bild", "_cyl2.bild"
+            para_write_503   = .false.      !  Basepair model,                          Basepair_Chimera_Mesh,            "_mesh.bild"
+            para_write_504   = .false.      !  Cross-sectional geometry,                Basepair_Chimera_Cross_Geometry,  "_cross_geo_mod.bild"
+            para_write_505   = .true.       ! *Txt file on edge length,                 Basepair_Write_Edge_Length,       "_edge_length_1.txt", "_edge_length_2.txt"
+            para_write_601_1 = .false.      !  Route 1, seperated edges,                Route_Chimera_Route, step 1,      "_route1_scaf.bild", "_route1_stap.bild"
+            para_write_601_2 = .false.      !  Route 2, contruction closed loop,        Route_Chimera_Route, step 2,      "_route2_scaf.bild", "_route2_stap.bild"
+            para_write_601_3 = .false.      !  Route 3, centered crossovers             Route_Chimera_Route, step 3,      "_route3_scaf.bild", "_route3_stap.bild"
+            para_write_601_4 = .false.      !  Route 4, modified centered crossovers,   Route_Chimera_Route, step 4,      "_route4_scaf.bild", "_route4_stap.bild"
+            para_write_601_5 = .false.      !  Route 5, scaffold route,                 Route_Chimera_Route, step 5,      "_route5_scaf.bild", "_route5_stap.bild"
+            para_write_606   = .false.      !  Sapnning tree for dual-graph,            Route_Graph_Chimera_Spanning_Tre, "_spantree.bild"
+            para_write_607   = .false.      !  Crossovers based on basepair model,      Route_Chimera_Crossovers,         "_crossovers.bild"
+            para_write_608   = .false.      !  3-orientation vectors,                   Route_Chimera_Orientation,        "_orientation.bild"
+            para_write_609   = .false.      !  Atomic model without sequence design,    Route_Chimera_Atom,               "_atom.bild"
+            para_write_610   = .false.      !  Possible centered scaffold crossovers,   Route_Write_Centered_Scaf_Xover,  "_scaf_xover.txt"
+            para_write_701   = .false.      !  Txt on sequence design data,             SeqDesign_Write_Strand,           "strand.txt"
+            para_write_711   = .false.      !  CSV file for sequence data,              SeqDesign_Write_Strand,           "sequence.csv"
+            para_write_702   = .false.      !  Atomic model with sequence design,       SeqDesign_Chimera_Atom,           "_atom_nick.bild"
+            para_write_703   = .false.      !  Route 6, strand route with nick,         SeqDesign_Chimera_Route,          "_route6_scaf.bild", "_route6_stap.bild"
+            para_write_705   = .false.      !  Sequence model,                          SeqDesign_Chimera_Sequence,       "_sequence_design.bild"
+            para_write_706   = .false.      !  Atomic model bases on strands/sequence,  SeqDesign_Chimera_Strand,         "_strand.bild", "_sequence.bild"
+            para_write_710   = .false.      !  Edge-based sequence design,              SeqDesign_Write_Graphical_Output, "_design_edgeX"
+            para_write_801   = .false.      !  Txt on basepair based data,              Output_Write_Basepair,            "_basepair.txt"
+            para_write_802   = .false.      !  Txt on nucleotide based data,            Output_Write_Base,                "_base.txt"
+            para_write_803   = .true.       ! *CanDo input file,                        Output_Write_CanDo,               ".cndo"
+            para_write_804   = .false.      !  Tecplot input file,                      Output_Write_TecPlot,             "_tecplot.dat"
+            para_write_805   = .false.      !  ADINA input file,                        Output_Write_ADINA,               "_adina.in"
+            para_write_808   = .false.      !  Txt on sectional edges based sequence,   Output_Write_Sequence_CroL,       "_seq_line.txt"
+            para_type_cndo   = 2            !  [1, 2], CanDo file option, 1 : original format, 2 : updated format
+            para_cmd_Chimera = "on"
         end if
     end if
+
+    ! If new version cndo format, cut long scaffold
+    if(para_type_cndo == 2) para_max_cut_scaf = 7000
 end subroutine Input_Set_Parameter_Dependence
 
 ! ---------------------------------------------------------------------------------------
