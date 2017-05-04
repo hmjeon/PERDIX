@@ -781,8 +781,9 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
 
             if(Is_Same_Vector(pos_1, pos_2) == .false.) then
                 if(Norm(pos_1 - pos_2) > 0.4d0) then
-                    write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/200.0d0
-                    write(502, "(a)"), ".color orange"
+                    !write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/200.0d0
+                    !write(502, "(a)"), ".color orange"
+                    write(502, "(a)"), ".color dark gray"
                 else
                     write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
                 end if
@@ -797,8 +798,9 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
 
             if(Is_Same_Vector(pos_1, pos_2) ==.false.) then
                 if(Norm(pos_1 - pos_2) > 0.4d0) then
-                    write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/200.0d0
-                    write(502, "(a)"), ".color orange"
+                    !write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/200.0d0
+                    !write(502, "(a)"), ".color orange"
+                    write(502, "(a)"), ".color dark gray"
                 else
                     write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
                 end if
