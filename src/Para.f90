@@ -17,8 +17,7 @@ module Para
     implicit none
 
     ! Geometric paprameters
-    double precision, parameter :: para_init_scale       = 20.0d0       ! Initial geometric scale
-    integer         , parameter :: para_n_square_lattice = 0            ! # of pre-defined square lattice cross-section
+    double precision, parameter :: para_init_scale = 20.0d0     ! Initial geometric scale
 
     ! Program parameters
     character(10)  :: para_external                     ! [off, on], External parameter loading flag

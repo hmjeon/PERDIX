@@ -16,22 +16,22 @@ module Data_Geom
 
     ! Section data for arbitrary cross-section
     type :: SecType
-        character(len=10) :: types                  ! Lattice type, squre or honeycomb
+        character(len=10) :: types          ! Lattice type, squre or honeycomb
 
-        integer :: dir                              ! Section convection of caDNAnano
-        integer :: maxR, minR                       ! Maximum and minimum row
-        integer :: maxC, minC                       ! Maximum and minimum column
-        integer :: n_row, n_col                     ! Size of row and column
-        integer :: ref_row                          ! Reference row to set t-axis
-        integer :: ref_maxC, ref_minC               ! Maximum and minimum column in reference row
+        integer :: dir                      ! Section convection of caDNAnano
+        integer :: maxR, minR               ! Maximum and minimum row
+        integer :: maxC, minC               ! Maximum and minimum column
+        integer :: n_row, n_col             ! Size of row and column
+        integer :: ref_row                  ! Reference row to set t-axis
+        integer :: ref_maxC, ref_minC       ! Maximum and minimum column in reference row
 
-        integer, allocatable, dimension(:) :: id    ! Section ID
-        integer, allocatable, dimension(:) :: posR  ! Row position number
-        integer, allocatable, dimension(:) :: posC  ! Column position number
+        integer, allocatable :: id(:)       ! Section ID
+        integer, allocatable :: posR(:)     ! Row position number
+        integer, allocatable :: posC(:)     ! Column position number
 
         ! Connetivity for self connection route
         ! -1 : neighbor connection, num : section number to be connected for self-connection
-        integer, allocatable, dimension(:) :: conn
+        integer, allocatable :: conn(:)
     end type SecType
 
 ! ---------------------------------------------------------------------------------------
@@ -63,8 +63,8 @@ module Data_Geom
 
     ! Face type data structure
     type :: FaceType
-        integer :: n_poi                            ! The number of points
-        integer, allocatable, dimension (:) :: poi  ! Connectivity
+        integer :: n_poi                ! The number of points
+        integer, allocatable :: poi(:)  ! Connectivity
     end type FaceType
 
 ! ---------------------------------------------------------------------------------------
@@ -78,10 +78,13 @@ module Data_Geom
         integer :: min_edge_length
         integer :: max_edge_length
 
-        type(SecType) :: sec                                            ! section
-        type(PointType), allocatable, dimension(:) :: iniP, modP, croP  ! points
-        type(LineType),  allocatable, dimension(:) :: iniL, croL        ! lines
-        type(FaceType),  allocatable, dimension(:) :: face              ! face
+        type(SecType) :: sec                        ! Section
+        type(PointType), allocatable :: iniP(:)     ! Initial points
+        type(PointType), allocatable :: modP(:)     ! Modified points
+        type(PointType), allocatable :: croP(:)     ! Cross-sectional points
+        type(LineType),  allocatable :: iniL(:)     ! Initial lines
+        type(LineType),  allocatable :: croL(:)     ! Cross-sectional lines
+        type(FaceType),  allocatable :: face(:)     ! Face
     end type Geomtype
 
 ! ---------------------------------------------------------------------------------------

@@ -141,7 +141,7 @@ end subroutine Mani_Progress_Bar
 
 ! Initialize line data type
 subroutine Mani_Init_LineType(line, n_line)
-    type(LineType), allocatable, dimension(:), intent(inout) :: line
+    type(LineType), allocatable, intent(inout) :: line(:)
     integer, intent(in) :: n_line
     
     integer :: i, j

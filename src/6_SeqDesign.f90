@@ -501,8 +501,8 @@ end function SeqDesign_Get_Comp_Sequence
 subroutine SeqDesign_Build_Strand(dna)
     type(DNAType), intent(inout) :: dna
 
-    type(StrandType), allocatable, dimension(:) :: strand
-    logical,          allocatable, dimension(:) :: b_visit
+    type(StrandType), allocatable :: strand(:)
+    logical,          allocatable :: b_visit(:)
     type(ListBase),   pointer :: list_base, ptr_base
     type(TopType) :: cur_base
 
@@ -3080,7 +3080,7 @@ end function SeqDesign_Count_Remainder
 subroutine SeqDesign_Rebuild_Strand(dna)
     type(DNAType), intent(inout) :: dna
 
-    logical, allocatable, dimension(:) :: b_visit
+    logical, allocatable :: b_visit(:)
     type(ListBase), pointer :: list_base
     type(ListBase), pointer :: ptr_base
     type(TopType) :: cur_base

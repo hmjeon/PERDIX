@@ -1406,12 +1406,12 @@ end subroutine SpanTree_Interface_1_Sort
 ! The data structure used in the code is dynamic; however, arcs that forms a circuit 
 ! with the (actual) spanning tree are marked to be removed as soon as "they are the cheapest arc"
 subroutine SpanTree_Interface_2_Sort(tail, head, cost, up, list, mode)
-    integer, allocatable, intent(inout)               :: tail(:)
-    integer, allocatable, intent(inout)               :: head(:)
-    integer, allocatable, intent(inout)               :: cost(:)
-    integer, allocatable, intent(inout)               :: up(:)
-    integer, allocatable, dimension(:), intent(inout) :: list
-    character(*)                                      :: mode
+    integer, allocatable, intent(inout) :: tail(:)
+    integer, allocatable, intent(inout) :: head(:)
+    integer, allocatable, intent(inout) :: cost(:)
+    integer, allocatable, intent(inout) :: up(:)
+    integer, allocatable, intent(inout) :: list(:)
+    character(*)                        :: mode
 
     integer :: n_edge, i, k, kk
 

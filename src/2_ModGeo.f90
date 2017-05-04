@@ -1002,7 +1002,7 @@ subroutine ModGeo_Seperate_Line(geom, bound)
     type(GeomType),  intent(inout) :: geom
     type(BoundType), intent(inout) :: bound
 
-    integer, allocatable, dimension(:) :: count_arm
+    integer, allocatable :: count_arm(:)
     integer :: i, j, poi_1, poi_2, poi_c
 
     ! Set the number of the seperated points and lines
@@ -1218,10 +1218,10 @@ subroutine ModGeo_Set_Angle_Junction(geom, bound)
 
     type :: JuncType
         integer :: n_arm    ! The number of arms
-        double precision, allocatable, dimension(:) :: ang
+        double precision, allocatable :: ang(:)
     end type JuncType
 
-    type(JuncType), allocatable, dimension(:) :: junc
+    type(JuncType), allocatable :: junc(:)
     double precision :: pos_cur(3), pos_pre(3), pos_next(3)
     double precision :: tot_ang, ref_ang, max_ang, min_ang, ang
     double precision :: vec_1(3), vec_2(3)

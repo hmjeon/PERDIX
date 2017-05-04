@@ -25,12 +25,12 @@ module Data_Bound
         double precision :: tot_ang     ! Total angle at the junction
         double precision :: gap         ! Gap distance between junction and end of edges
 
-        integer, allocatable, dimension(:)   :: iniL        ! Initial line
-        integer, allocatable, dimension(:)   :: modP        ! Modified point
-        integer, allocatable, dimension(:,:) :: croP        ! Sectional point (# of arms, # of sections)
-        integer, allocatable, dimension(:,:) :: node        ! Nodes (# of arms, # of sections)
-        integer, allocatable, dimension(:,:) :: conn        ! Node connectivity (node #, node # to be connected))
-        integer, allocatable, dimension(:)   :: type_conn   ! Section connection type, negihbor(1) and self(2)
+        integer, allocatable :: iniL(:)         ! Initial line
+        integer, allocatable :: modP(:)         ! Modified point
+        integer, allocatable :: croP(:,:)       ! Sectional point (# of arms, # of sections)
+        integer, allocatable :: node(:,:)       ! Nodes (# of arms, # of sections)
+        integer, allocatable :: conn(:,:)       ! Node connectivity (node #, node # to be connected))
+        integer, allocatable :: type_conn(:)    ! Section connection type, negihbor(1) and self(2)
     end type JuncType
 
 ! ---------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ module Data_Bound
         integer :: n_outer      ! The number of outers
         integer :: n_junc       ! The number of juncs
 
-        type(JuncType), allocatable, dimension(:) :: junc
+        type(JuncType), allocatable :: junc(:)
     end type BoundType
 
 ! ---------------------------------------------------------------------------------------

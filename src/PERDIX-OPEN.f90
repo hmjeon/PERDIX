@@ -159,6 +159,11 @@ subroutine Report()
     ! Problem
     do i = 1, 30
 
+        ! Edge length
+        if(i == 14 .or. i == 15 .or. i == 28 .or. i == 30) then
+            edge = 1
+        end if
+
         ! Initialize input
         call Input_Initialize_Report(prob, geom, mesh, i, sec, edge, char_vert, char_cut)
 
@@ -544,7 +549,7 @@ subroutine Verify_Solution(mesh, dna)
     end do
 
     write(0, "(a)")
-    write(0, "(a25, a)"), "7.87538228587238E+06"," - Reference: Plate 42-bp edge length"
+    write(0, "(a25, a)"), "7.94214281059471E+06"," - Reference: Plate 42-bp edge length"
     write(0, "(es25.14)"), verify
 end subroutine Verify_Solution
 

@@ -105,7 +105,7 @@ subroutine Output_Check_Output(dna)
     type(DNAType), intent(in) :: dna
 
     integer :: i, j, count, cur_base, across, xover
-    integer, allocatable, dimension(:) :: base
+    integer, allocatable :: base(:)
 
     ! --------------------------------------------------
     ! Check the # of dnatop and bases in all strands
@@ -662,8 +662,7 @@ subroutine Output_Write_ADINA(prob, mesh)
     type(MeshType), intent(in) :: mesh
 
     character(200) :: path
-    integer, dimension(8) :: time
-    integer :: i
+    integer :: i, time(8)
 
     if(para_write_805 == .false.) return
 
@@ -978,7 +977,7 @@ subroutine Output_Write_Sequence_CroL(prob, mesh, dna)
     type(MeshType), intent(in) :: mesh
     type(DNAType),  intent(in) :: dna
 
-    character, allocatable, dimension(:) :: seq
+    character, allocatable :: seq(:)
     integer :: i, j, base, node
     character(200) :: path
 

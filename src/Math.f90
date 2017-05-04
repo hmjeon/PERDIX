@@ -108,13 +108,14 @@ end function Check_Intersection
 
 ! ---------------------------------------------------------------------------------------
 
-! Distance between lines
+! Closet point between lines
 ! http://geomalgorithms.com/a07-_distance.html#dist3D_Segment_to_Segment()
-function Find_Cloest_Point(a1, a2, b1, b2) result(pos)
+function Find_Cloest_Point(a1, a2, b1, b2, check) result(pos)
     double precision, intent(in) :: a1(3)
     double precision, intent(in) :: a2(3)
     double precision, intent(in) :: b1(3)
     double precision, intent(in) :: b2(3)
+    logical, intent(out) :: check
 
     double precision, parameter :: SMALL_NUM = 0.00000001d0
     double precision :: pos_u(3), pos_v(3), pos(3), u(3), v(3), w(3), dp(3)
@@ -144,10 +145,12 @@ function Find_Cloest_Point(a1, a2, b1, b2) result(pos)
         else
             tc = e / c
         end if
+        check = .false.
     else
 
         sc = (b*e - c*d) / dd
         tc = (a*e - b*d) / dd
+        check = .true.
     end if
 
     ! Get the difference of the two closest points

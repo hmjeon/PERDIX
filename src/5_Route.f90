@@ -766,8 +766,8 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
     type(MeshType),  intent(in)    :: mesh
     type(DNAType),   intent(inout) :: dna
 
-    integer, allocatable, dimension(:,:) :: conn
-    integer, allocatable, dimension(:,:) :: join
+    integer, allocatable :: conn(:,:)
+    integer, allocatable :: join(:,:)
 
     integer :: node_cur, iniL_cur, croL_cur, sec_cur
     integer :: node_com, iniL_com, croL_com, sec_com
@@ -1170,7 +1170,7 @@ subroutine Route_Add_Nucleotide(base, n_base, pos)
     integer,                     intent(inout) :: n_base
     double precision,            intent(in)    :: pos(3)
 
-    type(BaseType), allocatable, dimension(:) :: t_base
+    type(BaseType), allocatable :: t_base(:)
 
     integer :: i
 
@@ -1206,7 +1206,7 @@ end subroutine Route_Add_Nucleotide
 subroutine Route_Set_Strand_ID_Scaf(dna)
     type(DNAType), intent(inout) :: dna
 
-    logical, allocatable, dimension(:) :: visit
+    logical, allocatable :: visit(:)
     integer :: i, n_strand, start, search, count
 
     ! Print information
@@ -2927,8 +2927,8 @@ subroutine Route_Make_Scaf_Origami(prob, mesh, dna)
     type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
 
-    integer, allocatable, dimension(:) :: id_entry
-    logical, allocatable, dimension(:) :: b_visit
+    integer, allocatable :: id_entry(:)
+    logical, allocatable :: b_visit(:)
 
     integer :: i, j, count, n_xover, base
     integer :: strand, up, start, xover
@@ -4180,8 +4180,8 @@ subroutine Route_Center_Scaf_Crossover(geom, mesh, dna)
     
     ! Cross-section information on crossovers
     type :: CroLType
-        integer, allocatable, dimension(:) :: cn        ! The section connectivity
-        integer, allocatable, dimension(:) :: count     ! Counter
+        integer, allocatable :: cn(:)        ! The section connectivity
+        integer, allocatable :: count(:)     ! Counter
     end type CroLType
 
     type(CroLType), allocatable :: croL(:)

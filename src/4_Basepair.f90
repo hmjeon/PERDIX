@@ -299,8 +299,8 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
     type(BoundType), intent(inout) :: bound
     type(MeshType),  intent(inout) :: mesh
 
-    integer, allocatable, dimension(:,:) :: connect
-    integer, allocatable, dimension(:)   :: node_con
+    integer, allocatable :: connect(:,:)
+    integer, allocatable :: node_con(:)
     integer :: node_cur, iniL_cur, croL_cur, node_com, iniL_com, croL_com
     integer :: col_cur, row_cur, sec_cur, col_com, row_com, sec_com
     integer :: i, j, k, m, n, count, n_column, nei_line(2)
@@ -1346,7 +1346,7 @@ end subroutine Basepair_Make_Ghost_Node
 
 ! ---------------------------------------------------------------------------------------
 
-! Increase edge length of the duplex to fill junctional gap
+! Increase edge length for neighbor connection
 subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
     type(probType),  intent(in)    :: prob
     type(geomType),  intent(inout) :: geom
@@ -1355,18 +1355,23 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
     integer,         intent(in)    :: node_cur
     integer,         intent(in)    :: node_com
 
+    double precision :: pos_a1(3), pos_a2(3), pos_b1(3), pos_b2(3), pos_inter(3)
+    double precision :: len_a, len_b, rad
+    integer :: line_a, line_b, count_in, count_out
+    logical :: ok
+
     double precision :: a, b, c, y, angle, len_side
     double precision :: length, pos(3), vec_in(3), vec_out(3)
     integer :: node_in, node_out, node_in_dn, node_out_up
     integer :: i, count, n_col_bottom, poi_1, poi_2
 
     ! ==================================================
+    !
     !     vertex                     vertex
-    ! *-----#---->*      or      *<----#-----*
+    ! *---->#---->*      or      *<----#<----*
     ! node_cur   node_com        node_cur   node_com
     !
     ! ==================================================
-
     ! Set direction of node_in and node_out
     if(mesh.node(node_cur).up == -1) then
 
@@ -1431,15 +1436,15 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
     y = para_dist_bp
 
     ! If two nodes are close, skip this subroutine
-    if(dabs(a-b) < 0.001d0 ) then
-        mesh.node(node_in ).conn = 1
-        mesh.node(node_out).conn = 1
+    if(dabs(a - b) < 0.001d0) then
+        mesh.node(node_in ).conn = 1    ! Neighbor connection
+        mesh.node(node_out).conn = 1    ! Neighbor connection
 
         ! If the length of the multiple line in node_in is changed
         poi_1  = geom.croL(mesh.node(node_in).croL).poi(1)
         poi_2  = geom.croL(mesh.node(node_in).croL).poi(2)
         length = Norm(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
-        if(prob.n_bp_edge-2 /= nint(length / para_dist_bp)) then
+        if(prob.n_bp_edge - 2 /= nint(length / para_dist_bp)) then
             mesh.node(node_in).conn = 3
         end if
 
@@ -1447,7 +1452,7 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
         poi_1  = geom.croL(mesh.node(node_out).croL).poi(1)
         poi_2  = geom.croL(mesh.node(node_out).croL).poi(2)
         length = Norm(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
-        if(prob.n_bp_edge-2 /= nint(length / para_dist_bp)) then
+        if(prob.n_bp_edge - 2 /= nint(length / para_dist_bp)) then
             mesh.node(node_out).conn = 3
         end if
 
@@ -1458,38 +1463,86 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
     length = dsqrt(((b-a)/2.0d0)**2.0d0 / (1.0d0-((y**2.0d0-((c-b)/2.0d0)**2.0d0)/y**2.0d0)))
     count  = floor(length / dble(para_dist_bp))
 
-    ! Add new nodes in node_in
-    do i = 1, count
+    ! ============================================================
+    line_a = mesh.node(node_in).croL
+    line_b = mesh.node(node_out).croL
 
-        ! Add one bp at the end indicating vector, vec_in and return newly node ID
-        call Basepair_Add_Basepair(geom, bound, mesh, node_in,  vec_in)
+    ! With cross-sectional lines
+    pos_a1(1:3) = geom.croP(geom.croL(line_a).poi(1)).pos(:)
+    pos_a2(1:3) = geom.croP(geom.croL(line_a).poi(2)).pos(:)
+    pos_b1(1:3) = geom.croP(geom.croL(line_b).poi(1)).pos(:)
+    pos_b2(1:3) = geom.croP(geom.croL(line_b).poi(2)).pos(:)
+
+    ! With basepairs
+    !pos_a1(1:3) = mesh.node(node_in).pos(:)
+    !pos_a2(1:3) = mesh.node(node_in_dn).pos(:)
+    !pos_b1(1:3) = mesh.node(node_out).pos(:)
+    !pos_b2(1:3) = mesh.node(node_out_up).pos(:)
+
+    ! Find intersection point between two vectors
+    !pos_inter = Find_Intersection(pos_a1, pos_a2, pos_b1, pos_b2)
+    pos_inter = Find_Cloest_Point(pos_a1, pos_a2, pos_b1, pos_b2, ok)
+
+    if(ok == .true.) then
+
+        rad   = len_side / dtan(angle/2.0d0)
+        len_a = Norm(mesh.node(node_in).pos  - pos_inter) - rad
+        len_b = Norm(mesh.node(node_out).pos - pos_inter) - rad
+
+        ! Round off to the nearest integer
+        count_in  = dnint(len_a / dble(para_dist_bp))
+        count_out = dnint(len_b / dble(para_dist_bp))
+
+        ! Ceiling - round up
+        !count_in  = ceiling(len_a / dble(para_dist_bp))
+        !count_out = ceiling(len_b / dble(para_dist_bp))
+    else
+
+        count_in  = count
+        count_out = count
+    end if
+    ! ============================================================
+
+    ! Loop for adding new nodes
+    do i = 1, count_in
+
+        ! Add one basepair at the position indicating vector, return updated newly node ID
+        call Basepair_Add_Basepair(geom, bound, mesh, node_in, vec_in)
+
+        ! If the node was added, change junctional connectivity
+        if(i == count_in) mesh.node(node_in).conn = 3
+    end do
+
+    do i = 1, count_out
+
+        ! Add one basepair at the position indicating vector, return updated newly node ID
         call Basepair_Add_Basepair(geom, bound, mesh, node_out, vec_out)
 
-        ! After the edge was increased, change connectivity
-        if(i == count) then
-            mesh.node(node_in ).conn = 3
-            mesh.node(node_out).conn = 3
-        end if
+        ! If the node was added, change junctional connectivity
+        if(i == count_out) mesh.node(node_out).conn = 3
     end do
 
     ! Exception
-    if(count == 0) then
+    if(count_in == 0) then
         mesh.node(node_in ).conn = 1
-        mesh.node(node_out).conn = 1
 
         ! If the length of the multiple line in node_in is changed
         poi_1  = geom.croL(mesh.node(node_in).croL).poi(1)
         poi_2  = geom.croL(mesh.node(node_in).croL).poi(2)
         length = Norm(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
-        if(prob.n_bp_edge-2 /= nint(length / para_dist_bp)) then
+        if(prob.n_bp_edge - 2 /= nint(length / para_dist_bp)) then
             mesh.node(node_in).conn = 3
         end if
+    end if
+
+    if(count_out == 0) then
+        mesh.node(node_out).conn = 1
 
         ! If the length of the multiple line in node_out is changed
         poi_1  = geom.croL(mesh.node(node_out).croL).poi(1)
         poi_2  = geom.croL(mesh.node(node_out).croL).poi(2)
         length = Norm(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
-        if(prob.n_bp_edge-2 /= nint(length / para_dist_bp)) then
+        if(prob.n_bp_edge - 2 /= nint(length / para_dist_bp)) then
             mesh.node(node_out).conn = 3
         end if
     end if
@@ -1505,8 +1558,8 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     integer,          intent(inout) :: node
     double precision, intent(in)    :: vec(3)
 
-    type(NodeType), allocatable, dimension(:) :: t_node
-    type(EleType),  allocatable, dimension(:) :: t_ele
+    type(NodeType), allocatable :: t_node(:)
+    type(EleType),  allocatable :: t_ele(:)
 
     integer :: i, j, k, croP
 
@@ -1857,8 +1910,8 @@ subroutine Basepair_Delete_Nodes(mesh, min, max)
     integer,        intent(in)    :: min
     integer,        intent(in)    :: max
     
-    type(NodeType), allocatable, dimension(:) :: t_node
-    type(EleType),  allocatable, dimension(:) :: t_ele
+    type(NodeType), allocatable :: t_node(:)
+    type(EleType),  allocatable :: t_ele(:)
 
     integer :: i, j, n_delete, count
 
@@ -1975,8 +2028,8 @@ subroutine Basepair_Make_Sticky_End(geom, bound, mesh)
     type(BoundType), intent(inout) :: bound
     type(MeshType),  intent(inout) :: mesh
 
-    type(NodeType), allocatable, dimension(:) :: t_node
-    type(EleType),  allocatable, dimension(:) :: t_ele
+    type(NodeType), allocatable :: t_node(:)
+    type(EleType),  allocatable :: t_ele(:)
 
     double precision :: pos(3), vec(3)
     integer :: i, j, k, ii, jj, sec, node, pre, croP, pre_n_node, pre_n_ele
@@ -2460,8 +2513,8 @@ subroutine Basepair_Write_Edge_Length(prob, geom)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(inout) :: geom
 
-    integer, allocatable, dimension(:) :: num_bp
-    integer, allocatable, dimension(:) :: num_count
+    integer, allocatable :: num_bp(:)
+    integer, allocatable :: num_count(:)
 
     double precision :: length
     integer :: i, j, poi_1, poi_2, n_bp, n_numbp, tot_bp

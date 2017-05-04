@@ -56,7 +56,7 @@ module Data_DNA
         logical      :: b_circular     ! Is it circular strand
         character(4) :: types          ! The strand type, scaffold or staple
 
-        integer, allocatable, dimension(:) :: base
+        integer, allocatable :: base(:)
     end type StrandType
 
 ! ---------------------------------------------------------------------------------------
@@ -82,11 +82,11 @@ module Data_DNA
         integer :: n_unpaired_stap, n_nt_unpaired_stap
         integer :: graph_node, graph_edge
 
-        type(BaseType),   allocatable, dimension(:) :: base_scaf    ! Base in scaffold strand
-        type(BaseType),   allocatable, dimension(:) :: base_stap    ! Base in staple strand
-        type(TopType),    allocatable, dimension(:) :: top          ! dnatop
-        type(StrandType), allocatable, dimension(:) :: strand       ! Strand
-        integer,          allocatable, dimension(:,:) :: order_stap ! Staple ordering
+        type(BaseType),   allocatable :: base_scaf(:)       ! Base in scaffold strand
+        type(BaseType),   allocatable :: base_stap(:)       ! Base in staple strand
+        type(TopType),    allocatable :: top(:)             ! dnatop
+        type(StrandType), allocatable :: strand(:)          ! Strand
+        integer,          allocatable :: order_stap(:,:)    ! Staple ordering
     end type DNAType
 
 ! ---------------------------------------------------------------------------------------

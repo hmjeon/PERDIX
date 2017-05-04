@@ -41,7 +41,9 @@ module Input
     private Input_Print_Problem
     private Input_Print_Section
     private Input_Print_Num_BP_Edge
+    private Input_Print_Vertex_Design
     private Input_Set_Problem
+    private Input_Set_Vertex_Design
     private Input_Select_Problem
     private Input_Select_File
     private Input_Set_Section
@@ -66,8 +68,8 @@ subroutine Input_Initialize(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    integer :: arg, i, j, n_problem, n_section, n_edge_len
-    character(10) :: c_prob, c_sec, c_edge_len, c_stap_break
+    integer :: arg, i, j, n_problem, n_section, n_vertex, n_edge_len
+    character(10) :: c_prob, c_sec, c_edge_len, c_vertex, c_stap_break
     logical :: results
 
     ! Read parameters from env.dat
@@ -104,6 +106,10 @@ subroutine Input_Initialize(prob, geom)
 
         ! The negative value terminate the program
         if(prob.sel_bp_edge < 1 .or. prob.sel_bp_edge > 10) stop
+
+        ! Print vertex design options
+        call Input_Print_Vertex_Design()
+        read(*, *), prob.sel_vertex
     else
 
         ! ==================================================
@@ -112,24 +118,30 @@ subroutine Input_Initialize(prob, geom)
         arg = 1; call getarg(arg, c_prob)       ! 1st argument, problem
         arg = 2; call getarg(arg, c_sec)        ! 2nd argument, section
         arg = 3; call getarg(arg, c_edge_len)   ! 3rd argument, edge length
-        arg = 4; call getarg(arg, c_stap_break) ! 4th argument, staple-break rule
+        arg = 4; call getarg(arg, c_vertex)     ! 4th argument, vertex design
+        arg = 5; call getarg(arg, c_stap_break) ! 5th argument, staple-break rule
 
         !prob.name_file = trim(c_prob)
         read(c_prob,     *), n_problem
         read(c_sec,      *), n_section
         read(c_edge_len, *), n_edge_len
+        read(c_vertex,   *), n_vertex
 
         ! Set inputs for geometry, section, edge length, stap-break rule
         ! Zero means that it will take arbitrary inputs
         prob.sel_prob        = n_problem
         prob.sel_sec         = n_section
         prob.sel_bp_edge     = n_edge_len
+        prob.sel_vertex      = n_vertex
         para_cut_stap_method = trim(c_stap_break)
     end if
 
     ! ==================================================
-    ! Set problem, cross-section and edge length
+    ! Set problem, cross-section, edge length and vertex design
     ! ==================================================
+    ! Set vertex design
+    call Input_Set_Vertex_Design(prob)
+
     ! Set cross-section
     call Input_Set_Section(prob, geom)
 
@@ -697,8 +709,8 @@ subroutine Input_Print_Problem
     write(0, "(a)")
     write(0, "(a)"), "     II - 3D Open Geometries"
     write(0, "(a)"), "     -----------------------"
-    write(0, "(a)"), "        11. Open End Triangular Prism [QUAD],      12. Open End Cube [QUAD]"
-    write(0, "(a)"), "        13. Open End Pentagonal Prism [QUAD],      14. Open End Cylinder [QUAD]"
+    write(0, "(a)"), "        11. Open End Cube [QUAD],                  12. Open End Pentagonal Prism [QUAD]"
+    write(0, "(a)"), "        13. Open End Cylinder [QUAD],              14. Cooling Tower [TRI]"
     write(0, "(a)"), "        15. Hemisphere [QUAD]"
     write(0, "(a)")
     write(0, "(a)"), "    III - Closed Geometries - Prism and Antiprism"
@@ -750,45 +762,38 @@ subroutine Input_Print_Num_BP_Edge(prob)
     type(ProbType), intent(in) :: prob
 
     ! The minimum edge lengths pre-defined
-    if(prob.sel_sec <= para_n_square_lattice) then
-        write(0, "(a)")
-        write(0, "(a)"), "   C. Third input - Pre-defined minimum edge length"
-        write(0, "(a)")
-        write(0, "(a)"), "   [Square lattice]"
-        write(0, "(a)")
-        write(0, "(a)"), "    *  1.  32 BPs :  3 turn ->  3 [turn] * 10.67 [BPs/turn] =  32.00 [10.88nm]"
-        write(0, "(a)"), "       2.  43 BPs :  4 turn ->  4 [turn] * 10.67 [BPs/turn] =  42.67 [14.51nm]"
-        write(0, "(a)"), "       3.  53 BPs :  5 turn ->  5 [turn] * 10.67 [BPs/turn] =  53.34 [18.14nm]"
-        write(0, "(a)"), "    *  4.  64 BPs :  6 turn ->  6 [turn] * 10.67 [BPs/turn] =  64.00 [21.76nm]"
-        write(0, "(a)"), "       5.  75 BPs :  7 turn ->  7 [turn] * 10.67 [BPs/turn] =  74.67 [25.39nm]"
-        write(0, "(a)"), "       6.  85 BPs :  8 turn ->  8 [turn] * 10.67 [BPs/turn] =  85.34 [29.02nm]"
-        write(0, "(a)"), "    *  7.  96 BPs :  9 turn ->  9 [turn] * 10.67 [BPs/turn] =  96.00 [32.64nm]"
-        write(0, "(a)"), "       8. 107 BPs : 10 turn -> 10 [turn] * 10.67 [BPs/turn] = 106.67 [36.27nm]"
-        write(0, "(a)"), "       9. 117 BPs : 11 turn -> 11 [turn] * 10.67 [BPs/turn] = 117.34 [39.90nm]"
-        write(0, "(a)"), "    * 10. 128 BPs : 12 turn -> 12 [turn] * 10.67 [BPs/turn] = 128.00 [43.52nm]"
-        write(0, "(a)")
-    else
-        write(0, "(a)")
-        write(0, "(a)"), "   C. Third input - Pre-defined minimum edge length"
-        write(0, "(a)"), "   ================================================"
-        write(0, "(a)")
-        write(0, "(a)"), "   [Honeycomb lattice]"
-        write(0, "(a)")
-        write(0, "(a)"), "      1.  31 bp =  3 turn * 10.5 bp/turn ->  31 bp * 0.34nm/bp = 10.54nm"
-        write(0, "(a)"), "   *  2.  42 bp =  4 turn * 10.5 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
-        write(0, "(a)"), "      3.  52 bp =  5 turn * 10.5 bp/turn ->  52 bp * 0.34nm/bp = 17.85nm"
-        write(0, "(a)"), "   *  4.  63 bp =  6 turn * 10.5 bp/turn ->  63 bp * 0.34nm/bp = 21.42nm"
-        write(0, "(a)"), "      5.  73 bp =  7 turn * 10.5 bp/turn ->  73 bp * 0.34nm/bp = 24.99nm"
-        write(0, "(a)"), "   *  6.  84 bp =  8 turn * 10.5 bp/turn ->  84 bp * 0.34nm/bp = 28.56nm"
-        write(0, "(a)"), "      7.  94 bp =  9 turn * 10.5 bp/turn ->  94 bp * 0.34nm/bp = 32.13nm"
-        write(0, "(a)"), "   *  8. 105 bp = 10 turn * 10.5 bp/turn -> 105 bp * 0.34nm/bp = 35.70nm"
-        write(0, "(a)"), "      9. 115 bp = 11 turn * 10.5 bp/turn -> 115 bp * 0.34nm/bp = 39.27nm"
-        write(0, "(a)"), "   * 10. 126 bp = 12 turn * 10.5 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
-        write(0, "(a)")
-    end if
-
+    write(0, "(a)")
+    write(0, "(a)"), "   C. Third input - Pre-defined minimum edge length"
+    write(0, "(a)"), "   ================================================"
+    write(0, "(a)")
+    write(0, "(a)"), "   [Honeycomb lattice]"
+    write(0, "(a)")
+    write(0, "(a)"), "      1.  31 bp =  3 turn * 10.5 bp/turn ->  31 bp * 0.34nm/bp = 10.54nm"
+    write(0, "(a)"), "   *  2.  42 bp =  4 turn * 10.5 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
+    write(0, "(a)"), "      3.  52 bp =  5 turn * 10.5 bp/turn ->  52 bp * 0.34nm/bp = 17.85nm"
+    write(0, "(a)"), "   *  4.  63 bp =  6 turn * 10.5 bp/turn ->  63 bp * 0.34nm/bp = 21.42nm"
+    write(0, "(a)"), "      5.  73 bp =  7 turn * 10.5 bp/turn ->  73 bp * 0.34nm/bp = 24.99nm"
+    write(0, "(a)"), "   *  6.  84 bp =  8 turn * 10.5 bp/turn ->  84 bp * 0.34nm/bp = 28.56nm"
+    write(0, "(a)"), "      7.  94 bp =  9 turn * 10.5 bp/turn ->  94 bp * 0.34nm/bp = 32.13nm"
+    write(0, "(a)"), "   *  8. 105 bp = 10 turn * 10.5 bp/turn -> 105 bp * 0.34nm/bp = 35.70nm"
+    write(0, "(a)"), "      9. 115 bp = 11 turn * 10.5 bp/turn -> 115 bp * 0.34nm/bp = 39.27nm"
+    write(0, "(a)"), "   * 10. 126 bp = 12 turn * 10.5 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
+    write(0, "(a)")
     write(0, "(a)"), "   Select the number [Enter] : "
 end subroutine Input_Print_Num_BP_Edge
+
+! ---------------------------------------------------------------------------------------
+
+! Print vertex design options
+subroutine Input_Print_Vertex_Design
+    write(0, "(a)")
+    write(0, "(a)"), "   D. Fourth input - Vertex design"
+    write(0, "(a)")
+    write(0, "(a)"), "   1. Flat vertex"
+    write(0, "(a)"), "   2. Beveled vertex"
+    write(0, "(a)")
+    write(0, "(a)"), "   Select the number [Enter] : "
+end subroutine Input_Print_Vertex_Design
 
 ! ---------------------------------------------------------------------------------------
 
@@ -801,6 +806,21 @@ subroutine Input_Set_Problem(prob, geom)
     if(prob.sel_prob == 0) call Input_Select_File(prob, geom)
     if(prob.sel_prob /= 0) call Input_Select_Problem(prob, geom)
 end subroutine Input_Set_Problem
+
+! ---------------------------------------------------------------------------------------
+
+! Set vertex design
+subroutine Input_Set_Vertex_Design(prob)
+    type(ProbType), intent(inout) :: prob
+
+    if(prob.sel_vertex == 1) then
+        para_vertex_design = "flat"
+    else
+        para_vertex_design = "beveled"
+    end if
+    
+    print *, para_vertex_design
+end subroutine Input_Set_Vertex_Design
 
 ! ---------------------------------------------------------------------------------------
 
@@ -1241,7 +1261,7 @@ subroutine Input_Convert_Face_To_Line(geom)
         integer :: cn(100)   ! Maximum connectivity
     end type MeshType
 
-    type(MeshType), allocatable, dimension (:) :: Basepair_con  ! 1st: # of meshes, 2nd: points
+    type(MeshType), allocatable :: Basepair_con(:)  ! 1st: # of meshes, 2nd: points
     type(ListConn), pointer :: straight_con
     type(ListConn), pointer :: ptr, ptr1
 

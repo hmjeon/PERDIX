@@ -48,8 +48,8 @@ module Data_Mesh
         integer :: n_ele  = 0   ! The number of elements
         integer :: n_beveled    ! The number of beveled nodes
 
-        type(NodeType), allocatable, dimension(:) :: node   ! Node array
-        type(EleType),  allocatable, dimension(:) :: ele    ! Element array
+        type(NodeType), allocatable :: node(:)   ! Node array
+        type(EleType),  allocatable :: ele(:)    ! Element array
     end type
 
 ! ---------------------------------------------------------------------------------------
