@@ -26,13 +26,13 @@ module Chimera
     public  Chimera_Figure_Output
     public  Chimera_Figure_Route_Step
 
-    private Chimera_Init_ChimeraType
+    private Chimera_Init_ChimType
     private Chimera_Make_Python_Figure
 
 ! ---------------------------------------------------------------------------------------
 
     ! Chimera data type
-    type :: ChimeraType
+    type :: ChimType
 
         logical :: run_init_geo         !  1. Input_Chimera_Init_Geometry,     "_init_geo.bild"
         logical :: run_check_geo        !  2. ModGeo_Chimera_Check_Geometry,   "_check_geo.bild"
@@ -76,59 +76,58 @@ module Chimera
         ! Light parameter
         character(15)    :: projection_mode     ! Projection mode
         character(15)    :: light_mode          ! Light mode
+        character(15)    :: preset              ! Preset
+        logical          :: depthcue            ! Depth cue
         double precision :: light_brightness    ! Brightness
         double precision :: light_contrast      ! Contrast
         double precision :: light_ratio         ! Ratio
-    end type ChimeraType
+    end type ChimType
 
 contains
-    
+
 ! ---------------------------------------------------------------------------------------
 
 ! Make command file to run outputs by Chimera
 subroutine Chimera_Command_Output(prob)
     type(ProbType), intent(in) :: prob
 
-    type(ChimeraType) :: Chimera
+    type(ChimType) :: chim
     character(200) :: path
     logical :: results
     integer :: i
 
     ! Initialzie Chimera data
-    call Chimera_Init_ChimeraType(Chimera)
+    call Chimera_Init_ChimType(chim)
 
-    Chimera.scale = 1.0d0
-    Chimera.view  = para_fig_view
-    
-    Chimera.run_init_geo        = para_write_102    ! 1.  Input_Chimera_Init_Geometry,     "_init_geo.bild"
-    Chimera.run_check_geo       = para_write_301    ! 2.  ModGeo_Chimera_Check_Geometry,   "_check_geo.bild"
-    Chimera.run_init_geo_local  = para_write_302    ! 3.  ModGeo_Chimera_Init_Geometry_L,  "_init_geo_local.bild"
-    Chimera.run_mod_geo         = para_write_303    ! 4.  ModGeo_Chimera_Mod_Geometry,     "_mod_geo.bild"
-    Chimera.run_cross_geo       = para_write_401    ! 5.  Section_Chimera_Cross_Geometry,  "_cross_geo.bild"
-    Chimera.run_cylinder1_ori   = para_write_501    ! 6.  Basepair_Chimera_Cylinder_Ori,   "_cyl1_ori.bild"
-    Chimera.run_cylinder1       = para_write_502    ! 7.  Basepair_Chimera_Cylinder,       "_cyl1.bild"
-    Chimera.run_cylinder2       = para_write_502    ! 8.  Basepair_Chimera_Cylinder,       "_cyl2.bild"
-    Chimera.run_mesh            = para_write_503    ! 9.  Basepair_Chimera_Mesh,           "_mesh.bild"
-    Chimera.run_cross_geo_mod   = para_write_504    ! 10. Basepair_Chimera_Cross_Geometry, "_cross_geo_mod.bild"
-    Chimera.run_route1_scaf     = para_write_601_1  ! 11. Route_Chimera_Route, step 1,     "_route1_scaf.bild"
-    Chimera.run_route1_stap     = para_write_601_1  ! 12. Route_Chimera_Route, step 1,     "_route1_stap.bild"
-    Chimera.run_route2_scaf     = para_write_601_2  ! 13. Route_Chimera_Route, step 2,     "_route2_scaf.bild"
-    Chimera.run_route2_stap     = para_write_601_2  ! 14. Route_Chimera_Route, step 2,     "_route2_stap.bild"
-    Chimera.run_route3_scaf     = para_write_601_3  ! 15. Route_Chimera_Route, step 3,     "_route3_scaf.bild"
-    Chimera.run_route3_stap     = para_write_601_3  ! 16. Route_Chimera_Route, step 3,     "_route3_stap.bild"
-    Chimera.run_route4_scaf     = para_write_601_4  ! 17. Route_Chimera_Route, step 4,     "_route4_scaf.bild"
-    Chimera.run_route4_stap     = para_write_601_4  ! 18. Route_Chimera_Route, step 4,     "_route4_stap.bild"
-    Chimera.run_route5_scaf     = para_write_601_5  ! 19. Route_Chimera_Route, step 5,     "_route5_scaf.bild"
-    Chimera.run_route5_stap     = para_write_601_5  ! 20. Route_Chimera_Route, step 5,     "_route5_stap.bild"
-    Chimera.run_crossovers      = para_write_607    ! 21. Route_Chimera_Crossovers,        "_crossovers.bild"
-    Chimera.run_orientation     = para_write_608    ! 22. Route_Chimera_Orientation,       "_orientation.bild"
-    Chimera.run_atom            = para_write_609    ! 23. Route_Chimera_Atom,              "_atom.bild"
-    Chimera.run_atom_nick       = para_write_702    ! 24. SeqDesign_Chimera_Atom,          "_atom_nick.bild"
-    Chimera.run_route6_scaf     = para_write_703    ! 25. SeqDesign_Chimera_Route,         "_route6_scaf.bild"
-    Chimera.run_route6_stap     = para_write_703    ! 26. SeqDesign_Chimera_Route,         "_route6_stap.bild"
-    Chimera.run_seq_design      = para_write_705    ! 27. SeqDesign_Chimera_Sequence,      "_sequence_design.bild"
-    Chimera.run_strand          = para_write_706    ! 28. SeqDesign_Chimera_Strand,        "_strand.bild"
-    Chimera.run_sequence        = para_write_706    ! 29. SeqDesign_Chimera_Strand,        "_sequence.bild"
+    chim.run_init_geo       = para_write_102    ! 1.  Input_Chimera_Init_Geometry,     "_init_geo.bild"
+    chim.run_check_geo      = para_write_301    ! 2.  ModGeo_Chimera_Check_Geometry,   "_check_geo.bild"
+    chim.run_init_geo_local = para_write_302    ! 3.  ModGeo_Chimera_Init_Geometry_L,  "_init_geo_local.bild"
+    chim.run_mod_geo        = para_write_303    ! 4.  ModGeo_Chimera_Mod_Geometry,     "_mod_geo.bild"
+    chim.run_cross_geo      = para_write_401    ! 5.  Section_Chimera_Cross_Geometry,  "_cross_geo.bild"
+    chim.run_cylinder1_ori  = para_write_501    ! 6.  Basepair_Chimera_Cylinder_Ori,   "_cyl1_ori.bild"
+    chim.run_cylinder1      = para_write_502    ! 7.  Basepair_Chimera_Cylinder,       "_cyl1.bild"
+    chim.run_cylinder2      = para_write_502    ! 8.  Basepair_Chimera_Cylinder,       "_cyl2.bild"
+    chim.run_mesh           = para_write_503    ! 9.  Basepair_Chimera_Mesh,           "_mesh.bild"
+    chim.run_cross_geo_mod  = para_write_504    ! 10. Basepair_Chimera_Cross_Geometry, "_cross_geo_mod.bild"
+    chim.run_route1_scaf    = para_write_601_1  ! 11. Route_Chimera_Route, step 1,     "_route1_scaf.bild"
+    chim.run_route1_stap    = para_write_601_1  ! 12. Route_Chimera_Route, step 1,     "_route1_stap.bild"
+    chim.run_route2_scaf    = para_write_601_2  ! 13. Route_Chimera_Route, step 2,     "_route2_scaf.bild"
+    chim.run_route2_stap    = para_write_601_2  ! 14. Route_Chimera_Route, step 2,     "_route2_stap.bild"
+    chim.run_route3_scaf    = para_write_601_3  ! 15. Route_Chimera_Route, step 3,     "_route3_scaf.bild"
+    chim.run_route3_stap    = para_write_601_3  ! 16. Route_Chimera_Route, step 3,     "_route3_stap.bild"
+    chim.run_route4_scaf    = para_write_601_4  ! 17. Route_Chimera_Route, step 4,     "_route4_scaf.bild"
+    chim.run_route4_stap    = para_write_601_4  ! 18. Route_Chimera_Route, step 4,     "_route4_stap.bild"
+    chim.run_route5_scaf    = para_write_601_5  ! 19. Route_Chimera_Route, step 5,     "_route5_scaf.bild"
+    chim.run_route5_stap    = para_write_601_5  ! 20. Route_Chimera_Route, step 5,     "_route5_stap.bild"
+    chim.run_crossovers     = para_write_607    ! 21. Route_Chimera_Crossovers,        "_crossovers.bild"
+    chim.run_orientation    = para_write_608    ! 22. Route_Chimera_Orientation,       "_orientation.bild"
+    chim.run_atom           = para_write_609    ! 23. Route_Chimera_Atom,              "_atom.bild"
+    chim.run_atom_nick      = para_write_702    ! 24. SeqDesign_Chimera_Atom,          "_atom_nick.bild"
+    chim.run_route6_scaf    = para_write_703    ! 25. SeqDesign_Chimera_Route,         "_route6_scaf.bild"
+    chim.run_route6_stap    = para_write_703    ! 26. SeqDesign_Chimera_Route,         "_route6_stap.bild"
+    chim.run_seq_design     = para_write_705    ! 27. SeqDesign_Chimera_Sequence,      "_sequence_design.bild"
+    chim.run_strand         = para_write_706    ! 28. SeqDesign_Chimera_Strand,        "_strand.bild"
+    chim.run_sequence       = para_write_706    ! 29. SeqDesign_Chimera_Strand,        "_sequence.bild"
 
     ! Make step directories for PNG files
     results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_py\")
@@ -136,35 +135,35 @@ subroutine Chimera_Command_Output(prob)
     ! Python script for geometric data
     path = trim(prob.path_work1)//"output_py\"//trim(prob.name_file)
 
-    open(unit=101, file=trim(path)//"_init_geo.py",        form="formatted")
-    open(unit=102, file=trim(path)//"_check_geo.py",       form="formatted")
-    open(unit=103, file=trim(path)//"_init_geo_local.py",  form="formatted")
-    open(unit=104, file=trim(path)//"_mod_geo.py",         form="formatted")
-    open(unit=105, file=trim(path)//"_cross_geo.py",       form="formatted")
-    open(unit=106, file=trim(path)//"_cyl_ori1.py",        form="formatted")
-    open(unit=107, file=trim(path)//"_cyl1.py",            form="formatted")
-    open(unit=108, file=trim(path)//"_cyl2.py",            form="formatted")
-    open(unit=109, file=trim(path)//"_mesh.py",            form="formatted")
-    open(unit=110, file=trim(path)//"_cross_geo_mod.py",   form="formatted")
-    open(unit=111, file=trim(path)//"_route1_scaf.py",     form="formatted")
-    open(unit=112, file=trim(path)//"_route1_stap.py",     form="formatted")
-    open(unit=113, file=trim(path)//"_route2_scaf.py",     form="formatted")
-    open(unit=114, file=trim(path)//"_route2_stap.py",     form="formatted")
-    open(unit=115, file=trim(path)//"_route3_scaf.py",     form="formatted")
-    open(unit=116, file=trim(path)//"_route3_stap.py",     form="formatted")
-    open(unit=117, file=trim(path)//"_route4_scaf.py",     form="formatted")
-    open(unit=118, file=trim(path)//"_route4_stap.py",     form="formatted")
-    open(unit=119, file=trim(path)//"_route5_scaf.py",     form="formatted")
-    open(unit=120, file=trim(path)//"_route5_stap.py",     form="formatted")
-    open(unit=121, file=trim(path)//"_crossovers.py",      form="formatted")
-    open(unit=122, file=trim(path)//"_orientation.py",     form="formatted")
-    open(unit=123, file=trim(path)//"_atom.py",            form="formatted")
-    open(unit=124, file=trim(path)//"_atom_nick.py",       form="formatted")
-    open(unit=125, file=trim(path)//"_route6_scaf.py",     form="formatted")
-    open(unit=126, file=trim(path)//"_route6_stap.py",     form="formatted")
-    open(unit=127, file=trim(path)//"_sequence_design.py", form="formatted")
-    open(unit=128, file=trim(path)//"_strand.py",          form="formatted")
-    open(unit=129, file=trim(path)//"_sequence.py",        form="formatted")
+    open(unit = 101, file = trim(path)//"_init_geo.py",        form = "formatted")
+    open(unit = 102, file = trim(path)//"_check_geo.py",       form = "formatted")
+    open(unit = 103, file = trim(path)//"_init_geo_local.py",  form = "formatted")
+    open(unit = 104, file = trim(path)//"_mod_geo.py",         form = "formatted")
+    open(unit = 105, file = trim(path)//"_cross_geo.py",       form = "formatted")
+    open(unit = 106, file = trim(path)//"_cyl_ori1.py",        form = "formatted")
+    open(unit = 107, file = trim(path)//"_cyl1.py",            form = "formatted")
+    open(unit = 108, file = trim(path)//"_cyl2.py",            form = "formatted")
+    open(unit = 109, file = trim(path)//"_mesh.py",            form = "formatted")
+    open(unit = 110, file = trim(path)//"_cross_geo_mod.py",   form = "formatted")
+    open(unit = 111, file = trim(path)//"_route1_scaf.py",     form = "formatted")
+    open(unit = 112, file = trim(path)//"_route1_stap.py",     form = "formatted")
+    open(unit = 113, file = trim(path)//"_route2_scaf.py",     form = "formatted")
+    open(unit = 114, file = trim(path)//"_route2_stap.py",     form = "formatted")
+    open(unit = 115, file = trim(path)//"_route3_scaf.py",     form = "formatted")
+    open(unit = 116, file = trim(path)//"_route3_stap.py",     form = "formatted")
+    open(unit = 117, file = trim(path)//"_route4_scaf.py",     form = "formatted")
+    open(unit = 118, file = trim(path)//"_route4_stap.py",     form = "formatted")
+    open(unit = 119, file = trim(path)//"_route5_scaf.py",     form = "formatted")
+    open(unit = 120, file = trim(path)//"_route5_stap.py",     form = "formatted")
+    open(unit = 121, file = trim(path)//"_crossovers.py",      form = "formatted")
+    open(unit = 122, file = trim(path)//"_orientation.py",     form = "formatted")
+    open(unit = 123, file = trim(path)//"_atom.py",            form = "formatted")
+    open(unit = 124, file = trim(path)//"_atom_nick.py",       form = "formatted")
+    open(unit = 125, file = trim(path)//"_route6_scaf.py",     form = "formatted")
+    open(unit = 126, file = trim(path)//"_route6_stap.py",     form = "formatted")
+    open(unit = 127, file = trim(path)//"_sequence_design.py", form = "formatted")
+    open(unit = 128, file = trim(path)//"_strand.py",          form = "formatted")
+    open(unit = 129, file = trim(path)//"_sequence.py",        form = "formatted")
 
     ! Python script for geometric data
     do i = 101, 129
@@ -204,22 +203,24 @@ subroutine Chimera_Command_Output(prob)
         if(i == 128) write(i, "(a)"), "runCommand('open "//trim(path)//"_strand.bild')"
         if(i == 129) write(i, "(a)"), "runCommand('open "//trim(path)//"_sequence.bild')"
 
-        write(i, "(a)"), "runCommand('windowsize "//trim(adjustl(Int2Str(Chimera.size_x)))//" "//trim(adjustl(Int2Str(Chimera.size_y)))//"')"
-        write(i, "(a)"), "runCommand('set projection "//trim(Chimera.projection_mode)//"')"
-        write(i, "(a)"), "runCommand('lighting mode " //trim(Chimera.light_mode)//"')"
+        write(i, "(a)"), "runCommand('windowsize "//trim(adjustl(Int2Str(chim.size_x)))//" "//trim(adjustl(Int2Str(chim.size_y)))//"')"
+        write(i, "(a)"), "runCommand('set projection "//trim(chim.projection_mode)//"')"
+        write(i, "(a)"), "runCommand('lighting mode " //trim(chim.light_mode)//"')"
 
         if(i == 127) then
             write(i, "(a)"), "runCommand('lighting brightness 0.95')"
             write(i, "(a)"), "runCommand('lighting contrast 0.0')"
             write(i, "(a)"), "runCommand('lighting ratio 1.0')"
         else
-            write(i, "(a)"), "runCommand('lighting brightness "//trim(adjustl(Dble2Str(Chimera.light_brightness)))//"')"
-            write(i, "(a)"), "runCommand('lighting contrast "//trim(adjustl(Dble2Str(Chimera.light_contrast)))//"')"
-            write(i, "(a)"), "runCommand('lighting ratio "//trim(adjustl(Dble2Str(Chimera.light_ratio)))//"')"
+            write(i, "(a)"), "runCommand('lighting brightness "//trim(adjustl(Dble2Str(chim.light_brightness)))//"')"
+            write(i, "(a)"), "runCommand('lighting contrast "//trim(adjustl(Dble2Str(chim.light_contrast)))//"')"
+            write(i, "(a)"), "runCommand('lighting ratio "//trim(adjustl(Dble2Str(chim.light_ratio)))//"')"
         end if
 
-        write(i, "(a)"), "runCommand('~set depthCue')"
-        write(i, "(a)"), "runCommand('preset apply publication 3')"
+        write(i, "(a)"), "runCommand('preset apply "//trim(chim.preset)//"')"
+
+        if(chim.depthcue == .false.) write(i, "(a)"), "runCommand('~set depthCue')"
+        if(chim.depthcue == .true. ) write(i, "(a)"), "runCommand('set depthCue')"
 
         ! Set background color
         if(para_fig_bgcolor == "black") then
@@ -241,12 +242,18 @@ subroutine Chimera_Command_Output(prob)
         end if
 
         ! Set view
-        if(Chimera.view == "XZ") then
+        if(chim.view == "xz") then
             write(i, "(a)"), "runCommand('turn x -90')"
-        else if(Chimera.view == "YZ") then
+        else if(chim.view == "yz") then
             write(i, "(a)"), "runCommand('turn x -90')"
             write(i, "(a)"), "runCommand('turn y -90')"
-        else if(Chimera.view == "XYZ") then
+        else if(chim.view == "xyz1") then
+            write(i, "(a)"), "runCommand('turn x -90')"
+            write(i, "(a)"), "runCommand('turn y -45')"
+            write(i, "(a)"), "runCommand('turn z 35')"
+        else if(chim.view == "xyz2") then
+            write(i, "(a)"), "runCommand('turn x 60')"
+        else if(chim.view == "xyz") then
             write(i, "(a)"), "runCommand('turn x -90')"
             write(i, "(a)"), "runCommand('turn y -120')"
             write(i, "(a)"), "runCommand('turn x 35')"
@@ -265,35 +272,35 @@ subroutine Chimera_Command_Output(prob)
     path = trim('"'//trim(prob.path_chimera)//'" --script')&
         //" "//"output_py\"//trim(prob.name_file)
 
-    if(Chimera.run_init_geo        == .true.) write(1001, "(a)"), trim(path)//"_init_geo.py"
-    if(Chimera.run_check_geo       == .true.) write(1001, "(a)"), trim(path)//"_check_geo.py"
-    if(Chimera.run_init_geo_local  == .true.) write(1001, "(a)"), trim(path)//"_init_geo_local.py"
-    if(Chimera.run_mod_geo         == .true.) write(1001, "(a)"), trim(path)//"_mod_geo.py"
-    if(Chimera.run_cross_geo       == .true.) write(1001, "(a)"), trim(path)//"_cross_geo.py"
-    if(Chimera.run_cylinder1_ori   == .true.) write(1001, "(a)"), trim(path)//"_cyl1_ori.py"
-    if(Chimera.run_cylinder1       == .true.) write(1001, "(a)"), trim(path)//"_cyl1.py"
-    if(Chimera.run_cylinder2       == .true.) write(1001, "(a)"), trim(path)//"_cyl2.py"
-    if(Chimera.run_mesh            == .true.) write(1001, "(a)"), trim(path)//"_mesh.py"
-    if(Chimera.run_cross_geo_mod   == .true.) write(1001, "(a)"), trim(path)//"_cross_geo_mod.py"
-    if(Chimera.run_route1_scaf     == .true.) write(1001, "(a)"), trim(path)//"_route1_scaf.py"
-    if(Chimera.run_route1_stap     == .true.) write(1001, "(a)"), trim(path)//"_route1_stap.py"
-    if(Chimera.run_route2_scaf     == .true.) write(1001, "(a)"), trim(path)//"_route2_scaf.py"
-    if(Chimera.run_route2_stap     == .true.) write(1001, "(a)"), trim(path)//"_route2_stap.py"
-    if(Chimera.run_route3_scaf     == .true.) write(1001, "(a)"), trim(path)//"_route3_scaf.py"
-    if(Chimera.run_route3_stap     == .true.) write(1001, "(a)"), trim(path)//"_route3_stap.py"
-    if(Chimera.run_route4_scaf     == .true.) write(1001, "(a)"), trim(path)//"_route4_scaf.py"
-    if(Chimera.run_route4_stap     == .true.) write(1001, "(a)"), trim(path)//"_route4_stap.py"
-    if(Chimera.run_route5_scaf     == .true.) write(1001, "(a)"), trim(path)//"_route5_scaf.py"
-    if(Chimera.run_route5_stap     == .true.) write(1001, "(a)"), trim(path)//"_route5_stap.py"
-    if(Chimera.run_crossovers      == .true.) write(1001, "(a)"), trim(path)//"_crossovers.py"
-    if(Chimera.run_orientation     == .true.) write(1001, "(a)"), trim(path)//"_orientation.py"
-    if(Chimera.run_atom            == .true.) write(1001, "(a)"), trim(path)//"_atom.py"
-    if(Chimera.run_atom_nick       == .true.) write(1001, "(a)"), trim(path)//"_atom_nick.py"
-    if(Chimera.run_route6_scaf     == .true.) write(1001, "(a)"), trim(path)//"_route6_scaf.py"
-    if(Chimera.run_route6_stap     == .true.) write(1001, "(a)"), trim(path)//"_route6_stap.py"
-    if(Chimera.run_seq_design      == .true.) write(1001, "(a)"), trim(path)//"_sequence_design.py"
-    if(Chimera.run_strand          == .true.) write(1001, "(a)"), trim(path)//"_strand.py"
-    if(Chimera.run_sequence        == .true.) write(1001, "(a)"), trim(path)//"_sequence.py"
+    if(chim.run_init_geo       == .true.) write(1001, "(a)"), trim(path)//"_init_geo.py"
+    if(chim.run_check_geo      == .true.) write(1001, "(a)"), trim(path)//"_check_geo.py"
+    if(chim.run_init_geo_local == .true.) write(1001, "(a)"), trim(path)//"_init_geo_local.py"
+    if(chim.run_mod_geo        == .true.) write(1001, "(a)"), trim(path)//"_mod_geo.py"
+    if(chim.run_cross_geo      == .true.) write(1001, "(a)"), trim(path)//"_cross_geo.py"
+    if(chim.run_cylinder1_ori  == .true.) write(1001, "(a)"), trim(path)//"_cyl1_ori.py"
+    if(chim.run_cylinder1      == .true.) write(1001, "(a)"), trim(path)//"_cyl1.py"
+    if(chim.run_cylinder2      == .true.) write(1001, "(a)"), trim(path)//"_cyl2.py"
+    if(chim.run_mesh           == .true.) write(1001, "(a)"), trim(path)//"_mesh.py"
+    if(chim.run_cross_geo_mod  == .true.) write(1001, "(a)"), trim(path)//"_cross_geo_mod.py"
+    if(chim.run_route1_scaf    == .true.) write(1001, "(a)"), trim(path)//"_route1_scaf.py"
+    if(chim.run_route1_stap    == .true.) write(1001, "(a)"), trim(path)//"_route1_stap.py"
+    if(chim.run_route2_scaf    == .true.) write(1001, "(a)"), trim(path)//"_route2_scaf.py"
+    if(chim.run_route2_stap    == .true.) write(1001, "(a)"), trim(path)//"_route2_stap.py"
+    if(chim.run_route3_scaf    == .true.) write(1001, "(a)"), trim(path)//"_route3_scaf.py"
+    if(chim.run_route3_stap    == .true.) write(1001, "(a)"), trim(path)//"_route3_stap.py"
+    if(chim.run_route4_scaf    == .true.) write(1001, "(a)"), trim(path)//"_route4_scaf.py"
+    if(chim.run_route4_stap    == .true.) write(1001, "(a)"), trim(path)//"_route4_stap.py"
+    if(chim.run_route5_scaf    == .true.) write(1001, "(a)"), trim(path)//"_route5_scaf.py"
+    if(chim.run_route5_stap    == .true.) write(1001, "(a)"), trim(path)//"_route5_stap.py"
+    if(chim.run_crossovers     == .true.) write(1001, "(a)"), trim(path)//"_crossovers.py"
+    if(chim.run_orientation    == .true.) write(1001, "(a)"), trim(path)//"_orientation.py"
+    if(chim.run_atom           == .true.) write(1001, "(a)"), trim(path)//"_atom.py"
+    if(chim.run_atom_nick      == .true.) write(1001, "(a)"), trim(path)//"_atom_nick.py"
+    if(chim.run_route6_scaf    == .true.) write(1001, "(a)"), trim(path)//"_route6_scaf.py"
+    if(chim.run_route6_stap    == .true.) write(1001, "(a)"), trim(path)//"_route6_stap.py"
+    if(chim.run_seq_design     == .true.) write(1001, "(a)"), trim(path)//"_sequence_design.py"
+    if(chim.run_strand         == .true.) write(1001, "(a)"), trim(path)//"_strand.py"
+    if(chim.run_sequence       == .true.) write(1001, "(a)"), trim(path)//"_sequence.py"
 
     close(unit=1001)
 end subroutine Chimera_Command_Output
@@ -304,48 +311,43 @@ end subroutine Chimera_Command_Output
 subroutine Chimera_Figure_Output(prob)
     type(ProbType), intent(in) :: prob
 
-    type(ChimeraType) :: Chimera
+    type(ChimType) :: chim
 
     ! Initialzie Chimera data
-    call Chimera_Init_ChimeraType(Chimera)
+    call Chimera_Init_ChimType(chim)
 
-    Chimera.size_x = 800
-    Chimera.size_y = 800
-    Chimera.scale  = 1.0d0
-    Chimera.view   = para_fig_view
-
-    Chimera.run_init_geo        = para_write_102    ! 1.  Input_Chimera_Init_Geometry,     "_init_geo.bild"
-    Chimera.run_check_geo       = para_write_301    ! 2.  ModGeo_Chimera_Check_Geometry,   "_check_geo.bild"
-    Chimera.run_init_geo_local  = para_write_302    ! 3.  ModGeo_Chimera_Init_Geometry_L,  "_init_geo_local.bild"
-    Chimera.run_mod_geo         = para_write_303    ! 4.  ModGeo_Chimera_Mod_Geometry,     "_mod_geo.bild"
-    Chimera.run_cross_geo       = para_write_401    ! 5.  Section_Chimera_Cross_Geometry,  "_cross_geo.bild"
-    Chimera.run_cylinder1_ori   = para_write_501    ! 6.  Basepair_Chimera_Cylinder_Ori,   "_cyl1_ori.bild"
-    Chimera.run_cylinder1       = para_write_502    ! 7.  Basepair_Chimera_Cylinder,       "_cyl1.bild"
-    Chimera.run_cylinder2       = para_write_502    ! 8.  Basepair_Chimera_Cylinder,       "_cyl2.bild"
-    Chimera.run_mesh            = para_write_503    ! 9.  Basepair_Chimera_Mesh,           "_mesh.bild"
-    Chimera.run_cross_geo_mod   = para_write_504    ! 10. Basepair_Chimera_Cross_Geometry, "_cross_geo_mod.bild"
-    Chimera.run_route1_scaf     = para_write_601_1  ! 11. Route_Chimera_Route, step 1,     "_route1_scaf.bild"
-    Chimera.run_route1_stap     = para_write_601_1  ! 12. Route_Chimera_Route, step 1,     "_route1_stap.bild"
-    Chimera.run_route2_scaf     = para_write_601_2  ! 13. Route_Chimera_Route, step 2,     "_route2_scaf.bild"
-    Chimera.run_route2_stap     = para_write_601_2  ! 14. Route_Chimera_Route, step 2,     "_route2_stap.bild"
-    Chimera.run_route3_scaf     = para_write_601_3  ! 15. Route_Chimera_Route, step 3,     "_route3_scaf.bild"
-    Chimera.run_route3_stap     = para_write_601_3  ! 16. Route_Chimera_Route, step 3,     "_route3_stap.bild"
-    Chimera.run_route4_scaf     = para_write_601_4  ! 17. Route_Chimera_Route, step 4,     "_route4_scaf.bild"
-    Chimera.run_route4_stap     = para_write_601_4  ! 18. Route_Chimera_Route, step 4,     "_route4_stap.bild"
-    Chimera.run_route5_scaf     = para_write_601_5  ! 19. Route_Chimera_Route, step 5,     "_route5_scaf.bild"
-    Chimera.run_route5_stap     = para_write_601_5  ! 20. Route_Chimera_Route, step 5,     "_route5_stap.bild"
-    Chimera.run_crossovers      = para_write_607    ! 21. Route_Chimera_Crossovers,        "_crossovers.bild"
-    Chimera.run_orientation     = para_write_608    ! 22. Route_Chimera_Orientation,       "_orientation.bild"
-    Chimera.run_atom            = para_write_609    ! 23. Route_Chimera_Atom,              "_atom.bild"
-    Chimera.run_atom_nick       = para_write_702    ! 24. SeqDesign_Chimera_Atom,          "_atom_nick.bild"
-    Chimera.run_route6_scaf     = para_write_703    ! 25. SeqDesign_Chimera_Route,         "_route6_scaf.bild"
-    Chimera.run_route6_stap     = para_write_703    ! 26. SeqDesign_Chimera_Route,         "_route6_stap.bild"
-    Chimera.run_seq_design      = para_write_705    ! 27. SeqDesign_Chimera_Sequence,      "_sequence_design.bild"
-    Chimera.run_strand          = para_write_706    ! 28. SeqDesign_Chimera_Strand,        "_strand.bild"
-    Chimera.run_sequence        = para_write_706    ! 29. SeqDesign_Chimera_Strand,        "_sequence.bild"
+    chim.run_init_geo       = para_write_102    ! 1.  Input_Chimera_Init_Geometry,     "_init_geo.bild"
+    chim.run_check_geo      = para_write_301    ! 2.  ModGeo_Chimera_Check_Geometry,   "_check_geo.bild"
+    chim.run_init_geo_local = para_write_302    ! 3.  ModGeo_Chimera_Init_Geometry_L,  "_init_geo_local.bild"
+    chim.run_mod_geo        = para_write_303    ! 4.  ModGeo_Chimera_Mod_Geometry,     "_mod_geo.bild"
+    chim.run_cross_geo      = para_write_401    ! 5.  Section_Chimera_Cross_Geometry,  "_cross_geo.bild"
+    chim.run_cylinder1_ori  = para_write_501    ! 6.  Basepair_Chimera_Cylinder_Ori,   "_cyl1_ori.bild"
+    chim.run_cylinder1      = para_write_502    ! 7.  Basepair_Chimera_Cylinder,       "_cyl1.bild"
+    chim.run_cylinder2      = para_write_502    ! 8.  Basepair_Chimera_Cylinder,       "_cyl2.bild"
+    chim.run_mesh           = para_write_503    ! 9.  Basepair_Chimera_Mesh,           "_mesh.bild"
+    chim.run_cross_geo_mod  = para_write_504    ! 10. Basepair_Chimera_Cross_Geometry, "_cross_geo_mod.bild"
+    chim.run_route1_scaf    = para_write_601_1  ! 11. Route_Chimera_Route, step 1,     "_route1_scaf.bild"
+    chim.run_route1_stap    = para_write_601_1  ! 12. Route_Chimera_Route, step 1,     "_route1_stap.bild"
+    chim.run_route2_scaf    = para_write_601_2  ! 13. Route_Chimera_Route, step 2,     "_route2_scaf.bild"
+    chim.run_route2_stap    = para_write_601_2  ! 14. Route_Chimera_Route, step 2,     "_route2_stap.bild"
+    chim.run_route3_scaf    = para_write_601_3  ! 15. Route_Chimera_Route, step 3,     "_route3_scaf.bild"
+    chim.run_route3_stap    = para_write_601_3  ! 16. Route_Chimera_Route, step 3,     "_route3_stap.bild"
+    chim.run_route4_scaf    = para_write_601_4  ! 17. Route_Chimera_Route, step 4,     "_route4_scaf.bild"
+    chim.run_route4_stap    = para_write_601_4  ! 18. Route_Chimera_Route, step 4,     "_route4_stap.bild"
+    chim.run_route5_scaf    = para_write_601_5  ! 19. Route_Chimera_Route, step 5,     "_route5_scaf.bild"
+    chim.run_route5_stap    = para_write_601_5  ! 20. Route_Chimera_Route, step 5,     "_route5_stap.bild"
+    chim.run_crossovers     = para_write_607    ! 21. Route_Chimera_Crossovers,        "_crossovers.bild"
+    chim.run_orientation    = para_write_608    ! 22. Route_Chimera_Orientation,       "_orientation.bild"
+    chim.run_atom           = para_write_609    ! 23. Route_Chimera_Atom,              "_atom.bild"
+    chim.run_atom_nick      = para_write_702    ! 24. SeqDesign_Chimera_Atom,          "_atom_nick.bild"
+    chim.run_route6_scaf    = para_write_703    ! 25. SeqDesign_Chimera_Route,         "_route6_scaf.bild"
+    chim.run_route6_stap    = para_write_703    ! 26. SeqDesign_Chimera_Route,         "_route6_stap.bild"
+    chim.run_seq_design     = para_write_705    ! 27. SeqDesign_Chimera_Sequence,      "_sequence_design.bild"
+    chim.run_strand         = para_write_706    ! 28. SeqDesign_Chimera_Strand,        "_strand.bild"
+    chim.run_sequence       = para_write_706    ! 29. SeqDesign_Chimera_Strand,        "_sequence.bild"
 
     ! Make Python script to make figures
-    call Chimera_Make_Python_Figure(prob, Chimera)
+    call Chimera_Make_Python_Figure(prob, chim)
 end subroutine Chimera_Figure_Output
 
 ! ---------------------------------------------------------------------------------------
@@ -356,15 +358,12 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
     character(200), intent(in) :: name_file
     integer,        intent(in) :: nnn
 
-    type(ChimeraType) :: Chimera
+    type(ChimType) :: chim
     character(200) :: path
     logical :: results
 
     ! Initialzie Chimera data
-    call Chimera_Init_ChimeraType(Chimera)
-
-    Chimera.scale = 1.0d0
-    Chimera.view  = para_fig_view
+    call Chimera_Init_ChimType(chim)
 
     ! Batch file to be excuted
     if(nnn == 1) then
@@ -381,18 +380,20 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
     write(1002, "(a )"), "step_bild/"//trim(name_file)//".bild')"
 
     if(nnn == 1) then
-        write(1002, "(a, 2i7, a )"), "runCommand('windowsize ", Chimera.size_x, Chimera.size_y, "')"
-        write(1002, "(a         )"), "runCommand('set projection "//trim(Chimera.projection_mode)//"')"
-        write(1002, "(a         )"), "runCommand('lighting mode " //trim(Chimera.light_mode)//"')"
-        write(1002, "(a, f8.2, a)"), "runCommand('lighting brightness ", Chimera.light_brightness, "')"
-        write(1002, "(a, f8.2, a)"), "runCommand('lighting contrast ", Chimera.light_contrast, "')"
-        write(1002, "(a, f8.2, a)"), "runCommand('lighting ratio ", Chimera.light_ratio, "')"
-        write(1002, "(a         )"), "runCommand('~set depthCue')"
-        write(1002, "(a         )"), "runCommand('preset apply publication 3')"
+        write(1002, "(a, 2i7, a )"), "runCommand('windowsize ", chim.size_x, chim.size_y, "')"
+        write(1002, "(a         )"), "runCommand('set projection "//trim(chim.projection_mode)//"')"
+        write(1002, "(a         )"), "runCommand('lighting mode " //trim(chim.light_mode)//"')"
+        write(1002, "(a, f8.2, a)"), "runCommand('lighting brightness ", chim.light_brightness, "')"
+        write(1002, "(a, f8.2, a)"), "runCommand('lighting contrast ", chim.light_contrast, "')"
+        write(1002, "(a, f8.2, a)"), "runCommand('lighting ratio ", chim.light_ratio, "')"
+        write(1002, "(a         )"), "runCommand('preset apply "//trim(chim.preset)//"')"
+
+        if(chim.depthcue == .false.) write(1002, "(a)"), "runCommand('~set depthCue')"
+        if(chim.depthcue == .true. ) write(1002, "(a)"), "runCommand('set depthCue')"
     end if
 
     write(1002, "(a         )"), "runCommand('window')"
-    write(1002, "(a, f8.2, a)"), "runCommand('scale ", Chimera.scale, "')"
+    write(1002, "(a, f8.2, a)"), "runCommand('scale ", chim.scale, "')"
 
     ! Set background color
     if(para_fig_bgcolor == "white") then
@@ -403,17 +404,17 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
         write(1002, "(a)"), "runCommand('set bgcolor white')"
 
         ! Set view
-        if(Chimera.view == "XY" .or. Chimera.view == "xy") then
+        if(chim.view == "xy") then
             write(1002, "(a )"), "runCommand('wait')"
             write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
             write(1002, "(a )"), "step_fig_white_XY/"//trim(name_file)//".tif supersample 3"//"')"
-        else if(Chimera.view == "XZ" .or. Chimera.view == "xz") then
+        else if(chim.view == "xz") then
             write(1002, "(a )"), "runCommand('turn x -90')"
             write(1002, "(a )"), "runCommand('wait')"
             write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
             write(1002, "(a )"), "step_fig_white_XZ/"//trim(name_file)//".tif supersample 3"//"')"
             write(1002, "(a )"), "runCommand('turn x 90')"
-        else if(Chimera.view == "YZ" .or. Chimera.view == "yz") then
+        else if(chim.view == "yz") then
             write(1002, "(a )"), "runCommand('turn x -90')"
             write(1002, "(a )"), "runCommand('turn y -90')"
             write(1002, "(a )"), "runCommand('wait')"
@@ -421,8 +422,23 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
             write(1002, "(a )"), "step_fig_white_YZ/"//trim(name_file)//".tif supersample 3"//"')"
             write(1002, "(a )"), "runCommand('turn y 90')"
             write(1002, "(a )"), "runCommand('turn x 90')"
-        else if(Chimera.view == "XYZ" .or. Chimera.view == "xyz" .or. &
-                Chimera.view == "ALL" .or. Chimera.view == "all" ) then
+        else if(chim.view == "xyz1") then
+            write(1002, "(a )"), "runCommand('turn x -90')"
+            write(1002, "(a )"), "runCommand('turn y -45')"
+            write(1002, "(a )"), "runCommand('turn z 35')"
+            write(1002, "(a )"), "runCommand('wait')"
+            write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+            write(1002, "(a )"), "step_fig_white_XYZ1/"//trim(name_file)//".tif supersample 3"//"')"
+            write(1002, "(a )"), "runCommand('turn z -35')"
+            write(1002, "(a )"), "runCommand('turn y 45')"
+            write(1002, "(a )"), "runCommand('turn x 90')"
+        else if(chim.view == "xyz2") then
+            write(1002, "(a )"), "runCommand('turn x 60')"
+            write(1002, "(a )"), "runCommand('wait')"
+            write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+            write(1002, "(a )"), "step_fig_white_XYZ2/"//trim(name_file)//".tif supersample 3"//"')"
+            write(1002, "(a )"), "runCommand('turn x -60')"
+        else if(chim.view == "xyz" .or. chim.view == "all" ) then
             write(1002, "(a )"), "runCommand('turn x -90')"
             write(1002, "(a )"), "runCommand('turn y -120')"
             write(1002, "(a )"), "runCommand('turn x 35')"
@@ -434,24 +450,24 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
             write(1002, "(a )"), "runCommand('turn x 90')"
         end if
     else if(para_fig_bgcolor == "black") then
-        ! --------------------------------------------------
+        ! ==================================================
         ! Black background
-        ! --------------------------------------------------
+        ! ==================================================
         write(1002, "(a)"), "runCommand('unset bgTransparency')"
         write(1002, "(a)"), "runCommand('set bgcolor black')"
 
         ! Set view
-        if(Chimera.view == "XY" .or. Chimera.view == "xy") then
+        if(chim.view == "xy") then
             write(1002, "(a )"), "runCommand('wait')"
             write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
             write(1002, "(a )"), "step_fig_black_XY/"//trim(name_file)//".tif supersample 3"//"')"
-        else if(Chimera.view == "XZ" .or. Chimera.view == "xz") then
+        else if(chim.view == "xz") then
             write(1002, "(a )"), "runCommand('turn x -90')"
             write(1002, "(a )"), "runCommand('wait')"
             write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
             write(1002, "(a )"), "step_fig_black_XZ/"//trim(name_file)//".tif supersample 3"//"')"
             write(1002, "(a )"), "runCommand('turn x 90')"
-        else if(Chimera.view == "YZ" .or. Chimera.view == "yz") then
+        else if(chim.view == "yz") then
             write(1002, "(a )"), "runCommand('turn x -90')"
             write(1002, "(a )"), "runCommand('turn y -90')"
             write(1002, "(a )"), "runCommand('wait')"
@@ -459,8 +475,23 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
             write(1002, "(a )"), "step_fig_black_YZ/"//trim(name_file)//".tif supersample 3"//"')"
             write(1002, "(a )"), "runCommand('turn y 90')"
             write(1002, "(a )"), "runCommand('turn x 90')"
-        else if(Chimera.view == "XYZ" .or. Chimera.view == "xyz" .or. &
-                Chimera.view == "ALL" .or. Chimera.view == "all" ) then
+        else if(chim.view == "xyz1") then
+            write(1002, "(a )"), "runCommand('turn x -90')"
+            write(1002, "(a )"), "runCommand('turn y -45')"
+            write(1002, "(a )"), "runCommand('turn z 35')"
+            write(1002, "(a )"), "runCommand('wait')"
+            write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+            write(1002, "(a )"), "step_fig_black_XYZ1/"//trim(name_file)//".tif supersample 3"//"')"
+            write(1002, "(a )"), "runCommand('turn z -35')"
+            write(1002, "(a )"), "runCommand('turn y 45')"
+            write(1002, "(a )"), "runCommand('turn x 90')"
+        else if(chim.view == "xyz2") then
+            write(1002, "(a )"), "runCommand('turn x 60')"
+            write(1002, "(a )"), "runCommand('wait')"
+            write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+            write(1002, "(a )"), "step_fig_black_XYZ2/"//trim(name_file)//".tif supersample 3"//"')"
+            write(1002, "(a )"), "runCommand('turn x -60')"
+        else if(chim.view == "xyz" .or. chim.view == "all" ) then
             write(1002, "(a )"), "runCommand('turn x -90')"
             write(1002, "(a )"), "runCommand('turn y -120')"
             write(1002, "(a )"), "runCommand('turn x 35')"
@@ -472,24 +503,24 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
             write(1002, "(a )"), "runCommand('turn x 90')"
         end if
     else if(para_fig_bgcolor == "all") then
-        ! --------------------------------------------------
+        ! ==================================================
         ! White and black background (white)
-        ! --------------------------------------------------
+        ! ==================================================
         write(1002, "(a)"), "runCommand('set bgTransparency')"
         write(1002, "(a)"), "runCommand('set bgcolor white')"
 
         ! Set view
-        if(Chimera.view == "XY" .or. Chimera.view == "xy") then
+        if(chim.view == "xy") then
             write(1002, "(a )"), "runCommand('wait')"
             write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
             write(1002, "(a )"), "step_fig_white_XY/"//trim(name_file)//".tif supersample 3"//"')"
-        else if(Chimera.view == "XZ" .or. Chimera.view == "xz") then
+        else if(chim.view == "xz") then
             write(1002, "(a )"), "runCommand('turn x -90')"
             write(1002, "(a )"), "runCommand('wait')"
             write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
             write(1002, "(a )"), "step_fig_white_XZ/"//trim(name_file)//".tif supersample 3"//"')"
             write(1002, "(a )"), "runCommand('turn x 90')"
-        else if(Chimera.view == "YZ" .or. Chimera.view == "yz") then
+        else if(chim.view == "yz") then
             write(1002, "(a )"), "runCommand('turn x -90')"
             write(1002, "(a )"), "runCommand('turn y -90')"
             write(1002, "(a )"), "runCommand('wait')"
@@ -497,8 +528,23 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
             write(1002, "(a )"), "step_fig_white_YZ/"//trim(name_file)//".tif supersample 3"//"')"
             write(1002, "(a )"), "runCommand('turn y 90')"
             write(1002, "(a )"), "runCommand('turn x 90')"
-        else if(Chimera.view == "XYZ" .or. Chimera.view == "xyz" .or. &
-                Chimera.view == "ALL" .or. Chimera.view == "all" ) then
+        else if(chim.view == "xyz1") then
+            write(1002, "(a )"), "runCommand('turn x -90')"
+            write(1002, "(a )"), "runCommand('turn y -45')"
+            write(1002, "(a )"), "runCommand('turn z 35')"
+            write(1002, "(a )"), "runCommand('wait')"
+            write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+            write(1002, "(a )"), "step_fig_white_XYZ1/"//trim(name_file)//".tif supersample 3"//"')"
+            write(1002, "(a )"), "runCommand('turn z -35')"
+            write(1002, "(a )"), "runCommand('turn y 45')"
+            write(1002, "(a )"), "runCommand('turn x 90')"
+        else if(chim.view == "xyz2") then
+            write(1002, "(a )"), "runCommand('turn x 60')"
+            write(1002, "(a )"), "runCommand('wait')"
+            write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+            write(1002, "(a )"), "step_fig_white_XYZ2/"//trim(name_file)//".tif supersample 3"//"')"
+            write(1002, "(a )"), "runCommand('turn x -60')"
+        else if(chim.view == "xyz" .or. chim.view == "all" ) then
             write(1002, "(a )"), "runCommand('turn x -90')"
             write(1002, "(a )"), "runCommand('turn y -120')"
             write(1002, "(a )"), "runCommand('turn x 35')"
@@ -510,24 +556,24 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
             write(1002, "(a )"), "runCommand('turn x 90')"
         end if
 
-        ! --------------------------------------------------
+        ! ==================================================
         ! White and black background (black)
-        ! --------------------------------------------------
+        ! ==================================================
         write(1002, "(a)"), "runCommand('unset bgTransparency')"
         write(1002, "(a)"), "runCommand('set bgcolor black')"
 
         ! Set view
-        if(Chimera.view == "XY" .or. Chimera.view == "xy") then
+        if(chim.view == "xy") then
             write(1002, "(a )"), "runCommand('wait')"
             write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
             write(1002, "(a )"), "step_fig_black_XY/"//trim(name_file)//".tif supersample 3"//"')"
-        else if(Chimera.view == "XZ" .or. Chimera.view == "xz") then
+        else if(chim.view == "xz") then
             write(1002, "(a )"), "runCommand('turn x -90')"
             write(1002, "(a )"), "runCommand('wait')"
             write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
             write(1002, "(a )"), "step_fig_black_XZ/"//trim(name_file)//".tif supersample 3"//"')"
             write(1002, "(a )"), "runCommand('turn x 90')"
-        else if(Chimera.view == "YZ" .or. Chimera.view == "yz") then
+        else if(chim.view == "yz") then
             write(1002, "(a )"), "runCommand('turn x -90')"
             write(1002, "(a )"), "runCommand('turn y -90')"
             write(1002, "(a )"), "runCommand('wait')"
@@ -535,8 +581,23 @@ subroutine Chimera_Figure_Route_Step(prob, name_file, nnn)
             write(1002, "(a )"), "step_fig_black_YZ/"//trim(name_file)//".tif supersample 3"//"')"
             write(1002, "(a )"), "runCommand('turn y 90')"
             write(1002, "(a )"), "runCommand('turn x 90')"
-        else if(Chimera.view == "XYZ" .or. Chimera.view == "xyz" .or. &
-                Chimera.view == "ALL" .or. Chimera.view == "all" ) then
+        else if(chim.view == "xyz1") then
+            write(1002, "(a )"), "runCommand('turn x -90')"
+            write(1002, "(a )"), "runCommand('turn y -45')"
+            write(1002, "(a )"), "runCommand('turn z 35')"
+            write(1002, "(a )"), "runCommand('wait')"
+            write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+            write(1002, "(a )"), "step_fig_black_XYZ1/"//trim(name_file)//".tif supersample 3"//"')"
+            write(1002, "(a )"), "runCommand('turn z -35')"
+            write(1002, "(a )"), "runCommand('turn y 45')"
+            write(1002, "(a )"), "runCommand('turn x 90')"
+        else if(chim.view == "xyz2") then
+            write(1002, "(a )"), "runCommand('turn x 60')"
+            write(1002, "(a )"), "runCommand('wait')"
+            write(1002, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+            write(1002, "(a )"), "step_fig_black_XYZ2/"//trim(name_file)//".tif supersample 3"//"')"
+            write(1002, "(a )"), "runCommand('turn x -60')"
+        else if(chim.view == "xyz" .or. chim.view == "all" ) then
             write(1002, "(a )"), "runCommand('turn x -90')"
             write(1002, "(a )"), "runCommand('turn y -120')"
             write(1002, "(a )"), "runCommand('turn x 35')"
@@ -558,39 +619,42 @@ end subroutine Chimera_Figure_Route_Step
 
 ! ---------------------------------------------------------------------------------------
 
-! Initialize ChimeraType
-subroutine Chimera_Init_ChimeraType(Chimera)
-    type(ChimeraType), intent(inout) :: Chimera
+! Initialize ChimType
+subroutine Chimera_Init_ChimType(chim)
+    type(ChimType), intent(out) :: chim
 
-    Chimera.size_x = 800
-    Chimera.size_y = 800
-    Chimera.zoom   = 1.0d0
-    Chimera.scale  = 1.0d0
+    chim.size_x = 800
+    chim.size_y = 800
+    chim.zoom   = 1.0d0
+    chim.scale  = 1.0d0
 
-    Chimera.turn_x = 0.0d0
-    Chimera.turn_y = 0.0d0
-    Chimera.turn_z = 0.0d0
+    chim.turn_x = 0.0d0
+    chim.turn_y = 0.0d0
+    chim.turn_z = 0.0d0
 
-    Chimera.move_x = 0.0d0
-    Chimera.move_y = 0.0d0
-    Chimera.move_z = 0.0d0
+    chim.move_x = 0.0d0
+    chim.move_y = 0.0d0
+    chim.move_z = 0.0d0
 
     ! Set mode
-    Chimera.projection_mode  = "perspective"    ! [perspective / orthographic]
-    Chimera.light_mode       = "two-point"      ! [ambient / single / two-point / three-point]
+    chim.view            = para_fig_view
+    chim.projection_mode = "orthographic"   ! [perspective | orthographic]
+    chim.light_mode      = "two-point"      ! [ambient | single | two-point | three-point]
+    chim.preset          = "publication 3"  ! Preset
+    chim.depthcue        = .true.           ! ~set depthCue
 
-    ! Set light
-    Chimera.light_brightness = 1.16d0           ! From 0 to 2
-    Chimera.light_contrast   = 0.83d0           ! From 0 to 1
-    Chimera.light_ratio      = 1.25d0           ! From 1
-end subroutine Chimera_Init_ChimeraType
+    ! Set light as default
+    chim.light_brightness = 1.16d0      ! From 0 to 2
+    chim.light_contrast   = 0.83d0      ! From 0 to 1
+    chim.light_ratio      = 1.25d0      ! From 1
+end subroutine Chimera_Init_ChimType
 
 ! ---------------------------------------------------------------------------------------
 
-! Make Python script to make figures
-subroutine Chimera_Make_Python_Figure(prob, chi)
-    type(ProbType),    intent(in)    :: prob
-    type(ChimeraType), intent(inout) :: chi
+! Make Python script to make figures automatically
+subroutine Chimera_Make_Python_Figure(prob, chim)
+    type(ProbType), intent(in) :: prob
+    type(ChimType), intent(in) :: chim
 
     character(200) :: path, des
     logical :: results
@@ -599,9 +663,7 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
     ! Make output directories for TIF images
     if(para_fig_bgcolor == "white") then
         ! ==================================================
-        !
         ! White background
-        !
         ! ==================================================
         if(para_fig_view == "xy") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XY\")
@@ -609,6 +671,10 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XZ\")
         else if(para_fig_view == "yz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_YZ\")
+        else if(para_fig_view == "xyz1") then
+            results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XYZ1\")
+        else if(para_fig_view == "xyz2") then
+            results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XYZ2\")
         else if(para_fig_view == "xyz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XYZ\")
         else if(para_fig_view == "all") then
@@ -619,9 +685,7 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
         end if
     else if(para_fig_bgcolor == "black") then
         ! ==================================================
-        !
         ! Black background
-        !
         ! ==================================================
         if(para_fig_view == "xy") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XY\")
@@ -629,6 +693,10 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XZ\")
         else if(para_fig_view == "yz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_YZ\")
+        else if(para_fig_view == "xyz1") then
+            results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XYZ1\")
+        else if(para_fig_view == "xyz2") then
+            results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XYZ2\")
         else if(para_fig_view == "xyz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XYZ\")
         else if(para_fig_view == "all") then
@@ -639,9 +707,7 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
         end if
     else if(para_fig_bgcolor == "all") then
         ! ==================================================
-        !
         ! White and black background
-        !
         ! ==================================================
         if(para_fig_view == "xy") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XY\")
@@ -652,6 +718,12 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
         else if(para_fig_view == "yz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_YZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_YZ\")
+        else if(para_fig_view == "xyz1") then
+            results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XYZ1\")
+            results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XYZ1\")
+        else if(para_fig_view == "xyz2") then
+            results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XYZ2\")
+            results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XYZ2\")
         else if(para_fig_view == "xyz") then
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_white_XYZ\")
             results = SYSTEMQQ("md "//trim(prob.path_work1)//"output_figure_black_XYZ\")
@@ -674,56 +746,59 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
     write(101, "(a)"), "from chimera import runCommand"
     do i = 1, 29
 
-        if(     i ==  1 .and. chi.run_init_geo       == .true.) then; des = "_init_geo"
-        else if(i ==  2 .and. chi.run_check_geo      == .true.) then; des = "_check_geo"
-        else if(i ==  3 .and. chi.run_init_geo_local == .true.) then; des = "_init_geo_local"
-        else if(i ==  4 .and. chi.run_mod_geo        == .true.) then; des = "_mod_geo"
-        else if(i ==  5 .and. chi.run_cross_geo      == .true.) then; des = "_cross_geo"
-        else if(i ==  6 .and. chi.run_cylinder1_ori  == .true.) then; des = "_cyl1_ori"
-        else if(i ==  7 .and. chi.run_cylinder1      == .true.) then; des = "_cyl1"
-        else if(i ==  8 .and. chi.run_cylinder2      == .true.) then; des = "_cyl2"
-        else if(i ==  9 .and. chi.run_mesh           == .true.) then; des = "_mesh"
-        else if(i == 10 .and. chi.run_cross_geo_mod  == .true.) then; des = "_cross_geo_mod"
-        else if(i == 11 .and. chi.run_route1_scaf    == .true.) then; des = "_route1_scaf"
-        else if(i == 12 .and. chi.run_route1_stap    == .true.) then; des = "_route1_stap"
-        else if(i == 13 .and. chi.run_route2_scaf    == .true.) then; des = "_route2_scaf"
-        else if(i == 14 .and. chi.run_route2_stap    == .true.) then; des = "_route2_stap"
-        else if(i == 15 .and. chi.run_route3_scaf    == .true.) then; des = "_route3_scaf"
-        else if(i == 16 .and. chi.run_route3_stap    == .true.) then; des = "_route3_stap"
-        else if(i == 17 .and. chi.run_route4_scaf    == .true.) then; des = "_route4_scaf"
-        else if(i == 18 .and. chi.run_route4_stap    == .true.) then; des = "_route4_stap"
-        else if(i == 19 .and. chi.run_route5_scaf    == .true.) then; des = "_route5_scaf"
-        else if(i == 20 .and. chi.run_route5_stap    == .true.) then; des = "_route5_stap"
-        else if(i == 21 .and. chi.run_crossovers     == .true.) then; des = "_crossovers"
-        else if(i == 22 .and. chi.run_orientation    == .true.) then; des = "_orientation"
-        else if(i == 23 .and. chi.run_atom           == .true.) then; des = "_atom"
-        else if(i == 24 .and. chi.run_atom_nick      == .true.) then; des = "_atom_nick"
-        else if(i == 25 .and. chi.run_route6_scaf    == .true.) then; des = "_route6_scaf"
-        else if(i == 26 .and. chi.run_route6_stap    == .true.) then; des = "_route6_stap"
-        else if(i == 27 .and. chi.run_seq_design     == .true.) then; des = "_sequence_design"
-        else if(i == 28 .and. chi.run_strand         == .true.) then; des = "_strand"
-        else if(i == 29 .and. chi.run_sequence       == .true.) then; des = "_sequence"
+        if(     i ==  1 .and. chim.run_init_geo       == .true.) then; des = "_init_geo"
+        else if(i ==  2 .and. chim.run_check_geo      == .true.) then; des = "_check_geo"
+        else if(i ==  3 .and. chim.run_init_geo_local == .true.) then; des = "_init_geo_local"
+        else if(i ==  4 .and. chim.run_mod_geo        == .true.) then; des = "_mod_geo"
+        else if(i ==  5 .and. chim.run_cross_geo      == .true.) then; des = "_cross_geo"
+        else if(i ==  6 .and. chim.run_cylinder1_ori  == .true.) then; des = "_cyl1_ori"
+        else if(i ==  7 .and. chim.run_cylinder1      == .true.) then; des = "_cyl1"
+        else if(i ==  8 .and. chim.run_cylinder2      == .true.) then; des = "_cyl2"
+        else if(i ==  9 .and. chim.run_mesh           == .true.) then; des = "_mesh"
+        else if(i == 10 .and. chim.run_cross_geo_mod  == .true.) then; des = "_cross_geo_mod"
+        else if(i == 11 .and. chim.run_route1_scaf    == .true.) then; des = "_route1_scaf"
+        else if(i == 12 .and. chim.run_route1_stap    == .true.) then; des = "_route1_stap"
+        else if(i == 13 .and. chim.run_route2_scaf    == .true.) then; des = "_route2_scaf"
+        else if(i == 14 .and. chim.run_route2_stap    == .true.) then; des = "_route2_stap"
+        else if(i == 15 .and. chim.run_route3_scaf    == .true.) then; des = "_route3_scaf"
+        else if(i == 16 .and. chim.run_route3_stap    == .true.) then; des = "_route3_stap"
+        else if(i == 17 .and. chim.run_route4_scaf    == .true.) then; des = "_route4_scaf"
+        else if(i == 18 .and. chim.run_route4_stap    == .true.) then; des = "_route4_stap"
+        else if(i == 19 .and. chim.run_route5_scaf    == .true.) then; des = "_route5_scaf"
+        else if(i == 20 .and. chim.run_route5_stap    == .true.) then; des = "_route5_stap"
+        else if(i == 21 .and. chim.run_crossovers     == .true.) then; des = "_crossovers"
+        else if(i == 22 .and. chim.run_orientation    == .true.) then; des = "_orientation"
+        else if(i == 23 .and. chim.run_atom           == .true.) then; des = "_atom"
+        else if(i == 24 .and. chim.run_atom_nick      == .true.) then; des = "_atom_nick"
+        else if(i == 25 .and. chim.run_route6_scaf    == .true.) then; des = "_route6_scaf"
+        else if(i == 26 .and. chim.run_route6_stap    == .true.) then; des = "_route6_stap"
+        else if(i == 27 .and. chim.run_seq_design     == .true.) then; des = "_sequence_design"
+        else if(i == 28 .and. chim.run_strand         == .true.) then; des = "_strand"
+        else if(i == 29 .and. chim.run_sequence       == .true.) then; des = "_sequence"
         else
             cycle
         end if
 
         write(101, "(a)"), "runCommand('open "//trim(prob.path_work2)//trim(prob.name_file)//trim(des)//".bild')"
-        write(101, "(a)"), "runCommand('windowsize "//trim(adjustl(Int2Str(chi.size_x)))//" "//trim(adjustl(Int2Str(chi.size_y)))//"')"
-        write(101, "(a)"), "runCommand('set projection "//trim(chi.projection_mode)//"')"
-        write(101, "(a)"), "runCommand('lighting mode " //trim(chi.light_mode)//"')"
+        write(101, "(a)"), "runCommand('windowsize "//trim(adjustl(Int2Str(chim.size_x)))//" "//trim(adjustl(Int2Str(chim.size_y)))//"')"
+        write(101, "(a)"), "runCommand('set projection "//trim(chim.projection_mode)//"')"
+        write(101, "(a)"), "runCommand('lighting mode " //trim(chim.light_mode)//"')"
 
         if(i == 27) then
             write(101, "(a)"), "runCommand('lighting brightness 0.85')"
             write(101, "(a)"), "runCommand('lighting contrast 0.0')"
             write(101, "(a)"), "runCommand('lighting ratio 1.0')"
         else
-            write(101, "(a)"), "runCommand('lighting brightness "//trim(adjustl(Dble2Str(chi.light_brightness)))//"')"
-            write(101, "(a)"), "runCommand('lighting contrast "//trim(adjustl(Dble2Str(chi.light_contrast)))//"')"
-            write(101, "(a)"), "runCommand('lighting ratio "//trim(adjustl(Dble2Str(chi.light_ratio)))//"')"
+            write(101, "(a)"), "runCommand('lighting brightness "//trim(adjustl(Dble2Str(chim.light_brightness)))//"')"
+            write(101, "(a)"), "runCommand('lighting contrast "//trim(adjustl(Dble2Str(chim.light_contrast)))//"')"
+            write(101, "(a)"), "runCommand('lighting ratio "//trim(adjustl(Dble2Str(chim.light_ratio)))//"')"
         end if
 
-        write(101, "(a)"), "runCommand('~set depthCue')"
-        write(101, "(a)"), "runCommand('preset apply publication 3')"
+        write(101, "(a)"), "runCommand('preset apply "//trim(chim.preset)//"')"
+
+        if(chim.depthcue == .false.) write(101, "(a)"), "runCommand('~set depthCue')"
+        if(chim.depthcue == .true. ) write(101, "(a)"), "runCommand('set depthCue')"
+
         write(101, "(a)"), "runCommand('window')"
 
         ! Set x and y movement
@@ -738,27 +813,25 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
         ! Set background color
         if(para_fig_bgcolor == "white") then
             ! ==================================================
-            !
             ! White background
-            !
             ! ==================================================
             write(101, "(a)"), "runCommand('set bgTransparency')"
             write(101, "(a)"), "runCommand('set bgcolor white')"
 
             ! Set view
-            if(chi.view == "XY" .or. chi.view == "xy") then
+            if(chim.view == "xy") then
                 write(101, "(a )"), "runCommand('wait')"
                 write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
                 write(101, "(a$)"), "output_figure_white_XY/"//trim(prob.name_file)
                 write(101, "(a )"), trim(des)//"_XY.tif supersample 3"//"')"
-            else if(chi.view == "XZ" .or. chi.view == "xz") then
+            else if(chim.view == "xz") then
                 write(101, "(a )"), "runCommand('turn x -90')"
                 write(101, "(a )"), "runCommand('wait')"
                 write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
                 write(101, "(a$)"), "output_figure_white_XZ/"//trim(prob.name_file)
                 write(101, "(a )"), trim(des)//"_XZ.tif supersample 3"//"')"
                 write(101, "(a )"), "runCommand('turn x 90')"
-            else if(chi.view == "YZ" .or. chi.view == "yz") then
+            else if(chim.view == "yz") then
                 write(101, "(a )"), "runCommand('turn x -90')"
                 write(101, "(a )"), "runCommand('turn y -90')"
                 write(101, "(a )"), "runCommand('wait')"
@@ -767,7 +840,25 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
                 write(101, "(a )"), trim(des)//"_YZ.tif supersample 3"//"')"
                 write(101, "(a )"), "runCommand('turn y 90')"
                 write(101, "(a )"), "runCommand('turn x 90')"
-            else if(chi.view == "XYZ" .or. chi.view == "xyz") then
+            else if(chim.view == "xyz1") then
+                write(101, "(a )"), "runCommand('turn x -90')"
+                write(101, "(a )"), "runCommand('turn y -45')"
+                write(101, "(a )"), "runCommand('turn z 35')"
+                write(101, "(a )"), "runCommand('wait')"
+                write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+                write(101, "(a$)"), "output_figure_white_XYZ1/"//trim(prob.name_file)
+                write(101, "(a )"), trim(des)//"_XYZ1.tif supersample 3"//"')"
+                write(101, "(a )"), "runCommand('turn z -35')"
+                write(101, "(a )"), "runCommand('turn y 45')"
+                write(101, "(a )"), "runCommand('turn x 90')"
+            else if(chim.view == "xyz2") then
+                write(101, "(a )"), "runCommand('turn x 60')"
+                write(101, "(a )"), "runCommand('wait')"
+                write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+                write(101, "(a$)"), "output_figure_white_XYZ2/"//trim(prob.name_file)
+                write(101, "(a )"), trim(des)//"_XYZ2.tif supersample 3"//"')"
+                write(101, "(a )"), "runCommand('turn x -60')"
+            else if(chim.view == "xyz") then
                 write(101, "(a )"), "runCommand('turn x -90')"
                 write(101, "(a )"), "runCommand('turn y -120')"
                 write(101, "(a )"), "runCommand('turn x 35')"
@@ -778,7 +869,7 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
                 write(101, "(a )"), "runCommand('turn x -35')"
                 write(101, "(a )"), "runCommand('turn y 120')"
                 write(101, "(a )"), "runCommand('turn x 90')"
-            else if(chi.view == "ALL" .or. chi.view == "all") then
+            else if(chim.view == "all") then
                 write(101, "(a )"), "runCommand('wait')"
                 write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
                 write(101, "(a$)"), "output_figure_white_XY/"//trim(prob.name_file)
@@ -809,27 +900,25 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
 
         else if(para_fig_bgcolor == "black") then
             ! ==================================================
-            !
             ! Black background
-            !
             ! ==================================================
             write(101, "(a)"), "runCommand('unset bgTransparency')"
             write(101, "(a)"), "runCommand('set bgcolor black')"
 
             ! Set view
-            if(chi.view == "XY" .or. chi.view == "xy") then
+            if(chim.view == "xy") then
                 write(101, "(a )"), "runCommand('wait')"
                 write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
                 write(101, "(a$)"), "output_figure_black_XY/"//trim(prob.name_file)
                 write(101, "(a )"), trim(des)//"_XY.tif supersample 3"//"')"
-            else if(chi.view == "XZ" .or. chi.view == "xz") then
+            else if(chim.view == "xz") then
                 write(101, "(a )"), "runCommand('turn x -90')"
                 write(101, "(a )"), "runCommand('wait')"
                 write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
                 write(101, "(a$)"), "output_figure_black_XZ/"//trim(prob.name_file)
                 write(101, "(a )"), trim(des)//"_XZ.tif supersample 3"//"')"
                 write(101, "(a )"), "runCommand('turn x 90')"
-            else if(chi.view == "YZ" .or. chi.view == "yz") then
+            else if(chim.view == "yz") then
                 write(101, "(a )"), "runCommand('turn x -90')"
                 write(101, "(a )"), "runCommand('turn y -90')"
                 write(101, "(a )"), "runCommand('wait')"
@@ -838,7 +927,25 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
                 write(101, "(a )"), trim(des)//"_YZ.tif supersample 3"//"')"
                 write(101, "(a )"), "runCommand('turn y 90')"
                 write(101, "(a )"), "runCommand('turn x 90')"
-            else if(chi.view == "XYZ" .or. chi.view == "xyz") then
+            else if(chim.view == "xyz1") then
+                write(101, "(a )"), "runCommand('turn x -90')"
+                write(101, "(a )"), "runCommand('turn y -45')"
+                write(101, "(a )"), "runCommand('turn z 35')"
+                write(101, "(a )"), "runCommand('wait')"
+                write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+                write(101, "(a$)"), "output_figure_black_XYZ1/"//trim(prob.name_file)
+                write(101, "(a )"), trim(des)//"_XYZ1.tif supersample 3"//"')"
+                write(101, "(a )"), "runCommand('turn z -35')"
+                write(101, "(a )"), "runCommand('turn y 45')"
+                write(101, "(a )"), "runCommand('turn x 90')"
+            else if(chim.view == "xyz2") then
+                write(101, "(a )"), "runCommand('turn x 60')"
+                write(101, "(a )"), "runCommand('wait')"
+                write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+                write(101, "(a$)"), "output_figure_black_XYZ2/"//trim(prob.name_file)
+                write(101, "(a )"), trim(des)//"_XYZ2.tif supersample 3"//"')"
+                write(101, "(a )"), "runCommand('turn x -60')"
+            else if(chim.view == "xyz") then
                 write(101, "(a )"), "runCommand('turn x -90')"
                 write(101, "(a )"), "runCommand('turn y -120')"
                 write(101, "(a )"), "runCommand('turn x 35')"
@@ -849,7 +956,7 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
                 write(101, "(a )"), "runCommand('turn x -35')"
                 write(101, "(a )"), "runCommand('turn y 120')"
                 write(101, "(a )"), "runCommand('turn x 90')"
-            else if(chi.view == "ALL" .or. chi.view == "all") then
+            else if(chim.view == "all") then
                 write(101, "(a )"), "runCommand('wait')"
                 write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
                 write(101, "(a$)"), "output_figure_black_XY/"//trim(prob.name_file)
@@ -880,27 +987,25 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
 
         else if(para_fig_bgcolor == "all") then
             ! ==================================================
-            !
             ! White and black background (white)
-            !
             ! ==================================================
             write(101, "(a)"), "runCommand('set bgTransparency')"
             write(101, "(a)"), "runCommand('set bgcolor white')"
 
             ! Set view
-            if(chi.view == "XY" .or. chi.view == "xy") then
+            if(chim.view == "xy") then
                 write(101, "(a )"), "runCommand('wait')"
                 write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
                 write(101, "(a$)"), "output_figure_white_XY/"//trim(prob.name_file)
                 write(101, "(a )"), trim(des)//"_XY.tif supersample 3"//"')"
-            else if(chi.view == "XZ" .or. chi.view == "xz") then
+            else if(chim.view == "xz") then
                 write(101, "(a )"), "runCommand('turn x -90')"
                 write(101, "(a )"), "runCommand('wait')"
                 write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
                 write(101, "(a$)"), "output_figure_white_XZ/"//trim(prob.name_file)
                 write(101, "(a )"), trim(des)//"_XZ.tif supersample 3"//"')"
                 write(101, "(a )"), "runCommand('turn x 90')"
-            else if(chi.view == "YZ" .or. chi.view == "yz") then
+            else if(chim.view == "yz") then
                 write(101, "(a )"), "runCommand('turn x -90')"
                 write(101, "(a )"), "runCommand('turn y -90')"
                 write(101, "(a )"), "runCommand('wait')"
@@ -909,7 +1014,25 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
                 write(101, "(a )"), trim(des)//"_YZ.tif supersample 3"//"')"
                 write(101, "(a )"), "runCommand('turn y 90')"
                 write(101, "(a )"), "runCommand('turn x 90')"
-            else if(chi.view == "XYZ" .or. chi.view == "xyz") then
+            else if(chim.view == "xyz1") then
+                write(101, "(a )"), "runCommand('turn x -90')"
+                write(101, "(a )"), "runCommand('turn y -45')"
+                write(101, "(a )"), "runCommand('turn z 35')"
+                write(101, "(a )"), "runCommand('wait')"
+                write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+                write(101, "(a$)"), "output_figure_white_XYZ1/"//trim(prob.name_file)
+                write(101, "(a )"), trim(des)//"_XYZ1.tif supersample 3"//"')"
+                write(101, "(a )"), "runCommand('turn z -35')"
+                write(101, "(a )"), "runCommand('turn y 45')"
+                write(101, "(a )"), "runCommand('turn x 90')"
+            else if(chim.view == "xyz2") then
+                write(101, "(a )"), "runCommand('turn x 60')"
+                write(101, "(a )"), "runCommand('wait')"
+                write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+                write(101, "(a$)"), "output_figure_white_XYZ2/"//trim(prob.name_file)
+                write(101, "(a )"), trim(des)//"_XYZ2.tif supersample 3"//"')"
+                write(101, "(a )"), "runCommand('turn x -60')"
+            else if(chim.view == "xyz") then
                 write(101, "(a )"), "runCommand('turn x -90')"
                 write(101, "(a )"), "runCommand('turn y -120')"
                 write(101, "(a )"), "runCommand('turn x 35')"
@@ -920,7 +1043,7 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
                 write(101, "(a )"), "runCommand('turn x -35')"
                 write(101, "(a )"), "runCommand('turn y 120')"
                 write(101, "(a )"), "runCommand('turn x 90')"
-            else if(chi.view == "ALL" .or. chi.view == "all") then
+            else if(chim.view == "all") then
                 write(101, "(a )"), "runCommand('wait')"
                 write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
                 write(101, "(a$)"), "output_figure_white_XY/"//trim(prob.name_file)
@@ -950,27 +1073,25 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
             end if
 
             ! ==================================================
-            !
             ! White and black background (black)
-            !
             ! ==================================================
             write(101, "(a)"), "runCommand('unset bgTransparency')"
             write(101, "(a)"), "runCommand('set bgcolor black')"
 
             ! Set view
-            if(chi.view == "XY" .or. chi.view == "xy") then
+            if(chim.view == "xy") then
                 write(101, "(a )"), "runCommand('wait')"
                 write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
                 write(101, "(a$)"), "output_figure_black_XY/"//trim(prob.name_file)
                 write(101, "(a )"), trim(des)//"_XY.tif supersample 3"//"')"
-            else if(chi.view == "XZ" .or. chi.view == "xz") then
+            else if(chim.view == "xz") then
                 write(101, "(a )"), "runCommand('turn x -90')"
                 write(101, "(a )"), "runCommand('wait')"
                 write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
                 write(101, "(a$)"), "output_figure_black_XZ/"//trim(prob.name_file)
                 write(101, "(a )"), trim(des)//"_XZ.tif supersample 3"//"')"
                 write(101, "(a )"), "runCommand('turn x 90')"
-            else if(chi.view == "YZ" .or. chi.view == "yz") then
+            else if(chim.view == "yz") then
                 write(101, "(a )"), "runCommand('turn x -90')"
                 write(101, "(a )"), "runCommand('turn y -90')"
                 write(101, "(a )"), "runCommand('wait')"
@@ -979,7 +1100,25 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
                 write(101, "(a )"), trim(des)//"_YZ.tif supersample 3"//"')"
                 write(101, "(a )"), "runCommand('turn y 90')"
                 write(101, "(a )"), "runCommand('turn x 90')"
-            else if(chi.view == "XYZ" .or. chi.view == "xyz") then
+            else if(chim.view == "xyz1") then
+                write(101, "(a )"), "runCommand('turn x -90')"
+                write(101, "(a )"), "runCommand('turn y -45')"
+                write(101, "(a )"), "runCommand('turn z 35')"
+                write(101, "(a )"), "runCommand('wait')"
+                write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+                write(101, "(a$)"), "output_figure_black_XYZ1/"//trim(prob.name_file)
+                write(101, "(a )"), trim(des)//"_XYZ1.tif supersample 3"//"')"
+                write(101, "(a )"), "runCommand('turn z -35')"
+                write(101, "(a )"), "runCommand('turn y 45')"
+                write(101, "(a )"), "runCommand('turn x 90')"
+            else if(chim.view == "xyz2") then
+                write(101, "(a )"), "runCommand('turn x 60')"
+                write(101, "(a )"), "runCommand('wait')"
+                write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
+                write(101, "(a$)"), "output_figure_black_XYZ2/"//trim(prob.name_file)
+                write(101, "(a )"), trim(des)//"_XYZ2.tif supersample 3"//"')"
+                write(101, "(a )"), "runCommand('turn x -60')"
+            else if(chim.view == "xyz") then
                 write(101, "(a )"), "runCommand('turn x -90')"
                 write(101, "(a )"), "runCommand('turn y -120')"
                 write(101, "(a )"), "runCommand('turn x 35')"
@@ -990,7 +1129,7 @@ subroutine Chimera_Make_Python_Figure(prob, chi)
                 write(101, "(a )"), "runCommand('turn x -35')"
                 write(101, "(a )"), "runCommand('turn y 120')"
                 write(101, "(a )"), "runCommand('turn x 90')"
-            else if(chi.view == "ALL" .or. chi.view == "all") then
+            else if(chim.view == "all") then
                 write(101, "(a )"), "runCommand('wait')"
                 write(101, "(a$)"), "runCommand('copy file "//trim(prob.path_work2)
                 write(101, "(a$)"), "output_figure_black_XY/"//trim(prob.name_file)

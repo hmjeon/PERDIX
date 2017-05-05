@@ -77,7 +77,7 @@ subroutine Exam_Open2D_Plate_Uniform_Quad(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.05d0, 0.0d0, 0.0d0)
 
     ! Set options
     !n  = 2
@@ -149,7 +149,7 @@ subroutine Exam_Open2D_Plate_Uniform_Tri(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
 
     ! Set options
     !n  = 2
@@ -240,7 +240,7 @@ subroutine Exam_Open2D_Quarter_Circle_Quad(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.2d0, -15.0d0, -13.0d0)
 
     n = 2
 
@@ -398,7 +398,7 @@ subroutine Exam_Open2D_Disk_Quad(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 7.0d0, 0.0d0)
 
     n  = 2
     nx = n
@@ -475,7 +475,7 @@ subroutine Exam_Open2D_circle_Tri_Coarse(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 2.5d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 19
@@ -553,7 +553,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Coarse(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 0.95d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 27
@@ -651,7 +651,7 @@ subroutine Exam_Open2D_L_Shape_Regular(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.2d0, -7.0d0, -6.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 21
@@ -731,7 +731,7 @@ subroutine Exam_Open2D_Hexagonal_Mesh(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.05d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 38
@@ -816,7 +816,7 @@ subroutine Exam_Open2D_Honeycomb(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 2.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 30
@@ -917,7 +917,7 @@ subroutine Exam_Open2D_Stickman(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.1d0, 0.0d0, 2.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 48

@@ -275,7 +275,7 @@ subroutine Exam_Prism_Octagonal(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xyz2", 1.0d0, 1.02d0, 0.0d0, 1.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 16
@@ -336,7 +336,7 @@ subroutine Exam_Prism_Enneagonal(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xyz2", 1.0d0, 1.0d0, -1.0d0, 1.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 18
@@ -520,7 +520,7 @@ subroutine Exam_Antiprism_Pentagonal(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xyz2", 1.0d0, 1.15d0, 0.0d0, 0.5d0)
 
     ! The number of points and faces
     geom.n_iniP = 10
@@ -577,7 +577,7 @@ subroutine Exam_Antiprism_Hexagonal(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xyz2", 1.0d0, 1.1d0, 1.5d0, 1.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 12
@@ -638,7 +638,7 @@ subroutine Exam_Antiprism_Heptagonal(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xyz2", 1.0d0, 0.98d0, 0.0d0, 0.5d0)
 
     ! The number of points and faces
     geom.n_iniP = 14
