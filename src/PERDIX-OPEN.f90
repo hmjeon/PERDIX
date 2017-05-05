@@ -549,7 +549,7 @@ subroutine Verify_Solution(mesh, dna)
     end do
 
     write(0, "(a)")
-    write(0, "(a25, a)"), "7.94214281059471E+06"," - Reference: Plate 42-bp edge length"
+    write(0, "(a25, a)"), "7.94214281059487E+06"," - Reference: Plate 42-bp edge length"
     write(0, "(es25.14)"), verify
 end subroutine Verify_Solution
 
