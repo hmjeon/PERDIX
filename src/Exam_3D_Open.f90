@@ -1,7 +1,7 @@
 !
 ! ---------------------------------------------------------------------------------------
 !
-!                               Module - Exam_3D_Open
+!                                   Exam_3D_Open
 !
 !                                                                    Updated : 2017/03/27
 !
@@ -368,7 +368,7 @@ subroutine Exam_Open3D_Hemisphere_Quad(prob, geom)
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
     prob.name_prob = "Hemisphere Quad"
-    prob.name_file = "14_Hemisphere_Quad"//&
+    prob.name_file = "15_Hemisphere_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_vertex_design)//&
@@ -884,7 +884,7 @@ subroutine Exam_Open3D_Cooling_Tower_Tri(prob, geom)
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
     prob.name_prob = "Cooling Tower Tri"
-    prob.name_file = "15_Cooling_Tower_Tri"//&
+    prob.name_file = "14_Cooling_Tower_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_vertex_design)//&
@@ -906,9 +906,9 @@ subroutine Exam_Open3D_Cooling_Tower_Tri(prob, geom)
             n_jnt = n_jnt + 1
             angle = (360.0d0 - dble(j-1)*(360.0d0/dble(n)))*(pi/180.0d0)
 
-            jnt(n_jnt,2) = 3.0d0 - dble(i-1)*(6.0d0/dble(n))
+            jnt(n_jnt,2) = 4.0d0 - dble(i-1)*(8.0d0/dble(n))
 
-            radius = dsqrt(1.0d0 + jnt(n_jnt,2)*jnt(n_jnt,2))
+            radius = dsqrt(1.0d0 + (jnt(n_jnt,2) * jnt(n_jnt,2))**(0.55d0))
             jnt(n_jnt,1) = radius * dcos(angle)
             jnt(n_jnt,3) = radius * dsin(angle)
         end do

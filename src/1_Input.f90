@@ -903,8 +903,8 @@ subroutine Input_Select_Problem(prob, geom)
         case (11); call Exam_Open3D_End_Cube_Quad             (prob, geom)
         case (12); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
         case (13); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
-        case (14); call Exam_Open3D_Hemisphere_Quad           (prob, geom)
-        case (15); call Exam_Open3D_Cooling_Tower_Tri         (prob, geom)
+        case (14); call Exam_Open3D_Cooling_Tower_Tri         (prob, geom)
+        case (15); call Exam_Open3D_Hemisphere_Quad           (prob, geom)
 
         ! Prism and antiprism
         case (16); call Exam_Prism_Octagonal      (prob, geom)
