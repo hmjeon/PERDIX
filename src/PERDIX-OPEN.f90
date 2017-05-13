@@ -34,8 +34,8 @@ program PERDIX_OPEN
 
     implicit none
 
-    call Main           ! Main module
-    !call Report        ! Main module for auto run
+    !call Main           ! Main module
+    call Report        ! Main module for auto run
 
 contains
 
@@ -104,7 +104,7 @@ subroutine Report()
     type(DNAType)   :: dna      ! B-form DNA data
 
     character(10) :: char_sec, char_edge, char_cut, char_vert
-    integer :: i, arg, sec, edge, max_stap, min_stap
+    integer :: i, ii, arg, sec, edge_in, edge, max_stap, min_stap
     logical :: results
 
     if(iargc() /= 0) then
@@ -120,14 +120,14 @@ subroutine Report()
     else
 
         sec       = 1           ! Section number
-        edge      = 2           ! Edge length
+        edge_in   = 2           ! Edge length
         char_vert = "beveled"   ! Flat or beveled vertex
         char_cut  = "max"       ! Staple-break rule
     end if
 
     ! Open file
     open(unit = 90, file = "Report_"//trim(adjustl(Int2Str(sec)))//&
-        "_"//trim(adjustl(Int2Str(edge)))//"_"//trim(char_vert)//&
+        "_"//trim(adjustl(Int2Str(edge_in)))//"_"//trim(char_vert)//&
         "_"//trim(char_cut)//".txt", form="formatted")
 
     ! Remove the directory and files
@@ -135,33 +135,37 @@ subroutine Report()
 
     ! Infomation
     write(90, "(a)"), "========================="
-    if(edge == 1) write(90, "(a)"), "Edge length   : 31bp"
-    if(edge == 2) write(90, "(a)"), "Edge length   : 42bp"
-    if(edge == 3) write(90, "(a)"), "Edge length   : 52bp"
-    if(edge == 4) write(90, "(a)"), "Edge length   : 63bp"
+    if(edge_in == 1) write(90, "(a)"), "Edge length   : 31bp"
+    if(edge_in == 2) write(90, "(a)"), "Edge length   : 42bp"
+    if(edge_in == 3) write(90, "(a)"), "Edge length   : 52bp"
+    if(edge_in == 4) write(90, "(a)"), "Edge length   : 63bp"
     write(90, "(a)"), "Staple cutting: "//trim(adjustl(char_cut))
     write(90, "(a)"), "Cross-section : honeycomb"
     write(90, "(a)"), "========================="
     write(90, "(a)")
 
     call space (90, 30)
-    write(90, "(a)"), "|============================================================================================================================================|"
+    write(90, "(a)"), "|=========================================================================================================================================================================|"
     call space (90, 30)
-    write(90, "(a)"), "|========== TOTAL LENGTH =========|======== STAPLE =======|===== SEED ====|== STRAND RATIO =|= NU RATIO=|= PARA=|=== CROSSOVER ===|=UNPAIRED=|"
+    write(90, "(a)"), "|=========|==================== TOTAL LENGTH ==================|======== STAPLE =======|===== SEED ====|== STRAND RATIO =|= NU RATIO=|= PARA=|=== CROSSOVER ===|=UNPAIRED=|"
     call space (90, 30)
-    write(90, "(a)"), "L_Scaf| L_Stap|   L_BP| MaxE| MinE| nStap| Min| Max|   ave| 14nt| S14| 4nt| 14nt|  S14|  4nt| 14nt|  4nt| p1| p2| scaf|  stap| one| scaf| stap"
-    write(90, "(a$)"), "---------------------------- "
-    write(90, "(a )"), " |-----|-------|-------|-----|-----|------|---------|------|-----|----|----|-----|-----|-----|-----|-----|---|---|-----|------|----|-----|----|"
+    write(90, "(a)"), " Sec| Edge| L_Scaf| L_Stap|   L_BP|L_Beveled(ratio)| MaxE| MinE| nStap| Min| Max|   ave| 14nt| S14| 4nt| 14nt|  S14|  4nt| 14nt|  4nt| p1| p2| scaf|  stap| one| scaf| stap"
+    write(90, "(a$)"), "----------------------------  "
+    write(90, "(a )"), "----|-----|-------|-------|-------|----------------|-----|-----|------|----|----|------|-----|----|----|-----|-----|-----|-----|-----|---|---|-----|------|----|-----|----|"
 
     min_stap = 10000
     max_stap =-10000
 
     ! Problem
-    do i = 1, 30
+    do i = 1, 15
+
+        ii = i
 
         ! Edge length
-        if(i == 14 .or. i == 15 .or. i == 28 .or. i == 30) then
-            edge = 1
+        if(ii == 14 .or. ii == 15 .or. ii == 28 .or. ii == 30) then
+            edge = edge_in - 1
+        else
+            edge = edge_in
         end if
 
         ! Initialize input
@@ -195,9 +199,13 @@ subroutine Report()
         write(90, "(a4, a24, a$)"), trim(adjustl(Int2Str(i)))//". ", trim(prob.name_prob), ","
 
         ! Print information
+        write(90, "(a6$)"), trim(adjustl(Int2Str(sec)))//"|"
+        write(90, "(a6$)"), trim(adjustl(Int2Str(edge)))//"|"
         write(90, "(a8$)"), trim(adjustl(Int2Str(dna.n_base_scaf)))//"|"
         write(90, "(a8$)"), trim(adjustl(Int2Str(dna.n_base_stap)))//"|"
         write(90, "(a8$)"), trim(adjustl(Int2Str(mesh.n_node)))//"|"
+        write(90, "(a8$)"), trim(adjustl(Int2Str(mesh.n_beveled)))//"("
+        write(90, "(a9$)"), trim(adjustl(Dble2Str(dble(mesh.n_beveled)/dble(mesh.n_node)*100.0d0)))//"%)|"
         write(90, "(a6$)"), trim(adjustl(Int2Str(geom.max_edge_length)))//"|"
         write(90, "(a6$)"), trim(adjustl(Int2Str(geom.min_edge_length)))//"|"
         write(90, "(a7$)"), trim(adjustl(Int2Str(dna.n_stap)))//"|"
