@@ -2520,7 +2520,7 @@ subroutine Basepair_Write_Edge_Length(prob, geom)
 
     double precision :: length
     integer :: i, j, poi_1, poi_2, n_bp, n_numbp, tot_bp
-    integer :: max_edge, min_edge
+    integer :: max_edge, min_edge, iniL, sec
     logical :: b_add
     character(200) :: path
 
@@ -2533,8 +2533,7 @@ subroutine Basepair_Write_Edge_Length(prob, geom)
     path = trim(prob.path_work1)
     open(unit=505, file=trim(path)//"edge_length.txt", form="formatted")
 
-    call space(505, 15)
-    write(505, "(a)"), "Cros line         Edge length(bp)"
+    write(505, "(4a15)"), "Cross line", "Init line", "Cross-sec", "Edge length"
 
     ! The number of base pairs on each edge
     n_numbp = 0
@@ -2545,8 +2544,10 @@ subroutine Basepair_Write_Edge_Length(prob, geom)
         length = Norm(geom.croP(poi_1).pos - geom.croP(poi_2).pos)
         n_bp   = nint(length / para_dist_bp) + 1
         tot_bp = tot_bp + n_bp
+        iniL   = geom.croL(i).iniL
+        sec    = geom.croL(i).sec
 
-        write(505, "(2i20)"), i, n_bp
+        write(505, "(4i15)"), i, iniL, sec, n_bp
 
         ! Save the number if it doesn't exist
         b_add = .true.
@@ -2570,14 +2571,13 @@ subroutine Basepair_Write_Edge_Length(prob, geom)
     call Sort2(num_bp, num_count, n_numbp)
 
     write(505, "(a)")
-    call space(505, 12)
-    write(505, "(a)"), "Edge length(bp)      # of edges"
+    write(505, "(2a15)"), "Edge length", "# of edges"
 
     ! Write edge length and count
     max_edge = num_bp(1)
     min_edge = num_bp(1)
     do i = 1, n_numbp
-        write(505, "(2i20)"), num_bp(i), num_count(i)
+        write(505, "(2i15)"), num_bp(i), num_count(i)
 
         if(max_edge < num_bp(i)) max_edge = num_bp(i)
         if(min_edge > num_bp(i)) min_edge = num_bp(i)

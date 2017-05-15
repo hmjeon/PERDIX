@@ -34,8 +34,8 @@ program PERDIX_OPEN
 
     implicit none
 
-    !call Main           ! Main module
-    call Report        ! Main module for auto run
+    call Main           ! Main module
+    !call Report        ! Main module for auto run
 
 contains
 
