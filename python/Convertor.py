@@ -1,41 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-Spyder Editor
+Convertor - From points and lines to faces
 
-This is a temporary script file.
 """
-import sys
-import numpy
-from shapely.geometry import LineString, MultiLineString
 
-from matplotlib import pyplot as plt
-from shapely.ops import polygonize, polygonize_full
-from shapely.geometry import Polygon, MultiPolygon, mapping
-from shapely.ops import linemerge, cascaded_union
-from descartes import PolygonPatch
+from shapely.geometry import MultiLineString
+from shapely.geometry import MultiPolygon
+from shapely.ops import polygonize_full
+from shapely.ops import cascaded_union
 
-# References
-# http://stackoverflow.com/questions/34475431/plot-unions-of-polygons-in-matplotlib
-# http://toblerity.org/shapely/manual.html#MultiLineString
-# http://stackoverflow.com/questions/21824157/how-to-extract-interior-polygon-coordinates-using-shapely
-
-'''
-1	0	1	4	1 
-2	0	3	4	3 
-3 	0	1	2	4
-4	2	0	0	3
-5	2	4	4	1
-6 	2	0	4	3
-
-1	0	0	1	0
-2	1	0	2	0 
-3 	0	1	1	1
-4	1	1	2	1
-5	0	0	0	1
-6 	1	0	1	1
-7 	2	0	2	1
-'''
-
+# Open file stream
 fin = open('geometry.txt', 'r')
 
 # ==================================================
@@ -50,9 +24,9 @@ for i in range(n_point):
     points.append([float(point[1]), float(point[2])])
 
 # Print points
-print 'Points'
+print 'Points: ', n_point
 for i in range(n_point):
-    print i, ' th points : ', points[i]
+    print i+1, ' th points : ', points[i]
 print '\n'
 
 # ==================================================
@@ -67,10 +41,12 @@ for i in range(n_line):
     lines.append([int(line[1]), int(line[2])])
 
 # Print lines
-print 'Lines'
+print 'Lines:',  n_line
 for i in range(n_line):
-    print i, ' th lines : ', lines[i]
+    print i+1, ' th lines : ', lines[i]
 print '\n'
+
+fin.close()
 
 # ==================================================
 # Make lines with points
@@ -82,22 +58,10 @@ for i in range(n_line):
     linepoints.extend(linepoint)
 
 # Print line list with points
-print 'Lines with points'
+print 'Lines with points: ', n_line
 for i in range(n_line):
-    print i, ' th lines with points : ', linepoints[i]
+    print i+1, ' th lines with points : ', linepoints[i]
 print '\n'
-
-'''
-# Read geometry file
-a = numpy.loadtxt('geometry.txt', usecols = [1,2,3,4])
-
-# Make line list 
-lines = []
-for i in range(len(a)):
-    line = [((a[i,0],a[i,1]),(a[i,2],a[i,3]))]
-    lines.extend(line)
-    print i, ' th line : ', line
-'''
 
 # ==================================================
 # Make mutilinestring from line list
@@ -124,14 +88,14 @@ multilines = polygon.boundary.union(result.boundary)
 
 # Polygonize
 result, dangles, cuts, invalids = polygonize_full(multilines)
-
-polygon = MultiPolygon(result)
 ##################################################
 
+polygon = MultiPolygon(result)
+
 # Print polygon
-print 'Polygons - ', len(polygon)
+print 'Polygons: ', len(polygon)
 for i in range(len(polygon)):
-    print i, ' th point : ', polygon[i]
+    print i+1, ' th', polygon[i]
 print '\n'
 
 # ==================================================
@@ -146,9 +110,9 @@ for i in range(len(polygon)):
             points.extend([(x[0], x[1])])
 
 # Print points
-print 'Points - ', len(points)
+print 'Points: ', len(points)
 for i in range(len(points)):
-    print i, ' th point : ', points[i]
+    print i+1, ' th point : ', points[i]
 print '\n'
 
 # ==================================================
@@ -166,48 +130,27 @@ for i in range(len(polygon)):
     conns.append(face)
 
 # Print connectivity
-print 'Connectivity - ', len(conns)
+print 'Face connectivity: ', len(conns)
 for i in range(len(conns)):
-    print i, ' th connectivity : ', conns[i]
+    print i+1, ' th connectivity : ', len(conns[i]), ' - ', conns[i]
 print '\n'
 
 # ==================================================
+# Write file
 # ==================================================
-# ==================================================
-sys.exit()
-# ==================================================
+fout = open('output.txt', 'w')
 
-# Print points and lines
-print '#########################################'
+fout.write('%d\t' % len(points))
+fout.write('%d\n' % len(conns))
+for i in range(len(points)):
+    fout.write('%s \t %s \t' % points[i])
+    fout.write('0.0\n')
 
-points = []
-for i in range(len(polygon)):
-    #print i, polygon[i]
-    x, y = polygon[i].exterior.coords.xy
-    poly = polygon[i]
-    interior = list(polygon[i].interiors)
-    exterior = list(poly.exterior.coords)
-    print i, ' th polygon : ', exterior
-    aaa = list(exterior[0])
-    #print aaa[0], aaa[1]
-
-#m = mapping(polygon)
-#print m['coordinates']
-sys.exit()
-
-# Plot polygon graph
-# http://stackoverflow.com/questions/26935701/ploting-filled-polygons-in-python
-
-ring_patch = PolygonPatch(result)
-
-xrange = [-5, 10]
-yrange = [-5, 10]
-
-fig = plt.figure(1, figsize=(5,5), dpi=90)
-ax  = fig.add_subplot(111)
-
-ax.add_patch(ring_patch)
-ax.set_title('Filled Polygon')
-ax.set_xlim(*xrange)
-ax.set_ylim(*yrange)
-ax.set_aspect(1)
+for i in range(len(conns)):
+    fout.write('%d \t' % len(conns[i]))
+    for j in range(len(conns[i])):
+        entity = conns[i][j] + 1
+        fout.write('%d \t' %entity)
+    
+    fout.write('\n')
+fout.close()
