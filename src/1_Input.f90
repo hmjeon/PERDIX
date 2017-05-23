@@ -847,17 +847,15 @@ subroutine Input_Select_File(prob, geom)
     prob.type_file = prob.name_file(len_char-2:len_char)
     prob.name_file = prob.name_file(1:len_char-4)
 
-    ! Set view points
-    prob.color    = [52, 152, 219]
-    prob.scale    = 1.0d0           ! Atomic model
-    prob.size     = 1.0d0           ! Cylindrical model
-    prob.move_x   = 0.0d0           ! Cylindrical model
-    prob.move_y   = 0.0d0           ! Cylindrical model
-    para_fig_view = "XY"
-
     ! Select file type
-    if(prob.type_file == "ply") call Importer_PLY(prob, geom)
-    if(prob.type_file /= "ply") stop
+    if(prob.type_file == "ply") then
+        call Importer_PLY(prob, geom)
+    else if(prob.type_file == "geo") then
+        call Importer_GEO(prob, geom)
+    else
+        print *, "Not defined geometry file"
+        stop
+    end if
 
     prob.name_prob = prob.name_file
     prob.name_file = trim(prob.name_file)//&
@@ -865,6 +863,9 @@ subroutine Input_Select_File(prob, geom)
         "_"//trim(adjustl(trim(c_bp)))//"bp"//&
         "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Print filename and type
     do i = 0, 11, 11

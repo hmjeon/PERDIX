@@ -129,39 +129,48 @@ end subroutine Importer_WRL
 
 ! ---------------------------------------------------------------------------------------
 
-! import geom format that is standard for PERDIX
+! Import geom format
 subroutine Importer_GEO(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
     integer :: i, number, npoint
-    character(200) :: path
+    logical :: results
+    character(200) :: path, file
 
-    ! mesh data structure
+    ! Mesh data structure
     type :: MeshType
-        integer :: cn(100)   ! maximum connectivity
+        integer :: cn(100)   ! Maximum connectivity
     end type MeshType
 
     ! 1st: # of meshes, 2nd: points
-    type(MeshType), allocatable, dimension (:) :: Basepair_con
+    type(MeshType), allocatable :: Basepair_con(:)
 
-    path = "Input\"//trim(prob.name_file)//"."//trim(prob.type_file)
+    print *, "Converting geometry with faced mesh"
+    
+    ! Run convertorv to generate the geometry with face meshes
+    file = trim(prob.name_file)//"."//trim(prob.type_file)
+    results = SYSTEMQQ(trim("Convertor")//" input\"//trim(file))
+
+    results = SYSTEMQQ(trim("copy geometry.geo input\"))
+    results = SYSTEMQQ(trim("del geometry.geo"))
+
+    path = "input\geometry.geo"
     open(unit=1002, file=path, form="formatted")
 
-    ! read points
-    read(1002, *), geom.n_iniP
-    allocate(geom.iniP(geom.n_iniP))
+    ! Read number of points and faces
+    read(1002, *), geom.n_iniP, geom.n_face
 
+    ! Read point data
+    allocate(geom.iniP(geom.n_iniP))
     do i = 1, geom.n_iniP
         read(1002, *), number, geom.iniP(i).pos(1:3)
     end do
 
-    ! read face
-    read(1002, *), geom.n_face
+    
+    ! Read face
     allocate(geom.face(geom.n_face))
     allocate(Basepair_con(geom.n_face))
-
-    ! read # of vectices in the mesh and connectivity
     do i = 1, geom.n_face
         read(1002, *), npoint, Basepair_con(i).cn(1:npoint)
 
