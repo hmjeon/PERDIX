@@ -12,7 +12,7 @@ from shapely.ops import cascaded_union
 
 # Open file stream
 if len(sys.argv) is 1:
-    fin = open('geometry.txt', 'r')
+    fin = open('geometry.geo', 'r')
 if len(sys.argv) is 2:
     fin = open(sys.argv[1], 'r')
 
@@ -143,7 +143,7 @@ print '\n'
 # Write file
 # ==================================================
 # Open file stream
-fout = open('geometry.geo', 'w')
+fout = open('geometry.txt', 'w')
 
 fout.write('%d\t' % len(points))
 fout.write('%d\n' % len(conns))
