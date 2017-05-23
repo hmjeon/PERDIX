@@ -4,13 +4,17 @@ Convertor - From points and lines to faces
 
 """
 
+import sys
 from shapely.geometry import MultiLineString
 from shapely.geometry import MultiPolygon
 from shapely.ops import polygonize_full
 from shapely.ops import cascaded_union
 
 # Open file stream
-fin = open('geometry.txt', 'r')
+if len(sys.argv) is 1:
+    fin = open('geometry.txt', 'r')
+if len(sys.argv) is 2:
+    fin = open(sys.argv[1], 'r')
 
 # ==================================================
 # Read points
@@ -138,7 +142,8 @@ print '\n'
 # ==================================================
 # Write file
 # ==================================================
-fout = open('output.txt', 'w')
+# Open file stream
+fout = open('geometry.geo', 'w')
 
 fout.write('%d\t' % len(points))
 fout.write('%d\n' % len(conns))
