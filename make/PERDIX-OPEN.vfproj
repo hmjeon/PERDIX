@@ -79,6 +79,7 @@
 		<File RelativePath="..\src\6_SeqDesign.f90"/>
 		<File RelativePath="..\src\7_Output.f90"/></Filter>
 		<File RelativePath=".\env.txt"/>
+		<File RelativePath=".\input\geometry.geo"/>
 		<File RelativePath=".\Makefile"/>
 		<File RelativePath="..\src\PERDIX-OPEN.f90"/>
 		<File RelativePath=".\seq.txt"/></Filter></Files>

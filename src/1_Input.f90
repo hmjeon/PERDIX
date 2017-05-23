@@ -733,7 +733,7 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "        28. Biscribed Propello Octahedron,         29. Biscribed Snub Cube"
     write(0, "(a)"), "        30. Biscribed Pentagonal Icositetrahedron"
     write(0, "(a)")
-    write(0, "(a)"), "      0. Input from file (*.PLY)"
+    write(0, "(a)"), "      0. Input from file (*.PLY, *.GEO)"
     write(0, "(a)")
     write(0, "(a)"), "   Select the number [Enter] : "
 end subroutine Input_Print_Problem
@@ -840,7 +840,7 @@ subroutine Input_Select_File(prob, geom)
 
     ! Read geometric file
     write(0, "(a)")
-    write(0, "(a)"), " Write the file name (*.PLY), [Enter] : "
+    write(0, "(a)"), " Write the file name (*.PLY, *.GEO), [Enter] : "
     read(*, *),  prob.name_file
 
     len_char       = LEN_TRIM(prob.name_file)
