@@ -129,12 +129,12 @@ end subroutine Importer_WRL
 
 ! ---------------------------------------------------------------------------------------
 
-! Import geom format
+! Import .geo format and convert face meshes
 subroutine Importer_GEO(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    integer :: i, n_poi
+    integer :: i, j, n_poi
     logical :: results
     character(200) :: path, file
 
@@ -176,11 +176,13 @@ subroutine Importer_GEO(prob, geom)
         geom.face(i).n_poi = n_poi
         allocate(geom.face(i).poi(n_poi))
 
-        geom.face(i).poi(1:n_poi) = face_con(i).cn(1:n_poi)
+        do j = 1, n_poi
+            geom.face(i).poi(j) = face_con(i).cn(j)
+        end do
     end do
 
     ! Deallocate memory and close file
-    deallocate(Basepair_con)
+    deallocate(face_con)
     close(unit=1002)
 end subroutine Importer_GEO
 
