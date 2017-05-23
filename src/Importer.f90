@@ -134,7 +134,7 @@ subroutine Importer_GEO(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    integer :: i, number, npoint
+    integer :: i, n_poi
     logical :: results
     character(200) :: path, file
 
@@ -144,18 +144,17 @@ subroutine Importer_GEO(prob, geom)
     end type MeshType
 
     ! 1st: # of meshes, 2nd: points
-    type(MeshType), allocatable :: Basepair_con(:)
+    type(MeshType), allocatable :: face_con(:)
 
     print *, "Converting geometry with faced mesh"
-    
+
     ! Run convertorv to generate the geometry with face meshes
     file = trim(prob.name_file)//"."//trim(prob.type_file)
     results = SYSTEMQQ(trim("Convertor")//" input\"//trim(file))
+    results = SYSTEMQQ(trim("copy geometry.txt input\"))
+    results = SYSTEMQQ(trim("del geometry.txt"))
 
-    results = SYSTEMQQ(trim("copy geometry.geo input\"))
-    results = SYSTEMQQ(trim("del geometry.geo"))
-
-    path = "input\geometry.geo"
+    path = "input\geometry.txt"
     open(unit=1002, file=path, form="formatted")
 
     ! Read number of points and faces
@@ -164,23 +163,25 @@ subroutine Importer_GEO(prob, geom)
     ! Read point data
     allocate(geom.iniP(geom.n_iniP))
     do i = 1, geom.n_iniP
-        read(1002, *), number, geom.iniP(i).pos(1:3)
+        read(1002, *), geom.iniP(i).pos(1:3)
     end do
 
-    
     ! Read face
     allocate(geom.face(geom.n_face))
-    allocate(Basepair_con(geom.n_face))
+    allocate(face_con(geom.n_face))
     do i = 1, geom.n_face
-        read(1002, *), npoint, Basepair_con(i).cn(1:npoint)
 
-        geom.face(i).n_poi = npoint
-        allocate(geom.face(i).poi(npoint))
+        read(1002, *), n_poi, face_con(i).cn(1:n_poi)
 
-        geom.face(i).poi(1:npoint) = Basepair_con(i).cn(1:npoint)
+        geom.face(i).n_poi = n_poi
+        allocate(geom.face(i).poi(n_poi))
+
+        geom.face(i).poi(1:n_poi) = face_con(i).cn(1:n_poi)
     end do
 
+    ! Deallocate memory and close file
     deallocate(Basepair_con)
+    close(unit=1002)
 end subroutine Importer_GEO
 
 ! ---------------------------------------------------------------------------------------
