@@ -146,7 +146,14 @@ print '\n'
 # Write file
 # ==================================================
 # Open file stream
-fout = open('geometry.tmp', 'w')
+if len(sys.argv) is 1:
+    str = 'geometry.tmp'
+    
+if len(sys.argv) is 2:
+    str = sys.argv[1]
+
+filename, filetype = str.split('.')
+fout = open(filename+'.tmp', 'w')
 
 fout.write('%d\t' % len(points))
 fout.write('0\t')

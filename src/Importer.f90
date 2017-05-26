@@ -160,11 +160,11 @@ subroutine Importer_GEO(prob, geom)
 
         ! Run convertorv to generate the geometry with face meshes
         results = SYSTEMQQ(trim("Convertor")//" input\"//trim(file))
-        results = SYSTEMQQ(trim("copy geometry.tmp input\"))
-        results = SYSTEMQQ(trim("del geometry.tmp"))
+        !results = SYSTEMQQ(trim("copy ")//trim(prob.name_file)//".tmp input\")
+        !results = SYSTEMQQ(trim("del geometry.tmp"))
 
-        path = "input\geometry.tmp"
-        open(unit=1002, file=path, form="formatted")
+        path = trim(prob.name_file)//".tmp"
+        open(unit=1002, file="input\"//path, form="formatted")
 
         ! Read number of points and faces
         read(1002, *), geom.n_iniP, n_line, geom.n_face
