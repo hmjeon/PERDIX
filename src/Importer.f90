@@ -154,9 +154,9 @@ subroutine Importer_GEO(prob, geom)
     read(1002, *), geom.n_iniP, n_line, geom.n_face
 
     if(n_line /= 0) then
-        
+
         close(unit=1002)
-        print *, "Converting geometry with faced mesh"
+        write(0, "(a)"), "Converting geometry with faced mesh"
 
         ! Run convertorv to generate the geometry with face meshes
         results = SYSTEMQQ(trim("Convertor")//" input\"//trim(file))
@@ -188,17 +188,17 @@ subroutine Importer_GEO(prob, geom)
         allocate(geom.face(i).poi(n_poi))
 
         do j = 1, n_poi
-            !geom.face(i).poi(j) = face_con(i).cn(n_poi-j+1)
-            geom.face(i).poi(j) = face_con(i).cn(j)
+            geom.face(i).poi(j) = face_con(i).cn(n_poi-j+1)
+            !geom.face(i).poi(j) = face_con(i).cn(j)
         end do
     end do
-
-    ! Delete temp file
-    if(n_line /= 0) results = SYSTEMQQ(trim("del input\geometry.tmp"))
 
     ! Deallocate memory and close file
     deallocate(face_con)
     close(unit=1002)
+
+    ! Delete temp file
+    results = SYSTEMQQ(trim("del input\")//trim(prob.name_file)//".tmp")
 end subroutine Importer_GEO
 
 ! ---------------------------------------------------------------------------------------

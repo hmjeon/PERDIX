@@ -29,8 +29,8 @@ n_face  = int(str[2])
 points = []
 for i in range(n_point):
     str = fin.readline()
-    point = str.split("\t")
-    points.append([float(point[1]), float(point[2])])
+    point = str.split()
+    points.append([-float(point[1]), -float(point[2])])
 
 # Print points
 print 'Points: ', n_point
@@ -44,7 +44,7 @@ print '\n'
 lines = []
 for i in range(n_line):
     str = fin.readline()
-    line = str.split("\t")
+    line = str.split()
     lines.append([int(line[1]), int(line[2])])
 
 # Print lines
@@ -75,20 +75,22 @@ print '\n'
 # ==================================================
 multilines = MultiLineString(linepoints)
 
+x = multilines.intersection(multilines)
+
 # Polygonize
-result, dangles, cuts, invalids = polygonize_full(multilines)
+result, dangles, cuts, invalids = polygonize_full(x)
 
 result = MultiPolygon(result)
 polygon = cascaded_union(result)
 
 # Make mutilinestring from line list
-multilines = MultiLineString(linepoints)
+#multilines = MultiLineString(linepoints)
 
 # Polygonize
-result, dangles, cuts, invalids = polygonize_full(multilines)
+#result, dangles, cuts, invalids = polygonize_full(multilines)
 
-result = MultiPolygon(result)
-polygon = cascaded_union(result)
+#result = MultiPolygon(result)
+#polygon = cascaded_union(result)
 
 ##################################################
 multilines = polygon.boundary.union(result.boundary)
