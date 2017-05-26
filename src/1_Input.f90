@@ -868,11 +868,9 @@ subroutine Input_Select_File(prob, geom)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! Print filename and type
-    do i = 0, 11, 11
-        call Space(i, 11)
-        write(i, "(a)"), "* File name : "//trim(prob.name_file)//"."//trim(prob.type_file)
-        write(i, "(a)")
-    end do
+    call Space(0, 11)
+    write(0, "(a)"), "* File name : "//trim(prob.name_file)//"."//trim(prob.type_file)
+    write(0, "(a)")
 end subroutine Input_Select_File
 
 ! ---------------------------------------------------------------------------------------
