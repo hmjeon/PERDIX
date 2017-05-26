@@ -135,7 +135,7 @@ subroutine Importer_GEO(prob, geom)
     type(GeomType), intent(inout) :: geom
 
     integer :: i, j, n_poi, n_line, temp
-    logical :: results
+    logical :: results, b_face
     character(200) :: path, file
 
     ! Mesh data structure
@@ -146,6 +146,8 @@ subroutine Importer_GEO(prob, geom)
     ! 1st: # of meshes, 2nd: points
     type(MeshType), allocatable :: face_con(:)
 
+    b_face = .true.
+
     file = trim(prob.name_file)//"."//trim(prob.type_file)
     path = "input\"//file
     open(unit=1002, file=path, form="formatted")
@@ -154,6 +156,8 @@ subroutine Importer_GEO(prob, geom)
     read(1002, *), geom.n_iniP, n_line, geom.n_face
 
     if(n_line /= 0) then
+
+        b_face = .false.
 
         close(unit=1002)
         write(0, "(a)"), "Converting geometry with faced mesh"
@@ -175,6 +179,8 @@ subroutine Importer_GEO(prob, geom)
     do i = 1, geom.n_iniP
         read(1002, *), temp, geom.iniP(i).pos(1:2)
         geom.iniP(i).pos(3) = 0.0d0
+
+        if(b_face == .true.) geom.iniP(i).pos(2) = -geom.iniP(i).pos(2)
     end do
 
     ! Read face

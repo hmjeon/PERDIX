@@ -30,7 +30,7 @@ points = []
 for i in range(n_point):
     str = fin.readline()
     point = str.split()
-    points.append([-float(point[1]), -float(point[2])])
+    points.append([float(point[1]), -float(point[2])])
 
 # Print points
 print 'Points: ', n_point
