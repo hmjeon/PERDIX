@@ -16,11 +16,16 @@ if len(sys.argv) is 1:
 if len(sys.argv) is 2:
     fin = open(sys.argv[1], 'r')
 
+str = fin.readline()
+str = str.split("\t")
+
+n_point = int(str[0])
+n_line  = int(str[1])
+n_face  = int(str[2])
+
 # ==================================================
 # Read points
 # ==================================================
-n_point = int(fin.readline())
-
 points = []
 for i in range(n_point):
     str = fin.readline()
@@ -36,8 +41,6 @@ print '\n'
 # ==================================================
 # Read lines
 # ==================================================
-n_line = int(fin.readline())
-
 lines = []
 for i in range(n_line):
     str = fin.readline()
@@ -143,17 +146,19 @@ print '\n'
 # Write file
 # ==================================================
 # Open file stream
-fout = open('geometry.txt', 'w')
+fout = open('geometry.tmp', 'w')
 
 fout.write('%d\t' % len(points))
+fout.write('0\t')
 fout.write('%d\n' % len(conns))
 for i in range(len(points)):
-    fout.write('%s \t %s \t' % points[i])
-    fout.write('0.0\n')
+    fout.write('%d \t' % (i+1))
+    fout.write('%s \t %s \t\n' % points[i])
 
 for i in range(len(conns)):
+    fout.write('%d \t' % (i+1))
     fout.write('%d \t' % len(conns[i]))
-    for j in range(len(conns[i])):
+    for j in range(len(conns[i])-1, -1, -1):
         entity = conns[i][j] + 1
         fout.write('%d \t' %entity)
     
