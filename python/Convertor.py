@@ -13,56 +13,117 @@ from shapely.ops import cascaded_union
 # Open file stream
 if len(sys.argv) is 1:
     fin = open('geometry.geo', 'r')
+    filename = 'geometry'
+    filetype = 'geo'
 if len(sys.argv) is 2:
     fin = open(sys.argv[1], 'r')
+    filename, filetype = sys.argv[1].split('.')
 
-str = fin.readline()
-str = str.split("\t")
-
-n_point = int(str[0])
-n_line  = int(str[1])
-n_face  = int(str[2])
+print '\nFilename: ', filename, '\nFiletype: ', filetype, '\n'
 
 # ==================================================
-# Read points
+# Read GEO data
 # ==================================================
-points = []
-for i in range(n_point):
+if filetype == 'geo':
     str = fin.readline()
-    point = str.split()
-    points.append([float(point[1]), -float(point[2])])
+    str = str.split("\t")
 
-# Print points
-print 'Points: ', n_point
-for i in range(n_point):
-    print i+1, ' th points : ', points[i]
-print '\n'
+    n_point = int(str[0])
+    n_line  = int(str[1])
+    n_face  = int(str[2])
+
+    # ==================================================
+    # Read points
+    # ==================================================
+    points = []
+    for i in range(n_point):
+        str = fin.readline()
+        point = str.split()
+        points.append([float(point[1]), -float(point[2])])
+
+    # Print points
+    print 'Points: ', n_point
+    for i in range(n_point):
+        print i+1, ' th points : ', points[i]
+    print '\n'
+
+    # ==================================================
+    # Read lines
+    # ==================================================
+    lines = []
+    for i in range(n_line):
+        str = fin.readline()
+        line = str.split()
+        lines.append([int(line[1]), int(line[2])])
+        
+    # Print lines
+    print 'Lines:',  n_line
+    for i in range(n_line):
+        print i+1, ' th lines : ', lines[i]
+    print '\n'
+    
+    # ==================================================
+    # Make lines with points
+    # ==================================================
+    linepoints = []
+    for i in range(n_line):
+        poi1, poi2 = lines[i]
+        linepoint = [((points[poi1-1]),(points[poi2-1]))]
+        linepoints.extend(linepoint)
 
 # ==================================================
-# Read lines
+# Read IGES data
 # ==================================================
-lines = []
-for i in range(n_line):
-    str = fin.readline()
-    line = str.split()
-    lines.append([int(line[1]), int(line[2])])
+if filetype == 'iges':
 
-# Print lines
-print 'Lines:',  n_line
-for i in range(n_line):
-    print i+1, ' th lines : ', lines[i]
-print '\n'
+    linepoints = []
+    while True:
+        str = fin.readline()
+        if str == '':
+            break
+        str = str.split(',')
+
+        # Add lines
+        points = []
+        if str[0] == '110':
+            index = len(str) - 2
+            for i in (range(1,len(str)-1)):
+                points.append(float(str[i]))
+                #print points
+            else:
+                if index is 3:
+                    #print "333"
+                    str = fin.readline()
+                    str = str.split(',')
+                    split0 = str[2].split(';')
+                    #print str[0], str[1], split0[0]
+                    points.append(float(str[0]))
+                    points.append(float(str[1]))
+                    points.append(float(split0[0]))
+                if index is 4:
+                    #print "444"
+                    str = fin.readline()
+                    str = str.split(',')
+                    split0 = str[1].split(';')
+                    #print str[0], split0[0]
+                    points.append(float(str[0]))
+                    points.append(float(split0[0]))
+                if index is 5:
+                    #print "555"
+                    str = fin.readline()
+                    str = str.split(';')
+                    #print str[0]
+                    points.append(float(str[0]))
+                 
+            linepoint = [((points[0], points[1]), (points[3], points[4]))]
+            print linepoint
+            linepoints.extend(linepoint)
+        
+    n_line = len(linepoints)
+    print n_line
 
 fin.close()
-
-# ==================================================
-# Make lines with points
-# ==================================================
-linepoints = []
-for i in range(n_line):
-    poi1, poi2 = lines[i]
-    linepoint = [((points[poi1-1]),(points[poi2-1]))]
-    linepoints.extend(linepoint)
+#sys.exit()
 
 # Print line list with points
 print 'Lines with points: ', n_line
