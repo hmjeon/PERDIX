@@ -74,7 +74,7 @@ if filetype == 'geo':
 # ==================================================
 # Read IGES data
 # ==================================================
-if filetype == 'iges':
+if filetype == 'igs':
 
     linepoints = []
     while True:
@@ -86,44 +86,38 @@ if filetype == 'iges':
         # Add lines
         points = []
         if str[0] == '110':
+
+            # no count first and last items
             index = len(str) - 2
             for i in (range(1,len(str)-1)):
-                points.append(float(str[i]))
-                #print points
+                if i == 5:
+                    split0 = str[5].split(';') 
+                    points.append(float(split0[0]))
+                else:
+                    points.append(float(str[i]))
             else:
                 if index is 3:
-                    #print "333"
+                    # 2 items are below
                     str = fin.readline()
                     str = str.split(',')
                     split0 = str[2].split(';')
-                    #print str[0], str[1], split0[0]
                     points.append(float(str[0]))
                     points.append(float(str[1]))
                     points.append(float(split0[0]))
                 if index is 4:
-                    #print "444"
+                    # 1 item is below
                     str = fin.readline()
                     str = str.split(',')
                     split0 = str[1].split(';')
-                    #print str[0], split0[0]
                     points.append(float(str[0]))
                     points.append(float(split0[0]))
-                if index is 5:
-                    #print "555"
-                    str = fin.readline()
-                    str = str.split(';')
-                    #print str[0]
-                    points.append(float(str[0]))
-                 
+
             linepoint = [((points[0], points[1]), (points[3], points[4]))]
-            print linepoint
             linepoints.extend(linepoint)
-        
+
     n_line = len(linepoints)
-    print n_line
 
 fin.close()
-#sys.exit()
 
 # Print line list with points
 print 'Lines with points: ', n_line

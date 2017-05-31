@@ -850,7 +850,7 @@ subroutine Input_Select_File(prob, geom)
     ! Select file type
     if(prob.type_file == "ply") then
         call Importer_PLY(prob, geom)
-    else if(prob.type_file == "geo") then
+    else if(prob.type_file == "geo" .or. prob.type_file == "igs") then
         call Importer_GEO(prob, geom)
     else
         print *, "Not defined geometry file"
