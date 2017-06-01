@@ -188,6 +188,7 @@ subroutine Importer_GEO(prob, geom)
     allocate(face_con(geom.n_face))
     do i = 1, geom.n_face
 
+        face_con(i).cn(:) = 0
         read(1002, *), temp, n_poi, face_con(i).cn(1:n_poi)
 
         geom.face(i).n_poi = n_poi
