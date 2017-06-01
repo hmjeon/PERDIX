@@ -155,7 +155,7 @@ subroutine Importer_GEO(prob, geom)
     ! Read number of points and faces
     if(prob.type_file == 'geo') read(1002, *), geom.n_iniP, n_line, geom.n_face
 
-    if(prob.type_file == 'igs' .or. n_line /= 0) then
+    if(prob.type_file == 'iges' .or. prob.type_file == 'igs' .or. n_line /= 0) then
 
         b_face = .false.
 

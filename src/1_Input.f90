@@ -733,7 +733,7 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "        28. Biscribed Propello Octahedron,         29. Biscribed Snub Cube"
     write(0, "(a)"), "        30. Biscribed Pentagonal Icositetrahedron"
     write(0, "(a)")
-    write(0, "(a)"), "      0. Input from file (*.PLY, *.GEO)"
+    write(0, "(a)"), "      0. Input from file (*.PLY, *.IGES, *.GEO)"
     write(0, "(a)")
     write(0, "(a)"), "   Select the number [Enter] : "
 end subroutine Input_Print_Problem
@@ -840,17 +840,27 @@ subroutine Input_Select_File(prob, geom)
 
     ! Read geometric file
     write(0, "(a)")
-    write(0, "(a)"), " Write the file name (*.PLY, *.GEO), [Enter] : "
-    read(*, *),  prob.name_file
+    write(0, "(a)"), " Write the file name (*.PLY, *.IGES, *.GEO), [Enter] : "
+    read(*, *), prob.name_file
 
-    len_char       = LEN_TRIM(prob.name_file)
-    prob.type_file = prob.name_file(len_char-2:len_char)
-    prob.name_file = prob.name_file(1:len_char-4)
+    len_char = LEN_TRIM(prob.name_file)
+    if(prob.name_file(len_char-3:len_char-3) == '.') then
+
+        prob.type_file = prob.name_file(len_char-2:len_char)
+        prob.name_file = prob.name_file(1:len_char-4)
+
+    else if(prob.name_file(len_char-4:len_char-4) == '.') then
+        prob.type_file = prob.name_file(len_char-3:len_char)
+        prob.name_file = prob.name_file(1:len_char-5)
+    else
+        write(0, "(a)"), "Wrong file type"
+        stop
+    end if
 
     ! Select file type
     if(prob.type_file == "ply") then
         call Importer_PLY(prob, geom)
-    else if(prob.type_file == "geo" .or. prob.type_file == "igs") then
+    else if(prob.type_file == "geo" .or. prob.type_file == "iges" .or. prob.type_file == "igs") then
         call Importer_GEO(prob, geom)
     else
         print *, "Not defined geometry file"

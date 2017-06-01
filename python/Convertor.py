@@ -74,7 +74,7 @@ if filetype == 'geo':
 # ==================================================
 # Read IGES data
 # ==================================================
-if filetype == 'igs':
+if filetype == 'igs' or filetype == 'iges':
 
     linepoints = []
     while True:
@@ -111,6 +111,16 @@ if filetype == 'igs':
                     split0 = str[1].split(';')
                     points.append(float(str[0]))
                     points.append(float(split0[0]))
+
+            # Set zero
+            if abs(points[0]) < 0.0000001:
+                points[0] = 0.0
+            if abs(points[1]) < 0.0000001:
+                points[1] = 0.0
+            if abs(points[2]) < 0.0000001:
+                points[2] = 0.0
+            if abs(points[3]) < 0.0000001:
+                points[3] = 0.0
 
             linepoint = [((points[0], points[1]), (points[3], points[4]))]
             linepoints.extend(linepoint)
