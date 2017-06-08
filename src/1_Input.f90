@@ -678,7 +678,7 @@ subroutine Input_Set_Command
     logical :: results
 
     ! Set command environments
-    results = SYSTEMQQ('title PERDIX')                       ! cmd title
+    results = SYSTEMQQ('title PERDIX-OPEN')                 ! cmd title
     results = SYSTEMQQ('mode con: cols=135 lines=6000')     ! cmd size
     results = SYSTEMQQ('color')                             ! convert color, 02, f0, f1, f2
     results = SYSTEMQQ('date /t')                           ! display time
@@ -732,6 +732,8 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "        26. Biscribed Propello Tetrahedron,        27. Biscribed Propello Cube"
     write(0, "(a)"), "        28. Biscribed Propello Octahedron,         29. Biscribed Snub Cube"
     write(0, "(a)"), "        30. Biscribed Pentagonal Icositetrahedron"
+    write(0, "(a)")
+    write(0, "(a)"), "        99. N-polygon"
     write(0, "(a)")
     write(0, "(a)"), "      0. Input from file (*.PLY, *.IGES, *.GEO)"
     write(0, "(a)")
@@ -941,6 +943,8 @@ subroutine Input_Select_Problem(prob, geom)
         case (33); call Exam_Chiral_Asym_Octahedron   (prob, geom)
         case (34); call Exam_Chiral_Asym_Dodecahedron (prob, geom)
         case (35); call Exam_Chiral_Asym_Icosahedron  (prob, geom)
+
+        case (99); call Exam_Open2D_N_Polygon (prob, geom)
 
         case default
             write(0, "(a$)"), "Error - Not defined problem : "

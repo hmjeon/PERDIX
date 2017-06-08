@@ -47,6 +47,8 @@ module Exam_2D_Open
     !public Exam_Open2D_Hyperbolic_Paraboloid_Quad   ! Hyperbolic paraboloid with quad mesh
     !public Exam_Open2D_Hyperbolic_Paraboloid_Tri    ! Hyperbolic paraboloid with tri mesh
 
+    public Exam_Open2D_N_Polygon
+
     private Exam_Open2D_Cross_Point
     private Exam_Open2D_Merge_Point_Face_Quad
     private Exam_Open2D_Merge_Point_Face_Tri
@@ -2302,6 +2304,72 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Tri(prob, geom)
         end do
     end do
 end subroutine Exam_Open2D_Hyperbolic_Paraboloid_Tri
+
+! ---------------------------------------------------------------------------------------
+
+! Example of n-polygon with tri mesh
+subroutine Exam_Open2D_N_Polygon(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: x_width, y_width, del_x, del_y
+    integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
+    character :: pn
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "N Polygon"
+    prob.name_file = "N_Polygon_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_vertex_design)//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
+
+    ! Set options
+    n = 12
+
+    ! The number of points and faces
+    geom.n_iniP = n + 1
+    geom.n_face = n
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    geom.iniP(n+1).pos(1) = 0.0d0
+    geom.iniP(n+1).pos(2) = 0.0d0
+    geom.iniP(n+1).pos(3) = 0.0d0
+
+    ! Set position vector
+    do i = 1, n
+        geom.iniP(i).pos(1) = 10.0d0 * dcos(2.0d0 * pi * dble(i) / dble(n))
+        geom.iniP(i).pos(2) = 10.0d0 * dsin(2.0d0 * pi * dble(i) / dble(n))
+        geom.iniP(i).pos(3) = 0.0d0
+    end do
+
+    ! Set connectivity
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
+    end do
+
+    do i = 1, n
+        if(i == n) then
+            geom.face(i).poi(1) = n + 1
+            geom.face(i).poi(2) = i
+            geom.face(i).poi(3) = 1
+        else
+            geom.face(i).poi(1) = n + 1
+            geom.face(i).poi(2) = i
+            geom.face(i).poi(3) = i + 1
+        end if
+    end do
+end subroutine Exam_Open2D_N_Polygon
 
 ! ---------------------------------------------------------------------------------------
 
