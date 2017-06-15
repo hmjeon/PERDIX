@@ -707,6 +707,7 @@ subroutine ModGeo_Set_Local_Coorindate(geom)
         write(11, "(f5.2, a$)"), geom.iniL(i).t(3, 2), ", "
         write(11, "(f5.2, a )"), geom.iniL(i).t(3, 3), " ]"
     end do
+
     write(0, "(a)"); write(11, "(a)")
 end subroutine ModGeo_Set_Local_Coorindate
 
@@ -740,9 +741,16 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
     face1 = geom.iniL(line).neiF(1)
     if(face1 /= -1) then
 
+        ! Find center point of the face1 -> centroid point is more reasonable
+        pos_c(:) = 0.0d0
+        do i = 1, geom.face(face1).n_poi
+            pos_c(:) = pos_c(:) + geom.iniP(geom.face(face1).poi(i)).pos
+        end do
+        pos_c(1:3) = pos_c / dble(geom.face(face1).n_poi)
+
         ! Find outward vector of the face 1
-        vec_a(1:3) = geom.iniP(geom.face(face1).poi(2)).pos - geom.iniP(geom.face(face1).poi(1)).pos
-        vec_b(1:3) = geom.iniP(geom.face(face1).poi(3)).pos - geom.iniP(geom.face(face1).poi(2)).pos
+        vec_a(1:3) = geom.iniP(geom.face(face1).poi(1)).pos - pos_c
+        vec_b(1:3) = geom.iniP(geom.face(face1).poi(2)).pos - pos_c
         vec_face1(1:3) = Normalize(Cross(vec_a, vec_b))
     else
 
@@ -753,9 +761,16 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
     face2 = geom.iniL(line).neiF(2)
     if(face2 /= -1) then
 
+        ! Find center point of the face1 -> centroid point is more reasonable
+        pos_c(:) = 0.0d0
+        do i = 1, geom.face(face2).n_poi
+            pos_c(:) = pos_c(:) + geom.iniP(geom.face(face2).poi(i)).pos
+        end do
+        pos_c(1:3) = pos_c / dble(geom.face(face2).n_poi)
+
         ! Find outward vector of the face 2
-        vec_a(1:3) = geom.iniP(geom.face(face2).poi(2)).pos - geom.iniP(geom.face(face2).poi(1)).pos
-        vec_b(1:3) = geom.iniP(geom.face(face2).poi(3)).pos - geom.iniP(geom.face(face2).poi(2)).pos
+        vec_a(1:3) = geom.iniP(geom.face(face2).poi(1)).pos - pos_c
+        vec_b(1:3) = geom.iniP(geom.face(face2).poi(2)).pos - pos_c
         vec_face2(1:3) = Normalize(Cross(vec_a, vec_b))
     else
 
