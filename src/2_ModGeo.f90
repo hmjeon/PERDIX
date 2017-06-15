@@ -741,7 +741,7 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
     face1 = geom.iniL(line).neiF(1)
     if(face1 /= -1) then
 
-        ! Find center point of the face1 -> centroid point is more reasonable
+        ! Find the center point of the face1 -> the centroid point is more reasonable
         pos_c(:) = 0.0d0
         do i = 1, geom.face(face1).n_poi
             pos_c(:) = pos_c(:) + geom.iniP(geom.face(face1).poi(i)).pos
@@ -761,7 +761,7 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
     face2 = geom.iniL(line).neiF(2)
     if(face2 /= -1) then
 
-        ! Find center point of the face1 -> centroid point is more reasonable
+        ! Find the center point of the face1 -> the centroid point is more reasonable
         pos_c(:) = 0.0d0
         do i = 1, geom.face(face2).n_poi
             pos_c(:) = pos_c(:) + geom.iniP(geom.face(face2).poi(i)).pos

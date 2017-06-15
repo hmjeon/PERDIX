@@ -285,7 +285,7 @@ subroutine Input_Print_Parameters(prob, geom)
     integer :: i
 
     ! Open output progress file (unit 11 is used for global output file)
-    open(unit=11, file=trim(prob.path_work1)//"PERDIX.txt", form="formatted")
+    open(unit=11, file=trim(prob.path_work1)//"PERDIX-OPEN.txt", form="formatted")
 
     do i = 0, 11, 11
         write(i, "(a )"), "   +--------------------------------------------------------------------+"
