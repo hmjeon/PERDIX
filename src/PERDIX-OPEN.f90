@@ -390,25 +390,27 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         call Space(i, 11)
         write(i, "(a)"), "[ STAPLE ]"
         call Space(i, 16)
-        write(i, "(a)"), "* # of staples               : "//trim(adjustl(Int2Str(dna.n_stap)))
-        call Space(i, 21)
-        write(i, "(a)"), "* with the 4nt dsDNA domain  - "//&
+        write(i, "(a)"), "* # of staples              : "//trim(adjustl(Int2Str(dna.n_stap)))
+        call Space(i, 25)
+        write(i, "(a)"), "@ with the 4nt dsDNA domain  - "//&
             trim(adjustl(Int2Str(dna.n_4nt)))//" ["//&
             trim(adjustl(Dble2Str(dble(dna.n_4nt)/dble(dna.n_stap)*100.0d0)))//" %]"
-        call Space(i, 21)
-        write(i, "(a)"), "* with the 14nt dsDNA domain - "//&
+        call Space(i, 25)
+        write(i, "(a)"), "@ with the 14nt dsDNA domain - "//&
             trim(adjustl(Int2Str(dna.n_14nt)))//" ["//&
             trim(adjustl(Dble2Str(dble(dna.n_14nt)/dble(dna.n_stap)*100.0d0)))//" %]"
+
         call Space(i, 16)
         write(i, "(a)"), "* # of nucleotides          : "//trim(adjustl(Int2Str(dna.n_base_stap)))
-        call Space(i, 21)
-        write(i, "(a)"), "* in 4nt dsDNA domains       - "//&
+        call Space(i, 25)
+        write(i, "(a)"), "@ in 4nt dsDNA domains       - "//&
             trim(adjustl(Int2Str(dna.n_nt_4nt)))//" ["//&
             trim(adjustl(Dble2Str(dble(dna.n_nt_4nt)/dble(dna.n_base_stap)*100.0d0)))//" %]"
-        call Space(i, 21)
-        write(i, "(a)"), "* in 14nt dsDNA domains      - "//&
+        call Space(i, 25)
+        write(i, "(a)"), "@ in 14nt dsDNA domains      - "//&
             trim(adjustl(Int2Str(dna.n_nt_14nt)))//" ["//&
             trim(adjustl(Dble2Str(dble(dna.n_nt_14nt)/dble(dna.n_base_stap)*100.0d0)))//" %]"
+
         !call Space(i, 16)
         !write(i, "(a)"), "* # of unpaired regions     : "//trim(adjustl(Int2Str(dna.n_unpaired_stap)))
         call Space(i, 16)
@@ -557,7 +559,10 @@ subroutine Verify_Solution(mesh, dna)
     end do
 
     write(0, "(a)")
-    write(0, "(a25, a)"), "7.94214281059487E+06"," - Reference: Plate 42-bp edge length"
+    write(0, "(a)"), "[ONLY DEBUG MODE]"
+    write(0, "(a25, a)"), " 7.94214281059471E+06"," - Reference: 1-2 plate 42-bp Beveled"
+    write(0, "(a25, a)"), " 2.60567494365903E+07"," - Reference: 3-2 quarter circle 42-bp Beveled"
+
     write(0, "(es25.14)"), verify
 end subroutine Verify_Solution
 

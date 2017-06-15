@@ -68,8 +68,9 @@ subroutine Input_Initialize(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    integer :: arg, i, j, n_problem, n_section, n_vertex, n_edge_len
-    character(10) :: c_prob, c_sec, c_edge_len, c_vertex, c_stap_break
+    integer :: arg, i, j, n_section, n_vertex, n_edge_len, len_char
+    character(10) :: c_sec, c_edge_len, c_stap_break
+    character(100) :: c_prob
     logical :: results
 
     ! Read parameters from env.dat
@@ -85,17 +86,38 @@ subroutine Input_Initialize(prob, geom)
         ! ==================================================
         ! Print pre-defined problems
         call Input_Print_Problem
-        read(*, *) prob.sel_prob
+        read(*, *), c_prob
 
-        ! The negative value terminate the program
-        if(prob.sel_prob < 0) stop
+        if(len_trim(c_prob) <= 3) then
+
+            read(c_prob, *), prob.sel_prob
+
+            ! The negative value terminate the program
+            if(prob.sel_prob <= 0) stop
+        else
+
+            prob.sel_prob  = 0
+            prob.name_file = c_prob
+            len_char       = len_trim(prob.name_file)
+            prob.type_file = prob.name_file(len_char-2:len_char)
+            prob.name_file = prob.name_file(1:len_char-4)
+        end if
 
         ! Clean the screen
-        results = SYSTEMQQ("cls")
+        !results = SYSTEMQQ("cls")
+
+        ! Print vertex design options
+        !call Input_Print_Vertex_Design()
+        !read(*, *), prob.sel_vertex
+        prob.sel_vertex = 2
+
+        ! The negative value terminate the program
+        if(prob.sel_vertex < 1 .or. prob.sel_vertex > 2) stop
 
         ! Print pre-defined cross-sections
-        call Input_Print_Section
-        read(*, *) prob.sel_sec
+        !call Input_Print_Section
+        !read(*, *) prob.sel_sec
+        prob.sel_sec = 1
 
         ! The negative value terminate the program
         if(prob.sel_sec < 1 .or. prob.sel_sec > 3) stop
@@ -105,34 +127,34 @@ subroutine Input_Initialize(prob, geom)
         read(*, *) prob.sel_bp_edge
 
         ! The negative value terminate the program
-        if(prob.sel_bp_edge < 1 .or. prob.sel_bp_edge > 10) stop
-
-        ! Print vertex design options
-        call Input_Print_Vertex_Design()
-        read(*, *), prob.sel_vertex
+        if(prob.sel_bp_edge < 1) stop
     else
 
         ! ==================================================
         ! Running from a command shell with options
         ! ==================================================
         arg = 1; call getarg(arg, c_prob)       ! 1st argument, problem
-        arg = 2; call getarg(arg, c_sec)        ! 2nd argument, section
-        arg = 3; call getarg(arg, c_edge_len)   ! 3rd argument, edge length
-        arg = 4; call getarg(arg, c_vertex)     ! 4th argument, vertex design
-        arg = 5; call getarg(arg, c_stap_break) ! 5th argument, staple-break rule
+        arg = 2; call getarg(arg, c_edge_len)   ! 2nd argument, edge length
+        arg = 3; call getarg(arg, c_stap_break) ! 3rd argument, staple-break rule
 
-        !prob.name_file = trim(c_prob)
-        read(c_prob,     *), n_problem
-        read(c_sec,      *), n_section
+        if(len_trim(c_prob) <= 3) then
+
+            read(c_prob, *), prob.sel_prob
+        else
+
+            prob.sel_prob  = 0
+            prob.name_file = c_prob
+            len_char       = len_trim(prob.name_file)
+            prob.type_file = prob.name_file(len_char-2:len_char)
+            prob.name_file = prob.name_file(1:len_char-4)
+        end if
+
         read(c_edge_len, *), n_edge_len
-        read(c_vertex,   *), n_vertex
 
         ! Set inputs for geometry, section, edge length, stap-break rule
-        ! Zero means that it will take arbitrary inputs
-        prob.sel_prob        = n_problem
-        prob.sel_sec         = n_section
+        prob.sel_sec         = 1
         prob.sel_bp_edge     = n_edge_len
-        prob.sel_vertex      = n_vertex
+        prob.sel_vertex      = 2
         para_cut_stap_method = trim(c_stap_break)
     end if
 
@@ -691,11 +713,39 @@ end subroutine Input_Set_Command
 ! Print pre-defined problems
 subroutine Input_Print_Problem
     write(0, "(a)")
-    write(0, "(a)"), "   +=====================================================================================+"
-    write(0, "(a)"), "   |                                                                                     |"
-    write(0, "(a)"), "   |           PERDIX-OPEN written by Hyungmin Jun (Hyungminjun@outlook.com)             |"
-    write(0, "(a)"), "   |                                                                                     |"
-    write(0, "(a)"), "   +=====================================================================================+"
+    write(0, "(a)"), "       +=====================================================================================+"
+    write(0, "(a)"), "       |                                                                                     |"
+    write(0, "(a)"), "       |     PERDIX-OPEN by Hyungmin Jun (hyungminjun@outlook.com), MIT, Bathe Lab, 2017     |"
+    write(0, "(a)"), "       |                                                                                     |"
+    write(0, "(a)"), "       +=====================================================================================+"
+    write(0, "(a)")
+    write(0, "(a)"), "   A. First input - 2D Geometry discretized by surface mesh"
+    write(0, "(a)"), "   ====================================================="
+    write(0, "(a)")
+    write(0, "(a)"), "       1. Plate with 4 by 3 Mesh [QUAD],          2. Plate with 3 by 4 Mesh [TRI]"
+    write(0, "(a)"), "       3. Quarter Circle [QUAD],                  4. Disk [QUAD]"
+    write(0, "(a)"), "       5. Circle with Coarse Mesh [TRI],          6. Ellipse with Coarse Mesh [TRI]"
+    write(0, "(a)"), "       7. L-Shape with Regular mesh [TRI],        8. Hexagonal Mesh"
+    write(0, "(a)"), "       9. Honeycomb,                             10. 2D Stickman"
+    write(0, "(a)"), "      11. Plate with 4 by 3 Mesh [QUAD],         12. Plate with 3 by 4 Mesh [TRI]"
+    write(0, "(a)"), "      13. Quarter Circle [QUAD],                 14. Disk [QUAD]"
+    write(0, "(a)"), "      15. Circle with Coarse Mesh [TRI],         16. Ellipse with Coarse Mesh [TRI]"
+    write(0, "(a)"), "      17. L-Shape with Regular mesh [TRI],       18. Hexagonal Mesh"
+    write(0, "(a)"), "      19. Honeycomb,                             20. 2D Stickman"
+    write(0, "(a)")
+    write(0, "(a)"), "   Select the number or type geometry file (*.ply, *.geo, *.igs) [Enter] : "
+end subroutine Input_Print_Problem
+
+! ---------------------------------------------------------------------------------------
+
+! Print pre-defined problems
+subroutine Input_Print_Problem_Old
+    write(0, "(a)")
+    write(0, "(a)"), "       +=====================================================================================+"
+    write(0, "(a)"), "       |                                                                                     |"
+    write(0, "(a)"), "       |     PERDIX-OPEN by Hyungmin Jun (hyungminjun@outlook.com), MIT, Bathe Lab, 2017     |"
+    write(0, "(a)"), "       |                                                                                     |"
+    write(0, "(a)"), "       +=====================================================================================+"
     write(0, "(a)")
     write(0, "(a)"), "   A. First input - Geometry discretized by surface mesh"
     write(0, "(a)"), "   ====================================================="
@@ -738,7 +788,7 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "      0. Input from file (*.PLY, *.IGES, *.GEO)"
     write(0, "(a)")
     write(0, "(a)"), "   Select the number [Enter] : "
-end subroutine Input_Print_Problem
+end subroutine Input_Print_Problem_Old
 
 ! ---------------------------------------------------------------------------------------
 
@@ -767,7 +817,7 @@ subroutine Input_Print_Num_BP_Edge(prob)
 
     ! The minimum edge lengths pre-defined
     write(0, "(a)")
-    write(0, "(a)"), "   C. Third input - Pre-defined minimum edge length"
+    write(0, "(a)"), "   B. Section input - Pre-defined minimum edge length"
     write(0, "(a)"), "   ================================================"
     write(0, "(a)")
     write(0, "(a)"), "   [Honeycomb lattice]"
@@ -841,28 +891,28 @@ subroutine Input_Select_File(prob, geom)
     write(unit=c_start_bp, fmt = "(i10)"), para_start_bp_ID
 
     ! Read geometric file
-    write(0, "(a)")
-    write(0, "(a)"), " Write the file name (*.PLY, *.IGES, *.GEO), [Enter] : "
-    read(*, *), prob.name_file
+    !write(0, "(a)")
+    !write(0, "(a)"), " Write the file name (*.PLY, *.IGES, *.GEO), [Enter] : "
+    !read(*, *), prob.name_file
 
-    len_char = LEN_TRIM(prob.name_file)
-    if(prob.name_file(len_char-3:len_char-3) == '.') then
-
-        prob.type_file = prob.name_file(len_char-2:len_char)
-        prob.name_file = prob.name_file(1:len_char-4)
-
-    else if(prob.name_file(len_char-4:len_char-4) == '.') then
-        prob.type_file = prob.name_file(len_char-3:len_char)
-        prob.name_file = prob.name_file(1:len_char-5)
-    else
-        write(0, "(a)"), "Wrong file type"
-        stop
-    end if
+    !len_char = LEN_TRIM(prob.name_file)
+    !if(prob.name_file(len_char-3:len_char-3) == '.') then
+    !
+    !    prob.type_file = prob.name_file(len_char-2:len_char)
+    !    prob.name_file = prob.name_file(1:len_char-4)
+    !
+    !else if(prob.name_file(len_char-4:len_char-4) == '.') then
+    !    prob.type_file = prob.name_file(len_char-3:len_char)
+    !    prob.name_file = prob.name_file(1:len_char-5)
+    !else
+    !    write(0, "(a)"), "Wrong file type"
+    !    stop
+    !end if
 
     ! Select file type
     if(prob.type_file == "ply") then
         call Importer_PLY(prob, geom)
-    else if(prob.type_file == "geo" .or. prob.type_file == "iges" .or. prob.type_file == "igs") then
+    else if(prob.type_file == "geo" .or. prob.type_file == "igs") then
         call Importer_GEO(prob, geom)
     else
         print *, "Not defined geometry file"
@@ -1229,6 +1279,34 @@ subroutine Input_Set_Num_BP_Edge(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(in)    :: geom
 
+    if(prob.sel_bp_edge ==  1) prob.n_bp_edge =  31     ! 10.5bp/turn *  3 turn
+    if(prob.sel_bp_edge ==  2) prob.n_bp_edge =  42     ! 10.5bp/turn *  4 turn
+    if(prob.sel_bp_edge ==  3) prob.n_bp_edge =  52     ! 10.5bp/turn *  5 turn
+    if(prob.sel_bp_edge ==  4) prob.n_bp_edge =  63     ! 10.5bp/turn *  6 turn
+    if(prob.sel_bp_edge ==  5) prob.n_bp_edge =  73     ! 10.5bp/turn *  7 turn
+    if(prob.sel_bp_edge ==  6) prob.n_bp_edge =  84     ! 10.5bp/turn *  8 turn
+    if(prob.sel_bp_edge ==  7) prob.n_bp_edge =  94     ! 10.5bp/turn *  9 turn
+    if(prob.sel_bp_edge ==  8) prob.n_bp_edge = 105     ! 10.5bp/turn * 10 turn
+    if(prob.sel_bp_edge ==  9) prob.n_bp_edge = 115     ! 10.5bp/turn * 11 turn
+    if(prob.sel_bp_edge == 10) prob.n_bp_edge = 126     ! 10.5bp/turn * 12 turn
+
+    if(prob.sel_bp_edge > 10 .and. prob.sel_bp_edge <= 20) then
+        write(0, "(a)"), "Error: Not defined edge-length"
+        stop
+    end if
+
+    if(prob.sel_bp_edge >= 21) then
+        prob.n_bp_edge = prob.sel_bp_edge
+    end if
+end subroutine Input_Set_Num_BP_Edge
+
+! ---------------------------------------------------------------------------------------
+
+! Set the minimum edge length
+subroutine Input_Set_Num_BP_Edge_Old(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(in)    :: geom
+
     ! The edge length depends on the types of the lattice
     if(geom.sec.types == "square") then
 
@@ -1260,7 +1338,7 @@ subroutine Input_Set_Num_BP_Edge(prob, geom)
     !if(para_vertex_design == 1) then
     !    prob.n_bp_edge = prob.n_bp_edge + 1
     !end if
-end subroutine Input_Set_Num_BP_Edge
+end subroutine Input_Set_Num_BP_Edge_Old
 
 ! ---------------------------------------------------------------------------------------
 
