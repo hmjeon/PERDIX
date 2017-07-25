@@ -215,15 +215,16 @@ subroutine Mani_Init_MeshType(mesh)
     integer :: i, j
 
     do i = 1, mesh.n_node
-        mesh.node(i).id    = -1      ! Node ID
-        mesh.node(i).bp    = -1      ! Base pair ID
-        mesh.node(i).up    = -1      ! Upward ID
-        mesh.node(i).dn    = -1      ! Downward ID
-        mesh.node(i).sec   = -1      ! Section ID
-        mesh.node(i).iniL  = -1      ! Initial line
-        mesh.node(i).croL  = -1      ! Cross-section line
-        mesh.node(i).conn  = -1      ! -1 - no-connection, 1 - neighbor, 2 - self, 3 - modified neighbor, 4- modified self
-        mesh.node(i).ghost = -1      ! Ghost node
+        mesh.node(i).id      = -1   ! Node ID
+        mesh.node(i).bp      = -1   ! Base pair ID
+        mesh.node(i).up      = -1   ! Upward ID
+        mesh.node(i).dn      = -1   ! Downward ID
+        mesh.node(i).sec     = -1   ! Section ID
+        mesh.node(i).iniL    = -1   ! Initial line
+        mesh.node(i).croL    = -1   ! Cross-section line
+        mesh.node(i).beveled = -1   ! Beveled node
+        mesh.node(i).conn    = -1   ! -1 - no-connection, 1 - neighbor, 2 - self, 3 - modified neighbor, 4- modified self
+        mesh.node(i).ghost   = -1   ! Ghost node
 
         ! Position and orientation vector
         do j = 1, 3
@@ -248,15 +249,16 @@ subroutine Mani_Init_Node(node, n_node)
     integer :: i, j
 
     do i = 1, n_node
-        node(i).id    = -1      ! Node ID
-        node(i).bp    = -1      ! Base pair ID
-        node(i).up    = -1      ! Upward ID
-        node(i).dn    = -1      ! Downward ID
-        node(i).sec   = -1      ! Section ID
-        node(i).iniL  = -1      ! Initial line
-        node(i).croL  = -1      ! Cross-section line
-        node(i).conn  = -1      ! -1 - no-connection, 1 - neighbor, 2 - self, 3 - modified neighbor, 4 - modified self
-        node(i).ghost = -1      ! Ghost node
+        node(i).id      = -1    ! Node ID
+        node(i).bp      = -1    ! Base pair ID
+        node(i).up      = -1    ! Upward ID
+        node(i).dn      = -1    ! Downward ID
+        node(i).sec     = -1    ! Section ID
+        node(i).iniL    = -1    ! Initial line
+        node(i).croL    = -1    ! Cross-section line
+        node(i).beveled = -1    ! Beveled node
+        node(i).conn    = -1    ! -1 - no-connection, 1 - neighbor, 2 - self, 3 - modified neighbor, 4 - modified self
+        node(i).ghost   = -1    ! Ghost node
 
         ! Position and orientation vector
         do j = 1, 3
@@ -293,15 +295,16 @@ subroutine Mani_Copy_NodeType(ori, copy, num)
 
     ! Copy node data from ori to copy with size num
     do i = 1, num
-        copy(i).id    = ori(i).id       ! Node ID
-        copy(i).bp    = ori(i).bp       ! Base pair ID
-        copy(i).up    = ori(i).up       ! Upward ID
-        copy(i).dn    = ori(i).dn       ! Downward ID
-        copy(i).sec   = ori(i).sec      ! Cross-section ID
-        copy(i).iniL  = ori(i).iniL     ! Initial line
-        copy(i).croL  = ori(i).croL     ! Crossectional line
-        copy(i).conn  = ori(i).conn     ! Connection type
-        copy(i).ghost = ori(i).ghost    ! Ghost node
+        copy(i).id      = ori(i).id         ! Node ID
+        copy(i).bp      = ori(i).bp         ! Base pair ID
+        copy(i).up      = ori(i).up         ! Upward ID
+        copy(i).dn      = ori(i).dn         ! Downward ID
+        copy(i).sec     = ori(i).sec        ! Cross-section ID
+        copy(i).iniL    = ori(i).iniL       ! Initial line
+        copy(i).croL    = ori(i).croL       ! Crossectional line
+        copy(i).beveled = ori(i).beveled    ! Beveled node
+        copy(i).conn    = ori(i).conn       ! Connection type
+        copy(i).ghost   = ori(i).ghost      ! Ghost node
 
         ! Position and orientation vector
         do j = 1, 3

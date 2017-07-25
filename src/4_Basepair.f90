@@ -203,6 +203,7 @@ subroutine Basepair_Generate_Basepair(geom, bound, mesh)
         mesh.node(n_node).sec      = geom.croL(i).sec
         mesh.node(n_node).iniL     = geom.croL(i).iniL
         mesh.node(n_node).croL     = i
+        mesh.node(n_node).beveled  =-1
         mesh.node(n_node).pos(1:3) = pos_1(1:3)
 
         ! Set connectivity of base pairs
@@ -1634,6 +1635,9 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     mesh.node(mesh.n_node).iniL = t_node(node).iniL
     mesh.node(mesh.n_node).croL = t_node(node).croL
 
+    ! Set beveled node
+    mesh.node(mesh.n_node).beveled = 1
+
     ! Node connectivity for newly added node is derived from previous node
     mesh.node(mesh.n_node).conn = -1
 
@@ -1960,15 +1964,16 @@ subroutine Basepair_Delete_Nodes(mesh, min, max)
 
         if(i == min) count = n_delete
 
-        mesh.node(i).id    = t_node(i+count).id         ! Node ID
-        mesh.node(i).bp    = t_node(i+count).bp         ! Base pair ID
-        mesh.node(i).up    = t_node(i+count).up         ! Upward ID
-        mesh.node(i).dn    = t_node(i+count).dn         ! Downward ID
-        mesh.node(i).sec   = t_node(i+count).sec        ! Section ID
-        mesh.node(i).iniL  = t_node(i+count).iniL       ! Initial edge
-        mesh.node(i).croL  = t_node(i+count).croL       ! Sectional edge
-        mesh.node(i).conn  = t_node(i+count).conn       ! Connection type
-        mesh.node(i).ghost = t_node(i+count).ghost      ! Ghost node type
+        mesh.node(i).id      = t_node(i+count).id           ! Node ID
+        mesh.node(i).bp      = t_node(i+count).bp           ! Base pair ID
+        mesh.node(i).up      = t_node(i+count).up           ! Upward ID
+        mesh.node(i).dn      = t_node(i+count).dn           ! Downward ID
+        mesh.node(i).sec     = t_node(i+count).sec          ! Section ID
+        mesh.node(i).iniL    = t_node(i+count).iniL         ! Initial edge
+        mesh.node(i).croL    = t_node(i+count).croL         ! Sectional edge
+        mesh.node(i).beveled = t_node(i+count).beveled      ! Sectional edge
+        mesh.node(i).conn    = t_node(i+count).conn         ! Connection type
+        mesh.node(i).ghost   = t_node(i+count).ghost        ! Ghost node type
 
         do j = 1, 3
             mesh.node(i).pos(j)      = t_node(i+count).pos(j)

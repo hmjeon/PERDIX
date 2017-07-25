@@ -116,7 +116,7 @@ subroutine SeqDesign_Design(prob, geom, mesh, dna)
         call SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
     end if
 
-    ! Make nick in scaffold strand
+    ! Make nick in scaffold
     call SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
 
     ! Make short scaffold strand
@@ -2502,7 +2502,7 @@ end subroutine SeqDesign_Build_Sequence_Design
 
 ! ---------------------------------------------------------------------------------------
 
-! Make nick in scaffold strand
+! Make nick in scaffold
 subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
     type(GeomType), intent(in)    :: geom
     type(MeshType), intent(in)    :: mesh
@@ -2544,13 +2544,13 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
     !    print *, i, "-th : ", croL(i).n_xover
     !end do
 
-    ! Loop to make nick position in scaffold strand
+    ! Loop to make nick in scaffold
     do i = 1, dna.n_strand
 
-        ! Only for scaffold strand
+        ! Only scaffold
         if(dna.strand(i).types == "stap") cycle
 
-        ! Find first base(going down) that has single crossover
+        ! Set first base(going down) on the crossover
         base = dna.strand(i).base(1)
         do j = 1, dna.strand(i).n_base
             node = dna.top(base).node
@@ -2559,6 +2559,7 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
         end do
 
         ! Find maximum region in only non-crossover edges
+        ! Scaffold nick will be located outside
         max_strt_base = base
         max_count     = 0
         count         = 0
@@ -2625,6 +2626,11 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
         ! Disconnect between current and downward bases
         dna.top(base).dn    = -1
         dna.top(dn_base).up = -1
+
+        ....
+        print *, dna.top(base).node, mesh.node(dna.top(base).node).beveled
+        stop
+        
     end do
 
     ! Print progress
