@@ -77,7 +77,7 @@ module Para
     integer   :: para_mid_cut_stap         = 40         ! [40], The optimal number of nucleotides for one staple strand
     integer   :: para_max_cut_stap         = 60         ! [60], The maximum number of nucleotides for one staple strand
     integer   :: para_set_seq_scaf         = 0          ! [0, 1, 2], Scaffold sequence, 0 - M13mp18(7249nt), 1 - import sequence from seq.txt, 2 - random
-    integer   :: para_set_start_scaf       = 7217       ! [7217, 4141], Starting nucleotide position of scaffold strand
+    integer   :: para_set_start_scaf       = 1          ! [1], Starting nucleotide position of scaffold strand
 
     ! UCSF Chimera output control
     logical :: para_write_101   = .false.       !  GEO file,                                Input_Write_GEO_File,             ".geo"
