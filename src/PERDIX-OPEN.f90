@@ -3,7 +3,7 @@
 !
 !                                   PERDIX-OPEN
 !
-!                                                                    Updated : 2017/03/18
+!                                                                    Updated : 2017/08/02
 !
 ! Comments: PERDIX is an open-source Fortran library, which allows scientists
 ! to build and solve the sequence design of complex DNA nanostructures.
@@ -561,8 +561,8 @@ subroutine Verify_Solution(mesh, dna)
     write(0, "(a)")
     write(0, "(a)"), "[ONLY DEBUG MODE]"
     write(0, "(a25, a)"), " 7.94214281059471E+06"," - Reference: 1-2 plate 42-bp Beveled"
+    write(0, "(a25, a)"), " 2.93957201742065E+07"," - Reference: 2-2 Plate 42-bp Beveled"
     write(0, "(a25, a)"), " 2.60567494365903E+07"," - Reference: 3-2 quarter circle 42-bp Beveled"
-
     write(0, "(es25.14)"), verify
 end subroutine Verify_Solution
 

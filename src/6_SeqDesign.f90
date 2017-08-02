@@ -2596,7 +2596,7 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
                     mesh.node(node).dn    == -1 ) then
 
                     ! If the region exceeds max_count
-                    if(max_count < count) then
+                    if(max_count < count .and. mesh.node(node).beveled == -1) then
                         max_count     = count
                         max_edge      = edge
                         max_strt_base = strt_base
@@ -2626,11 +2626,6 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
         ! Disconnect between current and downward bases
         dna.top(base).dn    = -1
         dna.top(dn_base).up = -1
-
-        ....
-        print *, dna.top(base).node, mesh.node(dna.top(base).node).beveled
-        stop
-        
     end do
 
     ! Print progress
