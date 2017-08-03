@@ -713,18 +713,22 @@ end subroutine Input_Set_Command
 ! Print pre-defined problems
 subroutine Input_Print_Problem
     write(0, "(a)")
-    write(0, "(a)"), "       +=====================================================================================+"
-    write(0, "(a)"), "       |                                                                                     |"
-    write(0, "(a)"), "       |     PERDIX-OPEN by Hyungmin Jun (hyungminjun@outlook.com), MIT, Bathe Lab, 2017     |"
-    write(0, "(a)"), "       |                                                                                     |"
-    write(0, "(a)"), "       +=====================================================================================+"
+    write(0, "(a)"), "       +===============================================================+"
+    write(0, "(a)"), "       |                                                               |"
+    write(0, "(a)"), "       |  PERDIX-OPEN by Hyungmin Jun (hyungminjun@outlook.com), 2017  |"
+    write(0, "(a)"), "       |                                                               |"
+    write(0, "(a)"), "       +===============================================================+"
     write(0, "(a)")
     write(0, "(a)"), "   A. First input - 2D Geometry discretized by surface mesh"
-    write(0, "(a)"), "   ====================================================="
+    write(0, "(a)"), "   ========================================================"
     write(0, "(a)")
-    write(0, "(a)"), "       1. Plate with 4 by 3 Mesh [QUAD],          2. Plate with 3 by 4 Mesh [TRI]"
+    write(0, "(a)"), "       [Tri mesh]"
+    write(0, "(a)"), "       1. Plate (4 x 3),         2. Circle (coarse)"
+    write(0, "(a)"), "       3. Ellipse (coarse),      9. Honeycomb, "
+    write(0, "(a)"), "       3. 8-polygon[TRI]"
+    write(0, "(a)"), "       Plate with 3 by 4 Mesh [TRI]"
     write(0, "(a)"), "       3. Quarter Circle [QUAD],                  4. Disk [QUAD]"
-    write(0, "(a)"), "       5. Circle with Coarse Mesh [TRI],          6. Ellipse with Coarse Mesh [TRI]"
+    write(0, "(a)"), "       5. ,          6. Ellipse with Coarse Mesh [TRI]"
     write(0, "(a)"), "       7. L-Shape with Regular mesh [TRI],        8. Hexagonal Mesh"
     write(0, "(a)"), "       9. Honeycomb,                             10. 2D Stickman"
     write(0, "(a)"), "      11. Plate with 4 by 3 Mesh [QUAD],         12. Plate with 3 by 4 Mesh [TRI]"
@@ -923,7 +927,6 @@ subroutine Input_Select_File(prob, geom)
     prob.name_file = trim(prob.name_file)//&
         "_"//trim(adjustl(trim(c_sec)))//"cs"//&
         "_"//trim(adjustl(trim(c_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -949,16 +952,16 @@ subroutine Input_Select_Problem(prob, geom)
     select case (prob.sel_prob)
 
         ! 2D open geometry
-        case ( 1); call Exam_Open2D_Plate_Uniform_Quad  (prob, geom)
-        case ( 2); call Exam_Open2D_Plate_Uniform_Tri   (prob, geom)
-        case ( 3); call Exam_Open2D_Quarter_Circle_Quad (prob, geom)
-        case ( 4); call Exam_Open2D_Disk_Quad           (prob, geom)
-        case ( 5); call Exam_Open2D_Circle_Tri_Coarse   (prob, geom)
-        case ( 6); call Exam_Open2D_Ellipse_Tri_Coarse  (prob, geom)
-        case ( 7); call Exam_Open2D_L_Shape_Regular     (prob, geom)
-        case ( 8); call Exam_Open2D_Hexagonal_Mesh      (prob, geom)
-        case ( 9); call Exam_Open2D_Honeycomb           (prob, geom)
-        case (10); call Exam_Open2D_Stickman            (prob, geom)
+        case ( 1); call Exam_Open2D_Plate_4x3     (prob, geom)
+        case ( 2); call Exam_Open2D_Circle_Coarse (prob, geom)
+        case ( 112); call Exam_Open2D_Plate_4x3   (prob, geom)
+        case ( 113); call Exam_Open2D_Quarter_Circle_Quad (prob, geom)
+        case ( 114); call Exam_Open2D_Disk_Quad           (prob, geom)
+        case ( 116); call Exam_Open2D_Ellipse_Tri_Coarse  (prob, geom)
+        case ( 117); call Exam_Open2D_L_Shape_Regular     (prob, geom)
+        case ( 118); call Exam_Open2D_Hexagonal_Mesh      (prob, geom)
+        case ( 119); call Exam_Open2D_Honeycomb           (prob, geom)
+        case (110); call Exam_Open2D_Stickman            (prob, geom)
 
         ! 3D open geometry
         case (11); call Exam_Open3D_End_Cube_Quad             (prob, geom)

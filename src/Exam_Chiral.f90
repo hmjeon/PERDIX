@@ -53,7 +53,6 @@ subroutine Exam_Chiral_Biscribed_Propello_Tetrahedron(prob, geom)
     prob.name_file = "26_Chiral_Bi_Pro_Tetrahedron"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -126,7 +125,6 @@ subroutine Exam_Chiral_Biscribed_Propello_Cube(prob, geom)
     prob.name_file = "27_Chiral_Bi_Pro_Cube"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -228,7 +226,6 @@ subroutine Exam_Chiral_Biscribed_Propello_Octahedron(prob, geom)
     prob.name_file = "28_Chiral_Bi_Pro_Octahedron"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -330,7 +327,6 @@ subroutine Exam_Chiral_Biscribed_Snub_Cube(prob, geom)
     prob.name_file = "29_Chiral_Bi_Snub_Cube"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -432,7 +428,6 @@ subroutine Exam_Chiral_Biscribed_Pentagonal_Icositetrahedron(prob, geom)
     prob.name_file = "30_Chiral_Bi_Penta_Icositetrahedron"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -534,7 +529,6 @@ subroutine Exam_Chiral_Asym_Tetrahedron(prob, geom)
     prob.name_file = "Chiral_Asym_Tetrahedron"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -577,7 +571,6 @@ subroutine Exam_Chiral_Asym_Cube(prob, geom)
     prob.name_file = "Chiral_Asym_Cube"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -626,7 +619,6 @@ subroutine Exam_Chiral_Asym_Octahedron(prob, geom)
     prob.name_file = "Chiral_Asym_Octahedron"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -675,7 +667,6 @@ subroutine Exam_Chiral_Asym_Dodecahedron(prob, geom)
     prob.name_file = "Chiral_Asym_Dodecahedron"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -742,7 +733,6 @@ subroutine Exam_Chiral_Asym_Icosahedron(prob, geom)
     prob.name_file = "Chiral_Asym_Icosahedron"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)

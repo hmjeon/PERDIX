@@ -59,7 +59,6 @@ subroutine Exam_Open3D_End_Triangular_Prism_Quad(prob, geom)
     prob.name_file = "End_Triangular_Prism_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -137,7 +136,6 @@ subroutine Exam_Open3D_End_Cube_Quad(prob, geom)
     prob.name_file = "11_End_Cube_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -215,7 +213,6 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Quad(prob, geom)
     prob.name_file = "12_End_Pentagonal_Prism_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -293,7 +290,6 @@ subroutine Exam_Open3D_End_Cylinder_Quad(prob, geom)
     prob.name_file = "13_End_Cylinder_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -371,7 +367,6 @@ subroutine Exam_Open3D_Hemisphere_Quad(prob, geom)
     prob.name_file = "15_Hemisphere_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -450,7 +445,6 @@ subroutine Exam_Open3D_End_Triangular_Prism_Tri(prob, geom)
     prob.name_file = "End_Triangular_Prism_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -536,7 +530,6 @@ subroutine Exam_Open3D_End_Cube_Tri(prob, geom)
     prob.name_file = "End_Cube_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -622,7 +615,6 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Tri(prob, geom)
     prob.name_file = "End_Pentagonal_Prism_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -708,7 +700,6 @@ subroutine Exam_Open3D_End_Cylinder_Tri(prob, geom)
     prob.name_file = "End_Cylinder_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -794,7 +785,6 @@ subroutine Exam_Open3D_Hemisphere_Tri(prob, geom)
     prob.name_file = "Hemisphere_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -887,7 +877,6 @@ subroutine Exam_Open3D_Cooling_Tower_Tri(prob, geom)
     prob.name_file = "14_Cooling_Tower_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)

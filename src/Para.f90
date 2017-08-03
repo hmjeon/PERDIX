@@ -30,7 +30,7 @@ module Para
     character(10)  :: para_fig_bgcolor     = "black"    ! [black, white, all], Background color for figures from UCSF Chimera
     character(10)  :: para_fig_view        = "xy"       ! [xy, xz, xyz1, xyz2, xyz, all], Viewpoint for figures from UCSF Chimera
     integer        :: para_n_route_step    = 5          ! [5], The number of steps in routing progress
-    integer        :: para_type_cndo       = 1          ! [1, 2], CanDo file option, 1 : original format, 2 : updated format
+    integer        :: para_type_cndo       = 2          ! [1, 2], CanDo file option, 1 : original format, 2 : updated format
     character(200) :: para_path_Chimera    = &          ! UCSF Chimera program path
         "C:\Program Files\Chimera 1.10.2\bin\chimera.exe"
 

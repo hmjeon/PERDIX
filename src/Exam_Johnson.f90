@@ -59,7 +59,6 @@ subroutine Exam_Johnson_Square_Pyramid_J1(prob, geom)
     prob.name_file = "21_Square_Pyramid_J1"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -104,7 +103,6 @@ subroutine Exam_Johnson_Pentagonal_Pyramid_J2(prob, geom)
     prob.name_file = "22_Penta_Pyramid_J2"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -151,7 +149,6 @@ subroutine Exam_Johnson_Triangular_Cupola_J3(prob, geom)
     prob.name_file = "Tri_Cupola_J3"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -203,7 +200,6 @@ subroutine Exam_Johnson_Square_Cupola_J4(prob, geom)
     prob.name_file = "Square_Cupola_J4"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -260,7 +256,6 @@ subroutine Exam_Johnson_Pentagonal_Cupola_J5(prob, geom)
     prob.name_file = "23_Penta_Cupola_J5"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -322,7 +317,6 @@ subroutine Exam_Johnson_Pentagonal_Rotunda_J6(prob, geom)
     prob.name_file = "Penta_Rotunda_J6"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -394,7 +388,6 @@ subroutine Exam_Johnson_Elongated_Triangular_Cupola_J18(prob, geom)
     prob.name_file = "Elon_Tri_Cupola_J18"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -458,7 +451,6 @@ subroutine Exam_Johnson_Elongated_Square_Cupola_J19(prob, geom)
     prob.name_file = "Elong_Square_Cupola_J19"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -531,7 +523,6 @@ subroutine Exam_Johnson_Elongated_Pentagonal_Cupola_J20(prob, geom)
     prob.name_file = "Elon_Penta_Cupola_J20"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -613,7 +604,6 @@ subroutine Exam_Johnson_Elongated_Pentagonal_Rotunda_J21(prob, geom)
     prob.name_file = "Elon_Penta_Rotunda_J21"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -705,7 +695,6 @@ subroutine Exam_Johnson_Gyroelongated_Triangular_Cupola_J22(prob, geom)
     prob.name_file = "Gyro_Tri_Cupola_J22"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -775,7 +764,6 @@ subroutine Exam_Johnson_Gyroelongated_Square_Cupola_J23(prob, geom)
     prob.name_file = "24_Gyro_Square_Cupola_J23"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -856,7 +844,6 @@ subroutine Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24(prob, geom)
     prob.name_file = "25_Gyro_Penta_Cupola_J24"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -948,7 +935,6 @@ subroutine Exam_Johnson_Gyroelongated_Pentagonal_Rotunda_J25(prob, geom)
     prob.name_file = "Gyro_Penta_Rotunda_J25"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -1050,7 +1036,6 @@ subroutine Exam_Johnson_Gyrobifastigium_J26(prob, geom)
     prob.name_file = "Gyrobifastigium_J26"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)

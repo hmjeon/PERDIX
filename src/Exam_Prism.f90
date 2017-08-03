@@ -60,7 +60,6 @@ subroutine Exam_Prism_Triangular(prob, geom)
     prob.name_file = "Prism Triangular"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -106,7 +105,6 @@ subroutine Exam_Prism_Pentagonal(prob, geom)
     prob.name_file = "Prism_Pentagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -158,7 +156,6 @@ subroutine Exam_Prism_Hexagonal(prob, geom)
     prob.name_file = "Prism_Hexagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -213,7 +210,6 @@ subroutine Exam_Prism_Heptagonal(prob, geom)
     prob.name_file = "Prism_Heptagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -271,7 +267,6 @@ subroutine Exam_Prism_Octagonal(prob, geom)
     prob.name_file = "16_Prism_Octagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -332,7 +327,6 @@ subroutine Exam_Prism_Enneagonal(prob, geom)
     prob.name_file = "17_Prism_Enneagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -396,7 +390,6 @@ subroutine Exam_Prism_Decagonal(prob, geom)
     prob.name_file = "Prism_Decagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -463,7 +456,6 @@ subroutine Exam_Antiprism_Square(prob, geom)
     prob.name_file = "Antiprism_Square"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -516,7 +508,6 @@ subroutine Exam_Antiprism_Pentagonal(prob, geom)
     prob.name_file = "18_Antiprism_Pentagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -573,7 +564,6 @@ subroutine Exam_Antiprism_Hexagonal(prob, geom)
     prob.name_file = "19_Antiprism_Hexagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -634,7 +624,6 @@ subroutine Exam_Antiprism_Heptagonal(prob, geom)
     prob.name_file = "20_Antiprism_Heptagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -699,7 +688,6 @@ subroutine Exam_Antiprism_Octagonal(prob, geom)
     prob.name_file = "Antiprism_Octagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -768,7 +756,6 @@ subroutine Exam_Antiprism_Enneagonal(prob, geom)
     prob.name_file = "Antiprism_Enneagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
@@ -841,7 +828,6 @@ subroutine Exam_Antiprism_Decagonal(prob, geom)
     prob.name_file = "Antiprism_Decagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_vertex_design)//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)

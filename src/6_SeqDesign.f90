@@ -2593,7 +2593,11 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
                     dna.top(across).up    == -1 .or. &  ! If there is staple nick
                     dna.top(across).dn    == -1 .or. &
                     mesh.node(node).up    == -1 .or. &  ! If there is single crossover
-                    mesh.node(node).dn    == -1 ) then
+                    mesh.node(node).dn    == -1 .or. &
+                    (geom.iniL(mesh.node(node).iniL).neiF(1) /= -1 .and. geom.iniL(mesh.node(node).iniL).neiF(2) /= -1)) then
+
+                    ! To place the unparied remaining scaffold outside
+                    print *, geom.iniL(mesh.node(node).iniL).neiF(1:2)
 
                     ! If the region exceeds max_count
                     if(max_count < count .and. mesh.node(node).beveled == -1) then
@@ -6489,11 +6493,9 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
         end if
     end do
 
-    ! --------------------------------------------------
-    !
+    ! ==================================================
     ! For bases of the scaffold strand
-    !
-    ! --------------------------------------------------
+    ! ==================================================
     do i = 1, dna.n_strand
 
         ! Only for scaffold strand
@@ -6589,7 +6591,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
                 write(705, "(a     )"), ".color red"
                 write(705, "(a$    )"), ".sphere "
                 write(705, "(3f9.3$)"), mesh.node(node).pos !+ vec_jt1*0.5d0
-                write(705, "(1f9.3 )"), 0.2d0
+                write(705, "(1f9.3 )"), 0.4d0
                 write(705, "(a     )"), ".color steel blue"
             end if
 
