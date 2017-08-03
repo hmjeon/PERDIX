@@ -130,6 +130,7 @@ module Para
     logical :: para_chimera_601_dir  = .false.  !  Plot with strand direction (_scaf.bild / _stap.bild)
     logical :: para_chimera_609_cyl  = .false.  !  Plot with cylinderical representation (_atom.bild)
     logical :: para_chimera_609_dir  = .false.  !  Plot with strand direction (_atom.bild)
+
 contains
 
 ! ---------------------------------------------------------------------------------------

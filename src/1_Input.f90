@@ -690,7 +690,7 @@ subroutine Input_Set_Parameter_Dependence
     end if
 
     ! If new version cndo format, cut long scaffold
-    if(para_type_cndo == 2) para_max_cut_scaf = 7000
+    !if(para_type_cndo == 2) para_max_cut_scaf = 7000
 end subroutine Input_Set_Parameter_Dependence
 
 ! ---------------------------------------------------------------------------------------
@@ -713,31 +713,32 @@ end subroutine Input_Set_Command
 ! Print pre-defined problems
 subroutine Input_Print_Problem
     write(0, "(a)")
-    write(0, "(a)"), "       +===============================================================+"
-    write(0, "(a)"), "       |                                                               |"
-    write(0, "(a)"), "       |  PERDIX-OPEN by Hyungmin Jun (hyungminjun@outlook.com), 2017  |"
-    write(0, "(a)"), "       |                                                               |"
-    write(0, "(a)"), "       +===============================================================+"
+    write(0, "(a)"), "     +=============================================================+"
+    write(0, "(a)"), "     |                                                             |"
+    write(0, "(a)"), "     |  PERDIX-OPEN by Hyungmin Jun (hyungminjun@outlook.com) 2017 |"
+    write(0, "(a)"), "     |                                                             |"
+    write(0, "(a)"), "     +=============================================================+"
     write(0, "(a)")
     write(0, "(a)"), "   A. First input - 2D Geometry discretized by surface mesh"
     write(0, "(a)"), "   ========================================================"
     write(0, "(a)")
-    write(0, "(a)"), "       [Tri mesh]"
+    write(0, "(a)"), "    [Triangular mesh]"
     write(0, "(a)"), "       1. Plate (4 x 3),         2. Circle (coarse)"
-    write(0, "(a)"), "       3. Ellipse (coarse),      9. Honeycomb, "
-    write(0, "(a)"), "       3. 8-polygon[TRI]"
-    write(0, "(a)"), "       Plate with 3 by 4 Mesh [TRI]"
-    write(0, "(a)"), "       3. Quarter Circle [QUAD],                  4. Disk [QUAD]"
-    write(0, "(a)"), "       5. ,          6. Ellipse with Coarse Mesh [TRI]"
-    write(0, "(a)"), "       7. L-Shape with Regular mesh [TRI],        8. Hexagonal Mesh"
-    write(0, "(a)"), "       9. Honeycomb,                             10. 2D Stickman"
-    write(0, "(a)"), "      11. Plate with 4 by 3 Mesh [QUAD],         12. Plate with 3 by 4 Mesh [TRI]"
-    write(0, "(a)"), "      13. Quarter Circle [QUAD],                 14. Disk [QUAD]"
-    write(0, "(a)"), "      15. Circle with Coarse Mesh [TRI],         16. Ellipse with Coarse Mesh [TRI]"
-    write(0, "(a)"), "      17. L-Shape with Regular mesh [TRI],       18. Hexagonal Mesh"
-    write(0, "(a)"), "      19. Honeycomb,                             20. 2D Stickman"
+    write(0, "(a)"), "       3. Ellipse (coarse),      4. Honeycomb,            5. Wheel"
     write(0, "(a)")
-    write(0, "(a)"), "   Select the number or type geometry file (*.ply, *.geo, *.igs) [Enter] : "
+    write(0, "(a)"), "    [Quadrilateral mesh]"
+    write(0, "(a)"), "       6. Plate (3 x 4),         7. L-Shape"
+    write(0, "(a)"), "       8. Cross,                 9. Quarter Circle,      10. Disk"
+    write(0, "(a)")
+    write(0, "(a)"), "    [N-polygon mesh]"
+    write(0, "(a)"), "      11. Hexagonal Mesh,       12. Star"
+    write(0, "(a)"), "      13. Pentagon,             14. Plumeria,            15. Lotus"
+    write(0, "(a)")
+    write(0, "(a)"), "    [Different angles and mesh patterns]"
+    write(0, "(a)"), "      16. 4-Sided Polygon,      17. 5-Sided Polygon,     18. 6-Sided Polygon"
+    write(0, "(a)"), "      19. Plate Quad,           20. Plate Tri,           21. Plate Eng"
+    write(0, "(a)")
+    write(0, "(a)"), " Select the number or type geometry file (*.ply, *.geo, *.igs) [Enter] : "
 end subroutine Input_Print_Problem
 
 ! ---------------------------------------------------------------------------------------
@@ -951,53 +952,70 @@ subroutine Input_Select_Problem(prob, geom)
     ! Select problem
     select case (prob.sel_prob)
 
-        ! 2D open geometry
-        case ( 1); call Exam_Open2D_Plate_4x3     (prob, geom)
-        case ( 2); call Exam_Open2D_Circle_Coarse (prob, geom)
-        case ( 112); call Exam_Open2D_Plate_4x3   (prob, geom)
-        case ( 113); call Exam_Open2D_Quarter_Circle_Quad (prob, geom)
-        case ( 114); call Exam_Open2D_Disk_Quad           (prob, geom)
-        case ( 116); call Exam_Open2D_Ellipse_Tri_Coarse  (prob, geom)
-        case ( 117); call Exam_Open2D_L_Shape_Regular     (prob, geom)
-        case ( 118); call Exam_Open2D_Hexagonal_Mesh      (prob, geom)
-        case ( 119); call Exam_Open2D_Honeycomb           (prob, geom)
-        case (110); call Exam_Open2D_Stickman            (prob, geom)
+        ! 2D open geometry - tri mesh
+        case ( 1); call Exam_Open2D_Plate_4x3       (prob, geom)
+        case ( 2); call Exam_Open2D_Circle_Coarse   (prob, geom)
+        case ( 3); call Exam_Open2D_Ellipse_Coarse  (prob, geom)
+        case ( 4); call Exam_Open2D_Honeycomb       (prob, geom)
+        case ( 5); call Exam_Open2D_Wheel           (prob, geom)
+
+        ! 2D open geometry - quadrilateral mesh
+        case ( 6); call Exam_Open2D_Plate_3x4       (prob, geom)
+        case ( 7); call Exam_Open2D_L_Shape         (prob, geom)
+        case ( 8); call Exam_Open2D_Cross           (prob, geom)
+        case ( 9); call Exam_Open2D_Quarter_Circle  (prob, geom)
+        case (10); call Exam_Open2D_Disk            (prob, geom)
+
+        ! 2D open geometry - n-polygon mesh
+        case (11); call Exam_Open2D_Hexagonal_Mesh  (prob, geom)
+        case (12); call Exam_Open2D_Star            (prob, geom)
+        case (13); call Exam_Open2D_Pentagon        (prob, geom)
+        case (14); call Exam_Open2D_Plumeria        (prob, geom)
+        case (15); call Exam_Open2D_Lotus           (prob, geom)
+
+        ! Different angles
+        case (16); call Exam_Open2D_4_Sided_Polygon (prob, geom)
+        case (17); call Exam_Open2D_5_Sided_Polygon (prob, geom)
+        case (18); call Exam_Open2D_6_Sided_Polygon (prob, geom)
+
+        ! Different mesh patterns with the square
+        case (19); call Exam_Open2D_Plate_Quad      (prob, geom)
+        case (20); call Exam_Open2D_Plate_Tri       (prob, geom)
+        case (21); call Exam_Open2D_Plate_Eng       (prob, geom)
 
         ! 3D open geometry
-        case (11); call Exam_Open3D_End_Cube_Quad             (prob, geom)
-        case (12); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
-        case (13); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
-        case (14); call Exam_Open3D_Cooling_Tower_Tri         (prob, geom)
-        case (15); call Exam_Open3D_Hemisphere_Quad           (prob, geom)
+        case (101); call Exam_Open3D_End_Cube_Quad             (prob, geom)
+        case (102); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
+        case (103); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
+        case (104); call Exam_Open3D_Cooling_Tower_Tri         (prob, geom)
+        case (105); call Exam_Open3D_Hemisphere_Quad           (prob, geom)
 
         ! Prism and antiprism
-        case (16); call Exam_Prism_Octagonal      (prob, geom)
-        case (17); call Exam_Prism_Enneagonal     (prob, geom)
-        case (18); call Exam_Antiprism_Pentagonal (prob, geom)
-        case (19); call Exam_Antiprism_Hexagonal  (prob, geom)
-        case (20); call Exam_Antiprism_Heptagonal (prob, geom)
+        case (106); call Exam_Prism_Octagonal      (prob, geom)
+        case (107); call Exam_Prism_Enneagonal     (prob, geom)
+        case (108); call Exam_Antiprism_Pentagonal (prob, geom)
+        case (109); call Exam_Antiprism_Hexagonal  (prob, geom)
+        case (110); call Exam_Antiprism_Heptagonal (prob, geom)
 
         ! Johnson solids
-        case (21); call Exam_Johnson_Square_Pyramid_J1                   (prob, geom)
-        case (22); call Exam_Johnson_Pentagonal_Pyramid_J2               (prob, geom)
-        case (23); call Exam_Johnson_Pentagonal_Cupola_J5                (prob, geom)
-        case (24); call Exam_Johnson_Gyroelongated_Square_Cupola_J23     (prob, geom)
-        case (25); call Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24 (prob, geom)
+        case (111); call Exam_Johnson_Square_Pyramid_J1                   (prob, geom)
+        case (112); call Exam_Johnson_Pentagonal_Pyramid_J2               (prob, geom)
+        case (113); call Exam_Johnson_Pentagonal_Cupola_J5                (prob, geom)
+        case (114); call Exam_Johnson_Gyroelongated_Square_Cupola_J23     (prob, geom)
+        case (115); call Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24 (prob, geom)
 
         ! Chiral solids
-        case (26); call Exam_Chiral_Biscribed_Propello_Tetrahedron        (prob, geom)
-        case (27); call Exam_Chiral_Biscribed_Propello_Cube               (prob, geom)
-        case (28); call Exam_Chiral_Biscribed_Propello_Octahedron         (prob, geom)
-        case (29); call Exam_Chiral_Biscribed_Snub_Cube                   (prob, geom)
-        case (30); call Exam_Chiral_Biscribed_Pentagonal_Icositetrahedron (prob, geom)
+        case (116); call Exam_Chiral_Biscribed_Propello_Tetrahedron        (prob, geom)
+        case (117); call Exam_Chiral_Biscribed_Propello_Cube               (prob, geom)
+        case (118); call Exam_Chiral_Biscribed_Propello_Octahedron         (prob, geom)
+        case (119); call Exam_Chiral_Biscribed_Snub_Cube                   (prob, geom)
+        case (120); call Exam_Chiral_Biscribed_Pentagonal_Icositetrahedron (prob, geom)
 
-        case (31); call Exam_Chiral_Asym_Tetrahedron  (prob, geom)
-        case (32); call Exam_Chiral_Asym_Cube         (prob, geom)
-        case (33); call Exam_Chiral_Asym_Octahedron   (prob, geom)
-        case (34); call Exam_Chiral_Asym_Dodecahedron (prob, geom)
-        case (35); call Exam_Chiral_Asym_Icosahedron  (prob, geom)
-
-        case (99); call Exam_Open2D_N_Polygon (prob, geom)
+        case (121); call Exam_Chiral_Asym_Tetrahedron  (prob, geom)
+        case (122); call Exam_Chiral_Asym_Cube         (prob, geom)
+        case (123); call Exam_Chiral_Asym_Octahedron   (prob, geom)
+        case (124); call Exam_Chiral_Asym_Dodecahedron (prob, geom)
+        case (125); call Exam_Chiral_Asym_Icosahedron  (prob, geom)
 
         case default
             write(0, "(a$)"), "Error - Not defined problem : "

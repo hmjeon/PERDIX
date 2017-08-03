@@ -2588,19 +2588,26 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
                 node   = dna.top(base).node
                 across = dna.top(base).across
 
-                if( dna.top(base).xover   /= -1 .or. &  ! If there is crossover
-                    dna.top(across).xover /= -1 .or. &
-                    dna.top(across).up    == -1 .or. &  ! If there is staple nick
-                    dna.top(across).dn    == -1 .or. &
-                    mesh.node(node).up    == -1 .or. &  ! If there is single crossover
-                    mesh.node(node).dn    == -1 .or. &
-                    (geom.iniL(mesh.node(node).iniL).neiF(1) /= -1 .and. geom.iniL(mesh.node(node).iniL).neiF(2) /= -1)) then
+                if( dna.top(base).xover     /= -1 .or. &    ! If crossover
+                    dna.top(across).xover   /= -1 .or. &
+                    dna.top(across).up      == -1 .or. &    ! If staple nick
+                    dna.top(across).dn      == -1 .or. &
+                    mesh.node(node).up      == -1 .or. &    ! If single crossover
+                    mesh.node(node).dn      == -1 .or. &
+                    mesh.node(node).beveled /= -1 .or. &    ! If beveled strand
 
-                    ! To place the unparied remaining scaffold outside
-                    print *, geom.iniL(mesh.node(node).iniL).neiF(1:2)
+                    ! To avoid placing inside
+                    ( geom.iniL(mesh.node(node).iniL).neiF(1) /= -1 .and. &
+                      geom.iniL(mesh.node(node).iniL).neiF(2) /= -1 ) .or. &
+
+                    ( geom.iniL(mesh.node(node).iniL).neiF(2) == -1 .and. &     ! To place the unparied remaining scaffold outside
+                      geom.croL(mesh.node(node).croL).sec == 0 ) .or. &
+
+                    ( geom.iniL(mesh.node(node).iniL).neiF(1) == -1 .and. &     ! To place the unparied remaining scaffold outside
+                      geom.croL(mesh.node(node).croL).sec == 1 ) ) then
 
                     ! If the region exceeds max_count
-                    if(max_count < count .and. mesh.node(node).beveled == -1) then
+                    if(max_count < count) then
                         max_count     = count
                         max_edge      = edge
                         max_strt_base = strt_base

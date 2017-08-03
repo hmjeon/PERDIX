@@ -25,29 +25,45 @@ module Exam_2D_Open
 
     implicit none
 
-    public Exam_Open2D_Plate_4x3       ! Plate (4 x 3)
-    public Exam_Open2D_Circle_Coarse   ! Circle (coarse)
-    public Exam_Open2D_Plate_Uniform_Quad        ! Plate with uniform tri mesh
-    public Exam_Open2D_Quarter_Circle_Quad      ! Quarter circle with quad mesh
-    public Exam_Open2D_Disk_Quad                ! Disk with quad mesh
-    public Exam_Open2D_Ellipse_Tri_Coarse       ! Ellipse with tri coarse mesh
-    public Exam_Open2D_L_Shape_Regular          ! L-shape with regular mesh
-    public Exam_Open2D_Hexagonal_Mesh           ! Hexagonal mesh
-    public Exam_Open2D_Honeycomb                ! Honeycomb
-    public Exam_Open2D_Stickman                 ! 2D stickman
+    ! Triangular mesh
+    public Exam_Open2D_Plate_4x3        ! Plate (4x3)
+    public Exam_Open2D_Circle_Coarse    ! Circle (coarse)
+    public Exam_Open2D_Ellipse_Coarse   ! Ellipse (coarse)
+    public Exam_Open2D_Honeycomb        ! Honeycomb
+    public Exam_Open2D_Wheel            ! Wheel
 
-    public Exam_Open2D_Quarter_Circle_Tri           ! Quarter circle with tri mesh
-    public Exam_Open2D_Disk_Tri                     ! Disk with tri mesh
-    public Exam_Open2D_Circle_Tri_Fine              ! Circle with tri fine mesh
-    public Exam_Open2D_Ellipse_Tri_Fine             ! Ellipse with tri fine mesh
-    public Exam_Open2D_L_Shape_Irregular            ! L-shape with irregular mesh
+    ! Quadrilateral mesh
+    public Exam_Open2D_Plate_3x4        ! Plate (3x4)
+    public Exam_Open2D_L_Shape          ! L-shape
+    public Exam_Open2D_Cross            ! Cross
+    public Exam_Open2D_Quarter_Circle   ! Quarter circle
+    public Exam_Open2D_Disk             ! Disk
 
-    !public Exam_Open2D_Plate_Distorted_Quad         ! Plate with distorted quad mesh
-    !public Exam_Open2D_Plate_Distorted_Tri          ! Plate with distorted tri mesh
-    !public Exam_Open2D_Hyperbolic_Paraboloid_Quad   ! Hyperbolic paraboloid with quad mesh
-    !public Exam_Open2D_Hyperbolic_Paraboloid_Tri    ! Hyperbolic paraboloid with tri mesh
+    ! N-polygon mesh
+    public Exam_Open2D_Hexagonal_Mesh   ! Hexagonal mesh
+    public Exam_Open2D_Star             ! Star
+    public Exam_Open2D_Pentagon         ! Pentagon
+    public Exam_Open2D_Plumeria         ! Plumeria
+    public Exam_Open2D_Lotus            ! Lotus
 
-    public Exam_Open2D_N_Polygon
+    ! Different angles
+    public Exam_Open2D_4_Sided_Polygon  ! 4-sided polygon
+    public Exam_Open2D_5_Sided_Polygon  ! 5-sided polygon
+    public Exam_Open2D_6_Sided_Polygon  ! 6-sided polygon
+
+    ! Different mesh patterns with the square
+    public Exam_Open2D_Plate_Quad       ! Plate with quad mesh
+    public Exam_Open2D_Plate_Tri        ! Plate with tri mesh
+    public Exam_Open2D_Plate_Eng        ! Plate with eng mesh
+
+    ! Others
+    public Exam_Open2D_Stickman             ! 2D stickman
+    public Exam_Open2D_Quarter_Circle_Tri   ! Quarter circle with tri mesh
+    public Exam_Open2D_Disk_Tri             ! Disk with tri mesh
+    public Exam_Open2D_Circle_Tri_Fine      ! Circle with tri fine mesh
+    public Exam_Open2D_Ellipse_Tri_Fine     ! Ellipse with tri fine mesh
+    public Exam_Open2D_L_Shape_Irregular    ! L-shape with irregular mesh
+    public Exam_Open2D_N_Polygon            ! N-sided polygon
 
     private Exam_Open2D_Cross_Point
     private Exam_Open2D_Merge_Point_Face_Quad
@@ -223,316 +239,8 @@ end subroutine Exam_Open2D_Circle_Coarse
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of plate with uniform quad mesh
-subroutine Exam_Open2D_Plate_Uniform_Quad(prob, geom)
-    type(ProbType), intent(inout) :: prob
-    type(GeomType), intent(inout) :: geom
-
-    double precision :: x_width, y_width, del_x, del_y
-    integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Plate Uniform Quad"
-    prob.name_file = "01_Plate_Uniform_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.05d0, 0.0d0, 0.0d0)
-
-    ! Set options
-    !n  = 2
-    nx = 4
-    ny = 3
-
-    n_i_poi = nx + 1
-    n_j_poi = ny + 1
-    x_width = dble(nx)
-    y_width = dble(ny)
-    del_x   = x_width / dble(n_i_poi - 1)
-    del_y   = y_width / dble(n_j_poi - 1)
-
-    ! The number of points and faces
-    geom.n_iniP = n_i_poi * n_j_poi
-    geom.n_face = nx * ny
-
-    allocate(geom.iniP(geom.n_iniP))
-    allocate(geom.face(geom.n_face))
-
-    do i = 1, geom.n_face
-        geom.face(i).n_poi = 4
-        allocate(geom.face(i).poi(4))
-    end do
-
-    ! Set position vector
-    do j = 1, n_j_poi
-        do i = 1, n_i_poi
-            index = n_i_poi * (j - 1) + i
-            geom.iniP(index).pos(1) = del_x * dble(i - 1)
-            geom.iniP(index).pos(2) = del_y * dble(j - 1)
-            geom.iniP(index).pos(3) = 0.0d0
-        end do
-    end do
-
-    ! Set connectivity
-    do j = 1, ny
-        do i = 1, nx
-            index = nx * (j - 1) + i
-            geom.face(index).poi(1) = n_i_poi * (j - 1) + i
-            geom.face(index).poi(2) = n_i_poi * (j - 1) + i + 1
-            geom.face(index).poi(3) = n_i_poi * j + i + 1
-            geom.face(index).poi(4) = n_i_poi * j + i
-        end do
-    end do
-end subroutine Exam_Open2D_Plate_Uniform_Quad
-
-! ---------------------------------------------------------------------------------------
-
-! Example of quarter circle with quad mesh
-subroutine Exam_Open2D_Quarter_Circle_Quad(prob, geom)
-    type(ProbType), intent(inout) :: prob
-    type(GeomType), intent(inout) :: geom
-
-    double precision,allocatable  :: edge(:,:,:), joint(:,:)
-    integer, allocatable :: conn(:,:)
-
-    double precision :: dx, dy
-    integer :: i, j, n, count_n, count_e, count_n_t, count_e_t
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Quarter Circle Quad"
-    prob.name_file = "03_Quarter_Circle_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.2d0, -15.0d0, -13.0d0)
-
-    n = 2
-
-    ! The number of points and faces
-    geom.n_iniP = (n + 1)*(n + 1 ) + n*(n + 1) + n*n
-    geom.n_face = 3*n*n
-
-    ! allocate data structures
-    allocate(edge(2, n+1, 2), conn(n*n, 4), joint((n+1)**2, 3))
-    allocate(geom.iniP(geom.n_iniP))
-    allocate(geom.face(geom.n_face))
-    
-    do i = 1, geom.n_face
-        geom.face(i).n_poi = 4
-        allocate(geom.face(i).poi(4))
-    end do
-
-    ! First mesh, generate positions of edges
-    do i = 1, n + 1
-        ! First edge
-        edge(1, i, 1) = dble(i-1) * 0.5d0 / dble(n)             ! x1
-        edge(1, i, 2) = 0.0d0                                   ! y1
-        ! Second edge
-        edge(2, i, 1) = dble(i-1) * 1.0d0 / 3.0d0 / dble(n)     ! x2
-        edge(2, i, 2) = 0.5d0 - 0.5d0 * edge(2, i, 1)           ! y2
-    end do
-
-    ! Generation of joint
-    count_n = 0
-    do i = 1, n + 1
-        dx = (edge(2,i,1) - edge(1,i,1)) / dble(n)
-        dy = (edge(2,i,2) - edge(1,i,2)) / dble(n)
-
-        do j = 1, n + 1
-            count_n = count_n + 1
-            geom.iniP(count_n).pos(1) = edge(1,i,1) + dble(j-1) * dx
-            geom.iniP(count_n).pos(2) = edge(1,i,2) + dble(j-1) * dy
-            geom.iniP(count_n).pos(3) = 0.0d0
-        end do
-    end do
-
-    ! Generation of connectivities for quadrilaterlar elements
-    count_e = 0
-    do i = 1, n
-        do j = 1, n
-            count_e = count_e + 1
-            geom.face(count_e).poi(1) = (n+1)*(i+0) + (j-1) + 1
-            geom.face(count_e).poi(2) = (n+1)*(i+0) + (j-1) + 2
-            geom.face(count_e).poi(3) = (n+1)*(i-1) + (j-1) + 2
-            geom.face(count_e).poi(4) = (n+1)*(i-1) + (j-1) + 1
-        end do
-    end do
-
-    ! Second mesh, generate positions of edges
-    do i = 1, n + 1
-        ! First edge
-        edge(1, n+2-i, 1) = dble(i-1) * 1.0d0 / 3.0d0 / dble(n)     ! x1
-        edge(1, n+2-i, 2) = 0.5d0 - 0.5d0 * edge(1, n+2-i, 1)       ! y1
-        ! Second edge
-        edge(2, n+2-i, 1) = dsin(dble(i-1)*(pi/180.0d0) * 45.d0 / dble(n))    ! x2
-        edge(2, n+2-i, 2) = dcos(dble(i-1)*(pi/180.0d0) * 45.d0 / dble(n))    ! y2
-    end do
-
-    ! Generation of joint
-    count_n_t = 0
-    do i = 1, n + 1
-        dx = (edge(2, i, 1) - edge(1, i, 1)) / dble(n)
-        dy = (edge(2, i, 2) - edge(1, i, 2)) / dble(n)
-
-        do j = 1, n + 1
-            count_n_t = count_n_t + 1
-            joint(count_n_t, 1) = edge(1,i,1) + dble(j-1) * dx
-            joint(count_n_t, 2) = edge(1,i,2) + dble(j-1) * dy
-            joint(count_n_t, 3) = 0.0d0
-        end do
-    end do
-
-    ! Generation of connectivities for quadrilaterlar elements
-    count_e_t = 0
-    do i = 1, n
-        do j = 1, n
-            count_e_t = count_e_t + 1
-
-            conn(count_e_t, 1) = (n+1)*(i-1) + (j-1) + 1
-            conn(count_e_t, 2) = (n+1)*(i-1) + (j-1) + 2
-            conn(count_e_t, 3) = (n+1)*(i+0) + (j-1) + 2
-            conn(count_e_t, 4) = (n+1)*(i+0) + (j-1) + 1
-        end do
-    end do
-
-    call Exam_Open2D_Merge_Point_Face_Quad(n, joint, conn, count_n, count_e, geom)
-
-    ! Third mesh, generate positions of edges
-    do i = 1, n + 1
-        ! First edge
-        edge(1,i,1) = 1.0d0/3.d0 + dble(i-1) * (0.5d0 - 1.0d0 / 3.0d0) / dble(n)        ! x1
-        edge(1,i,2) = 1.0d0 - 2.0d0 * edge(1,i,1)                                       ! y1
-        ! Second edge
-        edge(2,i,1) = dsin(pi/180.0d0 * 45.d0 + dble(i-1) * (pi/180.0d0) * 45.d0 / dble(n))   ! x2
-        edge(2,i,2) = dcos(pi/180.0d0 * 45.d0 + dble(i-1) * (pi/180.0d0) * 45.d0 / dble(n))   ! y2
-    end do
-
-    ! Generation of joint
-    count_n_t = 0
-    do i = 1, n + 1
-        dx = (edge(2, i, 1) - edge(1, i, 1)) / dble(n)
-        dy = (edge(2, i, 2) - edge(1, i, 2)) / dble(n)
-
-        do j = 1, n + 1
-            count_n_t = count_n_t + 1
-            joint(count_n_t, 1) = edge(1, i, 1) + dble(j-1) * dx
-            joint(count_n_t, 2) = edge(1, i, 2) + dble(j-1) * dy
-            joint(count_n_t, 3) = 0.0d0
-        end do
-    end do
-
-    ! Generation of connectivities for quadrilaterlar elements
-    count_e_t = 0
-    do i = 1, n
-        do j = 1, n
-            count_e_t = count_e_t + 1
-            conn(count_e_t, 1) = (n+1)*(i+0) + (j-1) + 1
-            conn(count_e_t, 2) = (n+1)*(i+0) + (j-1) + 2
-            conn(count_e_t, 3) = (n+1)*(i-1) + (j-1) + 2
-            conn(count_e_t, 4) = (n+1)*(i-1) + (j-1) + 1
-        end do
-    end do
-
-    call Exam_Open2D_Merge_Point_Face_Quad(n, joint, conn, count_n, count_e, geom)
-
-    ! Deallocate data structure
-    deallocate(edge, joint, conn)
-end subroutine Exam_Open2D_Quarter_Circle_Quad
-
-! ---------------------------------------------------------------------------------------
-
-! Example of disk with quad mesh
-subroutine Exam_Open2D_Disk_Quad(prob, geom)
-    type(ProbType), intent(inout) :: prob
-    type(GeomType), intent(inout) :: geom
-
-    double precision :: i_rad, o_rad, ang, rad
-    integer :: i, j, index, n, nx, nr
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Disk Quad"
-    prob.name_file = "04_Disk_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 7.0d0, 0.0d0)
-
-    n  = 2
-    nx = n
-    nr = n * 5
-
-    o_rad = 4.0d0       ! Outer radius
-    i_rad = 1.8d0       ! Internal radius
-
-    ! The number of points and faces
-    geom.n_iniP = (nx + 1) * nr
-    geom.n_face = nx * nr
-
-    ! Allocate point structure and set position vector
-    allocate(geom.iniP(geom.n_iniP))
-    allocate(geom.face(geom.n_face))
-
-    do i = 1, geom.n_face
-        geom.face(i).n_poi = 4
-        allocate(geom.face(i).poi(4))
-    end do
-
-    index = 0
-    do j = 1, nr
-        do i = 1, nx + 1
-            index  = index + 1
-            ang = 2.0d0 * pi / dble(nr) * dble(j - 1)
-            rad = ((o_rad - i_rad) / dble(nx) * dble(i - 1)) + i_rad
-
-            geom.iniP(index).pos(1) = rad * dcos(ang)
-            geom.iniP(index).pos(2) = rad * dsin(ang)
-            geom.iniP(index).pos(3) = 0.0d0
-        end do
-    end do
-
-    ! Set connectivity
-    index = 0
-    do i = 1, nr
-        do j = 1, nx
-            if(i /= nr) then
-                index = index + 1
-                geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 1
-                geom.face(index).poi(2) = (nx+1)*(i-1) + (j-1) + 2
-                geom.face(index).poi(3) = (nx+1)*(i-0) + (j-1) + 2
-                geom.face(index).poi(4) = (nx+1)*(i-0) + (j-1) + 1
-            else if(i == nr) then
-                index = index + 1
-                geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 1
-                geom.face(index).poi(2) = (nx+1)*(i-1) + (j-1) + 2
-                geom.face(index).poi(3) = (nx+1)*(1-1) + (j-1) + 2
-                geom.face(index).poi(4) = (nx+1)*(1-1) + (j-1) + 1
-            end if
-        end do
-    end do
-end subroutine Exam_Open2D_Disk_Quad
-
-! ---------------------------------------------------------------------------------------
-
 ! Example of circle generated by Distmesh using 0.5 factor
-subroutine Exam_Open2D_Ellipse_Tri_Coarse(prob, geom)
+subroutine Exam_Open2D_Ellipse_Coarse(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -542,8 +250,8 @@ subroutine Exam_Open2D_Ellipse_Tri_Coarse(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Ellipse Tri Coarse"
-    prob.name_file = "06_Ellipse_Tri_Coarse"//&
+    prob.name_prob = "Ellipse Coarse"
+    prob.name_file = "03_Ellipse_Coarse"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -624,170 +332,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Coarse(prob, geom)
     geom.face(34).n_poi = 3; allocate(geom.face(34).poi(3)); geom.face(34).poi(1:3) = [  8, 12,  9 ]
     geom.face(35).n_poi = 3; allocate(geom.face(35).poi(3)); geom.face(35).poi(1:3) = [ 11, 12,  8 ]
     geom.face(36).n_poi = 3; allocate(geom.face(36).poi(3)); geom.face(36).poi(1:3) = [  8,  7, 11 ]
-end subroutine Exam_Open2D_Ellipse_Tri_Coarse
-
-! ---------------------------------------------------------------------------------------
-
-! Example of L-shape with regular mesh
-subroutine Exam_Open2D_L_Shape_Regular(prob, geom)
-    type(ProbType), intent(inout) :: prob
-    type(GeomType), intent(inout) :: geom
-
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "L Shape Regular"
-    prob.name_file = "07_L_Shape_Regular"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.2d0, -7.0d0, -6.0d0)
-
-    ! The number of points and faces
-    geom.n_iniP = 21
-    geom.n_face = 24
-
-    allocate(geom.iniP(geom.n_iniP))
-    allocate(geom.face(geom.n_face))
-
-    ! Set point position vectors
-    geom.iniP( 1).pos(1:3) = [ -34.2857d0, -34.2857d0, 0.0000d0 ]
-    geom.iniP( 2).pos(1:3) = [ -14.2857d0, -34.2857d0, 0.0000d0 ]
-    geom.iniP( 3).pos(1:3) = [   5.7143d0, -34.2857d0, 0.0000d0 ]
-    geom.iniP( 4).pos(1:3) = [  25.7143d0, -34.2857d0, 0.0000d0 ]
-    geom.iniP( 5).pos(1:3) = [  45.7143d0, -34.2857d0, 0.0000d0 ]
-    geom.iniP( 6).pos(1:3) = [ -34.2857d0, -14.2857d0, 0.0000d0 ]
-    geom.iniP( 7).pos(1:3) = [ -14.2857d0, -14.2857d0, 0.0000d0 ]
-    geom.iniP( 8).pos(1:3) = [   5.7143d0, -14.2857d0, 0.0000d0 ]
-    geom.iniP( 9).pos(1:3) = [  25.7143d0, -14.2857d0, 0.0000d0 ]
-    geom.iniP(10).pos(1:3) = [  45.7143d0, -14.2857d0, 0.0000d0 ]
-    geom.iniP(11).pos(1:3) = [ -34.2857d0,   5.7143d0, 0.0000d0 ]
-    geom.iniP(12).pos(1:3) = [ -14.2857d0,   5.7143d0, 0.0000d0 ]
-    geom.iniP(13).pos(1:3) = [   5.7143d0,   5.7143d0, 0.0000d0 ]
-    geom.iniP(14).pos(1:3) = [  25.7143d0,   5.7143d0, 0.0000d0 ]
-    geom.iniP(15).pos(1:3) = [  45.7143d0,   5.7143d0, 0.0000d0 ]
-    geom.iniP(16).pos(1:3) = [ -34.2857d0,  25.7143d0, 0.0000d0 ]
-    geom.iniP(17).pos(1:3) = [ -14.2857d0,  25.7143d0, 0.0000d0 ]
-    geom.iniP(18).pos(1:3) = [   5.7143d0,  25.7143d0, 0.0000d0 ]
-    geom.iniP(19).pos(1:3) = [ -34.2857d0,  45.7143d0, 0.0000d0 ]
-    geom.iniP(20).pos(1:3) = [ -14.2857d0,  45.7143d0, 0.0000d0 ]
-    geom.iniP(21).pos(1:3) = [   5.7143d0,  45.7143d0, 0.0000d0 ]
-
-    ! Set point position vectors
-    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  6 ]
-    geom.face( 2).n_poi = 3; allocate(geom.face( 2).poi(3)); geom.face( 2).poi(1:3) = [  7,  6,  2 ]
-    geom.face( 3).n_poi = 3; allocate(geom.face( 3).poi(3)); geom.face( 3).poi(1:3) = [  2,  3,  7 ]
-    geom.face( 4).n_poi = 3; allocate(geom.face( 4).poi(3)); geom.face( 4).poi(1:3) = [  8,  7,  3 ]
-    geom.face( 5).n_poi = 3; allocate(geom.face( 5).poi(3)); geom.face( 5).poi(1:3) = [  3,  4,  8 ]
-    geom.face( 6).n_poi = 3; allocate(geom.face( 6).poi(3)); geom.face( 6).poi(1:3) = [  9,  8,  4 ]
-    geom.face( 7).n_poi = 3; allocate(geom.face( 7).poi(3)); geom.face( 7).poi(1:3) = [  4,  5,  9 ]
-    geom.face( 8).n_poi = 3; allocate(geom.face( 8).poi(3)); geom.face( 8).poi(1:3) = [ 10,  9,  5 ]
-    geom.face( 9).n_poi = 3; allocate(geom.face( 9).poi(3)); geom.face( 9).poi(1:3) = [  6,  7, 11 ]
-    geom.face(10).n_poi = 3; allocate(geom.face(10).poi(3)); geom.face(10).poi(1:3) = [ 12, 11,  7 ]
-    geom.face(11).n_poi = 3; allocate(geom.face(11).poi(3)); geom.face(11).poi(1:3) = [  7,  8, 12 ]
-    geom.face(12).n_poi = 3; allocate(geom.face(12).poi(3)); geom.face(12).poi(1:3) = [ 13, 12,  8 ]
-    geom.face(13).n_poi = 3; allocate(geom.face(13).poi(3)); geom.face(13).poi(1:3) = [  8,  9, 13 ]
-    geom.face(14).n_poi = 3; allocate(geom.face(14).poi(3)); geom.face(14).poi(1:3) = [ 14, 13,  9 ]
-    geom.face(15).n_poi = 3; allocate(geom.face(15).poi(3)); geom.face(15).poi(1:3) = [  9, 10, 14 ]
-    geom.face(16).n_poi = 3; allocate(geom.face(16).poi(3)); geom.face(16).poi(1:3) = [ 15, 14, 10 ]
-    geom.face(17).n_poi = 3; allocate(geom.face(17).poi(3)); geom.face(17).poi(1:3) = [ 11, 12, 16 ]
-    geom.face(18).n_poi = 3; allocate(geom.face(18).poi(3)); geom.face(18).poi(1:3) = [ 17, 16, 12 ]
-    geom.face(19).n_poi = 3; allocate(geom.face(19).poi(3)); geom.face(19).poi(1:3) = [ 12, 13, 17 ]
-    geom.face(20).n_poi = 3; allocate(geom.face(20).poi(3)); geom.face(20).poi(1:3) = [ 18, 17, 13 ]
-    geom.face(21).n_poi = 3; allocate(geom.face(21).poi(3)); geom.face(21).poi(1:3) = [ 16, 17, 19 ]
-    geom.face(22).n_poi = 3; allocate(geom.face(22).poi(3)); geom.face(22).poi(1:3) = [ 20, 19, 17 ]
-    geom.face(23).n_poi = 3; allocate(geom.face(23).poi(3)); geom.face(23).poi(1:3) = [ 17, 18, 20 ]
-    geom.face(24).n_poi = 3; allocate(geom.face(24).poi(3)); geom.face(24).poi(1:3) = [ 21, 20, 18 ]
-end subroutine Exam_Open2D_L_Shape_Regular
-
-! ---------------------------------------------------------------------------------------
-
-! Example of hexagonal mesh
-subroutine Exam_Open2D_Hexagonal_Mesh(prob, geom)
-    type(ProbType), intent(inout) :: prob
-    type(GeomType), intent(inout) :: geom
-
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Hexagonal Mesh"
-    prob.name_file = "08_Hexagonal_Mesh"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.05d0, 0.0d0, 0.0d0)
-
-    ! The number of points and faces
-    geom.n_iniP = 38
-    geom.n_face = 12
-
-    allocate(geom.iniP(geom.n_iniP))
-    allocate(geom.face(geom.n_face))
-
-    ! Set the position vector
-    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
-    geom.iniP( 2).pos(1:3) = [  10.0000d0, -82.0445d0, 0.0000d0 ]
-    geom.iniP( 3).pos(1:3) = [ -40.0000d0, -64.7240d0, 0.0000d0 ]
-    geom.iniP( 4).pos(1:3) = [ -20.0000d0, -64.7240d0, 0.0000d0 ]
-    geom.iniP( 5).pos(1:3) = [  20.0000d0, -64.7240d0, 0.0000d0 ]
-    geom.iniP( 6).pos(1:3) = [  40.0000d0, -64.7240d0, 0.0000d0 ]
-    geom.iniP( 7).pos(1:3) = [ -50.0000d0, -47.4035d0, 0.0000d0 ]
-    geom.iniP( 8).pos(1:3) = [ -10.0000d0, -47.4035d0, 0.0000d0 ]
-    geom.iniP( 9).pos(1:3) = [  10.0000d0, -47.4035d0, 0.0000d0 ]
-    geom.iniP(10).pos(1:3) = [  50.0000d0, -47.4035d0, 0.0000d0 ]
-    geom.iniP(11).pos(1:3) = [ -40.0000d0, -30.0830d0, 0.0000d0 ]
-    geom.iniP(12).pos(1:3) = [ -20.0000d0, -30.0830d0, 0.0000d0 ]
-    geom.iniP(13).pos(1:3) = [  20.0000d0, -30.0830d0, 0.0000d0 ]
-    geom.iniP(14).pos(1:3) = [  40.0000d0, -30.0830d0, 0.0000d0 ]
-    geom.iniP(15).pos(1:3) = [ -50.0000d0, -12.7625d0, 0.0000d0 ]
-    geom.iniP(16).pos(1:3) = [ -10.0000d0, -12.7625d0, 0.0000d0 ]
-    geom.iniP(17).pos(1:3) = [  10.0000d0, -12.7625d0, 0.0000d0 ]
-    geom.iniP(18).pos(1:3) = [  50.0000d0, -12.7625d0, 0.0000d0 ]
-    geom.iniP(19).pos(1:3) = [ -40.0000d0,   4.5580d0, 0.0000d0 ]
-    geom.iniP(20).pos(1:3) = [ -20.0000d0,   4.5580d0, 0.0000d0 ]
-    geom.iniP(21).pos(1:3) = [  20.0000d0,   4.5580d0, 0.0000d0 ]
-    geom.iniP(22).pos(1:3) = [  40.0000d0,   4.5580d0, 0.0000d0 ]
-    geom.iniP(23).pos(1:3) = [ -50.0000d0,  21.8785d0, 0.0000d0 ]
-    geom.iniP(24).pos(1:3) = [ -10.0000d0,  21.8785d0, 0.0000d0 ]
-    geom.iniP(25).pos(1:3) = [  10.0000d0,  21.8785d0, 0.0000d0 ]
-    geom.iniP(26).pos(1:3) = [  50.0000d0,  21.8785d0, 0.0000d0 ]
-    geom.iniP(27).pos(1:3) = [ -40.0000d0,  39.1991d0, 0.0000d0 ]
-    geom.iniP(28).pos(1:3) = [ -20.0000d0,  39.1991d0, 0.0000d0 ]
-    geom.iniP(29).pos(1:3) = [  20.0000d0,  39.1991d0, 0.0000d0 ]
-    geom.iniP(30).pos(1:3) = [  40.0000d0,  39.1991d0, 0.0000d0 ]
-    geom.iniP(31).pos(1:3) = [ -50.0000d0,  56.5196d0, 0.0000d0 ]
-    geom.iniP(32).pos(1:3) = [ -10.0000d0,  56.5196d0, 0.0000d0 ]
-    geom.iniP(33).pos(1:3) = [  10.0000d0,  56.5196d0, 0.0000d0 ]
-    geom.iniP(34).pos(1:3) = [  50.0000d0,  56.5196d0, 0.0000d0 ]
-    geom.iniP(35).pos(1:3) = [ -40.0000d0,  73.8401d0, 0.0000d0 ]
-    geom.iniP(36).pos(1:3) = [ -20.0000d0,  73.8401d0, 0.0000d0 ]
-    geom.iniP(37).pos(1:3) = [  20.0000d0,  73.8401d0, 0.0000d0 ]
-    geom.iniP(38).pos(1:3) = [  40.0000d0,  73.8401d0, 0.0000d0 ]
-
-    ! Set connectivity
-    geom.face( 1).n_poi = 6; allocate(geom.face( 1).poi(6)); geom.face( 1).poi(1:6) = [  1,  2,  5,  9,  8,  4 ]
-    geom.face( 2).n_poi = 6; allocate(geom.face( 2).poi(6)); geom.face( 2).poi(1:6) = [  3,  4,  8, 12, 11,  7 ]
-    geom.face( 3).n_poi = 6; allocate(geom.face( 3).poi(6)); geom.face( 3).poi(1:6) = [  5,  6, 10, 14, 13,  9 ]
-    geom.face( 4).n_poi = 6; allocate(geom.face( 4).poi(6)); geom.face( 4).poi(1:6) = [  8,  9, 13, 17, 16, 12 ]
-    geom.face( 5).n_poi = 6; allocate(geom.face( 5).poi(6)); geom.face( 5).poi(1:6) = [ 11, 12, 16, 20, 19, 15 ]
-    geom.face( 6).n_poi = 6; allocate(geom.face( 6).poi(6)); geom.face( 6).poi(1:6) = [ 13, 14, 18, 22, 21, 17 ]
-    geom.face( 7).n_poi = 6; allocate(geom.face( 7).poi(6)); geom.face( 7).poi(1:6) = [ 16, 17, 21, 25, 24, 20 ]
-    geom.face( 8).n_poi = 6; allocate(geom.face( 8).poi(6)); geom.face( 8).poi(1:6) = [ 19, 20, 24, 28, 27, 23 ]
-    geom.face( 9).n_poi = 6; allocate(geom.face( 9).poi(6)); geom.face( 9).poi(1:6) = [ 21, 22, 26, 30, 29, 25 ]
-    geom.face(10).n_poi = 6; allocate(geom.face(10).poi(6)); geom.face(10).poi(1:6) = [ 24, 25, 29, 33, 32, 28 ]
-    geom.face(11).n_poi = 6; allocate(geom.face(11).poi(6)); geom.face(11).poi(1:6) = [ 27, 28, 32, 36, 35, 31 ]
-    geom.face(12).n_poi = 6; allocate(geom.face(12).poi(6)); geom.face(12).poi(1:6) = [ 29, 30, 34, 38, 37, 33 ]
-end subroutine Exam_Open2D_Hexagonal_Mesh
+end subroutine Exam_Open2D_Ellipse_Coarse
 
 ! ---------------------------------------------------------------------------------------
 
@@ -803,13 +348,13 @@ subroutine Exam_Open2D_Honeycomb(prob, geom)
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
     prob.name_prob = "Honeycomb"
-    prob.name_file = "09_Honeycomb"//&
+    prob.name_file = "04_Honeycomb"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 2.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
     geom.n_iniP = 30
@@ -888,6 +433,996 @@ subroutine Exam_Open2D_Honeycomb(prob, geom)
     geom.face(35).n_poi = 3; allocate(geom.face(35).poi(3)); geom.face(35).poi(1:3) = [ 28, 14, 30 ]
     geom.face(36).n_poi = 3; allocate(geom.face(36).poi(3)); geom.face(36).poi(1:3) = [ 14, 29, 30 ]
 end subroutine Exam_Open2D_Honeycomb
+
+! ---------------------------------------------------------------------------------------
+
+! Example of wheel
+subroutine Exam_Open2D_Wheel(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: x_width, y_width, del_x, del_y
+    integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
+    character :: pn
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Wheel"
+    prob.name_file = "05_Wheel"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
+
+    ! Set options
+    n = 12
+
+    ! The number of points and faces
+    geom.n_iniP = n + 1
+    geom.n_face = n
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    geom.iniP(n+1).pos(1) = 0.0d0
+    geom.iniP(n+1).pos(2) = 0.0d0
+    geom.iniP(n+1).pos(3) = 0.0d0
+
+    ! Set position vector
+    do i = 1, n
+        geom.iniP(i).pos(1) = 10.0d0 * dcos(2.0d0 * pi * dble(i) / dble(n))
+        geom.iniP(i).pos(2) = 10.0d0 * dsin(2.0d0 * pi * dble(i) / dble(n))
+        geom.iniP(i).pos(3) = 0.0d0
+    end do
+
+    ! Set connectivity
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
+    end do
+
+    do i = 1, n
+        if(i == n) then
+            geom.face(i).poi(1) = n + 1
+            geom.face(i).poi(2) = i
+            geom.face(i).poi(3) = 1
+        else
+            geom.face(i).poi(1) = n + 1
+            geom.face(i).poi(2) = i
+            geom.face(i).poi(3) = i + 1
+        end if
+    end do
+end subroutine Exam_Open2D_Wheel
+
+! ---------------------------------------------------------------------------------------
+
+! Example of plate with uniform quad mesh
+subroutine Exam_Open2D_Plate_3x4(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: x_width, y_width, del_x, del_y
+    integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Plate 3x4"
+    prob.name_file = "06_Plate_3x4"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xy", 1.0d0, 1.05d0, 0.0d0, 0.0d0)
+
+    ! Set options
+    !n  = 2
+    nx = 4
+    ny = 3
+
+    n_i_poi = nx + 1
+    n_j_poi = ny + 1
+    x_width = dble(nx)
+    y_width = dble(ny)
+    del_x   = x_width / dble(n_i_poi - 1)
+    del_y   = y_width / dble(n_j_poi - 1)
+
+    ! The number of points and faces
+    geom.n_iniP = n_i_poi * n_j_poi
+    geom.n_face = nx * ny
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 4
+        allocate(geom.face(i).poi(4))
+    end do
+
+    ! Set position vector
+    do j = 1, n_j_poi
+        do i = 1, n_i_poi
+            index = n_i_poi * (j - 1) + i
+            geom.iniP(index).pos(1) = del_x * dble(i - 1)
+            geom.iniP(index).pos(2) = del_y * dble(j - 1)
+            geom.iniP(index).pos(3) = 0.0d0
+        end do
+    end do
+
+    ! Set connectivity
+    do j = 1, ny
+        do i = 1, nx
+            index = nx * (j - 1) + i
+            geom.face(index).poi(1) = n_i_poi * (j - 1) + i
+            geom.face(index).poi(2) = n_i_poi * (j - 1) + i + 1
+            geom.face(index).poi(3) = n_i_poi * j + i + 1
+            geom.face(index).poi(4) = n_i_poi * j + i
+        end do
+    end do
+end subroutine Exam_Open2D_Plate_3x4
+
+! ---------------------------------------------------------------------------------------
+
+! Example of L-shape
+subroutine Exam_Open2D_L_Shape(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "L Shape"
+    prob.name_file = "07_L_Shape"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xy", 1.0d0, 1.2d0, -7.0d0, -6.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 21
+    geom.n_face = 12
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set point position vectors
+    geom.iniP( 1).pos(1:3) = [ -34.2857d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [ -14.2857d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [   5.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [  25.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [  45.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [ -34.2857d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [ -14.2857d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [   5.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [  25.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [  45.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [ -34.2857d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [ -14.2857d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [   5.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  25.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [  45.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [ -34.2857d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [ -14.2857d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [   5.7143d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [ -34.2857d0,  45.7143d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [ -14.2857d0,  45.7143d0, 0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [   5.7143d0,  45.7143d0, 0.0000d0 ]
+
+    ! Set point position vectors
+    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  1,  2,  7,  6 ]
+    geom.face( 2).n_poi = 4; allocate(geom.face( 2).poi(4)); geom.face( 2).poi(1:4) = [  2,  3,  8,  7 ]
+    geom.face( 3).n_poi = 4; allocate(geom.face( 3).poi(4)); geom.face( 3).poi(1:4) = [  3,  4,  9,  8 ]
+    geom.face( 4).n_poi = 4; allocate(geom.face( 4).poi(4)); geom.face( 4).poi(1:4) = [  4,  5, 10,  9 ]
+    geom.face( 5).n_poi = 4; allocate(geom.face( 5).poi(4)); geom.face( 5).poi(1:4) = [  6,  7, 12, 11 ]
+    geom.face( 6).n_poi = 4; allocate(geom.face( 6).poi(4)); geom.face( 6).poi(1:4) = [  7,  8, 13, 12 ]
+    geom.face( 7).n_poi = 4; allocate(geom.face( 7).poi(4)); geom.face( 7).poi(1:4) = [  8,  9, 14, 13 ]
+    geom.face( 8).n_poi = 4; allocate(geom.face( 8).poi(4)); geom.face( 8).poi(1:4) = [  9, 10, 15, 14 ]
+    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [ 11, 12, 17, 16 ]
+    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [ 12, 13, 18, 17 ]
+    geom.face(11).n_poi = 4; allocate(geom.face(11).poi(4)); geom.face(11).poi(1:4) = [ 16, 17, 20, 19 ]
+    geom.face(12).n_poi = 4; allocate(geom.face(12).poi(4)); geom.face(12).poi(1:4) = [ 17, 18, 21, 20 ]
+end subroutine Exam_Open2D_L_Shape
+
+! ---------------------------------------------------------------------------------------
+
+! Example of cross
+subroutine Exam_Open2D_Cross(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: R_matrix(2,2), theta
+    integer :: i
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Cross"
+    prob.name_file = "08_Cross"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xy", 1.0d0, 1.2d0, -7.0d0, -6.0d0)
+    para_const_edge_mesh = "on"
+
+    ! The number of points and faces
+    geom.n_iniP = 33
+    geom.n_face = 20
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set point position vectors
+    geom.iniP( 1).pos(1:3) = [ -1.0d0, -3.0d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [  0.0d0, -3.0d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [  1.0d0, -3.0d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [ -1.0d0, -2.0d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [  0.0d0, -2.0d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [  1.0d0, -2.0d0, 0.0000d0 ]
+
+    geom.iniP( 7).pos(1:3) = [ -3.0d0, -1.0d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [ -2.0d0, -1.0d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [ -1.0d0, -1.0d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [  0.0d0, -1.0d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [  1.0d0, -1.0d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [  2.0d0, -1.0d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [  3.0d0, -1.0d0, 0.0000d0 ]
+
+    geom.iniP(14).pos(1:3) = [ -3.0d0,  0.0d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [ -2.0d0,  0.0d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [ -1.0d0,  0.0d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [  0.0d0,  0.0d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [  1.0d0,  0.0d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [  2.0d0,  0.0d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [  3.0d0,  0.0d0, 0.0000d0 ]
+
+    geom.iniP(21).pos(1:3) = [ -3.0d0,  1.0d0, 0.0000d0 ]
+    geom.iniP(22).pos(1:3) = [ -2.0d0,  1.0d0, 0.0000d0 ]
+    geom.iniP(23).pos(1:3) = [ -1.0d0,  1.0d0, 0.0000d0 ]
+    geom.iniP(24).pos(1:3) = [  0.0d0,  1.0d0, 0.0000d0 ]
+    geom.iniP(25).pos(1:3) = [  1.0d0,  1.0d0, 0.0000d0 ]
+    geom.iniP(26).pos(1:3) = [  2.0d0,  1.0d0, 0.0000d0 ]
+    geom.iniP(27).pos(1:3) = [  3.0d0,  1.0d0, 0.0000d0 ]
+
+    geom.iniP(28).pos(1:3) = [ -1.0d0,  2.0d0, 0.0000d0 ]
+    geom.iniP(29).pos(1:3) = [  0.0d0,  2.0d0, 0.0000d0 ]
+    geom.iniP(30).pos(1:3) = [  1.0d0,  2.0d0, 0.0000d0 ]
+    geom.iniP(31).pos(1:3) = [ -1.0d0,  3.0d0, 0.0000d0 ]
+    geom.iniP(32).pos(1:3) = [  0.0d0,  3.0d0, 0.0000d0 ]
+    geom.iniP(33).pos(1:3) = [  1.0d0,  3.0d0, 0.0000d0 ]
+
+    ! Rotate geometry
+    theta = 45.0d0 * pi / 180.0d0
+    R_matrix(1,1) = dcos(theta)
+    R_matrix(1,2) = -dsin(theta)
+    R_matrix(2,1) = dsin(theta)
+    R_matrix(2,2) = dcos(theta)
+
+    do i = 1, 33
+        geom.iniP(i).pos(1:2) = matmul(R_matrix, geom.iniP(i).pos(1:2))
+    end do
+
+    ! Set point position vectors
+    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  1,  2,  5,  4 ]
+    geom.face( 2).n_poi = 4; allocate(geom.face( 2).poi(4)); geom.face( 2).poi(1:4) = [  2,  3,  6,  5 ]
+    geom.face( 3).n_poi = 4; allocate(geom.face( 3).poi(4)); geom.face( 3).poi(1:4) = [  4,  5, 10,  9 ]
+    geom.face( 4).n_poi = 4; allocate(geom.face( 4).poi(4)); geom.face( 4).poi(1:4) = [  5,  6, 11, 10 ]
+    geom.face( 5).n_poi = 4; allocate(geom.face( 5).poi(4)); geom.face( 5).poi(1:4) = [  7,  8, 15, 14 ]
+    geom.face( 6).n_poi = 4; allocate(geom.face( 6).poi(4)); geom.face( 6).poi(1:4) = [  8,  9, 16, 15 ]
+    geom.face( 7).n_poi = 4; allocate(geom.face( 7).poi(4)); geom.face( 7).poi(1:4) = [  9, 10, 17, 16 ]
+    geom.face( 8).n_poi = 4; allocate(geom.face( 8).poi(4)); geom.face( 8).poi(1:4) = [ 10, 11, 18, 17 ]
+    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [ 11, 12, 19, 18 ]
+    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [ 12, 13, 20, 19 ]
+    geom.face(11).n_poi = 4; allocate(geom.face(11).poi(4)); geom.face(11).poi(1:4) = [ 14, 15, 22, 21 ]
+    geom.face(12).n_poi = 4; allocate(geom.face(12).poi(4)); geom.face(12).poi(1:4) = [ 15, 16, 23, 22 ]
+
+    geom.face(13).n_poi = 4; allocate(geom.face(13).poi(4)); geom.face(13).poi(1:4) = [ 16, 17, 24, 23 ]
+    geom.face(14).n_poi = 4; allocate(geom.face(14).poi(4)); geom.face(14).poi(1:4) = [ 17, 18, 25, 24 ]
+    geom.face(15).n_poi = 4; allocate(geom.face(15).poi(4)); geom.face(15).poi(1:4) = [ 18, 19, 26, 25 ]
+    geom.face(16).n_poi = 4; allocate(geom.face(16).poi(4)); geom.face(16).poi(1:4) = [ 19, 20, 27, 26 ]
+    geom.face(17).n_poi = 4; allocate(geom.face(17).poi(4)); geom.face(17).poi(1:4) = [ 23, 24, 29, 28 ]
+    geom.face(18).n_poi = 4; allocate(geom.face(18).poi(4)); geom.face(18).poi(1:4) = [ 24, 25, 30, 29 ]
+    geom.face(19).n_poi = 4; allocate(geom.face(19).poi(4)); geom.face(19).poi(1:4) = [ 28, 29, 32, 31 ]
+    geom.face(20).n_poi = 4; allocate(geom.face(20).poi(4)); geom.face(20).poi(1:4) = [ 29, 30, 33, 32 ]
+end subroutine Exam_Open2D_Cross
+
+! ---------------------------------------------------------------------------------------
+
+! Example of quarter circle
+subroutine Exam_Open2D_Quarter_Circle(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision,allocatable  :: edge(:,:,:), joint(:,:)
+    integer, allocatable :: conn(:,:)
+
+    double precision :: dx, dy
+    integer :: i, j, n, count_n, count_e, count_n_t, count_e_t
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Quarter Circle"
+    prob.name_file = "09_Quarter_Circle"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xy", 1.0d0, 1.2d0, 0.0d0, 0.0d0)
+
+    n = 2
+
+    ! The number of points and faces
+    geom.n_iniP = (n + 1)*(n + 1 ) + n*(n + 1) + n*n
+    geom.n_face = 3*n*n
+
+    ! allocate data structures
+    allocate(edge(2, n+1, 2), conn(n*n, 4), joint((n+1)**2, 3))
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+    
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 4
+        allocate(geom.face(i).poi(4))
+    end do
+
+    ! First mesh, generate positions of edges
+    do i = 1, n + 1
+        ! First edge
+        edge(1, i, 1) = dble(i-1) * 0.5d0 / dble(n)             ! x1
+        edge(1, i, 2) = 0.0d0                                   ! y1
+        ! Second edge
+        edge(2, i, 1) = dble(i-1) * 1.0d0 / 3.0d0 / dble(n)     ! x2
+        edge(2, i, 2) = 0.5d0 - 0.5d0 * edge(2, i, 1)           ! y2
+    end do
+
+    ! Generation of joint
+    count_n = 0
+    do i = 1, n + 1
+        dx = (edge(2,i,1) - edge(1,i,1)) / dble(n)
+        dy = (edge(2,i,2) - edge(1,i,2)) / dble(n)
+
+        do j = 1, n + 1
+            count_n = count_n + 1
+            geom.iniP(count_n).pos(1) = edge(1,i,1) + dble(j-1) * dx
+            geom.iniP(count_n).pos(2) = edge(1,i,2) + dble(j-1) * dy
+            geom.iniP(count_n).pos(3) = 0.0d0
+        end do
+    end do
+
+    ! Generation of connectivities for quadrilaterlar elements
+    count_e = 0
+    do i = 1, n
+        do j = 1, n
+            count_e = count_e + 1
+            geom.face(count_e).poi(1) = (n+1)*(i+0) + (j-1) + 1
+            geom.face(count_e).poi(2) = (n+1)*(i+0) + (j-1) + 2
+            geom.face(count_e).poi(3) = (n+1)*(i-1) + (j-1) + 2
+            geom.face(count_e).poi(4) = (n+1)*(i-1) + (j-1) + 1
+        end do
+    end do
+
+    ! Second mesh, generate positions of edges
+    do i = 1, n + 1
+        ! First edge
+        edge(1, n+2-i, 1) = dble(i-1) * 1.0d0 / 3.0d0 / dble(n)     ! x1
+        edge(1, n+2-i, 2) = 0.5d0 - 0.5d0 * edge(1, n+2-i, 1)       ! y1
+        ! Second edge
+        edge(2, n+2-i, 1) = dsin(dble(i-1)*(pi/180.0d0) * 45.d0 / dble(n))    ! x2
+        edge(2, n+2-i, 2) = dcos(dble(i-1)*(pi/180.0d0) * 45.d0 / dble(n))    ! y2
+    end do
+
+    ! Generation of joint
+    count_n_t = 0
+    do i = 1, n + 1
+        dx = (edge(2, i, 1) - edge(1, i, 1)) / dble(n)
+        dy = (edge(2, i, 2) - edge(1, i, 2)) / dble(n)
+
+        do j = 1, n + 1
+            count_n_t = count_n_t + 1
+            joint(count_n_t, 1) = edge(1,i,1) + dble(j-1) * dx
+            joint(count_n_t, 2) = edge(1,i,2) + dble(j-1) * dy
+            joint(count_n_t, 3) = 0.0d0
+        end do
+    end do
+
+    ! Connectivity
+    count_e_t = 0
+    do i = 1, n
+        do j = 1, n
+            count_e_t = count_e_t + 1
+
+            conn(count_e_t, 1) = (n+1)*(i-1) + (j-1) + 1
+            conn(count_e_t, 2) = (n+1)*(i-1) + (j-1) + 2
+            conn(count_e_t, 3) = (n+1)*(i+0) + (j-1) + 2
+            conn(count_e_t, 4) = (n+1)*(i+0) + (j-1) + 1
+        end do
+    end do
+
+    call Exam_Open2D_Merge_Point_Face_Quad(n, joint, conn, count_n, count_e, geom)
+
+    ! Third mesh, generate positions of edges
+    do i = 1, n + 1
+        ! First edge
+        edge(1,i,1) = 1.0d0/3.d0 + dble(i-1) * (0.5d0 - 1.0d0 / 3.0d0) / dble(n)        ! x1
+        edge(1,i,2) = 1.0d0 - 2.0d0 * edge(1,i,1)                                       ! y1
+        ! Second edge
+        edge(2,i,1) = dsin(pi/180.0d0 * 45.d0 + dble(i-1) * (pi/180.0d0) * 45.d0 / dble(n))   ! x2
+        edge(2,i,2) = dcos(pi/180.0d0 * 45.d0 + dble(i-1) * (pi/180.0d0) * 45.d0 / dble(n))   ! y2
+    end do
+
+    ! Generation of joint
+    count_n_t = 0
+    do i = 1, n + 1
+        dx = (edge(2, i, 1) - edge(1, i, 1)) / dble(n)
+        dy = (edge(2, i, 2) - edge(1, i, 2)) / dble(n)
+
+        do j = 1, n + 1
+            count_n_t = count_n_t + 1
+            joint(count_n_t, 1) = edge(1, i, 1) + dble(j-1) * dx
+            joint(count_n_t, 2) = edge(1, i, 2) + dble(j-1) * dy
+            joint(count_n_t, 3) = 0.0d0
+        end do
+    end do
+
+    ! Connectivity
+    count_e_t = 0
+    do i = 1, n
+        do j = 1, n
+            count_e_t = count_e_t + 1
+            conn(count_e_t, 1) = (n+1)*(i+0) + (j-1) + 1
+            conn(count_e_t, 2) = (n+1)*(i+0) + (j-1) + 2
+            conn(count_e_t, 3) = (n+1)*(i-1) + (j-1) + 2
+            conn(count_e_t, 4) = (n+1)*(i-1) + (j-1) + 1
+        end do
+    end do
+
+    call Exam_Open2D_Merge_Point_Face_Quad(n, joint, conn, count_n, count_e, geom)
+
+    ! Deallocate data structure
+    deallocate(edge, joint, conn)
+end subroutine Exam_Open2D_Quarter_Circle
+
+! ---------------------------------------------------------------------------------------
+
+! Example of disk
+subroutine Exam_Open2D_Disk(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: i_rad, o_rad, ang, rad
+    integer :: i, j, index, n, nx, nr
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Disk"
+    prob.name_file = "10_Disk"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    n  = 2
+    nx = n
+    nr = n * 5
+
+    o_rad = 4.0d0       ! Outer radius
+    i_rad = 1.8d0       ! Internal radius
+
+    ! The number of points and faces
+    geom.n_iniP = (nx + 1) * nr
+    geom.n_face = nx * nr
+
+    ! Allocate point structure and set position vector
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 4
+        allocate(geom.face(i).poi(4))
+    end do
+
+    index = 0
+    do j = 1, nr
+        do i = 1, nx + 1
+            index  = index + 1
+            ang = 2.0d0 * pi / dble(nr) * dble(j - 1)
+            rad = ((o_rad - i_rad) / dble(nx) * dble(i - 1)) + i_rad
+
+            geom.iniP(index).pos(1) = rad * dcos(ang)
+            geom.iniP(index).pos(2) = rad * dsin(ang)
+            geom.iniP(index).pos(3) = 0.0d0
+        end do
+    end do
+
+    ! Set connectivity
+    index = 0
+    do i = 1, nr
+        do j = 1, nx
+            if(i /= nr) then
+                index = index + 1
+                geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 1
+                geom.face(index).poi(2) = (nx+1)*(i-1) + (j-1) + 2
+                geom.face(index).poi(3) = (nx+1)*(i-0) + (j-1) + 2
+                geom.face(index).poi(4) = (nx+1)*(i-0) + (j-1) + 1
+            else if(i == nr) then
+                index = index + 1
+                geom.face(index).poi(1) = (nx+1)*(i-1) + (j-1) + 1
+                geom.face(index).poi(2) = (nx+1)*(i-1) + (j-1) + 2
+                geom.face(index).poi(3) = (nx+1)*(1-1) + (j-1) + 2
+                geom.face(index).poi(4) = (nx+1)*(1-1) + (j-1) + 1
+            end if
+        end do
+    end do
+end subroutine Exam_Open2D_Disk
+
+! ---------------------------------------------------------------------------------------
+
+! Example of hexagonal mesh
+subroutine Exam_Open2D_Hexagonal_Mesh(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Hexagonal Mesh"
+    prob.name_file = "11_Hexagonal_Mesh"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 38
+    geom.n_face = 12
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [  10.0000d0, -82.0445d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [ -40.0000d0, -64.7240d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [ -20.0000d0, -64.7240d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [  20.0000d0, -64.7240d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [  40.0000d0, -64.7240d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [ -50.0000d0, -47.4035d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [ -10.0000d0, -47.4035d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [  10.0000d0, -47.4035d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [  50.0000d0, -47.4035d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [ -40.0000d0, -30.0830d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [ -20.0000d0, -30.0830d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [  20.0000d0, -30.0830d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  40.0000d0, -30.0830d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [ -50.0000d0, -12.7625d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [ -10.0000d0, -12.7625d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [  10.0000d0, -12.7625d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [  50.0000d0, -12.7625d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [ -40.0000d0,   4.5580d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [ -20.0000d0,   4.5580d0, 0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [  20.0000d0,   4.5580d0, 0.0000d0 ]
+    geom.iniP(22).pos(1:3) = [  40.0000d0,   4.5580d0, 0.0000d0 ]
+    geom.iniP(23).pos(1:3) = [ -50.0000d0,  21.8785d0, 0.0000d0 ]
+    geom.iniP(24).pos(1:3) = [ -10.0000d0,  21.8785d0, 0.0000d0 ]
+    geom.iniP(25).pos(1:3) = [  10.0000d0,  21.8785d0, 0.0000d0 ]
+    geom.iniP(26).pos(1:3) = [  50.0000d0,  21.8785d0, 0.0000d0 ]
+    geom.iniP(27).pos(1:3) = [ -40.0000d0,  39.1991d0, 0.0000d0 ]
+    geom.iniP(28).pos(1:3) = [ -20.0000d0,  39.1991d0, 0.0000d0 ]
+    geom.iniP(29).pos(1:3) = [  20.0000d0,  39.1991d0, 0.0000d0 ]
+    geom.iniP(30).pos(1:3) = [  40.0000d0,  39.1991d0, 0.0000d0 ]
+    geom.iniP(31).pos(1:3) = [ -50.0000d0,  56.5196d0, 0.0000d0 ]
+    geom.iniP(32).pos(1:3) = [ -10.0000d0,  56.5196d0, 0.0000d0 ]
+    geom.iniP(33).pos(1:3) = [  10.0000d0,  56.5196d0, 0.0000d0 ]
+    geom.iniP(34).pos(1:3) = [  50.0000d0,  56.5196d0, 0.0000d0 ]
+    geom.iniP(35).pos(1:3) = [ -40.0000d0,  73.8401d0, 0.0000d0 ]
+    geom.iniP(36).pos(1:3) = [ -20.0000d0,  73.8401d0, 0.0000d0 ]
+    geom.iniP(37).pos(1:3) = [  20.0000d0,  73.8401d0, 0.0000d0 ]
+    geom.iniP(38).pos(1:3) = [  40.0000d0,  73.8401d0, 0.0000d0 ]
+
+    ! Set connectivity
+    geom.face( 1).n_poi = 6; allocate(geom.face( 1).poi(6)); geom.face( 1).poi(1:6) = [  1,  2,  5,  9,  8,  4 ]
+    geom.face( 2).n_poi = 6; allocate(geom.face( 2).poi(6)); geom.face( 2).poi(1:6) = [  3,  4,  8, 12, 11,  7 ]
+    geom.face( 3).n_poi = 6; allocate(geom.face( 3).poi(6)); geom.face( 3).poi(1:6) = [  5,  6, 10, 14, 13,  9 ]
+    geom.face( 4).n_poi = 6; allocate(geom.face( 4).poi(6)); geom.face( 4).poi(1:6) = [  8,  9, 13, 17, 16, 12 ]
+    geom.face( 5).n_poi = 6; allocate(geom.face( 5).poi(6)); geom.face( 5).poi(1:6) = [ 11, 12, 16, 20, 19, 15 ]
+    geom.face( 6).n_poi = 6; allocate(geom.face( 6).poi(6)); geom.face( 6).poi(1:6) = [ 13, 14, 18, 22, 21, 17 ]
+    geom.face( 7).n_poi = 6; allocate(geom.face( 7).poi(6)); geom.face( 7).poi(1:6) = [ 16, 17, 21, 25, 24, 20 ]
+    geom.face( 8).n_poi = 6; allocate(geom.face( 8).poi(6)); geom.face( 8).poi(1:6) = [ 19, 20, 24, 28, 27, 23 ]
+    geom.face( 9).n_poi = 6; allocate(geom.face( 9).poi(6)); geom.face( 9).poi(1:6) = [ 21, 22, 26, 30, 29, 25 ]
+    geom.face(10).n_poi = 6; allocate(geom.face(10).poi(6)); geom.face(10).poi(1:6) = [ 24, 25, 29, 33, 32, 28 ]
+    geom.face(11).n_poi = 6; allocate(geom.face(11).poi(6)); geom.face(11).poi(1:6) = [ 27, 28, 32, 36, 35, 31 ]
+    geom.face(12).n_poi = 6; allocate(geom.face(12).poi(6)); geom.face(12).poi(1:6) = [ 29, 30, 34, 38, 37, 33 ]
+end subroutine Exam_Open2D_Hexagonal_Mesh
+
+! ---------------------------------------------------------------------------------------
+
+! Example of star
+subroutine Exam_Open2D_Star(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Star"
+    prob.name_file = "12_Star"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 1
+    geom.n_face = 1
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+
+    ! Set connectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+end subroutine Exam_Open2D_Star
+
+! ---------------------------------------------------------------------------------------
+
+! Example of pentagon
+subroutine Exam_Open2D_Pentagon(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Pentagon"
+    prob.name_file = "13_Pentagon"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 1
+    geom.n_face = 1
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+
+    ! Set connectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+end subroutine Exam_Open2D_Pentagon
+
+! ---------------------------------------------------------------------------------------
+
+! Example of plumeria
+subroutine Exam_Open2D_Plumeria(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Plumeria"
+    prob.name_file = "14_Plumeria"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 1
+    geom.n_face = 1
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+
+    ! Set connectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+end subroutine Exam_Open2D_Plumeria
+
+! ---------------------------------------------------------------------------------------
+
+! Example of lotus
+subroutine Exam_Open2D_Lotus(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Lotus"
+    prob.name_file = "15_Lotus"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 1
+    geom.n_face = 1
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+
+    ! Set connectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+end subroutine Exam_Open2D_Lotus
+
+! ---------------------------------------------------------------------------------------
+
+! Example of 4-sided polygon
+subroutine Exam_Open2D_4_Sided_Polygon(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "4-Sided Polygon"
+    prob.name_file = "16_4_Sided_Polygon"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 1
+    geom.n_face = 1
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+
+    ! Set connectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+end subroutine Exam_Open2D_4_Sided_Polygon
+
+! ---------------------------------------------------------------------------------------
+
+! Example of 5-sided polygon
+subroutine Exam_Open2D_5_Sided_Polygon(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "5-Sided Polygon"
+    prob.name_file = "17_5_Sided_Polygon"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 1
+    geom.n_face = 1
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+
+    ! Set connectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+end subroutine Exam_Open2D_5_Sided_Polygon
+
+! ---------------------------------------------------------------------------------------
+
+! Example of 6-sided polygon
+subroutine Exam_Open2D_6_Sided_Polygon(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "6-Sided Polygon"
+    prob.name_file = "18_6_Sided_Polygon"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 1
+    geom.n_face = 1
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+
+    ! Set connectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+end subroutine Exam_Open2D_6_Sided_Polygon
+
+! ---------------------------------------------------------------------------------------
+
+! Example of plate with quad mesh
+subroutine Exam_Open2D_Plate_Quad(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Plate Quad"
+    prob.name_file = "19_Plate_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 1
+    geom.n_face = 1
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+
+    ! Set connectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+end subroutine Exam_Open2D_Plate_Quad
+
+! ---------------------------------------------------------------------------------------
+
+! Example of plate with tri mesh
+subroutine Exam_Open2D_Plate_Tri(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Plate Tri"
+    prob.name_file = "20_Plate_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 1
+    geom.n_face = 1
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+
+    ! Set connectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+end subroutine Exam_Open2D_Plate_Tri
+
+! ---------------------------------------------------------------------------------------
+
+! Example of plate with eng mesh
+subroutine Exam_Open2D_Plate_Eng(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Plate Eng"
+    prob.name_file = "21_Plate_Eng"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 1
+    geom.n_face = 1
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set the position vector
+    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+
+    ! Set connectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+end subroutine Exam_Open2D_Plate_Eng
 
 ! ---------------------------------------------------------------------------------------
 
@@ -1022,6 +1557,85 @@ subroutine Exam_Open2D_Stickman(prob, geom)
     geom.face(51).n_poi = 3; allocate(geom.face(51).poi(3)); geom.face(51).poi(1:3) = [ 45, 46, 47 ]
     geom.face(52).n_poi = 3; allocate(geom.face(52).poi(3)); geom.face(52).poi(1:3) = [ 47, 46, 48 ]
 end subroutine Exam_Open2D_Stickman
+
+! ---------------------------------------------------------------------------------------
+
+! Example of L-shape
+subroutine Exam_Open2D_L_Shape_Tri(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "L Shape Tri"
+    prob.name_file = "L_Shape_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xy", 1.0d0, 1.2d0, -7.0d0, -6.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 21
+    geom.n_face = 24
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set point position vectors
+    geom.iniP( 1).pos(1:3) = [ -34.2857d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [ -14.2857d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [   5.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [  25.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [  45.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [ -34.2857d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [ -14.2857d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [   5.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [  25.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [  45.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [ -34.2857d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [ -14.2857d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [   5.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  25.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [  45.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [ -34.2857d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [ -14.2857d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [   5.7143d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [ -34.2857d0,  45.7143d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [ -14.2857d0,  45.7143d0, 0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [   5.7143d0,  45.7143d0, 0.0000d0 ]
+
+    ! Set point position vectors
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  6 ]
+    geom.face( 2).n_poi = 3; allocate(geom.face( 2).poi(3)); geom.face( 2).poi(1:3) = [  7,  6,  2 ]
+    geom.face( 3).n_poi = 3; allocate(geom.face( 3).poi(3)); geom.face( 3).poi(1:3) = [  2,  3,  7 ]
+    geom.face( 4).n_poi = 3; allocate(geom.face( 4).poi(3)); geom.face( 4).poi(1:3) = [  8,  7,  3 ]
+    geom.face( 5).n_poi = 3; allocate(geom.face( 5).poi(3)); geom.face( 5).poi(1:3) = [  3,  4,  8 ]
+    geom.face( 6).n_poi = 3; allocate(geom.face( 6).poi(3)); geom.face( 6).poi(1:3) = [  9,  8,  4 ]
+    geom.face( 7).n_poi = 3; allocate(geom.face( 7).poi(3)); geom.face( 7).poi(1:3) = [  4,  5,  9 ]
+    geom.face( 8).n_poi = 3; allocate(geom.face( 8).poi(3)); geom.face( 8).poi(1:3) = [ 10,  9,  5 ]
+    geom.face( 9).n_poi = 3; allocate(geom.face( 9).poi(3)); geom.face( 9).poi(1:3) = [  6,  7, 11 ]
+    geom.face(10).n_poi = 3; allocate(geom.face(10).poi(3)); geom.face(10).poi(1:3) = [ 12, 11,  7 ]
+    geom.face(11).n_poi = 3; allocate(geom.face(11).poi(3)); geom.face(11).poi(1:3) = [  7,  8, 12 ]
+    geom.face(12).n_poi = 3; allocate(geom.face(12).poi(3)); geom.face(12).poi(1:3) = [ 13, 12,  8 ]
+    geom.face(13).n_poi = 3; allocate(geom.face(13).poi(3)); geom.face(13).poi(1:3) = [  8,  9, 13 ]
+    geom.face(14).n_poi = 3; allocate(geom.face(14).poi(3)); geom.face(14).poi(1:3) = [ 14, 13,  9 ]
+    geom.face(15).n_poi = 3; allocate(geom.face(15).poi(3)); geom.face(15).poi(1:3) = [  9, 10, 14 ]
+    geom.face(16).n_poi = 3; allocate(geom.face(16).poi(3)); geom.face(16).poi(1:3) = [ 15, 14, 10 ]
+    geom.face(17).n_poi = 3; allocate(geom.face(17).poi(3)); geom.face(17).poi(1:3) = [ 11, 12, 16 ]
+    geom.face(18).n_poi = 3; allocate(geom.face(18).poi(3)); geom.face(18).poi(1:3) = [ 17, 16, 12 ]
+    geom.face(19).n_poi = 3; allocate(geom.face(19).poi(3)); geom.face(19).poi(1:3) = [ 12, 13, 17 ]
+    geom.face(20).n_poi = 3; allocate(geom.face(20).poi(3)); geom.face(20).poi(1:3) = [ 18, 17, 13 ]
+    geom.face(21).n_poi = 3; allocate(geom.face(21).poi(3)); geom.face(21).poi(1:3) = [ 16, 17, 19 ]
+    geom.face(22).n_poi = 3; allocate(geom.face(22).poi(3)); geom.face(22).poi(1:3) = [ 20, 19, 17 ]
+    geom.face(23).n_poi = 3; allocate(geom.face(23).poi(3)); geom.face(23).poi(1:3) = [ 17, 18, 20 ]
+    geom.face(24).n_poi = 3; allocate(geom.face(24).poi(3)); geom.face(24).poi(1:3) = [ 21, 20, 18 ]
+end subroutine Exam_Open2D_L_Shape_Tri
 
 ! ---------------------------------------------------------------------------------------
 
