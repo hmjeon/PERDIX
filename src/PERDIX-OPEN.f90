@@ -34,8 +34,8 @@ program PERDIX_OPEN
 
     implicit none
 
-    call Main           ! Main module
-    !call Report         ! Main module for auto run
+    !call Main           ! Main module
+    call Report         ! Main module for auto run
 
 contains
 
@@ -134,14 +134,11 @@ subroutine Report()
     results = SYSTEMQQ("rd "//trim("output")//' /s /q')
 
     ! Infomation
-    write(90, "(a)"), "========================="
-    if(edge_in == 1) write(90, "(a)"), "Edge length   : 31bp"
-    if(edge_in == 2) write(90, "(a)"), "Edge length   : 42bp"
-    if(edge_in == 3) write(90, "(a)"), "Edge length   : 52bp"
-    if(edge_in == 4) write(90, "(a)"), "Edge length   : 63bp"
+    write(90, "(a)"), "========================================="
+    if(edge_in == 1) write(90, "(a)"), "Edge 1: 31bp, 2: 42bp , 3: 52bp, 4: 63bp"
+    write(90, "(a)"), "Sec: DX tile defined on honeycomb lattice"
     write(90, "(a)"), "Staple cutting: "//trim(adjustl(char_cut))
-    write(90, "(a)"), "Cross-section : honeycomb"
-    write(90, "(a)"), "========================="
+    write(90, "(a)"), "========================================="
     write(90, "(a)")
 
     call space (90, 30)
