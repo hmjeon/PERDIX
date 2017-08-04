@@ -34,8 +34,8 @@ program PERDIX_OPEN
 
     implicit none
 
-    call Main           ! Main module
-    !call Report         ! Main module for auto run
+    !call Main           ! Main module
+    call Report         ! Main module for auto run
 
 contains
 
@@ -126,9 +126,7 @@ subroutine Report()
     end if
 
     ! Open file
-    open(unit = 90, file = "Report_"//trim(adjustl(Int2Str(sec)))//&
-        "_"//trim(adjustl(Int2Str(edge_in)))//"_"//trim(char_vert)//&
-        "_"//trim(char_cut)//".txt", form="formatted")
+    open(unit = 90, file = "Report_2D_Flat_"//trim(char_cut)//".txt", form="formatted")
 
     ! Remove the directory and files
     results = SYSTEMQQ("rd "//trim("output")//' /s /q')
