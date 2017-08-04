@@ -34,8 +34,8 @@ program PERDIX_OPEN
 
     implicit none
 
-    call Main           ! Main module
-    !call Report        ! Main module for auto run
+    !call Main           ! Main module
+    call Report         ! Main module for auto run
 
 contains
 
@@ -157,12 +157,12 @@ subroutine Report()
     max_stap =-10000
 
     ! Problem
-    do i = 1, 15
+    do i = 1, 21
 
         ii = i
 
         ! Edge length
-        if(ii == 14 .or. ii == 15 .or. ii == 28 .or. ii == 30) then
+        if(ii == 3 .or. ii == 10 .or. ii == 15) then
             edge = edge_in - 1
         else
             edge = edge_in

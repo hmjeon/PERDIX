@@ -866,6 +866,8 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
 
             ! Connect strand with unpaired nucleotides
             if(geom.sec.conn(mesh.node(node_cur).sec + 1) == -1) then
+
+                ! When conn == -1, neighbor connection
                 ! Connect two scaffolds with/without unpaired nucleotides
                 n_add_nt_scaf = n_add_nt_scaf + &
                     Route_Connect_Scaf(mesh, dna, node_cur, node_com)
@@ -968,13 +970,15 @@ function Route_Connect_Scaf(mesh, dna, node_cur, node_com) result(count)
     ! Only for modified neighbor connection
     count = 0
     if(para_unpaired_scaf == "on") then
-        if(mesh.node(cur).conn /= 1 .and. mesh.node(com).conn /= 1) then
-            length = Norm(pos_cur - pos_com)
-            !count = floor((length-para_dist_pp)/dble(para_dist_pp))
-            count = idnint(length/para_dist_pp) - 1
 
-            if(count < 0) count = 0
-        end if
+        ! mesh.node.conn: -1 - no-connection, 1 - neighbor, 2 - self, 3 - modified neighbor, 4 - modified self
+        !if(mesh.node(cur).conn /= 1 .and. mesh.node(com).conn /= 1) then
+        length = Norm(pos_cur - pos_com)
+        !count = floor((length-para_dist_pp)/dble(para_dist_pp))
+        count = idnint(length/para_dist_pp) - 1
+
+        if(count < 0) count = 0
+        !end if
     end if
 
     ! Connect scaffolds acrossing vertex

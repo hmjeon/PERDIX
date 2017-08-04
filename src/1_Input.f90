@@ -240,6 +240,44 @@ subroutine Input_Initialize_Report(prob, geom, mesh, ii, sec, edge, char_vert, c
     prob.sel_sec     = sec
     prob.sel_bp_edge = edge
 
+    ! Set UCSF Chimera output control
+    para_write_101   = .false.       !  GEO file,                                Input_Write_GEO_File,             ".geo"
+    para_write_102   = .true.        ! *Initial geometry,                        Input_Chimera_Init_Geometry,      "init_geo.bild"
+    para_write_103   = .false.       !  Faced initial geometry,                  Input_Tecplot_Init_Geometry,      "init_geo_face.bild"
+    para_write_104   = .false.       !  Schlegel diagram,                        Input_Chimera_Schlegel_Diagram,   "_schlegel.bild"
+    para_write_301   = .false.       !  Initial geometry with face orientation,  ModGeo_Chimera_Check_Geometry,    "_check_geo.bild"
+    para_write_302   = .true.        ! *Initial geometry with local vector,      ModGeo_Chimera_Init_Geometry_L,   "_init_geo_local.bild"
+    para_write_303   = .true.        ! *Modified geometry seperated from vertex, ModGeo_Chimera_Mod_Geometry,      "_sep_geo.bild"
+    para_write_401   = .false.       !  Cross-sectional geometry,                Section_Chimera_Cross_Geometry,   "_cro_geo.bild"
+    para_write_501   = .false.       !  Cylindrical model with orientation,      Basepair_Chimera_Cylinder_Ori,    "_cyl_ori1.bild"
+    para_write_502   = .true.        ! *Cylindrical model,                       Basepair_Chimera_Cylinder,        "_cyl1.bild", "_cyl2.bild"
+    para_write_503   = .false.       !  Basepair model,                          Basepair_Chimera_Mesh,            "_mesh.bild"
+    para_write_504   = .true.        ! *Cross-sectional geometry,                Basepair_Chimera_Cross_Geometry,  "_cross_geo_mod.bild"
+    para_write_505   = .true.        ! *Txt file on edge length,                 Basepair_Write_Edge_Length,       "_edge_length.txt"
+    para_write_601_1 = .false.       !  Route 1, seperated edges,                Route_Chimera_Route, step 1,      "_route1_scaf.bild", "_route1_stap.bild"
+    para_write_601_2 = .false.       !  Route 2, contruction closed loop,        Route_Chimera_Route, step 2,      "_route2_scaf.bild", "_route2_stap.bild"
+    para_write_601_3 = .false.       !  Route 3, centered crossovers             Route_Chimera_Route, step 3,      "_route3_scaf.bild", "_route3_stap.bild"
+    para_write_601_4 = .false.       !  Route 4, modified centered crossovers,   Route_Chimera_Route, step 4,      "_route4_scaf.bild", "_route4_stap.bild"
+    para_write_601_5 = .false.       !  Route 5, scaffold route,                 Route_Chimera_Route, step 5,      "_route5_scaf.bild", "_route5_stap.bild"
+    para_write_606   = .true.        ! *Sapnning tree for dual-graph,            Route_Graph_Chimera_Spanning_Tre, "_spantree.bild"
+    para_write_607   = .true.        ! *Crossovers based on basepair model,      Route_Chimera_Crossovers,         "_crossovers.bild"
+    para_write_608   = .false.       !  3-orientation vectors,                   Route_Chimera_Orientation,        "_orientation.bild"
+    para_write_609   = .false.       !  Atomic model without sequence design,    Route_Chimera_Atom,               "_atom.bild"
+    para_write_610   = .false.       !  Possible centered scaffold crossovers,   Route_Write_Centered_Scaf_Xover,  "_scaf_xover.txt"
+    para_write_701   = .true.        ! *Txt on sequence design data,             SeqDesign_Write_Strand,           "strand.txt"
+    para_write_711   = .true.        ! *Csv file for sequence data,              SeqDesign_Write_Strand,           "sequence.csv"
+    para_write_702   = .true.        ! *Atomic model with sequence design,       SeqDesign_Chimera_Atom,           "_atom_nick.bild"
+    para_write_703   = .true.        ! *Route 6, strand route with nick,         SeqDesign_Chimera_Route,          "_route6_scaf.bild", "_route6_stap.bild"
+    para_write_705   = .true.        ! *Sequence model,                          SeqDesign_Chimera_Sequence,       "_sequence_design.bild"
+    para_write_706   = .false.       !  Atomic model bases on strands/sequence,  SeqDesign_Chimera_Strand,         "_strand.bild", "_sequence.bild"
+    para_write_710   = .true.        ! *Edge-based sequence design,              SeqDesign_Write_Graphical_Output, "_design_edgeX"
+    para_write_801   = .false.       !  Txt on basepair based data,              Output_Write_Basepair,            "_basepair.txt"
+    para_write_802   = .false.       !  Txt on nucleotide based data,            Output_Write_Base,                "_base.txt"
+    para_write_803   = .true.        ! *CanDo input file,                        Output_Write_CanDo,               ".cndo"
+    para_write_804   = .false.       !  Tecplot input file,                      Output_Write_TecPlot,             "_tecplot.dat"
+    para_write_805   = .false.       !  ADINA input file,                        Output_Write_ADINA,               "_adina.in"
+    para_write_808   = .false.       !  Txt on sectional edges based sequence,   Output_Write_Sequence_CroL,       "_seq_line.txt"
+
     ! ==================================================
     ! Set problem, cross-section and edge length
     ! ==================================================
@@ -278,20 +316,6 @@ subroutine Input_Initialize_Report(prob, geom, mesh, ii, sec, edge, char_vert, c
 
     ! Generate Schlegel diagram
     call Input_Generate_Schlegel_Diagram(prob, geom)
-
-    ! Set parameters
-    para_write_101   = .false.; para_write_102   = .false.; para_write_103   = .false.
-    para_write_104   = .false.; para_write_301   = .false.; para_write_302   = .false.
-    para_write_303   = .false.; para_write_401   = .false.; para_write_501   = .false.
-    para_write_502   = .false.; para_write_503   = .false.; para_write_504   = .false.
-    para_write_505   = .true. ; para_write_601_1 = .false.; para_write_601_2 = .false.
-    para_write_601_3 = .false.; para_write_601_4 = .false.; para_write_601_5 = .false.
-    para_write_606   = .false.; para_write_607   = .false.; para_write_608   = .false.
-    para_write_609   = .false.; para_write_610   = .false.; para_write_701   = .true.
-    para_write_702   = .false.; para_write_703   = .false.; para_write_705   = .false.
-    para_write_706   = .false.; para_write_710   = .false.; para_write_801   = .false.
-    para_write_802   = .false.; para_write_803   = .false.; para_write_804   = .false.
-    para_write_805   = .false.; para_write_808   = .false.
 
     ! Print progress
     call Input_Print_Parameters(prob, geom)
@@ -572,7 +596,7 @@ subroutine Input_Reset_Parameter
     para_fig_bgcolor     = "black"    ! [black, white, all], Background color for figures from UCSF Chimera
     para_fig_view        = "xy"       ! [xy, xz, xyz, all], Viewpoint for figures from UCSF Chimera
     para_n_route_step    = 5          ! [5], The number of steps in routing progress
-    para_type_cndo       = 1          ! [1, 2], CanDo file option, 1 : original format, 2 : updated format
+    para_type_cndo       = 2          ! [1, 2], CanDo file option, 1 : original format, 2 : updated format
     para_path_Chimera    = &          ! UCSF Chimera program path
         "C:\Program Files\Chimera 1.10.2\bin\chimera.exe"
 
@@ -602,24 +626,24 @@ subroutine Input_Reset_Parameter
     para_all_spanning  = "off"      ! [off, on], All possible spanning trees when # of edges is less than 12 for Prim or Kruskal
 
     ! Parameter for sequence design
-    !para_cut_stap_method  = "max"      ! [max, mix, opt, min, mid], Cutting method to make short staple strand, opt - 14nt seeds
-    para_set_stap_sxover  = "off"      ! [off, on], To make non-circular staple by single crossover (when para_set_stap_sxover is "on")
-    para_output_design    = "arrow"    ! [arrow, seq, strand], Graphical output type for sequence design
-    para_set_xover_scaf   = "split"    ! [split, center], Setting possible scaffold strand
+    !para_cut_stap_method  = "max"   ! [max, mix, opt, min, mid], Cutting method to make short staple strand, opt - 14nt seeds
+    para_set_stap_sxover  = "off"   ! [off, on], To make non-circular staple by single crossover (when para_set_stap_sxover is "on")
+    para_output_design    = "arrow" ! [arrow, seq, strand], Graphical output type for sequence design
+    para_set_xover_scaf   = "split" ! [split, center], Setting possible scaffold strand
 
-    para_gap_xover_two_scaf   = 3          ! [3 ], The minimum gap between two scaffold crossovers
-    para_gap_xover_bound_scaf = 7          ! [7 ], The mimimum gap between scaffold crossover and vertex boundary
-    para_gap_xover_bound_stap = 6          ! [6 ], The mimimum gap between staple crossover and vertex boundary
-    para_gap_xover_two        = 6          ! [6 ], The minimum gap between scaffold and staple crossovers
-    para_gap_xover_nick1      = 10         ! [10], The minimum gap between xover(scaf/stap)/Tn and first nick
-    para_gap_xover_nick       = 3          ! [3 ], The minimum gap between xover and nick, if staple length exceeds 60, redesign with num - 1
+    para_gap_xover_two_scaf   = 3   ! [3 ], The minimum gap between two scaffold crossovers
+    para_gap_xover_bound_scaf = 7   ! [7 ], The mimimum gap between scaffold crossover and vertex boundary
+    para_gap_xover_bound_stap = 6   ! [6 ], The mimimum gap between staple crossover and vertex boundary
+    para_gap_xover_two        = 6   ! [6 ], The minimum gap between scaffold and staple crossovers
+    para_gap_xover_nick1      = 10  ! [10], The minimum gap between xover(scaf/stap)/Tn and first nick
+    para_gap_xover_nick       = 3   ! [3 ], The minimum gap between xover and nick, if staple length exceeds 60, redesign with num - 1
 
-    para_max_cut_scaf         = 0          ! [0, 7249], Scaffold break - 0 : not breaking, num : breaking over num
-    para_min_cut_stap         = 20         ! [20], The minimum number of nucleotides for one staple strand
-    para_mid_cut_stap         = 40         ! [40], The optimal number of nucleotides for one staple strand
-    para_max_cut_stap         = 60         ! [60], The maximum number of nucleotides for one staple strand
-    para_set_seq_scaf         = 0          ! [0, 1, 2], Scaffold sequence, 0 - M13mp18(7249nt), 1 - import sequence from seq.txt, 2 - random
-    para_set_start_scaf       = 7217       ! [7217, 4141], Starting nucleotide position of scaffold strand
+    para_max_cut_scaf         = 0   ! [0, 7249], Scaffold break - 0 : not breaking, num : breaking over num
+    para_min_cut_stap         = 20  ! [20], The minimum number of nucleotides for one staple strand
+    para_mid_cut_stap         = 40  ! [40], The optimal number of nucleotides for one staple strand
+    para_max_cut_stap         = 60  ! [60], The maximum number of nucleotides for one staple strand
+    para_set_seq_scaf         = 0   ! [0, 1, 2], Scaffold sequence, 0 - M13mp18(7249nt), 1 - import sequence from seq.txt, 2 - random
+    para_set_start_scaf       = 1   ! [1], Starting nucleotide position of scaffold strand
 
     ! Set parameter dependence
     call Input_Set_Parameter_Dependence

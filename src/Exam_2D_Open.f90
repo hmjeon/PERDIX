@@ -460,7 +460,7 @@ subroutine Exam_Open2D_Wheel(prob, geom)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
 
     ! Set options
-    n = 12
+    n = 10
 
     ! The number of points and faces
     geom.n_iniP = n + 1
@@ -1273,57 +1273,57 @@ subroutine Exam_Open2D_Lotus(prob, geom)
     allocate(geom.face(geom.n_face))
 
     ! Set the position vector
-    geom.iniP(      1).pos(1:3) = [   -66.8891d0,   -94.1050d0,     0.0000d0 ]
-    geom.iniP(      2).pos(1:3) = [   -55.4609d0,   -52.9617d0,     0.0000d0 ]
-    geom.iniP(      3).pos(1:3) = [     0.5396d0,   -75.2475d0,     0.0000d0 ]
-    geom.iniP(      4).pos(1:3) = [   -33.1751d0,   -89.5337d0,     0.0000d0 ]
-    geom.iniP(      5).pos(1:3) = [  -102.6042d0,   -26.6756d0,     0.0000d0 ]
-    geom.iniP(      6).pos(1:3) = [  -116.0328d0,     0.1815d0,     0.0000d0 ]
-    geom.iniP(      7).pos(1:3) = [   -89.1750d0,    -2.1041d0,     0.0000d0 ]
-    geom.iniP(      8).pos(1:3) = [   -72.6038d0,   -20.3898d0,     0.0000d0 ]
-    geom.iniP(      9).pos(1:3) = [   -94.8897d0,    52.7536d0,     0.0000d0 ]
-    geom.iniP(     10).pos(1:3) = [   -68.0320d0,    41.3248d0,     0.0000d0 ]
-    geom.iniP(     11).pos(1:3) = [   -56.0321d0,    25.3248d0,     0.0000d0 ]
-    geom.iniP(     12).pos(1:3) = [   -58.3177d0,    72.7533d0,     0.0000d0 ]
-    geom.iniP(     13).pos(1:3) = [   -22.8891d0,    58.4677d0,     0.0000d0 ]
-    geom.iniP(     14).pos(1:3) = [   -17.2891d0,    33.6674d0,     0.0000d0 ]
-    geom.iniP(     15).pos(1:3) = [   -34.8890d0,    13.8960d0,     0.0000d0 ]
-    geom.iniP(     16).pos(1:3) = [     0.5396d0,    89.3250d0,     0.0000d0 ]
-    geom.iniP(     17).pos(1:3) = [    22.8255d0,    58.4677d0,     0.0000d0 ]
-    geom.iniP(     18).pos(1:3) = [    17.2255d0,    33.6674d0,     0.0000d0 ]
-    geom.iniP(     19).pos(1:3) = [    -0.6032d0,    52.1819d0,     0.0000d0 ]
-    geom.iniP(     20).pos(1:3) = [    58.2547d0,    72.7533d0,     0.0000d0 ]
-    geom.iniP(     21).pos(1:3) = [    67.9689d0,    41.3248d0,     0.0000d0 ]
-    geom.iniP(     22).pos(1:3) = [    55.9684d0,    25.3248d0,     0.0000d0 ]
-    geom.iniP(     23).pos(1:3) = [    34.8254d0,    13.8960d0,     0.0000d0 ]
-    geom.iniP(     24).pos(1:3) = [    94.8261d0,    52.7536d0,     0.0000d0 ]
-    geom.iniP(     25).pos(1:3) = [    89.1120d0,    -2.1041d0,     0.0000d0 ]
-    geom.iniP(     26).pos(1:3) = [    72.5402d0,   -20.3898d0,     0.0000d0 ]
-    geom.iniP(     27).pos(1:3) = [   115.9692d0,     0.1815d0,     0.0000d0 ]
-    geom.iniP(     28).pos(1:3) = [   102.5406d0,   -26.6756d0,     0.0000d0 ]
-    geom.iniP(     29).pos(1:3) = [    55.3973d0,   -52.9617d0,     0.0000d0 ]
-    geom.iniP(     30).pos(1:3) = [    66.8261d0,   -94.1050d0,     0.0000d0 ]
-    geom.iniP(     31).pos(1:3) = [    33.6826d0,   -89.5337d0,     0.0000d0 ]
-    geom.iniP(     32).pos(1:3) = [   -20.1464d0,   -10.2869d0,     0.0000d0 ]
-    geom.iniP(     33).pos(1:3) = [   -26.8893d0,   -42.6757d0,     0.0000d0 ]
-    geom.iniP(     34).pos(1:3) = [    20.0828d0,   -10.2869d0,     0.0000d0 ]
-    geom.iniP(     35).pos(1:3) = [    -0.0315d0,    14.4671d0,     0.0000d0 ]
-    geom.iniP(     36).pos(1:3) = [    26.8256d0,   -42.6757d0,     0.0000d0 ]
+    geom.iniP( 1).pos(1:3) = [  -66.8891d0, -94.1050d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [  -55.4609d0, -52.9617d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [    0.5396d0, -75.2475d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [  -33.1751d0, -89.5337d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [ -102.6042d0, -26.6756d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [ -116.0328d0,   0.1815d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [  -89.1750d0,  -2.1041d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [  -72.6038d0, -20.3898d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [  -94.8897d0,  52.7536d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [  -68.0320d0,  41.3248d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [  -56.0321d0,  25.3248d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [  -58.3177d0,  72.7533d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [  -22.8891d0,  58.4677d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  -17.2891d0,  33.6674d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [  -34.8890d0,  13.8960d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [    0.5396d0,  89.3250d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [   22.8255d0,  58.4677d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [   17.2255d0,  33.6674d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [   -0.6032d0,  52.1819d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [   58.2547d0,  72.7533d0, 0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [   67.9689d0,  41.3248d0, 0.0000d0 ]
+    geom.iniP(22).pos(1:3) = [   55.9684d0,  25.3248d0, 0.0000d0 ]
+    geom.iniP(23).pos(1:3) = [   34.8254d0,  13.8960d0, 0.0000d0 ]
+    geom.iniP(24).pos(1:3) = [   94.8261d0,  52.7536d0, 0.0000d0 ]
+    geom.iniP(25).pos(1:3) = [   89.1120d0,  -2.1041d0, 0.0000d0 ]
+    geom.iniP(26).pos(1:3) = [   72.5402d0, -20.3898d0, 0.0000d0 ]
+    geom.iniP(27).pos(1:3) = [  115.9692d0,   0.1815d0, 0.0000d0 ]
+    geom.iniP(28).pos(1:3) = [  102.5406d0, -26.6756d0, 0.0000d0 ]
+    geom.iniP(29).pos(1:3) = [   55.3973d0, -52.9617d0, 0.0000d0 ]
+    geom.iniP(30).pos(1:3) = [   66.8261d0, -94.1050d0, 0.0000d0 ]
+    geom.iniP(31).pos(1:3) = [   33.6826d0, -89.5337d0, 0.0000d0 ]
+    geom.iniP(32).pos(1:3) = [  -20.1464d0, -10.2869d0, 0.0000d0 ]
+    geom.iniP(33).pos(1:3) = [  -26.8893d0, -42.6757d0, 0.0000d0 ]
+    geom.iniP(34).pos(1:3) = [   20.0828d0, -10.2869d0, 0.0000d0 ]
+    geom.iniP(35).pos(1:3) = [   -0.0315d0,  14.4671d0, 0.0000d0 ]
+    geom.iniP(36).pos(1:3) = [   26.8256d0, -42.6757d0, 0.0000d0 ]
 
     ! Set connectivity
-    geom.face(      1).n_poi =       4; allocate(geom.face(      1).poi(      4)); geom.face(      1).poi(1:      4) = [      4,       3,       2,       1 ]
-    geom.face(      2).n_poi =       5; allocate(geom.face(      2).poi(      5)); geom.face(      2).poi(1:      5) = [      8,       7,       6,       5,       2 ]
-    geom.face(      3).n_poi =       5; allocate(geom.face(      3).poi(      5)); geom.face(      3).poi(1:      5) = [      8,      11,      10,       9,       7 ]
-    geom.face(      4).n_poi =       6; allocate(geom.face(      4).poi(      6)); geom.face(      4).poi(1:      6) = [     11,      15,      14,      13,      12,      10 ]
-    geom.face(      5).n_poi =       6; allocate(geom.face(      5).poi(      6)); geom.face(      5).poi(1:      6) = [     14,      19,      18,      17,      16,      13 ]
-    geom.face(      6).n_poi =       6; allocate(geom.face(      6).poi(      6)); geom.face(      6).poi(1:      6) = [     18,      23,      22,      21,      20,      17 ]
-    geom.face(      7).n_poi =       5; allocate(geom.face(      7).poi(      5)); geom.face(      7).poi(1:      5) = [     22,      26,      25,      24,      21 ]
-    geom.face(      8).n_poi =       5; allocate(geom.face(      8).poi(      5)); geom.face(      8).poi(1:      5) = [     26,      29,      28,      27,      25 ]
-    geom.face(      9).n_poi =       4; allocate(geom.face(      9).poi(      4)); geom.face(      9).poi(1:      4) = [      3,      31,      30,      29 ]
-    geom.face(     10).n_poi =       7; allocate(geom.face(     10).poi(      7)); geom.face(     10).poi(1:      7) = [     33,      32,      15,      11,       8,       2,       3 ]
-    geom.face(     11).n_poi =       8; allocate(geom.face(     11).poi(      8)); geom.face(     11).poi(1:      8) = [     32,      35,      34,      23,      18,      19,      14,      15 ]
-    geom.face(     12).n_poi =       7; allocate(geom.face(     12).poi(      7)); geom.face(     12).poi(1:      7) = [     34,      36,       3,      29,      26,      22,      23 ]
-    geom.face(     13).n_poi =       6; allocate(geom.face(     13).poi(      6)); geom.face(     13).poi(1:      6) = [      3,      36,      34,      35,      32,      33 ]
+    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  4,  3,  2,  1                 ]
+    geom.face( 2).n_poi = 5; allocate(geom.face( 2).poi(5)); geom.face( 2).poi(1:5) = [  8,  7,  6,  5,  2             ]
+    geom.face( 3).n_poi = 5; allocate(geom.face( 3).poi(5)); geom.face( 3).poi(1:5) = [  8, 11, 10,  9,  7             ]
+    geom.face( 4).n_poi = 6; allocate(geom.face( 4).poi(6)); geom.face( 4).poi(1:6) = [ 11, 15, 14, 13, 12, 10         ]
+    geom.face( 5).n_poi = 6; allocate(geom.face( 5).poi(6)); geom.face( 5).poi(1:6) = [ 14, 19, 18, 17, 16, 13         ]
+    geom.face( 6).n_poi = 6; allocate(geom.face( 6).poi(6)); geom.face( 6).poi(1:6) = [ 18, 23, 22, 21, 20, 17         ]
+    geom.face( 7).n_poi = 5; allocate(geom.face( 7).poi(5)); geom.face( 7).poi(1:5) = [ 22, 26, 25, 24, 21             ]
+    geom.face( 8).n_poi = 5; allocate(geom.face( 8).poi(5)); geom.face( 8).poi(1:5) = [ 26, 29, 28, 27, 25             ]
+    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [  3, 31, 30, 29                 ]
+    geom.face(10).n_poi = 7; allocate(geom.face(10).poi(7)); geom.face(10).poi(1:7) = [ 33, 32, 15, 11,  8,  2,  3     ]
+    geom.face(11).n_poi = 8; allocate(geom.face(11).poi(8)); geom.face(11).poi(1:8) = [ 32, 35, 34, 23, 18, 19, 14, 15 ]
+    geom.face(12).n_poi = 7; allocate(geom.face(12).poi(7)); geom.face(12).poi(1:7) = [ 34, 36,  3, 29, 26, 22, 23     ]
+    geom.face(13).n_poi = 6; allocate(geom.face(13).poi(6)); geom.face(13).poi(1:6) = [  3, 36, 34, 35, 32, 33         ]
 end subroutine Exam_Open2D_Lotus
 
 ! ---------------------------------------------------------------------------------------
@@ -1333,6 +1333,9 @@ subroutine Exam_Open2D_4_Sided_Polygon(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
+    double precision :: x_width, y_width, del_x, del_y
+    integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
+    character :: pn
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
@@ -1340,26 +1343,53 @@ subroutine Exam_Open2D_4_Sided_Polygon(prob, geom)
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
     prob.name_prob = "4-Sided Polygon"
-    prob.name_file = "16_4_Sided_Polygon"//&
+    prob.name_file = "4_Sided_Polygon"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
+    para_const_edge_mesh = "on"
+
+    ! Set options
+    n = 4
 
     ! The number of points and faces
-    geom.n_iniP = 1
-    geom.n_face = 1
+    geom.n_iniP = n + 1
+    geom.n_face = n
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
-    ! Set the position vector
-    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+    geom.iniP(n+1).pos(1) = 0.0d0
+    geom.iniP(n+1).pos(2) = 0.0d0
+    geom.iniP(n+1).pos(3) = 0.0d0
+
+    ! Set position vector
+    do i = 1, n
+        geom.iniP(i).pos(1) = 10.0d0 * dcos(2.0d0 * pi * dble(i) / dble(n))
+        geom.iniP(i).pos(2) = 10.0d0 * dsin(2.0d0 * pi * dble(i) / dble(n))
+        geom.iniP(i).pos(3) = 0.0d0
+    end do
 
     ! Set connectivity
-    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
+    end do
+
+    do i = 1, n
+        if(i == n) then
+            geom.face(i).poi(1) = n + 1
+            geom.face(i).poi(2) = i
+            geom.face(i).poi(3) = 1
+        else
+            geom.face(i).poi(1) = n + 1
+            geom.face(i).poi(2) = i
+            geom.face(i).poi(3) = i + 1
+        end if
+    end do
 end subroutine Exam_Open2D_4_Sided_Polygon
 
 ! ---------------------------------------------------------------------------------------
@@ -1369,6 +1399,9 @@ subroutine Exam_Open2D_5_Sided_Polygon(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
+    double precision :: x_width, y_width, del_x, del_y
+    integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
+    character :: pn
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
@@ -1376,26 +1409,53 @@ subroutine Exam_Open2D_5_Sided_Polygon(prob, geom)
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
     prob.name_prob = "5-Sided Polygon"
-    prob.name_file = "17_5_Sided_Polygon"//&
+    prob.name_file = "5_Sided_Polygon"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
+    para_const_edge_mesh = "on"
+
+    ! Set options
+    n = 5
 
     ! The number of points and faces
-    geom.n_iniP = 1
-    geom.n_face = 1
+    geom.n_iniP = n + 1
+    geom.n_face = n
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
-    ! Set the position vector
-    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+    geom.iniP(n+1).pos(1) = 0.0d0
+    geom.iniP(n+1).pos(2) = 0.0d0
+    geom.iniP(n+1).pos(3) = 0.0d0
+
+    ! Set position vector
+    do i = 1, n
+        geom.iniP(i).pos(1) = 10.0d0 * dcos(2.0d0 * pi * dble(i) / dble(n))
+        geom.iniP(i).pos(2) = 10.0d0 * dsin(2.0d0 * pi * dble(i) / dble(n))
+        geom.iniP(i).pos(3) = 0.0d0
+    end do
 
     ! Set connectivity
-    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
+    end do
+
+    do i = 1, n
+        if(i == n) then
+            geom.face(i).poi(1) = n + 1
+            geom.face(i).poi(2) = i
+            geom.face(i).poi(3) = 1
+        else
+            geom.face(i).poi(1) = n + 1
+            geom.face(i).poi(2) = i
+            geom.face(i).poi(3) = i + 1
+        end if
+    end do
 end subroutine Exam_Open2D_5_Sided_Polygon
 
 ! ---------------------------------------------------------------------------------------
@@ -1405,6 +1465,9 @@ subroutine Exam_Open2D_6_Sided_Polygon(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
+    double precision :: x_width, y_width, del_x, del_y
+    integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
+    character :: pn
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
@@ -1412,26 +1475,53 @@ subroutine Exam_Open2D_6_Sided_Polygon(prob, geom)
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
     prob.name_prob = "6-Sided Polygon"
-    prob.name_file = "18_6_Sided_Polygon"//&
+    prob.name_file = "6_Sided_Polygon"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
+    para_const_edge_mesh = "on"
+
+    ! Set options
+    n = 6
 
     ! The number of points and faces
-    geom.n_iniP = 1
-    geom.n_face = 1
+    geom.n_iniP = n + 1
+    geom.n_face = n
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
-    ! Set the position vector
-    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+    geom.iniP(n+1).pos(1) = 0.0d0
+    geom.iniP(n+1).pos(2) = 0.0d0
+    geom.iniP(n+1).pos(3) = 0.0d0
+
+    ! Set position vector
+    do i = 1, n
+        geom.iniP(i).pos(1) = 10.0d0 * dcos(2.0d0 * pi * dble(i) / dble(n))
+        geom.iniP(i).pos(2) = 10.0d0 * dsin(2.0d0 * pi * dble(i) / dble(n))
+        geom.iniP(i).pos(3) = 0.0d0
+    end do
 
     ! Set connectivity
-    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
+    end do
+
+    do i = 1, n
+        if(i == n) then
+            geom.face(i).poi(1) = n + 1
+            geom.face(i).poi(2) = i
+            geom.face(i).poi(3) = 1
+        else
+            geom.face(i).poi(1) = n + 1
+            geom.face(i).poi(2) = i
+            geom.face(i).poi(3) = i + 1
+        end if
+    end do
 end subroutine Exam_Open2D_6_Sided_Polygon
 
 ! ---------------------------------------------------------------------------------------
@@ -1441,6 +1531,8 @@ subroutine Exam_Open2D_Plate_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
+    double precision :: x_width, y_width, del_x, del_y
+    integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
@@ -1454,20 +1546,52 @@ subroutine Exam_Open2D_Plate_Quad(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.05d0, 0.0d0, 0.0d0)
+
+    ! Set options
+    !n  = 2
+    nx = 4
+    ny = 4
+
+    n_i_poi = nx + 1
+    n_j_poi = ny + 1
+    x_width = dble(nx)
+    y_width = dble(ny)
+    del_x   = x_width / dble(n_i_poi - 1)
+    del_y   = y_width / dble(n_j_poi - 1)
 
     ! The number of points and faces
-    geom.n_iniP = 1
-    geom.n_face = 1
+    geom.n_iniP = n_i_poi * n_j_poi
+    geom.n_face = nx * ny
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
-    ! Set the position vector
-    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 4
+        allocate(geom.face(i).poi(4))
+    end do
+
+    ! Set position vector
+    do j = 1, n_j_poi
+        do i = 1, n_i_poi
+            index = n_i_poi * (j - 1) + i
+            geom.iniP(index).pos(1) = del_x * dble(i - 1)
+            geom.iniP(index).pos(2) = del_y * dble(j - 1)
+            geom.iniP(index).pos(3) = 0.0d0
+        end do
+    end do
 
     ! Set connectivity
-    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+    do j = 1, ny
+        do i = 1, nx
+            index = nx * (j - 1) + i
+            geom.face(index).poi(1) = n_i_poi * (j - 1) + i
+            geom.face(index).poi(2) = n_i_poi * (j - 1) + i + 1
+            geom.face(index).poi(3) = n_i_poi * j + i + 1
+            geom.face(index).poi(4) = n_i_poi * j + i
+        end do
+    end do
 end subroutine Exam_Open2D_Plate_Quad
 
 ! ---------------------------------------------------------------------------------------
@@ -1477,6 +1601,9 @@ subroutine Exam_Open2D_Plate_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
+    double precision :: x_width, y_width, del_x, del_y
+    integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
+    character :: pn
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
@@ -1490,20 +1617,69 @@ subroutine Exam_Open2D_Plate_Tri(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
+
+    ! Set options
+    !n  = 2
+    nx = 2
+    ny = 2
+    pn = "\"
+
+    n_i_poi = nx + 1
+    n_j_poi = ny + 1
+    x_width = dble(nx)
+    y_width = dble(ny)
+    del_x   = x_width / dble(n_i_poi - 1)
+    del_y   = y_width / dble(n_j_poi - 1)
 
     ! The number of points and faces
-    geom.n_iniP = 1
-    geom.n_face = 1
-
+    geom.n_iniP = n_i_poi * n_j_poi
+    geom.n_face = nx  * ny * 2
+    
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
-    ! Set the position vector
-    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
+    end do
+
+    ! Set position vector
+    do j = 1, n_j_poi
+        do i = 1, n_i_poi
+            index = n_i_poi * (j - 1) + i
+            geom.iniP(index).pos(1) = del_x * dble(i - 1)
+            geom.iniP(index).pos(2) = del_y * dble(j - 1)
+            geom.iniP(index).pos(3) = 0.0d0
+        end do
+    end do
 
     ! Set connectivity
-    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+    do j = 1, ny
+        do i = 1, nx
+            if(pn == "\") then          ! Mesh pattern, \
+                index = 2*(nx * (j-1) + i) - 1
+                geom.face(index).poi(1) = n_i_poi * (j-1) + i
+                geom.face(index).poi(2) = n_i_poi * (j-1) + i + 1
+                geom.face(index).poi(3) = n_i_poi * j + i
+
+                index = 2*(nx * (j-1) + i)
+                geom.face(index).poi(1) = n_i_poi * (j-1) + i + 1
+                geom.face(index).poi(2) = n_i_poi * j + i + 1
+                geom.face(index).poi(3) = n_i_poi * j + i
+            else if(pn == "/") then     ! Mesh pattern, /
+                index = 2*(nx * (j-1) + i) - 1
+                geom.face(index).poi(1) = n_i_poi * (j - 1) + i
+                geom.face(index).poi(2) = n_i_poi * j + i + 1
+                geom.face(index).poi(3) = n_i_poi * j + i
+
+                index = 2*(nx * (j-1) + i)
+                geom.face(index).poi(1) = n_i_poi * (j - 1) + i
+                geom.face(index).poi(2) = n_i_poi * (j - 1) + i + 1
+                geom.face(index).poi(3) = n_i_poi * j + i + 1
+            end if
+        end do
+    end do
 end subroutine Exam_Open2D_Plate_Tri
 
 ! ---------------------------------------------------------------------------------------
@@ -1513,6 +1689,8 @@ subroutine Exam_Open2D_Plate_Eng(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
+    double precision :: x_width, y_width, del_x, del_y
+    integer :: i, j, index, n_i_poi, n_j_poi, nx, ny
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
@@ -1526,20 +1704,67 @@ subroutine Exam_Open2D_Plate_Eng(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
+
+    ! Set options
+    nx = 2
+    ny = 2
+
+    n_i_poi = nx + 1
+    n_j_poi = ny + 1
+    x_width = dble(nx)
+    y_width = dble(ny)
+    del_x   = x_width / dble(n_i_poi - 1)
+    del_y   = y_width / dble(n_j_poi - 1)
 
     ! The number of points and faces
-    geom.n_iniP = 1
-    geom.n_face = 1
-
+    geom.n_iniP = n_i_poi * n_j_poi
+    geom.n_face = nx  * ny * 2
+    
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
-    ! Set the position vector
-    geom.iniP( 1).pos(1:3) = [ -10.0000d0, -82.0445d0, 0.0000d0 ]
+    do i = 1, geom.n_face
+        geom.face(i).n_poi = 3
+        allocate(geom.face(i).poi(3))
+    end do
+
+    ! Set position vector
+    do j = 1, n_j_poi
+        do i = 1, n_i_poi
+            index = n_i_poi * (j - 1) + i
+            geom.iniP(index).pos(1) = del_x * dble(i - 1)
+            geom.iniP(index).pos(2) = del_y * dble(j - 1)
+            geom.iniP(index).pos(3) = 0.0d0
+        end do
+    end do
 
     ! Set connectivity
-    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  5  ]
+    do j = 1, ny
+        do i = 1, nx
+            if(mod(i+j, 2) == 1) then
+                index = 2*(nx * (j-1) + i) - 1
+                geom.face(index).poi(1) = n_i_poi * (j-1) + i
+                geom.face(index).poi(2) = n_i_poi * (j-1) + i + 1
+                geom.face(index).poi(3) = n_i_poi * j + i
+
+                index = 2*(nx * (j-1) + i)
+                geom.face(index).poi(1) = n_i_poi * (j-1) + i + 1
+                geom.face(index).poi(2) = n_i_poi * j + i + 1
+                geom.face(index).poi(3) = n_i_poi * j + i
+            else
+                index = 2*(nx * (j-1) + i) - 1
+                geom.face(index).poi(1) = n_i_poi * (j - 1) + i
+                geom.face(index).poi(2) = n_i_poi * j + i + 1
+                geom.face(index).poi(3) = n_i_poi * j + i
+
+                index = 2*(nx * (j-1) + i)
+                geom.face(index).poi(1) = n_i_poi * (j - 1) + i
+                geom.face(index).poi(2) = n_i_poi * (j - 1) + i + 1
+                geom.face(index).poi(3) = n_i_poi * j + i + 1
+            end if
+        end do
+    end do
 end subroutine Exam_Open2D_Plate_Eng
 
 ! ---------------------------------------------------------------------------------------
