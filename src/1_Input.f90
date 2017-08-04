@@ -246,7 +246,7 @@ subroutine Input_Initialize_Report(prob, geom, mesh, ii, sec, edge, char_vert, c
     para_write_103   = .false.       !  Faced initial geometry,                  Input_Tecplot_Init_Geometry,      "init_geo_face.bild"
     para_write_104   = .false.       !  Schlegel diagram,                        Input_Chimera_Schlegel_Diagram,   "_schlegel.bild"
     para_write_301   = .false.       !  Initial geometry with face orientation,  ModGeo_Chimera_Check_Geometry,    "_check_geo.bild"
-    para_write_302   = .true.        ! *Initial geometry with local vector,      ModGeo_Chimera_Init_Geometry_L,   "_init_geo_local.bild"
+    para_write_302   = .false.        ! *Initial geometry with local vector,      ModGeo_Chimera_Init_Geometry_L,   "_init_geo_local.bild"
     para_write_303   = .true.        ! *Modified geometry seperated from vertex, ModGeo_Chimera_Mod_Geometry,      "_sep_geo.bild"
     para_write_401   = .false.       !  Cross-sectional geometry,                Section_Chimera_Cross_Geometry,   "_cro_geo.bild"
     para_write_501   = .false.       !  Cylindrical model with orientation,      Basepair_Chimera_Cylinder_Ori,    "_cyl_ori1.bild"

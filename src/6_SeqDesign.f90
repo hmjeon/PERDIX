@@ -143,7 +143,7 @@ subroutine SeqDesign_Design(prob, geom, mesh, dna)
     call SeqDesign_Chimera_Atom(prob, dna)
 
     ! Write the curved cylindrical model
-    call SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
+    !call SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
 
     ! Chimera topology route
     call SeqDesign_Chimera_Route(prob, mesh, dna)

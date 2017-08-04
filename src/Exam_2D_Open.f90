@@ -659,7 +659,7 @@ subroutine Exam_Open2D_Cross(prob, geom)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xy", 1.0d0, 1.2d0, -7.0d0, -6.0d0)
-    para_const_edge_mesh = "on"
+    !para_const_edge_mesh = "on"
 
     ! The number of points and faces
     geom.n_iniP = 33
@@ -1350,7 +1350,7 @@ subroutine Exam_Open2D_4_Sided_Polygon(prob, geom)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
-    para_const_edge_mesh = "on"
+    !para_const_edge_mesh = "on"
 
     ! Set options
     n = 4
@@ -1416,7 +1416,6 @@ subroutine Exam_Open2D_5_Sided_Polygon(prob, geom)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
-    para_const_edge_mesh = "on"
 
     ! Set options
     n = 5
@@ -1482,7 +1481,6 @@ subroutine Exam_Open2D_6_Sided_Polygon(prob, geom)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [77, 175, 74], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
-    para_const_edge_mesh = "on"
 
     ! Set options
     n = 6
