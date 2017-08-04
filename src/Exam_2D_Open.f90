@@ -1343,7 +1343,7 @@ subroutine Exam_Open2D_4_Sided_Polygon(prob, geom)
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
     prob.name_prob = "4-Sided Polygon"
-    prob.name_file = "4_Sided_Polygon"//&
+    prob.name_file = "16_4_Sided_Polygon"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -1409,7 +1409,7 @@ subroutine Exam_Open2D_5_Sided_Polygon(prob, geom)
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
     prob.name_prob = "5-Sided Polygon"
-    prob.name_file = "5_Sided_Polygon"//&
+    prob.name_file = "17_5_Sided_Polygon"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -1474,7 +1474,7 @@ subroutine Exam_Open2D_6_Sided_Polygon(prob, geom)
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
     prob.name_prob = "6-Sided Polygon"
-    prob.name_file = "6_Sided_Polygon"//&
+    prob.name_file = "18_6_Sided_Polygon"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)

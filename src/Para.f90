@@ -119,14 +119,14 @@ module Para
 
     ! UCSF Chimera output option
     logical :: para_chimera_axis     = .false.  !  Plot with axis at the ceneter of geometry (*.bild)
-    logical :: para_chimera_102_info = .false.  !  Plot with edge and point number (_01_init_geo.bild)
+    logical :: para_chimera_102_info = .true.   ! *Plot with edge and point number (_01_init_geo.bild)
     logical :: para_chimera_301_info = .false.  !  Plot with edge and point number (_check_geo.bild)
-    logical :: para_chimera_302_info = .false.  !  Plot with edge and point number (_02_init_geo_local.bild)
-    logical :: para_chimera_303_info = .true.  !  Plot with edge and point number (_03_sep_line.bild)
+    logical :: para_chimera_302_info = .true.   ! *Plot with edge and point number (_02_init_geo_local.bild)
+    logical :: para_chimera_303_info = .true.   ! *Plot with edge and point number (_03_sep_line.bild)
     logical :: para_chimera_401_info = .false.  !  Plot with edge and point number (_cro_geo.bild)
     logical :: para_chimera_502_ori  = .false.  !  Plot with helix z-direction (_line.bild / _node.bild)
     logical :: para_chimera_503_mod  = .false.  !  Plot with modified edges (_mesh.bild)
-    logical :: para_chimera_504_info = .true.  !  Plot with edge and point number (_06_multi_line.bild)
+    logical :: para_chimera_504_info = .true.   ! *Plot with edge and point number (_06_multi_line.bild)
     logical :: para_chimera_601_dir  = .false.  !  Plot with strand direction (_scaf.bild / _stap.bild)
     logical :: para_chimera_609_cyl  = .false.  !  Plot with cylinderical representation (_atom.bild)
     logical :: para_chimera_609_dir  = .false.  !  Plot with strand direction (_atom.bild)
