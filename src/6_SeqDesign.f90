@@ -2517,6 +2517,7 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
 
     integer :: i, j, node, sec, across, edge, base, dn_base, strt_base
     integer :: max_strt_base, max_count, count, max_edge
+    logical :: b_inside
 
     ! Allocate and initialize croL data
     allocate(croL(geom.n_croL))
@@ -2549,6 +2550,9 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
 
         ! Only scaffold
         if(dna.strand(i).types == "stap") cycle
+
+        b_inside = .false.
+100     continue
 
         ! Set first base(going down) on the crossover
         base = dna.strand(i).base(1)
@@ -2597,13 +2601,13 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
                     mesh.node(node).beveled /= -1 .or. &    ! If beveled strand
 
                     ! To avoid placing inside
-                    ( geom.iniL(mesh.node(node).iniL).neiF(1) /= -1 .and. &
+                    ( b_inside == .false. .and. geom.iniL(mesh.node(node).iniL).neiF(1) /= -1 .and. &
                       geom.iniL(mesh.node(node).iniL).neiF(2) /= -1 ) .or. &
 
-                    ( geom.iniL(mesh.node(node).iniL).neiF(2) == -1 .and. &     ! To place the unparied remaining scaffold outside
+                    ( b_inside == .false. .and. geom.iniL(mesh.node(node).iniL).neiF(2) == -1 .and. &     ! To place the unparied remaining scaffold outside
                       geom.croL(mesh.node(node).croL).sec == 0 ) .or. &
 
-                    ( geom.iniL(mesh.node(node).iniL).neiF(1) == -1 .and. &     ! To place the unparied remaining scaffold outside
+                    ( b_inside == .false. .and. geom.iniL(mesh.node(node).iniL).neiF(1) == -1 .and. &     ! To place the unparied remaining scaffold outside
                       geom.croL(mesh.node(node).croL).sec == 1 ) ) then
 
                     ! If the region exceeds max_count
@@ -2626,6 +2630,12 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
         end do
 
         !max_count = max_count + 1
+
+        ! If no nick position, set inside
+        if(max_count == 0) then
+            b_inside = .true.
+            goto 100
+        end if
 
         ! Set base in the middle at the maximum region
         base = dna.top(max_strt_base).id
