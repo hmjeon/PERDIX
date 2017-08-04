@@ -34,16 +34,16 @@ module Chimera
     ! Chimera data type
     type :: ChimType
 
-        logical :: run_init_geo         !  1. Input_Chimera_Init_Geometry,     "_init_geo.bild"
+        logical :: run_init_geo         !  1. Input_Chimera_Init_Geometry,     "_01_init_geo.bild"
         logical :: run_check_geo        !  2. ModGeo_Chimera_Check_Geometry,   "_check_geo.bild"
-        logical :: run_init_geo_local   !  3. ModGeo_Chimera_Init_Geometry_L,  "_init_geo_local.bild"
-        logical :: run_mod_geo          !  4. ModGeo_Chimera_Mod_Geometry,     "_mod_geo.bild"
+        logical :: run_init_geo_local   !  3. ModGeo_Chimera_Init_Geometry_L,  "_02_init_geo_local.bild"
+        logical :: run_mod_geo          !  4. ModGeo_Chimera_Mod_Geometry,     "_03_sep_line.bild"
         logical :: run_cross_geo        !  5. Section_Chimera_Cross_Geometry,  "_cross_geo.bild"
         logical :: run_cylinder1_ori    !  6. Basepair_Chimera_Cylinder_Ori,   "_cyl1_ori.bild"
-        logical :: run_cylinder1        !  7. Basepair_Chimera_Cylinder,       "_cyl1.bild"
-        logical :: run_cylinder2        !  8. Basepair_Chimera_Cylinder,       "_cyl2.bild"
+        logical :: run_cylinder1        !  7. Basepair_Chimera_Cylinder,       "04_cylinder_1.bild"
+        logical :: run_cylinder2        !  8. Basepair_Chimera_Cylinder,       "05_cylinder_2.bild"
         logical :: run_mesh             !  9. Basepair_Chimera_Mesh,           "_mesh.bild"
-        logical :: run_cross_geo_mod    ! 10. Basepair_Chimera_Cross_Geometry, "_cross_geo_mod.bild"
+        logical :: run_cross_geo_mod    ! 10. Basepair_Chimera_Cross_Geometry, "_06_multi_line.bild"
         logical :: run_route1_scaf      ! 11. Route_Chimera_Route, step 1,     "_route1_scaf.bild"
         logical :: run_route1_stap      ! 12. Route_Chimera_Route, step 1,     "_route1_stap.bild"
         logical :: run_route2_scaf      ! 13. Route_Chimera_Route, step 2,     "_route2_scaf.bild"
@@ -54,13 +54,13 @@ module Chimera
         logical :: run_route4_stap      ! 18. Route_Chimera_Route, step 4,     "_route4_stap.bild"
         logical :: run_route5_scaf      ! 19. Route_Chimera_Route, step 5,     "_route5_scaf.bild"
         logical :: run_route5_stap      ! 20. Route_Chimera_Route, step 5,     "_route5_stap.bild"
-        logical :: run_crossovers       ! 21. Route_Chimera_Crossovers,        "_crossovers.bild"
+        logical :: run_crossovers       ! 21. Route_Chimera_Crossovers,        "_08_xovers.bild"
         logical :: run_orientation      ! 22. Route_Chimera_Orientation,       "_orientation.bild"
         logical :: run_atom             ! 23. Route_Chimera_Atom,              "_atom.bild"
-        logical :: run_atom_nick        ! 24. SeqDesign_Chimera_Atom,          "_atom_nick.bild"
-        logical :: run_route6_scaf      ! 25. SeqDesign_Chimera_Route,         "_route6_scaf.bild"
-        logical :: run_route6_stap      ! 26. SeqDesign_Chimera_Route,         "_route6_stap.bild"
-        logical :: run_seq_design       ! 27. SeqDesign_Chimera_Sequence,      "_sequence_design.bild"
+        logical :: run_atom_nick        ! 24. SeqDesign_Chimera_Atom,          "_09_atomic_model.bild"
+        logical :: run_route6_scaf      ! 25. SeqDesign_Chimera_Route,         "_10_route_scaf.bild"
+        logical :: run_route6_stap      ! 26. SeqDesign_Chimera_Route,         "_11_route_stap.bild"
+        logical :: run_seq_design       ! 27. SeqDesign_Chimera_Sequence,      "_12_route_all.bild"
         logical :: run_strand           ! 28. SeqDesign_Chimera_Strand,        "_strand.bild",
         logical :: run_sequence         ! 29. SeqDesign_Chimera_Strand,        "_sequence.bild"
 
@@ -99,16 +99,16 @@ subroutine Chimera_Command_Output(prob)
     ! Initialzie Chimera data
     call Chimera_Init_ChimType(chim)
 
-    chim.run_init_geo       = para_write_102    ! 1.  Input_Chimera_Init_Geometry,     "_init_geo.bild"
+    chim.run_init_geo       = para_write_102    ! 1.  Input_Chimera_Init_Geometry,     "_01_init_geo.bild"
     chim.run_check_geo      = para_write_301    ! 2.  ModGeo_Chimera_Check_Geometry,   "_check_geo.bild"
-    chim.run_init_geo_local = para_write_302    ! 3.  ModGeo_Chimera_Init_Geometry_L,  "_init_geo_local.bild"
-    chim.run_mod_geo        = para_write_303    ! 4.  ModGeo_Chimera_Mod_Geometry,     "_mod_geo.bild"
+    chim.run_init_geo_local = para_write_302    ! 3.  ModGeo_Chimera_Init_Geometry_L,  "_02_init_geo_local.bild"
+    chim.run_mod_geo        = para_write_303    ! 4.  ModGeo_Chimera_Mod_Geometry,     "_03_sep_line.bild"
     chim.run_cross_geo      = para_write_401    ! 5.  Section_Chimera_Cross_Geometry,  "_cross_geo.bild"
     chim.run_cylinder1_ori  = para_write_501    ! 6.  Basepair_Chimera_Cylinder_Ori,   "_cyl1_ori.bild"
-    chim.run_cylinder1      = para_write_502    ! 7.  Basepair_Chimera_Cylinder,       "_cyl1.bild"
-    chim.run_cylinder2      = para_write_502    ! 8.  Basepair_Chimera_Cylinder,       "_cyl2.bild"
+    chim.run_cylinder1      = para_write_502    ! 7.  Basepair_Chimera_Cylinder,       "_04_cylinder_1.bild"
+    chim.run_cylinder2      = para_write_502    ! 8.  Basepair_Chimera_Cylinder,       "_05_cylinder_2.bild"
     chim.run_mesh           = para_write_503    ! 9.  Basepair_Chimera_Mesh,           "_mesh.bild"
-    chim.run_cross_geo_mod  = para_write_504    ! 10. Basepair_Chimera_Cross_Geometry, "_cross_geo_mod.bild"
+    chim.run_cross_geo_mod  = para_write_504    ! 10. Basepair_Chimera_Cross_Geometry, "_06_multi_line.bild"
     chim.run_route1_scaf    = para_write_601_1  ! 11. Route_Chimera_Route, step 1,     "_route1_scaf.bild"
     chim.run_route1_stap    = para_write_601_1  ! 12. Route_Chimera_Route, step 1,     "_route1_stap.bild"
     chim.run_route2_scaf    = para_write_601_2  ! 13. Route_Chimera_Route, step 2,     "_route2_scaf.bild"
@@ -119,13 +119,13 @@ subroutine Chimera_Command_Output(prob)
     chim.run_route4_stap    = para_write_601_4  ! 18. Route_Chimera_Route, step 4,     "_route4_stap.bild"
     chim.run_route5_scaf    = para_write_601_5  ! 19. Route_Chimera_Route, step 5,     "_route5_scaf.bild"
     chim.run_route5_stap    = para_write_601_5  ! 20. Route_Chimera_Route, step 5,     "_route5_stap.bild"
-    chim.run_crossovers     = para_write_607    ! 21. Route_Chimera_Crossovers,        "_crossovers.bild"
+    chim.run_crossovers     = para_write_607    ! 21. Route_Chimera_Crossovers,        "_08_xovers.bild"
     chim.run_orientation    = para_write_608    ! 22. Route_Chimera_Orientation,       "_orientation.bild"
     chim.run_atom           = para_write_609    ! 23. Route_Chimera_Atom,              "_atom.bild"
-    chim.run_atom_nick      = para_write_702    ! 24. SeqDesign_Chimera_Atom,          "_atom_nick.bild"
-    chim.run_route6_scaf    = para_write_703    ! 25. SeqDesign_Chimera_Route,         "_route6_scaf.bild"
-    chim.run_route6_stap    = para_write_703    ! 26. SeqDesign_Chimera_Route,         "_route6_stap.bild"
-    chim.run_seq_design     = para_write_705    ! 27. SeqDesign_Chimera_Sequence,      "_sequence_design.bild"
+    chim.run_atom_nick      = para_write_702    ! 24. SeqDesign_Chimera_Atom,          "_09_atomic_model.bild"
+    chim.run_route6_scaf    = para_write_703    ! 25. SeqDesign_Chimera_Route,         "_10_route_scaf.bild"
+    chim.run_route6_stap    = para_write_703    ! 26. SeqDesign_Chimera_Route,         "_11_route_stap.bild"
+    chim.run_seq_design     = para_write_705    ! 27. SeqDesign_Chimera_Sequence,      "_12_route_all.bild"
     chim.run_strand         = para_write_706    ! 28. SeqDesign_Chimera_Strand,        "_strand.bild"
     chim.run_sequence       = para_write_706    ! 29. SeqDesign_Chimera_Strand,        "_sequence.bild"
 
@@ -135,33 +135,33 @@ subroutine Chimera_Command_Output(prob)
     ! Python script for geometric data
     path = trim(prob.path_work1)//"output_py\"//trim(prob.name_file)
 
-    open(unit = 101, file = trim(path)//"_init_geo.py",        form = "formatted")
-    open(unit = 102, file = trim(path)//"_check_geo.py",       form = "formatted")
-    open(unit = 103, file = trim(path)//"_init_geo_local.py",  form = "formatted")
-    open(unit = 104, file = trim(path)//"_mod_geo.py",         form = "formatted")
-    open(unit = 105, file = trim(path)//"_cross_geo.py",       form = "formatted")
-    open(unit = 106, file = trim(path)//"_cyl_ori1.py",        form = "formatted")
-    open(unit = 107, file = trim(path)//"_cyl1.py",            form = "formatted")
-    open(unit = 108, file = trim(path)//"_cyl2.py",            form = "formatted")
-    open(unit = 109, file = trim(path)//"_mesh.py",            form = "formatted")
-    open(unit = 110, file = trim(path)//"_cross_geo_mod.py",   form = "formatted")
-    open(unit = 111, file = trim(path)//"_route1_scaf.py",     form = "formatted")
-    open(unit = 112, file = trim(path)//"_route1_stap.py",     form = "formatted")
-    open(unit = 113, file = trim(path)//"_route2_scaf.py",     form = "formatted")
-    open(unit = 114, file = trim(path)//"_route2_stap.py",     form = "formatted")
-    open(unit = 115, file = trim(path)//"_route3_scaf.py",     form = "formatted")
-    open(unit = 116, file = trim(path)//"_route3_stap.py",     form = "formatted")
-    open(unit = 117, file = trim(path)//"_route4_scaf.py",     form = "formatted")
-    open(unit = 118, file = trim(path)//"_route4_stap.py",     form = "formatted")
-    open(unit = 119, file = trim(path)//"_route5_scaf.py",     form = "formatted")
-    open(unit = 120, file = trim(path)//"_route5_stap.py",     form = "formatted")
-    open(unit = 121, file = trim(path)//"_crossovers.py",      form = "formatted")
-    open(unit = 122, file = trim(path)//"_orientation.py",     form = "formatted")
-    open(unit = 123, file = trim(path)//"_atom.py",            form = "formatted")
-    open(unit = 124, file = trim(path)//"_atom_nick.py",       form = "formatted")
-    open(unit = 125, file = trim(path)//"_route6_scaf.py",     form = "formatted")
-    open(unit = 126, file = trim(path)//"_route6_stap.py",     form = "formatted")
-    open(unit = 127, file = trim(path)//"_sequence_design.py", form = "formatted")
+    open(unit = 101, file = trim(path)//"_01_init_geo.py",       form = "formatted")
+    open(unit = 102, file = trim(path)//"_check_geo.py",         form = "formatted")
+    open(unit = 103, file = trim(path)//"_02_init_geo_local.py", form = "formatted")
+    open(unit = 104, file = trim(path)//"_03_sep_line.py",       form = "formatted")
+    open(unit = 105, file = trim(path)//"_cross_geo.py",         form = "formatted")
+    open(unit = 106, file = trim(path)//"_cyl_ori1.py",          form = "formatted")
+    open(unit = 107, file = trim(path)//"04_cylinder_1.py",      form = "formatted")
+    open(unit = 108, file = trim(path)//"05_cylinder_2.py",      form = "formatted")
+    open(unit = 109, file = trim(path)//"_mesh.py",              form = "formatted")
+    open(unit = 110, file = trim(path)//"_06_multi_line.py",     form = "formatted")
+    open(unit = 111, file = trim(path)//"_route1_scaf.py",       form = "formatted")
+    open(unit = 112, file = trim(path)//"_route1_stap.py",       form = "formatted")
+    open(unit = 113, file = trim(path)//"_route2_scaf.py",       form = "formatted")
+    open(unit = 114, file = trim(path)//"_route2_stap.py",       form = "formatted")
+    open(unit = 115, file = trim(path)//"_route3_scaf.py",       form = "formatted")
+    open(unit = 116, file = trim(path)//"_route3_stap.py",       form = "formatted")
+    open(unit = 117, file = trim(path)//"_route4_scaf.py",       form = "formatted")
+    open(unit = 118, file = trim(path)//"_route4_stap.py",       form = "formatted")
+    open(unit = 119, file = trim(path)//"_route5_scaf.py",       form = "formatted")
+    open(unit = 120, file = trim(path)//"_route5_stap.py",       form = "formatted")
+    open(unit = 121, file = trim(path)//"_08_xovers.py",         form = "formatted")
+    open(unit = 122, file = trim(path)//"_orientation.py",       form = "formatted")
+    open(unit = 123, file = trim(path)//"_atom.py",              form = "formatted")
+    open(unit = 124, file = trim(path)//"_09_atomic_model.py",   form = "formatted")
+    open(unit = 125, file = trim(path)//"_10_route_scaf.py",     form = "formatted")
+    open(unit = 126, file = trim(path)//"_11_route_stap.py",     form = "formatted")
+    open(unit = 127, file = trim(path)//"_12_route_all.py",      form = "formatted")
     open(unit = 128, file = trim(path)//"_strand.py",          form = "formatted")
     open(unit = 129, file = trim(path)//"_sequence.py",        form = "formatted")
 
@@ -173,16 +173,16 @@ subroutine Chimera_Command_Output(prob)
         write(i, "(a)"), "from chimera import runCommand"
 
         path = trim(prob.name_file)
-        if(i == 101) write(i, "(a)"), "runCommand('open "//trim(path)//"_init_geo.bild')"
+        if(i == 101) write(i, "(a)"), "runCommand('open "//trim(path)//"_01_init_geo.bild')"
         if(i == 102) write(i, "(a)"), "runCommand('open "//trim(path)//"_check_geo.bild')"
-        if(i == 103) write(i, "(a)"), "runCommand('open "//trim(path)//"_init_geo_local.bild')"
-        if(i == 104) write(i, "(a)"), "runCommand('open "//trim(path)//"_mod_geo.bild')"
+        if(i == 103) write(i, "(a)"), "runCommand('open "//trim(path)//"_02_init_geo_local.bild')"
+        if(i == 104) write(i, "(a)"), "runCommand('open "//trim(path)//"_03_sep_line.bild')"
         if(i == 105) write(i, "(a)"), "runCommand('open "//trim(path)//"_cross_geo.bild')"
         if(i == 106) write(i, "(a)"), "runCommand('open "//trim(path)//"_cyl_ori1.bild')"
-        if(i == 107) write(i, "(a)"), "runCommand('open "//trim(path)//"_cyl1.bild')"
-        if(i == 108) write(i, "(a)"), "runCommand('open "//trim(path)//"_cyl2.bild')"
+        if(i == 107) write(i, "(a)"), "runCommand('open "//trim(path)//"04_cylinder_1.bild')"
+        if(i == 108) write(i, "(a)"), "runCommand('open "//trim(path)//"05_cylinder_2.bild')"
         if(i == 109) write(i, "(a)"), "runCommand('open "//trim(path)//"_mesh.bild')"
-        if(i == 110) write(i, "(a)"), "runCommand('open "//trim(path)//"_cross_geo_mod.bild')"
+        if(i == 110) write(i, "(a)"), "runCommand('open "//trim(path)//"_06_multi_line.bild')"
         if(i == 111) write(i, "(a)"), "runCommand('open "//trim(path)//"_route1_scaf.bild')"
         if(i == 112) write(i, "(a)"), "runCommand('open "//trim(path)//"_route1_stap.bild')"
         if(i == 113) write(i, "(a)"), "runCommand('open "//trim(path)//"_route2_scaf.bild')"
@@ -193,13 +193,13 @@ subroutine Chimera_Command_Output(prob)
         if(i == 118) write(i, "(a)"), "runCommand('open "//trim(path)//"_route4_stap.bild')"
         if(i == 119) write(i, "(a)"), "runCommand('open "//trim(path)//"_route5_scaf.bild')"
         if(i == 120) write(i, "(a)"), "runCommand('open "//trim(path)//"_route5_stap.bild')"
-        if(i == 121) write(i, "(a)"), "runCommand('open "//trim(path)//"_crossovers.bild')"
+        if(i == 121) write(i, "(a)"), "runCommand('open "//trim(path)//"_08_xovers.bild')"
         if(i == 122) write(i, "(a)"), "runCommand('open "//trim(path)//"_orientation.bild')"
         if(i == 123) write(i, "(a)"), "runCommand('open "//trim(path)//"_atom.bild')"
-        if(i == 124) write(i, "(a)"), "runCommand('open "//trim(path)//"_atom_nick.bild')"
-        if(i == 125) write(i, "(a)"), "runCommand('open "//trim(path)//"_route6_scaf.bild')"
-        if(i == 126) write(i, "(a)"), "runCommand('open "//trim(path)//"_route6_stap.bild')"
-        if(i == 127) write(i, "(a)"), "runCommand('open "//trim(path)//"_sequence_design.bild')"
+        if(i == 124) write(i, "(a)"), "runCommand('open "//trim(path)//"_09_atomic_model.bild')"
+        if(i == 125) write(i, "(a)"), "runCommand('open "//trim(path)//"_10_route_scaf.bild')"
+        if(i == 126) write(i, "(a)"), "runCommand('open "//trim(path)//"_11_route_stap.bild')"
+        if(i == 127) write(i, "(a)"), "runCommand('open "//trim(path)//"_12_route_all.bild')"
         if(i == 128) write(i, "(a)"), "runCommand('open "//trim(path)//"_strand.bild')"
         if(i == 129) write(i, "(a)"), "runCommand('open "//trim(path)//"_sequence.bild')"
 
@@ -272,16 +272,16 @@ subroutine Chimera_Command_Output(prob)
     path = trim('"'//trim(prob.path_chimera)//'" --script')&
         //" "//"output_py\"//trim(prob.name_file)
 
-    if(chim.run_init_geo       == .true.) write(1001, "(a)"), trim(path)//"_init_geo.py"
+    if(chim.run_init_geo       == .true.) write(1001, "(a)"), trim(path)//"_01_init_geo.py"
     if(chim.run_check_geo      == .true.) write(1001, "(a)"), trim(path)//"_check_geo.py"
-    if(chim.run_init_geo_local == .true.) write(1001, "(a)"), trim(path)//"_init_geo_local.py"
-    if(chim.run_mod_geo        == .true.) write(1001, "(a)"), trim(path)//"_mod_geo.py"
+    if(chim.run_init_geo_local == .true.) write(1001, "(a)"), trim(path)//"_02_init_geo_local.py"
+    if(chim.run_mod_geo        == .true.) write(1001, "(a)"), trim(path)//"_03_sep_line.py"
     if(chim.run_cross_geo      == .true.) write(1001, "(a)"), trim(path)//"_cross_geo.py"
     if(chim.run_cylinder1_ori  == .true.) write(1001, "(a)"), trim(path)//"_cyl1_ori.py"
-    if(chim.run_cylinder1      == .true.) write(1001, "(a)"), trim(path)//"_cyl1.py"
-    if(chim.run_cylinder2      == .true.) write(1001, "(a)"), trim(path)//"_cyl2.py"
+    if(chim.run_cylinder1      == .true.) write(1001, "(a)"), trim(path)//"04_cylinder_1.py"
+    if(chim.run_cylinder2      == .true.) write(1001, "(a)"), trim(path)//"05_cylinder_2.py"
     if(chim.run_mesh           == .true.) write(1001, "(a)"), trim(path)//"_mesh.py"
-    if(chim.run_cross_geo_mod  == .true.) write(1001, "(a)"), trim(path)//"_cross_geo_mod.py"
+    if(chim.run_cross_geo_mod  == .true.) write(1001, "(a)"), trim(path)//"_06_multi_line.py"
     if(chim.run_route1_scaf    == .true.) write(1001, "(a)"), trim(path)//"_route1_scaf.py"
     if(chim.run_route1_stap    == .true.) write(1001, "(a)"), trim(path)//"_route1_stap.py"
     if(chim.run_route2_scaf    == .true.) write(1001, "(a)"), trim(path)//"_route2_scaf.py"
@@ -292,13 +292,13 @@ subroutine Chimera_Command_Output(prob)
     if(chim.run_route4_stap    == .true.) write(1001, "(a)"), trim(path)//"_route4_stap.py"
     if(chim.run_route5_scaf    == .true.) write(1001, "(a)"), trim(path)//"_route5_scaf.py"
     if(chim.run_route5_stap    == .true.) write(1001, "(a)"), trim(path)//"_route5_stap.py"
-    if(chim.run_crossovers     == .true.) write(1001, "(a)"), trim(path)//"_crossovers.py"
+    if(chim.run_crossovers     == .true.) write(1001, "(a)"), trim(path)//"_08_xovers.py"
     if(chim.run_orientation    == .true.) write(1001, "(a)"), trim(path)//"_orientation.py"
     if(chim.run_atom           == .true.) write(1001, "(a)"), trim(path)//"_atom.py"
-    if(chim.run_atom_nick      == .true.) write(1001, "(a)"), trim(path)//"_atom_nick.py"
-    if(chim.run_route6_scaf    == .true.) write(1001, "(a)"), trim(path)//"_route6_scaf.py"
-    if(chim.run_route6_stap    == .true.) write(1001, "(a)"), trim(path)//"_route6_stap.py"
-    if(chim.run_seq_design     == .true.) write(1001, "(a)"), trim(path)//"_sequence_design.py"
+    if(chim.run_atom_nick      == .true.) write(1001, "(a)"), trim(path)//"_09_atomic_model.py"
+    if(chim.run_route6_scaf    == .true.) write(1001, "(a)"), trim(path)//"_10_route_scaf.py"
+    if(chim.run_route6_stap    == .true.) write(1001, "(a)"), trim(path)//"_11_route_stap.py"
+    if(chim.run_seq_design     == .true.) write(1001, "(a)"), trim(path)//"_12_route_all.py"
     if(chim.run_strand         == .true.) write(1001, "(a)"), trim(path)//"_strand.py"
     if(chim.run_sequence       == .true.) write(1001, "(a)"), trim(path)//"_sequence.py"
 
@@ -316,16 +316,16 @@ subroutine Chimera_Figure_Output(prob)
     ! Initialzie Chimera data
     call Chimera_Init_ChimType(chim)
 
-    chim.run_init_geo       = para_write_102    ! 1.  Input_Chimera_Init_Geometry,     "_init_geo.bild"
+    chim.run_init_geo       = para_write_102    ! 1.  Input_Chimera_Init_Geometry,     "_01_init_geo.bild"
     chim.run_check_geo      = para_write_301    ! 2.  ModGeo_Chimera_Check_Geometry,   "_check_geo.bild"
-    chim.run_init_geo_local = para_write_302    ! 3.  ModGeo_Chimera_Init_Geometry_L,  "_init_geo_local.bild"
-    chim.run_mod_geo        = para_write_303    ! 4.  ModGeo_Chimera_Mod_Geometry,     "_mod_geo.bild"
+    chim.run_init_geo_local = para_write_302    ! 3.  ModGeo_Chimera_Init_Geometry_L,  "_02_init_geo_local.bild"
+    chim.run_mod_geo        = para_write_303    ! 4.  ModGeo_Chimera_Mod_Geometry,     "_03_sep_line.bild"
     chim.run_cross_geo      = para_write_401    ! 5.  Section_Chimera_Cross_Geometry,  "_cross_geo.bild"
     chim.run_cylinder1_ori  = para_write_501    ! 6.  Basepair_Chimera_Cylinder_Ori,   "_cyl1_ori.bild"
-    chim.run_cylinder1      = para_write_502    ! 7.  Basepair_Chimera_Cylinder,       "_cyl1.bild"
-    chim.run_cylinder2      = para_write_502    ! 8.  Basepair_Chimera_Cylinder,       "_cyl2.bild"
+    chim.run_cylinder1      = para_write_502    ! 7.  Basepair_Chimera_Cylinder,       "_04_cylinder_1.bild"
+    chim.run_cylinder2      = para_write_502    ! 8.  Basepair_Chimera_Cylinder,       "_05_cylinder_2.bild"
     chim.run_mesh           = para_write_503    ! 9.  Basepair_Chimera_Mesh,           "_mesh.bild"
-    chim.run_cross_geo_mod  = para_write_504    ! 10. Basepair_Chimera_Cross_Geometry, "_cross_geo_mod.bild"
+    chim.run_cross_geo_mod  = para_write_504    ! 10. Basepair_Chimera_Cross_Geometry, "_06_multi_line.bild"
     chim.run_route1_scaf    = para_write_601_1  ! 11. Route_Chimera_Route, step 1,     "_route1_scaf.bild"
     chim.run_route1_stap    = para_write_601_1  ! 12. Route_Chimera_Route, step 1,     "_route1_stap.bild"
     chim.run_route2_scaf    = para_write_601_2  ! 13. Route_Chimera_Route, step 2,     "_route2_scaf.bild"
@@ -336,13 +336,13 @@ subroutine Chimera_Figure_Output(prob)
     chim.run_route4_stap    = para_write_601_4  ! 18. Route_Chimera_Route, step 4,     "_route4_stap.bild"
     chim.run_route5_scaf    = para_write_601_5  ! 19. Route_Chimera_Route, step 5,     "_route5_scaf.bild"
     chim.run_route5_stap    = para_write_601_5  ! 20. Route_Chimera_Route, step 5,     "_route5_stap.bild"
-    chim.run_crossovers     = para_write_607    ! 21. Route_Chimera_Crossovers,        "_crossovers.bild"
+    chim.run_crossovers     = para_write_607    ! 21. Route_Chimera_Crossovers,        "_08_xovers.bild"
     chim.run_orientation    = para_write_608    ! 22. Route_Chimera_Orientation,       "_orientation.bild"
     chim.run_atom           = para_write_609    ! 23. Route_Chimera_Atom,              "_atom.bild"
-    chim.run_atom_nick      = para_write_702    ! 24. SeqDesign_Chimera_Atom,          "_atom_nick.bild"
-    chim.run_route6_scaf    = para_write_703    ! 25. SeqDesign_Chimera_Route,         "_route6_scaf.bild"
-    chim.run_route6_stap    = para_write_703    ! 26. SeqDesign_Chimera_Route,         "_route6_stap.bild"
-    chim.run_seq_design     = para_write_705    ! 27. SeqDesign_Chimera_Sequence,      "_sequence_design.bild"
+    chim.run_atom_nick      = para_write_702    ! 24. SeqDesign_Chimera_Atom,          "_09_atomic_model.bild"
+    chim.run_route6_scaf    = para_write_703    ! 25. SeqDesign_Chimera_Route,         "_10_route_scaf.bild"
+    chim.run_route6_stap    = para_write_703    ! 26. SeqDesign_Chimera_Route,         "_11_route_stap.bild"
+    chim.run_seq_design     = para_write_705    ! 27. SeqDesign_Chimera_Sequence,      "_12_route_all.bild"
     chim.run_strand         = para_write_706    ! 28. SeqDesign_Chimera_Strand,        "_strand.bild"
     chim.run_sequence       = para_write_706    ! 29. SeqDesign_Chimera_Strand,        "_sequence.bild"
 
@@ -746,16 +746,16 @@ subroutine Chimera_Make_Python_Figure(prob, chim)
     write(101, "(a)"), "from chimera import runCommand"
     do i = 1, 29
 
-        if(     i ==  1 .and. chim.run_init_geo       == .true.) then; des = "_init_geo"
+        if(     i ==  1 .and. chim.run_init_geo       == .true.) then; des = "_01_init_geo"
         else if(i ==  2 .and. chim.run_check_geo      == .true.) then; des = "_check_geo"
-        else if(i ==  3 .and. chim.run_init_geo_local == .true.) then; des = "_init_geo_local"
-        else if(i ==  4 .and. chim.run_mod_geo        == .true.) then; des = "_mod_geo"
+        else if(i ==  3 .and. chim.run_init_geo_local == .true.) then; des = "_02_init_geo_local"
+        else if(i ==  4 .and. chim.run_mod_geo        == .true.) then; des = "_03_sep_line"
         else if(i ==  5 .and. chim.run_cross_geo      == .true.) then; des = "_cross_geo"
         else if(i ==  6 .and. chim.run_cylinder1_ori  == .true.) then; des = "_cyl1_ori"
-        else if(i ==  7 .and. chim.run_cylinder1      == .true.) then; des = "_cyl1"
-        else if(i ==  8 .and. chim.run_cylinder2      == .true.) then; des = "_cyl2"
+        else if(i ==  7 .and. chim.run_cylinder1      == .true.) then; des = "04_cylinder_1"
+        else if(i ==  8 .and. chim.run_cylinder2      == .true.) then; des = "05_cylinder_2"
         else if(i ==  9 .and. chim.run_mesh           == .true.) then; des = "_mesh"
-        else if(i == 10 .and. chim.run_cross_geo_mod  == .true.) then; des = "_cross_geo_mod"
+        else if(i == 10 .and. chim.run_cross_geo_mod  == .true.) then; des = "_06_multi_line"
         else if(i == 11 .and. chim.run_route1_scaf    == .true.) then; des = "_route1_scaf"
         else if(i == 12 .and. chim.run_route1_stap    == .true.) then; des = "_route1_stap"
         else if(i == 13 .and. chim.run_route2_scaf    == .true.) then; des = "_route2_scaf"
@@ -766,13 +766,13 @@ subroutine Chimera_Make_Python_Figure(prob, chim)
         else if(i == 18 .and. chim.run_route4_stap    == .true.) then; des = "_route4_stap"
         else if(i == 19 .and. chim.run_route5_scaf    == .true.) then; des = "_route5_scaf"
         else if(i == 20 .and. chim.run_route5_stap    == .true.) then; des = "_route5_stap"
-        else if(i == 21 .and. chim.run_crossovers     == .true.) then; des = "_crossovers"
+        else if(i == 21 .and. chim.run_crossovers     == .true.) then; des = "_08_xovers"
         else if(i == 22 .and. chim.run_orientation    == .true.) then; des = "_orientation"
         else if(i == 23 .and. chim.run_atom           == .true.) then; des = "_atom"
-        else if(i == 24 .and. chim.run_atom_nick      == .true.) then; des = "_atom_nick"
-        else if(i == 25 .and. chim.run_route6_scaf    == .true.) then; des = "_route6_scaf"
-        else if(i == 26 .and. chim.run_route6_stap    == .true.) then; des = "_route6_stap"
-        else if(i == 27 .and. chim.run_seq_design     == .true.) then; des = "_sequence_design"
+        else if(i == 24 .and. chim.run_atom_nick      == .true.) then; des = "_09_atomic_model"
+        else if(i == 25 .and. chim.run_route6_scaf    == .true.) then; des = "_10_route_scaf"
+        else if(i == 26 .and. chim.run_route6_stap    == .true.) then; des = "_11_route_stap"
+        else if(i == 27 .and. chim.run_seq_design     == .true.) then; des = "_12_route_all"
         else if(i == 28 .and. chim.run_strand         == .true.) then; des = "_strand"
         else if(i == 29 .and. chim.run_sequence       == .true.) then; des = "_sequence"
         else

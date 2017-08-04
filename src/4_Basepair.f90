@@ -82,10 +82,10 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
     call Basepair_Set_Conn_Junction(geom, bound, mesh)
 
     ! Write cylindrial model with orientation
-    call Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, "cyl1")
+    call Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, "cylinder_1")
 
     ! Write cylindrial model, cylinder 1
-    call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cyl1")
+    call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cylinder_1")
 
     ! Modify the length of the duplex at the junction
     call Basepair_Modify_Junction(prob, geom, bound, mesh)
@@ -97,10 +97,10 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
     call Basepair_Make_Sticky_End(geom, bound, mesh)
 
     ! Write cylindrial model with orientation
-    call Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, "cyl2")
+    call Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, "cylinder_2")
 
     ! Write cylindrial model, cylinder 2
-    call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cyl2")
+    call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cylinder_2")
 
     ! Write Chimera file for base pairs
     call Basepair_Chimera_Mesh(prob, geom, mesh)
@@ -741,14 +741,15 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     f_ori     = para_chimera_502_ori
     f_beveled = .true.
 
-    path = trim(prob.path_work1)//trim(prob.name_file)//"_"
+    if(mode == "cylinder_1") path = trim(prob.path_work1)//trim(prob.name_file)//"_04_"
+    if(mode == "cylinder_2") path = trim(prob.path_work1)//trim(prob.name_file)//"_05_"
     open(unit=502, file=trim(path)//trim(mode)//".bild", form="formatted")
 
     ! Cylinder radius
     radius = para_rad_helix + para_gap_helix / 2.0d0
 
     ! Write cylinder model base on edges
-    if(mode == "cyl1" .or. (mode == "cyl2" .and. f_beveled == .false.)) then
+    if(mode == "cylinder_1" .or. (mode == "cylinder_2" .and. f_beveled == .false.)) then
 
         write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
 
@@ -762,7 +763,7 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
             write(502, "(3f9.3$)"), pos_2(1:3)
             write(502, "(1f9.3 )"), radius
         end do
-    else if(mode == "cyl2" .and. f_beveled == .true.) then
+    else if(mode == "cylinder_2" .and. f_beveled == .true.) then
 
         do i = 1, geom.n_croL
 
@@ -854,7 +855,7 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     end do
 
     ! Print initial geometry with cylindrical model 1
-    if(mode == "cyl1") then
+    if(mode == "cylinder_1") then
 
         ! Write initial points
         write(502, "(a)"), ".color red"
@@ -2367,7 +2368,7 @@ subroutine Basepair_Chimera_Cross_Geometry(prob, geom)
     f_info = para_chimera_504_info
 
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=504, file=trim(path)//"_cross_geo_mod.bild", form="formatted")
+    open(unit=504, file=trim(path)//"_06_multi_line.bild", form="formatted")
 
     ! Write cross-sectional points
     write(504, "(a)"), ".color red"
@@ -2489,7 +2490,7 @@ subroutine Basepair_Chimera_Cross_Geometry(prob, geom)
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
-    open(unit=504, file=trim(path)//"_cross_geo_mod.dat", form="formatted")
+    open(unit=504, file=trim(path)//"_06_multi_line.dat", form="formatted")
 
     write(504, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
     write(504, "(a )"), 'VARIABLES = "X", "Y", "Z", "weight"'
@@ -2536,9 +2537,9 @@ subroutine Basepair_Write_Edge_Length(prob, geom)
     allocate(num_count(geom.n_croL))
 
     path = trim(prob.path_work1)
-    open(unit=505, file=trim(path)//"edge_length.txt", form="formatted")
+    open(unit=505, file=trim(path)//"TXT_Edge_Length.txt", form="formatted")
 
-    write(505, "(4a15)"), "Cross line", "Init line", "Cross-sec", "Edge length"
+    write(505, "(4a15)"), "Multi line", "Init line", "Section ID", "Edge length"
 
     ! The number of base pairs on each edge
     n_numbp = 0
@@ -2576,7 +2577,7 @@ subroutine Basepair_Write_Edge_Length(prob, geom)
     call Sort2(num_bp, num_count, n_numbp)
 
     write(505, "(a)")
-    write(505, "(2a15)"), "Edge length", "# of edges"
+    write(505, "(2a15)"), "Edge length", "# of multi lines"
 
     ! Write edge length and count
     max_edge = num_bp(1)

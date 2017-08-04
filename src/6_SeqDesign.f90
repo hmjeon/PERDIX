@@ -49,6 +49,7 @@ module SeqDesign
     private SeqDesign_Rebuild_Strand
     private SeqDesign_Build_Region_Staple
     private SeqDesign_Order_Staple
+    private SeqDesign_Print_14nt_Region_Simple
     private SeqDesign_Print_14nt_Region
     private SeqDesign_CirGraph_Count_Edge
     private SeqDesign_CirGraph_Init_Variable
@@ -130,7 +131,8 @@ subroutine SeqDesign_Design(prob, geom, mesh, dna)
 
     ! Print 14nt region with various representations
     if(para_max_cut_scaf == 0) then
-        call SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
+        !call SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
+        call SeqDesign_Print_14nt_Region_Simple(prob, geom, mesh, dna)
     end if
 
     ! Assign DNA sequence according to para_set_seq_scaf
@@ -3339,6 +3341,345 @@ end subroutine SeqDesign_Order_Staple
 ! ---------------------------------------------------------------------------------------
 
 ! Print 14nt region with various representations
+subroutine SeqDesign_Print_14nt_Region_Simple(prob, geom, mesh, dna)
+    type(ProbType), intent(in)    :: prob
+    type(GeomType), intent(in)    :: geom
+    type(MeshType), intent(in)    :: mesh
+    type(DNAType),  intent(inout) :: dna
+
+    type(RegionType), allocatable :: region(:)
+    integer,          allocatable :: region_14nt(:)
+    integer,          allocatable :: region_4nt(:)
+    integer,          allocatable :: scaf_base2idx(:)
+    type(GraphType)               :: graph
+
+    integer :: n_nt_14nt, n_nt_4nt, cn_tn, n_win, n_14nt, n_4nt, n_only_4nt, n_sec_14nt, n_sec_4nt
+    integer :: len_ave_stap, one_14nt, two_14nt, three_14nt, other_14nt, n_count(30)
+    integer :: i, j, k, base, n_region, n_edge, tot_14nt, tot_4nt
+    integer :: across1, across2, node, iniL
+    integer :: cir_rgb(3), cir_size
+    logical :: b_14nt, b_4nt
+    character(200) :: path
+
+    ! ==================================================
+    !
+    ! Intialize and setup the data structures
+    !
+    ! ==================================================
+    !
+    n_14nt   = 0; n_4nt    = 0; n_only_4nt = 0
+    one_14nt = 0; two_14nt = 0; three_14nt = 0; other_14nt = 0
+
+    n_nt_14nt = 0; n_nt_4nt = 0
+    len_ave_stap = 0
+
+    ! Initialize the variable for couting regions
+    allocate(region_14nt(dna.n_strand))
+    allocate(region_4nt(dna.n_strand))
+    region_14nt(:) = 0
+    region_4nt(:)  = 0
+    n_count(1:30)  = 0
+
+    ! Count total edges for circular graph
+    n_edge = SeqDesign_CirGraph_Count_Edge(dna)
+
+    ! Allocate and initialize variables for the circular graph
+    call SeqDesign_CirGraph_Init_Variable(dna, graph, n_edge)
+
+    ! Build scaffold index for bar and circular graph
+    allocate(scaf_base2idx(dna.n_base_scaf))
+    base = Mani_Go_Start_Base(dna, 1)
+    do i = 1, dna.n_base_scaf
+
+        scaf_base2idx(base)   = i       ! From base to index
+        graph.base2node(base) = i       ! From base to index
+        graph.node2base(i)    = base    ! From index to base
+
+        ! Node type depending on edge number
+        if(dna.top(base).node == -1) then
+            graph.node(base) = 0
+        else
+            graph.node(base) = mesh.node(dna.top(base).node).iniL
+        end if
+
+        base = dna.top(base).up
+    end do
+
+    ! Print progress
+    do i = 0, 11, 11
+        call Space(i, 6)
+        write(i, "(a)"), "6.7. Print 14nt seed with various representations"
+        call Space(i, 11)
+        write(i, "(a)"), "* The number of staple strands             : "&
+            //trim(adjustl(Int2Str(dna.n_stap)))
+        call Space(i, 11)
+        write(i, "(a)"), "* The number of total regions              : "&
+            //trim(adjustl(Int2Str(ubound(graph.edge, 1))))
+        call Space(i, 11)
+        write(i, "(a)"), "* Detailed strand region data"
+        write(i, "(a)")
+    end do
+
+    ! ==================================================
+    !
+    ! Calculate regions and # of staples
+    !
+    ! ==================================================
+    n_edge = 0
+    do i = 1, dna.n_strand
+
+        ! Only for staple strand
+        if(dna.strand(i).types == "scaf") then
+            ! ==================================================
+            ! For scaffold strand in bar graph - Graph #3
+            ! ==================================================
+            do j = 1, dna.strand(i).n_base
+                base = dna.strand(i).base(j)
+                node = dna.top(base).node
+                if(node /= -1) then
+                    iniL = mesh.node(node).iniL
+                else
+                    iniL = 0
+                end if
+            end do
+            cycle
+        end if
+
+        ! Count staple length
+        len_ave_stap = len_ave_stap + dna.strand(i).n_base
+
+        ! Count unpaired staple nucleotides if it contains Tn loop
+        cn_tn = 0
+        do j = 1, dna.strand(i).n_base
+            base = dna.strand(i).base(j)
+            if(dna.top(base).across == -1) cn_tn = cn_tn + 1
+        end do
+
+        ! Build region of staple strands
+        allocate(region(dna.strand(i).n_base))
+        call SeqDesign_Build_Region_Staple(dna, i, region, n_region)
+
+        ! ==================================================
+        ! Count 14nt regions - Graph #2
+        ! ==================================================
+        n_sec_14nt = 0;   n_sec_4nt  = 0
+        b_14nt = .false.; b_4nt= .false.
+
+        do j = 1, n_region
+            if( (region(j).types == 1 .and. region(j).length + 1 >= 14) .or. &
+                (region(j).types == 2 .and. region(j).length + 2 >= 14) ) then
+
+                ! Just check one 14nt seeds
+                if(b_14nt == .false.) then
+                    n_14nt = n_14nt + 1
+                    b_14nt = .true.
+                end if
+
+                ! All 14nt seeds in the region
+                n_sec_14nt = n_sec_14nt + 1
+                
+                ! Count # of nucleotides in 14nt seed domains
+                if(region(j).types == 1) n_nt_14nt = n_nt_14nt + region(j).length + 1
+                if(region(j).types == 2) n_nt_14nt = n_nt_14nt + region(j).length + 2
+            end if
+
+            ! Global 14nt region couting
+            if(region(j).length + 2 <= 30) then     ! There are no region longer than 30bp length
+                if(region(j).types == 1) n_count(region(j).length + 1) = n_count(region(j).length + 1) + 1
+                if(region(j).types == 2) n_count(region(j).length + 2) = n_count(region(j).length + 2) + 1
+
+                ! Find two crossovers region, 2nt region
+                if(j == 1) cycle 
+                if(dna.top(dna.top(region(j  ).sta_base).dn).across == -1) cycle
+                if(dna.top(dna.top(region(j-1).end_base).up).across == -1) cycle
+
+                n_win = (region(j).sta_pos -1) - (region(j-1).end_pos + 1) - 1
+                if(n_win >= 1) n_count(n_win) = n_count(n_win) + 1
+            end if
+        end do
+
+        ! Count 4nt regions
+        do j = 1, n_region
+            if( (region(j).types == 1 .and. region(j).length + 1 <= 4) .or. &
+                (region(j).types == 2 .and. region(j).length + 2 <= 4) ) then
+
+                ! Just check one 4nt seeds
+                if(b_4nt == .false.) then
+                    n_4nt = n_4nt + 1
+                    b_4nt = .true.
+                end if
+
+                ! # of 4nt seeds in the region
+                n_sec_4nt = n_sec_4nt + 1
+
+                ! Count # of nucleotides in 4nt seed domains
+                if(region(j).types == 1) n_nt_4nt = n_nt_4nt + region(j).length + 1
+                if(region(j).types == 2) n_nt_4nt = n_nt_4nt + region(j).length + 2
+            end if
+        end do
+
+        if(n_sec_14nt == 1) region_14nt(i) = 1
+        if(n_sec_14nt == 2) region_14nt(i) = 2
+        if(n_sec_14nt == 3) region_14nt(i) = 3
+        if(n_sec_14nt == 4) region_14nt(i) = 4
+
+        if(n_sec_4nt  == 1) region_4nt(i)  = 1
+        if(n_sec_4nt  == 2) region_4nt(i)  = 2
+        if(n_sec_4nt  == 3) region_4nt(i)  = 3
+        if(n_sec_4nt  == 4) region_4nt(i)  = 4
+
+        ! ==================================================
+        ! For staple strand in bar graph - Graph #3
+        ! ==================================================
+        ! Find the starting point (down == -1)
+        base = Mani_Go_Start_Base(dna, i)
+        do j = 1, dna.strand(i).n_base
+            across1 = dna.top(base).across
+            base = dna.top(base).up
+        end do
+
+        ! ==================================================
+        ! Build node and edge for circular graph - Graph #4
+        ! ==================================================
+        !
+        n_sec_14nt = 0
+        do j = 1, n_region
+
+            ! Set node type with different color
+            base = dna.top(region(j).cen_base).across
+
+            ! Set node type depending on region size
+            if( (region(j).types == 1 .and. region(j).length + 1 >= 14) .or. &
+                (region(j).types == 2 .and. region(j).length + 2 >= 14) ) then
+
+                n_sec_14nt = n_sec_14nt + 1
+                !if(n_sec_14nt == 1) graph.node(base) = 1
+                !if(n_sec_14nt == 2) graph.node(base) = 2
+            else if( (region(j).types == 1 .and. region(j).length + 1 <= 4) .or. &
+                     (region(j).types == 2 .and. region(j).length + 2 <= 4) ) then
+                !graph.node(base) = 3
+            else
+                !graph.node(base) = 0
+            end if
+
+            ! Set Edge data
+            if(j /= n_region) then
+
+                n_edge = n_edge + 1
+
+                ! Set edge in graph
+                graph.edge(n_edge, 1) = dna.top(region(j  ).cen_base).across
+                graph.edge(n_edge, 2) = dna.top(region(j+1).cen_base).across
+            end if
+        end do
+
+        ! Update variables
+        dna.strand(i).n_14nt = n_sec_14nt
+        dna.strand(i).n_4nt  = n_sec_4nt
+        dna.len_ave_stap     = dble(len_ave_stap)/dble(dna.n_stap)
+
+        ! Check 14nt only region
+        if(b_14nt == .false. .and. b_4nt == .true.) then
+            n_only_4nt = n_only_4nt + 1
+        end if
+
+        ! Print information on region of staple strands
+        do k = 0, 11, 11
+
+            write(k, "(i$    )"), i
+            write(k, "(a, i4$)"), " - th staple, # of total bases : ", dna.strand(i).n_base
+            write(k, "(a, i2$)"), ", # of bases in poly T : ", cn_tn
+            write(k, "(a, l$ )"), ", 14nt region("//trim(adjustl(Int2Str(n_sec_14nt)))//") - ", b_14nt
+            write(k, "(a, l  )"), ", 4nt region("//trim(adjustl(Int2Str(n_sec_4nt)))//") - ", b_4nt
+
+            do j = 1, n_region
+                write(k, "(i20, a$)"), j, " - th region"
+
+                if(region(j).types == 1) write(k, "(a$)"), " [vertex], "
+                if(region(j).types == 2) write(k, "(a$)"), " [ edge ], "
+
+                if(region(j).types == 1) write(k, "(a, 2(i2, a)$)"), "length : ", region(j).length, "(", region(j).length+1, ")"
+                if(region(j).types == 2) write(k, "(a, 2(i2, a)$)"), "length : ", region(j).length, "(", region(j).length+2, ")"
+
+                write(k, "(a, i3$)"), ", start pos : ", region(j).sta_pos
+                write(k, "(a, i3 )"), ", end pos : ",   region(j).end_pos
+            end do
+            write(k, "(a)")
+        end do
+
+        ! Deallocate memory
+        deallocate(region)
+    end do
+
+    ! Update global nucleotides in 14nt and 4nt dsDNA domains
+    dna.n_nt_14nt = n_nt_14nt
+    dna.n_nt_4nt  = n_nt_4nt
+
+    ! ==================================================
+    ! Print 14nt regions - Graph #2
+    ! ==================================================
+    !
+    tot_4nt  = 0
+    tot_14nt = 0
+    do i = 1, dna.n_strand
+        if(region_14nt(i) == 1) one_14nt   = one_14nt   + 1
+        if(region_14nt(i) == 2) two_14nt   = two_14nt   + 1
+        if(region_14nt(i) == 3) three_14nt = three_14nt + 1
+        if(region_14nt(i) == 4) other_14nt = other_14nt + 1
+
+        tot_14nt = tot_14nt + region_14nt(i)
+        tot_4nt  = tot_4nt  + region_4nt(i)
+    end do
+
+    ! Update n_14nt and n_4nt seeds in dna data
+    dna.n_14nt       = n_14nt
+    dna.n_s14nt      = two_14nt
+    dna.n_4nt        = n_4nt
+    dna.n_only_4nt   = n_only_4nt
+    dna.n_tot_region = n_edge
+    dna.n_tot_14nt   = tot_14nt
+    dna.n_tot_4nt    = tot_4nt
+
+    ! Print progress
+    do i = 0, 11, 11
+
+        call Space(i, 11)
+        write(i, "(a)"), "* The number of staples with 14nt regions  : "&
+            //trim(adjustl(Int2Str(n_14nt)))
+        call Space(i, 16)
+        write(i, "(a)"), "* One   14nt seeds : "//trim(adjustl(Int2Str(one_14nt)))
+        call Space(i, 16)
+        write(i, "(a)"), "* Two   14nt seeds : "//trim(adjustl(Int2Str(two_14nt)))
+        call Space(i, 16)
+        write(i, "(a)"), "* Three 14nt seeds : "//trim(adjustl(Int2Str(three_14nt)))
+        call Space(i, 16)
+        write(i, "(a)"), "* More  14nt seeds : "//trim(adjustl(Int2Str(other_14nt)))
+        call Space(i, 11)
+        write(i, "(a)")
+
+        call Space(i, 11)
+        write(i, "(a)"), "* Length of dsDNA domain formed with scaffold (bp)"
+        do k = 1, 25
+            call Space(i, 16)
+            write(i, "(a, i3, a)"), "* ", k, &
+                " bp dsDNA domain : "//trim(adjustl(Int2Str(n_count(k))))
+        end do
+        write(i, "(a)")
+    end do
+
+    ! Deallocate memory
+    deallocate(region_14nt)
+    deallocate(region_4nt)
+    deallocate(scaf_base2idx)
+    deallocate(graph.node2base)
+    deallocate(graph.base2node)
+    deallocate(graph.node)
+    deallocate(graph.edge)
+end subroutine SeqDesign_Print_14nt_Region_Simple
+
+! ---------------------------------------------------------------------------------------
+
+! Print 14nt region with various representations
 subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
     type(ProbType), intent(in)    :: prob
     type(GeomType), intent(in)    :: geom
@@ -4423,7 +4764,7 @@ subroutine SeqDesign_Write_Strand(prob, geom, mesh, dna)
     if(para_write_701 == .false.) return
 
     path = trim(prob.path_work1)
-    open(unit=701, file=trim(path)//"strand.txt",   form="formatted")
+    open(unit=701, file=trim(path)//"TXT_Sequence.txt",   form="formatted")
 
     write(701, "(a)")
     write(701, "(a)"), "--------------------------------------------------------------------"
@@ -5895,7 +6236,7 @@ subroutine SeqDesign_Chimera_Atom(prob, dna)
     f_axis = para_chimera_axis
 
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=702, file=trim(path)//"_atom_nick.bild", form="formatted")
+    open(unit=702, file=trim(path)//"_09_atomic_model.bild", form="formatted")
 
     ! For all bases
     do i = 1, dna.n_strand
@@ -5970,7 +6311,7 @@ subroutine SeqDesign_Chimera_Atom(prob, dna)
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
-    open(unit=702, file=trim(path)//"_atom_nick.dat", form="formatted")
+    open(unit=702, file=trim(path)//"_09_atomic_model.dat", form="formatted")
 
     write(702, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
 
@@ -6198,8 +6539,8 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
 
     ! File open for route step
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=703, file=trim(path)//"_route6_scaf.bild", form="formatted")
-    open(unit=704, file=trim(path)//"_route6_stap.bild", form="formatted")
+    open(unit=703, file=trim(path)//"_10_route_scaf.bild", form="formatted")
+    open(unit=704, file=trim(path)//"_11_route_stap.bild", form="formatted")
 
     ! ==================================================
     ! For scaffold strand
@@ -6411,8 +6752,8 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
     end if
 
     path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
-    open(unit=703, file=trim(path)//"_route6_scaf.dat", form="formatted")
-    open(unit=704, file=trim(path)//"_route6_stap.dat", form="formatted")
+    open(unit=703, file=trim(path)//"_10_route_scaf.dat", form="formatted")
+    open(unit=704, file=trim(path)//"_11_route_stap.dat", form="formatted")
 
     ! For scaffold bases
     write(703, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
@@ -6484,7 +6825,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
 
     ! File open for sequence design
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=705, file=trim(path)//"_seq_design.bild", form="formatted")
+    open(unit=705, file=trim(path)//"_12_route_all.bild", form="formatted")
 
     if(para_output_Tecplot == "on") then
         allocate(base_scaf(dna.n_base_scaf*2, 3))
@@ -6768,7 +7109,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
-    open(unit=705, file=trim(path)//"_sequence_design.dat", form="formatted")
+    open(unit=705, file=trim(path)//"_12_route_all.dat", form="formatted")
     open(unit=706, file=trim(path)//"_init_geo_col.dat",    form="formatted")
 
     ! For scaffold bases

@@ -829,7 +829,7 @@ subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
     f_info = para_chimera_302_info
 
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=302, file=trim(path)//"_init_geo_local.bild", form="formatted")
+    open(unit=302, file=trim(path)//"_02_init_geo_local.bild", form="formatted")
 
     ! Write edges
     write(302, "(a)"), ".color dark green"
@@ -924,7 +924,7 @@ subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
-    open(unit=302, file=trim(path)//"_init_geo_local.dat", form="formatted")
+    open(unit=302, file=trim(path)//"_02_init_geo_local.dat", form="formatted")
 
     write(302, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
     write(302, "(a )"), 'VARIABLES = "X", "Y", "Z", "t1", "t2", "t3"'
@@ -1403,7 +1403,7 @@ subroutine ModGeo_Chimera_Sep_Geometry(prob, geom, mode)
     f_info = para_chimera_303_info
 
     path = trim(prob.path_work1)//trim(prob.name_file)//"_"
-    open(unit=303, file=trim(path)//trim(mode)//"_geo.bild", form="formatted")
+    open(unit=303, file=trim(path)//"03_sep_line.bild", form="formatted")
 
     ! Write seperated points
     write(303, "(a)"), ".color red"
@@ -1501,7 +1501,7 @@ subroutine ModGeo_Chimera_Sep_Geometry(prob, geom, mode)
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
-    open(unit=303, file=trim(path)//"_sep_geo.dat", form="formatted")
+    open(unit=303, file=trim(path)//"_03_sep_line.dat", form="formatted")
 
     write(303, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
     write(303, "(a )"), 'VARIABLES = "X", "Y", "Z", "t1", "t2", "t3"'
