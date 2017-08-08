@@ -57,9 +57,9 @@ module Exam_2D_Open
     public Exam_Open2D_Plate_Eng        ! 21. Plate with eng mesh
 
     ! Different edge lengths
-    public Exam_Open2D_Cross_42bp       ! 22. Cross with 42-bp edge length
-    public Exam_Open2D_Cross_63bp       ! 23. Cross with 63-bp edge length
-    public Exam_Open2D_Cross_84bp       ! 24. Cross with 84-bp edge length
+    public Exam_Open2D_L_Shape_42bp     ! 22. L-shape with 42-bp edge length
+    public Exam_Open2D_L_Shape_63bp     ! 23. L-shape with 63-bp edge length
+    public Exam_Open2D_L_Shape_84bp     ! 24. L-shape with 84-bp edge length
 
     ! Others
     public Exam_Open2D_Stickman             ! 2D stickman
@@ -1772,8 +1772,8 @@ end subroutine Exam_Open2D_Plate_Eng
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of cross with 42-bp edge length
-subroutine Exam_Open2D_Cross_42bp(prob, geom)
+! Example of L-shape with 42-bp edge length
+subroutine Exam_Open2D_L_Shape_42bp(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -1785,8 +1785,8 @@ subroutine Exam_Open2D_Cross_42bp(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Cross 42bp"
-    prob.name_file = "22_Cross_42bp"//&
+    prob.name_prob = "L-shape 42bp"
+    prob.name_file = "22_L_shape_42bp"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -1796,90 +1796,54 @@ subroutine Exam_Open2D_Cross_42bp(prob, geom)
     !para_const_edge_mesh = "on"
 
     ! The number of points and faces
-    geom.n_iniP = 33
-    geom.n_face = 20
+    geom.n_iniP = 21
+    geom.n_face = 12
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
     ! Set point position vectors
-    geom.iniP( 1).pos(1:3) = [ -1.0d0, -3.0d0, 0.0000d0 ]
-    geom.iniP( 2).pos(1:3) = [  0.0d0, -3.0d0, 0.0000d0 ]
-    geom.iniP( 3).pos(1:3) = [  1.0d0, -3.0d0, 0.0000d0 ]
-    geom.iniP( 4).pos(1:3) = [ -1.0d0, -2.0d0, 0.0000d0 ]
-    geom.iniP( 5).pos(1:3) = [  0.0d0, -2.0d0, 0.0000d0 ]
-    geom.iniP( 6).pos(1:3) = [  1.0d0, -2.0d0, 0.0000d0 ]
-
-    geom.iniP( 7).pos(1:3) = [ -3.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP( 8).pos(1:3) = [ -2.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP( 9).pos(1:3) = [ -1.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP(10).pos(1:3) = [  0.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP(11).pos(1:3) = [  1.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP(12).pos(1:3) = [  2.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP(13).pos(1:3) = [  3.0d0, -1.0d0, 0.0000d0 ]
-
-    geom.iniP(14).pos(1:3) = [ -3.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(15).pos(1:3) = [ -2.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(16).pos(1:3) = [ -1.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(17).pos(1:3) = [  0.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(18).pos(1:3) = [  1.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(19).pos(1:3) = [  2.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(20).pos(1:3) = [  3.0d0,  0.0d0, 0.0000d0 ]
-
-    geom.iniP(21).pos(1:3) = [ -3.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(22).pos(1:3) = [ -2.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(23).pos(1:3) = [ -1.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(24).pos(1:3) = [  0.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(25).pos(1:3) = [  1.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(26).pos(1:3) = [  2.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(27).pos(1:3) = [  3.0d0,  1.0d0, 0.0000d0 ]
-
-    geom.iniP(28).pos(1:3) = [ -1.0d0,  2.0d0, 0.0000d0 ]
-    geom.iniP(29).pos(1:3) = [  0.0d0,  2.0d0, 0.0000d0 ]
-    geom.iniP(30).pos(1:3) = [  1.0d0,  2.0d0, 0.0000d0 ]
-    geom.iniP(31).pos(1:3) = [ -1.0d0,  3.0d0, 0.0000d0 ]
-    geom.iniP(32).pos(1:3) = [  0.0d0,  3.0d0, 0.0000d0 ]
-    geom.iniP(33).pos(1:3) = [  1.0d0,  3.0d0, 0.0000d0 ]
-
-    ! Rotate geometry
-    theta = 45.0d0 * pi / 180.0d0
-    R_matrix(1,1) = dcos(theta)
-    R_matrix(1,2) = -dsin(theta)
-    R_matrix(2,1) = dsin(theta)
-    R_matrix(2,2) = dcos(theta)
-
-    do i = 1, 33
-        geom.iniP(i).pos(1:2) = matmul(R_matrix, geom.iniP(i).pos(1:2))
-    end do
+    geom.iniP( 1).pos(1:3) = [ -34.2857d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [ -14.2857d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [   5.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [  25.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [  45.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [ -34.2857d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [ -14.2857d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [   5.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [  25.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [  45.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [ -34.2857d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [ -14.2857d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [   5.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  25.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [  45.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [ -34.2857d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [ -14.2857d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [   5.7143d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [ -34.2857d0,  45.7143d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [ -14.2857d0,  45.7143d0, 0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [   5.7143d0,  45.7143d0, 0.0000d0 ]
 
     ! Set point position vectors
-    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  1,  2,  5,  4 ]
-    geom.face( 2).n_poi = 4; allocate(geom.face( 2).poi(4)); geom.face( 2).poi(1:4) = [  2,  3,  6,  5 ]
-    geom.face( 3).n_poi = 4; allocate(geom.face( 3).poi(4)); geom.face( 3).poi(1:4) = [  4,  5, 10,  9 ]
-    geom.face( 4).n_poi = 4; allocate(geom.face( 4).poi(4)); geom.face( 4).poi(1:4) = [  5,  6, 11, 10 ]
-    geom.face( 5).n_poi = 4; allocate(geom.face( 5).poi(4)); geom.face( 5).poi(1:4) = [  7,  8, 15, 14 ]
-    geom.face( 6).n_poi = 4; allocate(geom.face( 6).poi(4)); geom.face( 6).poi(1:4) = [  8,  9, 16, 15 ]
-    geom.face( 7).n_poi = 4; allocate(geom.face( 7).poi(4)); geom.face( 7).poi(1:4) = [  9, 10, 17, 16 ]
-    geom.face( 8).n_poi = 4; allocate(geom.face( 8).poi(4)); geom.face( 8).poi(1:4) = [ 10, 11, 18, 17 ]
-    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [ 11, 12, 19, 18 ]
-    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [ 12, 13, 20, 19 ]
-    geom.face(11).n_poi = 4; allocate(geom.face(11).poi(4)); geom.face(11).poi(1:4) = [ 14, 15, 22, 21 ]
-    geom.face(12).n_poi = 4; allocate(geom.face(12).poi(4)); geom.face(12).poi(1:4) = [ 15, 16, 23, 22 ]
-
-    geom.face(13).n_poi = 4; allocate(geom.face(13).poi(4)); geom.face(13).poi(1:4) = [ 16, 17, 24, 23 ]
-    geom.face(14).n_poi = 4; allocate(geom.face(14).poi(4)); geom.face(14).poi(1:4) = [ 17, 18, 25, 24 ]
-    geom.face(15).n_poi = 4; allocate(geom.face(15).poi(4)); geom.face(15).poi(1:4) = [ 18, 19, 26, 25 ]
-    geom.face(16).n_poi = 4; allocate(geom.face(16).poi(4)); geom.face(16).poi(1:4) = [ 19, 20, 27, 26 ]
-    geom.face(17).n_poi = 4; allocate(geom.face(17).poi(4)); geom.face(17).poi(1:4) = [ 23, 24, 29, 28 ]
-    geom.face(18).n_poi = 4; allocate(geom.face(18).poi(4)); geom.face(18).poi(1:4) = [ 24, 25, 30, 29 ]
-    geom.face(19).n_poi = 4; allocate(geom.face(19).poi(4)); geom.face(19).poi(1:4) = [ 28, 29, 32, 31 ]
-    geom.face(20).n_poi = 4; allocate(geom.face(20).poi(4)); geom.face(20).poi(1:4) = [ 29, 30, 33, 32 ]
-end subroutine Exam_Open2D_Cross_42bp
+    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  1,  2,  7,  6 ]
+    geom.face( 2).n_poi = 4; allocate(geom.face( 2).poi(4)); geom.face( 2).poi(1:4) = [  2,  3,  8,  7 ]
+    geom.face( 3).n_poi = 4; allocate(geom.face( 3).poi(4)); geom.face( 3).poi(1:4) = [  3,  4,  9,  8 ]
+    geom.face( 4).n_poi = 4; allocate(geom.face( 4).poi(4)); geom.face( 4).poi(1:4) = [  4,  5, 10,  9 ]
+    geom.face( 5).n_poi = 4; allocate(geom.face( 5).poi(4)); geom.face( 5).poi(1:4) = [  6,  7, 12, 11 ]
+    geom.face( 6).n_poi = 4; allocate(geom.face( 6).poi(4)); geom.face( 6).poi(1:4) = [  7,  8, 13, 12 ]
+    geom.face( 7).n_poi = 4; allocate(geom.face( 7).poi(4)); geom.face( 7).poi(1:4) = [  8,  9, 14, 13 ]
+    geom.face( 8).n_poi = 4; allocate(geom.face( 8).poi(4)); geom.face( 8).poi(1:4) = [  9, 10, 15, 14 ]
+    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [ 11, 12, 17, 16 ]
+    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [ 12, 13, 18, 17 ]
+    geom.face(11).n_poi = 4; allocate(geom.face(11).poi(4)); geom.face(11).poi(1:4) = [ 16, 17, 20, 19 ]
+    geom.face(12).n_poi = 4; allocate(geom.face(12).poi(4)); geom.face(12).poi(1:4) = [ 17, 18, 21, 20 ]
+end subroutine Exam_Open2D_L_Shape_42bp
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of cross with 63-bp edge length
-subroutine Exam_Open2D_Cross_63bp(prob, geom)
+! Example of L-shape with 63-bp edge length
+subroutine Exam_Open2D_L_Shape_63bp(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -1891,8 +1855,8 @@ subroutine Exam_Open2D_Cross_63bp(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Cross 63bp"
-    prob.name_file = "23_Cross_63bp"//&
+    prob.name_prob = "L-shape 63bp"
+    prob.name_file = "23_L_shape_63bp"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -1902,90 +1866,54 @@ subroutine Exam_Open2D_Cross_63bp(prob, geom)
     !para_const_edge_mesh = "on"
 
     ! The number of points and faces
-    geom.n_iniP = 33
-    geom.n_face = 20
+    geom.n_iniP = 21
+    geom.n_face = 12
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
     ! Set point position vectors
-    geom.iniP( 1).pos(1:3) = [ -1.0d0, -3.0d0, 0.0000d0 ]
-    geom.iniP( 2).pos(1:3) = [  0.0d0, -3.0d0, 0.0000d0 ]
-    geom.iniP( 3).pos(1:3) = [  1.0d0, -3.0d0, 0.0000d0 ]
-    geom.iniP( 4).pos(1:3) = [ -1.0d0, -2.0d0, 0.0000d0 ]
-    geom.iniP( 5).pos(1:3) = [  0.0d0, -2.0d0, 0.0000d0 ]
-    geom.iniP( 6).pos(1:3) = [  1.0d0, -2.0d0, 0.0000d0 ]
-
-    geom.iniP( 7).pos(1:3) = [ -3.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP( 8).pos(1:3) = [ -2.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP( 9).pos(1:3) = [ -1.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP(10).pos(1:3) = [  0.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP(11).pos(1:3) = [  1.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP(12).pos(1:3) = [  2.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP(13).pos(1:3) = [  3.0d0, -1.0d0, 0.0000d0 ]
-
-    geom.iniP(14).pos(1:3) = [ -3.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(15).pos(1:3) = [ -2.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(16).pos(1:3) = [ -1.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(17).pos(1:3) = [  0.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(18).pos(1:3) = [  1.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(19).pos(1:3) = [  2.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(20).pos(1:3) = [  3.0d0,  0.0d0, 0.0000d0 ]
-
-    geom.iniP(21).pos(1:3) = [ -3.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(22).pos(1:3) = [ -2.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(23).pos(1:3) = [ -1.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(24).pos(1:3) = [  0.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(25).pos(1:3) = [  1.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(26).pos(1:3) = [  2.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(27).pos(1:3) = [  3.0d0,  1.0d0, 0.0000d0 ]
-
-    geom.iniP(28).pos(1:3) = [ -1.0d0,  2.0d0, 0.0000d0 ]
-    geom.iniP(29).pos(1:3) = [  0.0d0,  2.0d0, 0.0000d0 ]
-    geom.iniP(30).pos(1:3) = [  1.0d0,  2.0d0, 0.0000d0 ]
-    geom.iniP(31).pos(1:3) = [ -1.0d0,  3.0d0, 0.0000d0 ]
-    geom.iniP(32).pos(1:3) = [  0.0d0,  3.0d0, 0.0000d0 ]
-    geom.iniP(33).pos(1:3) = [  1.0d0,  3.0d0, 0.0000d0 ]
-
-    ! Rotate geometry
-    theta = 45.0d0 * pi / 180.0d0
-    R_matrix(1,1) = dcos(theta)
-    R_matrix(1,2) = -dsin(theta)
-    R_matrix(2,1) = dsin(theta)
-    R_matrix(2,2) = dcos(theta)
-
-    do i = 1, 33
-        geom.iniP(i).pos(1:2) = matmul(R_matrix, geom.iniP(i).pos(1:2))
-    end do
+    geom.iniP( 1).pos(1:3) = [ -34.2857d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [ -14.2857d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [   5.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [  25.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [  45.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [ -34.2857d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [ -14.2857d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [   5.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [  25.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [  45.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [ -34.2857d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [ -14.2857d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [   5.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  25.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [  45.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [ -34.2857d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [ -14.2857d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [   5.7143d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [ -34.2857d0,  45.7143d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [ -14.2857d0,  45.7143d0, 0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [   5.7143d0,  45.7143d0, 0.0000d0 ]
 
     ! Set point position vectors
-    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  1,  2,  5,  4 ]
-    geom.face( 2).n_poi = 4; allocate(geom.face( 2).poi(4)); geom.face( 2).poi(1:4) = [  2,  3,  6,  5 ]
-    geom.face( 3).n_poi = 4; allocate(geom.face( 3).poi(4)); geom.face( 3).poi(1:4) = [  4,  5, 10,  9 ]
-    geom.face( 4).n_poi = 4; allocate(geom.face( 4).poi(4)); geom.face( 4).poi(1:4) = [  5,  6, 11, 10 ]
-    geom.face( 5).n_poi = 4; allocate(geom.face( 5).poi(4)); geom.face( 5).poi(1:4) = [  7,  8, 15, 14 ]
-    geom.face( 6).n_poi = 4; allocate(geom.face( 6).poi(4)); geom.face( 6).poi(1:4) = [  8,  9, 16, 15 ]
-    geom.face( 7).n_poi = 4; allocate(geom.face( 7).poi(4)); geom.face( 7).poi(1:4) = [  9, 10, 17, 16 ]
-    geom.face( 8).n_poi = 4; allocate(geom.face( 8).poi(4)); geom.face( 8).poi(1:4) = [ 10, 11, 18, 17 ]
-    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [ 11, 12, 19, 18 ]
-    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [ 12, 13, 20, 19 ]
-    geom.face(11).n_poi = 4; allocate(geom.face(11).poi(4)); geom.face(11).poi(1:4) = [ 14, 15, 22, 21 ]
-    geom.face(12).n_poi = 4; allocate(geom.face(12).poi(4)); geom.face(12).poi(1:4) = [ 15, 16, 23, 22 ]
-
-    geom.face(13).n_poi = 4; allocate(geom.face(13).poi(4)); geom.face(13).poi(1:4) = [ 16, 17, 24, 23 ]
-    geom.face(14).n_poi = 4; allocate(geom.face(14).poi(4)); geom.face(14).poi(1:4) = [ 17, 18, 25, 24 ]
-    geom.face(15).n_poi = 4; allocate(geom.face(15).poi(4)); geom.face(15).poi(1:4) = [ 18, 19, 26, 25 ]
-    geom.face(16).n_poi = 4; allocate(geom.face(16).poi(4)); geom.face(16).poi(1:4) = [ 19, 20, 27, 26 ]
-    geom.face(17).n_poi = 4; allocate(geom.face(17).poi(4)); geom.face(17).poi(1:4) = [ 23, 24, 29, 28 ]
-    geom.face(18).n_poi = 4; allocate(geom.face(18).poi(4)); geom.face(18).poi(1:4) = [ 24, 25, 30, 29 ]
-    geom.face(19).n_poi = 4; allocate(geom.face(19).poi(4)); geom.face(19).poi(1:4) = [ 28, 29, 32, 31 ]
-    geom.face(20).n_poi = 4; allocate(geom.face(20).poi(4)); geom.face(20).poi(1:4) = [ 29, 30, 33, 32 ]
-end subroutine Exam_Open2D_Cross_63bp
+    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  1,  2,  7,  6 ]
+    geom.face( 2).n_poi = 4; allocate(geom.face( 2).poi(4)); geom.face( 2).poi(1:4) = [  2,  3,  8,  7 ]
+    geom.face( 3).n_poi = 4; allocate(geom.face( 3).poi(4)); geom.face( 3).poi(1:4) = [  3,  4,  9,  8 ]
+    geom.face( 4).n_poi = 4; allocate(geom.face( 4).poi(4)); geom.face( 4).poi(1:4) = [  4,  5, 10,  9 ]
+    geom.face( 5).n_poi = 4; allocate(geom.face( 5).poi(4)); geom.face( 5).poi(1:4) = [  6,  7, 12, 11 ]
+    geom.face( 6).n_poi = 4; allocate(geom.face( 6).poi(4)); geom.face( 6).poi(1:4) = [  7,  8, 13, 12 ]
+    geom.face( 7).n_poi = 4; allocate(geom.face( 7).poi(4)); geom.face( 7).poi(1:4) = [  8,  9, 14, 13 ]
+    geom.face( 8).n_poi = 4; allocate(geom.face( 8).poi(4)); geom.face( 8).poi(1:4) = [  9, 10, 15, 14 ]
+    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [ 11, 12, 17, 16 ]
+    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [ 12, 13, 18, 17 ]
+    geom.face(11).n_poi = 4; allocate(geom.face(11).poi(4)); geom.face(11).poi(1:4) = [ 16, 17, 20, 19 ]
+    geom.face(12).n_poi = 4; allocate(geom.face(12).poi(4)); geom.face(12).poi(1:4) = [ 17, 18, 21, 20 ]
+end subroutine Exam_Open2D_L_Shape_63bp
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of cross with 84-bp edge length
-subroutine Exam_Open2D_Cross_84bp(prob, geom)
+! Example of L-shape with 84-bp edge length
+subroutine Exam_Open2D_L_Shape_84bp(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -1997,8 +1925,8 @@ subroutine Exam_Open2D_Cross_84bp(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Cross 84bp"
-    prob.name_file = "24_Cross_84bp"//&
+    prob.name_prob = "L-shape 84bp"
+    prob.name_file = "24_L_shape_84bp"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -2008,85 +1936,49 @@ subroutine Exam_Open2D_Cross_84bp(prob, geom)
     !para_const_edge_mesh = "on"
 
     ! The number of points and faces
-    geom.n_iniP = 33
-    geom.n_face = 20
+    geom.n_iniP = 21
+    geom.n_face = 12
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
     ! Set point position vectors
-    geom.iniP( 1).pos(1:3) = [ -1.0d0, -3.0d0, 0.0000d0 ]
-    geom.iniP( 2).pos(1:3) = [  0.0d0, -3.0d0, 0.0000d0 ]
-    geom.iniP( 3).pos(1:3) = [  1.0d0, -3.0d0, 0.0000d0 ]
-    geom.iniP( 4).pos(1:3) = [ -1.0d0, -2.0d0, 0.0000d0 ]
-    geom.iniP( 5).pos(1:3) = [  0.0d0, -2.0d0, 0.0000d0 ]
-    geom.iniP( 6).pos(1:3) = [  1.0d0, -2.0d0, 0.0000d0 ]
-
-    geom.iniP( 7).pos(1:3) = [ -3.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP( 8).pos(1:3) = [ -2.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP( 9).pos(1:3) = [ -1.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP(10).pos(1:3) = [  0.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP(11).pos(1:3) = [  1.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP(12).pos(1:3) = [  2.0d0, -1.0d0, 0.0000d0 ]
-    geom.iniP(13).pos(1:3) = [  3.0d0, -1.0d0, 0.0000d0 ]
-
-    geom.iniP(14).pos(1:3) = [ -3.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(15).pos(1:3) = [ -2.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(16).pos(1:3) = [ -1.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(17).pos(1:3) = [  0.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(18).pos(1:3) = [  1.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(19).pos(1:3) = [  2.0d0,  0.0d0, 0.0000d0 ]
-    geom.iniP(20).pos(1:3) = [  3.0d0,  0.0d0, 0.0000d0 ]
-
-    geom.iniP(21).pos(1:3) = [ -3.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(22).pos(1:3) = [ -2.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(23).pos(1:3) = [ -1.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(24).pos(1:3) = [  0.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(25).pos(1:3) = [  1.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(26).pos(1:3) = [  2.0d0,  1.0d0, 0.0000d0 ]
-    geom.iniP(27).pos(1:3) = [  3.0d0,  1.0d0, 0.0000d0 ]
-
-    geom.iniP(28).pos(1:3) = [ -1.0d0,  2.0d0, 0.0000d0 ]
-    geom.iniP(29).pos(1:3) = [  0.0d0,  2.0d0, 0.0000d0 ]
-    geom.iniP(30).pos(1:3) = [  1.0d0,  2.0d0, 0.0000d0 ]
-    geom.iniP(31).pos(1:3) = [ -1.0d0,  3.0d0, 0.0000d0 ]
-    geom.iniP(32).pos(1:3) = [  0.0d0,  3.0d0, 0.0000d0 ]
-    geom.iniP(33).pos(1:3) = [  1.0d0,  3.0d0, 0.0000d0 ]
-
-    ! Rotate geometry
-    theta = 45.0d0 * pi / 180.0d0
-    R_matrix(1,1) = dcos(theta)
-    R_matrix(1,2) = -dsin(theta)
-    R_matrix(2,1) = dsin(theta)
-    R_matrix(2,2) = dcos(theta)
-
-    do i = 1, 33
-        geom.iniP(i).pos(1:2) = matmul(R_matrix, geom.iniP(i).pos(1:2))
-    end do
+    geom.iniP( 1).pos(1:3) = [ -34.2857d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [ -14.2857d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [   5.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [  25.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [  45.7143d0, -34.2857d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [ -34.2857d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [ -14.2857d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [   5.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [  25.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [  45.7143d0, -14.2857d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [ -34.2857d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [ -14.2857d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [   5.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  25.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [  45.7143d0,   5.7143d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [ -34.2857d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [ -14.2857d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [   5.7143d0,  25.7143d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [ -34.2857d0,  45.7143d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [ -14.2857d0,  45.7143d0, 0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [   5.7143d0,  45.7143d0, 0.0000d0 ]
 
     ! Set point position vectors
-    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  1,  2,  5,  4 ]
-    geom.face( 2).n_poi = 4; allocate(geom.face( 2).poi(4)); geom.face( 2).poi(1:4) = [  2,  3,  6,  5 ]
-    geom.face( 3).n_poi = 4; allocate(geom.face( 3).poi(4)); geom.face( 3).poi(1:4) = [  4,  5, 10,  9 ]
-    geom.face( 4).n_poi = 4; allocate(geom.face( 4).poi(4)); geom.face( 4).poi(1:4) = [  5,  6, 11, 10 ]
-    geom.face( 5).n_poi = 4; allocate(geom.face( 5).poi(4)); geom.face( 5).poi(1:4) = [  7,  8, 15, 14 ]
-    geom.face( 6).n_poi = 4; allocate(geom.face( 6).poi(4)); geom.face( 6).poi(1:4) = [  8,  9, 16, 15 ]
-    geom.face( 7).n_poi = 4; allocate(geom.face( 7).poi(4)); geom.face( 7).poi(1:4) = [  9, 10, 17, 16 ]
-    geom.face( 8).n_poi = 4; allocate(geom.face( 8).poi(4)); geom.face( 8).poi(1:4) = [ 10, 11, 18, 17 ]
-    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [ 11, 12, 19, 18 ]
-    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [ 12, 13, 20, 19 ]
-    geom.face(11).n_poi = 4; allocate(geom.face(11).poi(4)); geom.face(11).poi(1:4) = [ 14, 15, 22, 21 ]
-    geom.face(12).n_poi = 4; allocate(geom.face(12).poi(4)); geom.face(12).poi(1:4) = [ 15, 16, 23, 22 ]
-
-    geom.face(13).n_poi = 4; allocate(geom.face(13).poi(4)); geom.face(13).poi(1:4) = [ 16, 17, 24, 23 ]
-    geom.face(14).n_poi = 4; allocate(geom.face(14).poi(4)); geom.face(14).poi(1:4) = [ 17, 18, 25, 24 ]
-    geom.face(15).n_poi = 4; allocate(geom.face(15).poi(4)); geom.face(15).poi(1:4) = [ 18, 19, 26, 25 ]
-    geom.face(16).n_poi = 4; allocate(geom.face(16).poi(4)); geom.face(16).poi(1:4) = [ 19, 20, 27, 26 ]
-    geom.face(17).n_poi = 4; allocate(geom.face(17).poi(4)); geom.face(17).poi(1:4) = [ 23, 24, 29, 28 ]
-    geom.face(18).n_poi = 4; allocate(geom.face(18).poi(4)); geom.face(18).poi(1:4) = [ 24, 25, 30, 29 ]
-    geom.face(19).n_poi = 4; allocate(geom.face(19).poi(4)); geom.face(19).poi(1:4) = [ 28, 29, 32, 31 ]
-    geom.face(20).n_poi = 4; allocate(geom.face(20).poi(4)); geom.face(20).poi(1:4) = [ 29, 30, 33, 32 ]
-end subroutine Exam_Open2D_Cross_84bp
+    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  1,  2,  7,  6 ]
+    geom.face( 2).n_poi = 4; allocate(geom.face( 2).poi(4)); geom.face( 2).poi(1:4) = [  2,  3,  8,  7 ]
+    geom.face( 3).n_poi = 4; allocate(geom.face( 3).poi(4)); geom.face( 3).poi(1:4) = [  3,  4,  9,  8 ]
+    geom.face( 4).n_poi = 4; allocate(geom.face( 4).poi(4)); geom.face( 4).poi(1:4) = [  4,  5, 10,  9 ]
+    geom.face( 5).n_poi = 4; allocate(geom.face( 5).poi(4)); geom.face( 5).poi(1:4) = [  6,  7, 12, 11 ]
+    geom.face( 6).n_poi = 4; allocate(geom.face( 6).poi(4)); geom.face( 6).poi(1:4) = [  7,  8, 13, 12 ]
+    geom.face( 7).n_poi = 4; allocate(geom.face( 7).poi(4)); geom.face( 7).poi(1:4) = [  8,  9, 14, 13 ]
+    geom.face( 8).n_poi = 4; allocate(geom.face( 8).poi(4)); geom.face( 8).poi(1:4) = [  9, 10, 15, 14 ]
+    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [ 11, 12, 17, 16 ]
+    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [ 12, 13, 18, 17 ]
+    geom.face(11).n_poi = 4; allocate(geom.face(11).poi(4)); geom.face(11).poi(1:4) = [ 16, 17, 20, 19 ]
+    geom.face(12).n_poi = 4; allocate(geom.face(12).poi(4)); geom.face(12).poi(1:4) = [ 17, 18, 21, 20 ]
+end subroutine Exam_Open2D_L_Shape_84bp
 
 ! ---------------------------------------------------------------------------------------
 

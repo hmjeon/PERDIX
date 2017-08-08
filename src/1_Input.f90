@@ -775,7 +775,7 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "    [Different angles and mesh patterns]"
     write(0, "(a)"), "      16. 4-Sided Polygon,      17. 5-Sided Polygon,     18. 6-Sided Polygon"
     write(0, "(a)"), "      19. Plate Quad,           20. Plate Tri,           21. Plate Eng"
-    write(0, "(a)"), "      22. Cross 42bp,           23. Cross 63bp,          24. Cross 84bp"
+    write(0, "(a)"), "      22. L-shape 42bp,         23. L-shape 63bp,        24. L-shape 84bp"
     write(0, "(a)")
     write(0, "(a)"), " Select the number or type geometry file (*.ply, *.geo, *.igs) [Enter] : "
 end subroutine Input_Print_Problem
@@ -1023,9 +1023,9 @@ subroutine Input_Select_Problem(prob, geom)
         case (21); call Exam_Open2D_Plate_Eng       (prob, geom)
 
         ! Different edge lengths
-        case (22); call Exam_Open2D_Cross_42bp      (prob, geom)
-        case (23); call Exam_Open2D_Cross_63bp      (prob, geom)
-        case (24); call Exam_Open2D_Cross_84bp      (prob, geom)
+        case (22); call Exam_Open2D_L_Shape_42bp      (prob, geom)
+        case (23); call Exam_Open2D_L_Shape_63bp      (prob, geom)
+        case (24); call Exam_Open2D_L_Shape_84bp      (prob, geom)
 
         ! 3D open geometry
         case (101); call Exam_Open3D_End_Cube_Quad             (prob, geom)
