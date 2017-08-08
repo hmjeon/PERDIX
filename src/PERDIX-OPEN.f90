@@ -152,13 +152,17 @@ subroutine Report()
     max_stap =-10000
 
     ! Problem
-    do i = 1, 21
+    do i = 1, 24
 
         ii = i
 
         ! Edge length
         if(ii == 3 .or. ii == 10 .or. ii == 15) then
             edge = edge_in - 1
+        else if(ii == 23) then
+            edge = edge_in + 2
+        else if(ii == 24) then
+            edge = edge_in + 4
         else
             edge = edge_in
         end if
