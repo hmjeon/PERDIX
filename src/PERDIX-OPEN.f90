@@ -157,7 +157,7 @@ subroutine Report()
         ii = i
 
         ! Edge length
-        if(ii == 3 .or. ii == 10 .or. ii == 15) then
+        if(ii == 5 .or. ii == 10 .or. ii == 15) then
             edge = edge_in - 1
         else if(ii == 23) then
             edge = edge_in + 2
