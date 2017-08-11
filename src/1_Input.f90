@@ -761,16 +761,16 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "   ========================================================"
     write(0, "(a)")
     write(0, "(a)"), "    [Triangular mesh]"
-    write(0, "(a)"), "       1. Plate (4 x 3),         2. Honeycomb"
+    write(0, "(a)"), "       1. Plate (4 x 4),         2. Honeycomb"
     write(0, "(a)"), "       3. Wheel,                 4. Circle,               5. Ellipse"
     write(0, "(a)")
     write(0, "(a)"), "    [Quadrilateral mesh]"
-    write(0, "(a)"), "       6. Plate (3 x 4),         7. L-Shape"
+    write(0, "(a)"), "       6. Rhombic Tiles,         7. L-Shape"
     write(0, "(a)"), "       8. Cross,                 9. Quarter Circle,      10. Disk"
     write(0, "(a)")
     write(0, "(a)"), "    [N-polygon mesh]"
-    write(0, "(a)"), "      11. Pentagon,             12. Star"
-    write(0, "(a)"), "      13. Hexagonal Mesh,       14. Plumeria,            15. Lotus"
+    write(0, "(a)"), "      11. Cairo Penta Tiles,    12. Prismatic Penta Tiles"
+    write(0, "(a)"), "      13. Hexagonal Mesh,       14. Hepta Penta Tiles,   15. Lotus"
     write(0, "(a)")
     write(0, "(a)"), "    [Different angles and mesh patterns]"
     write(0, "(a)"), "      16. 4-Sided Polygon,      17. 5-Sided Polygon,     18. 6-Sided Polygon"
@@ -992,25 +992,25 @@ subroutine Input_Select_Problem(prob, geom)
     select case (prob.sel_prob)
 
         ! 2D open geometry - tri mesh
-        case ( 1); call Exam_Open2D_Plate_4x3       (prob, geom)
+        case ( 1); call Exam_Open2D_Plate_Cross     (prob, geom)
         case ( 2); call Exam_Open2D_Honeycomb       (prob, geom)
         case ( 3); call Exam_Open2D_Wheel           (prob, geom)
         case ( 4); call Exam_Open2D_Circle          (prob, geom)
         case ( 5); call Exam_Open2D_Ellipse         (prob, geom)
 
         ! 2D open geometry - quadrilateral mesh
-        case ( 6); call Exam_Open2D_Plate_3x4       (prob, geom)
+        case ( 6); call Exam_Open2D_Rhombic_Tiles   (prob, geom)
         case ( 7); call Exam_Open2D_L_Shape         (prob, geom)
         case ( 8); call Exam_Open2D_Cross           (prob, geom)
         case ( 9); call Exam_Open2D_Quarter_Circle  (prob, geom)
         case (10); call Exam_Open2D_Disk            (prob, geom)
 
         ! 2D open geometry - n-polygon mesh
-        case (11); call Exam_Open2D_Pentagon        (prob, geom)
-        case (12); call Exam_Open2D_Star            (prob, geom)
-        case (13); call Exam_Open2D_Hexagonal_Mesh  (prob, geom)
-        case (14); call Exam_Open2D_Plumeria        (prob, geom)
-        case (15); call Exam_Open2D_Lotus           (prob, geom)
+        case (11); call Exam_Open2D_Cairo_Penta_Tiles     (prob, geom)
+        case (12); call Exam_Open2D_Prismatic_Penta_Tiles (prob, geom)
+        case (13); call Exam_Open2D_Hexagonal_Mesh        (prob, geom)
+        case (14); call Exam_Open2D_Hepta_Penta_Tiles     (prob, geom)
+        case (15); call Exam_Open2D_Lotus                 (prob, geom)
 
         ! Different angles
         case (16); call Exam_Open2D_4_Sided_Polygon (prob, geom)
