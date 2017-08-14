@@ -34,8 +34,8 @@ program PERDIX_OPEN
 
     implicit none
 
-    !call Main           ! Main module
-    call Report         ! Main module for auto run
+    call Main           ! Main module
+    !call Report         ! Main module for auto run
 
 contains
 
@@ -559,9 +559,9 @@ subroutine Verify_Solution(mesh, dna)
 
     write(0, "(a)")
     write(0, "(a)"), "[ONLY DEBUG MODE]"
-    write(0, "(a25, a)"), " 2.99853833272262E+07"," - Reference: 1 -2"
-    write(0, "(a25, a)"), " 2.61079451760243E+07"," - Reference: 9 -2"
-    write(0, "(a25, a)"), " 1.96337589792834E+07"," - Reference: 14-2"
+    write(0, "(a25, a)"), " 3.41299052999253E+07"," - Reference: 1 - 2"
+    write(0, "(a25, a)"), " 3.88022588879539E+07"," - Reference: 2 - 2"
+    write(0, "(a25, a)"), " 2.61079451760243E+07"," - Reference: 9 - 2"
     write(0, "(es25.14)"), verify
 end subroutine Verify_Solution
 
