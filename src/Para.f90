@@ -5,7 +5,7 @@
 !
 !                                                                    Updated : 2017/03/27
 !
-! Comments: The parameters used
+! Comments: Parameters used in PERDIX
 !
 ! Script written by Hyungmin Jun (hyungminjun@outlook.com)
 ! Copyright Hyungmin Jun, 2017. All rights reserved.

@@ -34,8 +34,8 @@ program PERDIX_OPEN
 
     implicit none
 
-    call Main           ! Main module
-    !call Report         ! Main module for auto run
+    !call Main           ! Main module
+    call Report         ! Main module for auto run
 
 contains
 
@@ -97,33 +97,20 @@ end subroutine Main
 subroutine Report()
 
     ! Declare variables
-    type(ProbType)  :: prob     ! Problem description
-    type(GeomType)  :: geom     ! Geometric data(section, point, edge, face)
-    type(BoundType) :: bound    ! Boundary data(outer, junction)
-    type(MeshType)  :: mesh     ! Base pair model data
+    type(ProbType)  :: prob     ! Problem data
+    type(GeomType)  :: geom     ! Geometry data
+    type(BoundType) :: bound    ! Boundary data
+    type(MeshType)  :: mesh     ! Basepaire data
     type(DNAType)   :: dna      ! B-form DNA data
 
     character(10) :: char_sec, char_edge, char_cut, char_vert
-    integer :: i, ii, arg, sec, edge_in, edge, max_stap, min_stap
+    integer :: i, sec, edge_in, edge, max_stap, min_stap
     logical :: results
 
-    if(iargc() /= 0) then
-
-        ! Input system by using main argument
-        arg = 1; call getarg(arg, char_sec)     ! Argument, section
-        arg = 2; call getarg(arg, char_edge)    ! Argument, edge length
-        arg = 3; call getarg(arg, char_vert)    ! Argument, flat or beveled vertex
-        arg = 4; call getarg(arg, char_cut)     ! Argument, staple-break
-
-        read(char_sec,  *), sec
-        read(char_edge, *), edge
-    else
-
-        sec       = 1           ! Section number
-        edge_in   = 2           ! Edge length
-        char_vert = "beveled"   ! Flat or beveled vertex
-        char_cut  = "max"       ! Staple-break rule
-    end if
+    sec       = 1           ! Section number
+    edge_in   = 2           ! Edge length
+    char_vert = "beveled"   ! Flat or beveled vertex
+    char_cut  = "max"       ! Staple-break rule
 
     ! Open file
     open(unit = 90, file = "Report_2D_Flat_"//trim(char_cut)//".txt", form="formatted")
@@ -154,14 +141,12 @@ subroutine Report()
     ! Problem
     do i = 1, 24
 
-        ii = i
-
         ! Edge length
-        if(ii == 5 .or. ii == 10 .or. ii == 15) then
+        if(i == 5 .or. i == 10 .or. i == 15) then
             edge = edge_in - 1
-        else if(ii == 23) then
+        else if(i == 23) then
             edge = edge_in + 2
-        else if(ii == 24) then
+        else if(i == 24) then
             edge = edge_in + 4
         else
             edge = edge_in

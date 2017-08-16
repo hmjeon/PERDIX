@@ -210,15 +210,13 @@ end subroutine Input_Initialize
 ! ---------------------------------------------------------------------------------------
 
 ! Initialize all parameters
-subroutine Input_Initialize_Report(prob, geom, mesh, ii, sec, edge, char_vert, char_cut)
+subroutine Input_Initialize_Report(prob, geom, mesh, i, sec, edge, char_vert, char_cut)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
     type(MeshType), intent(inout) :: mesh
     integer,        intent(inout) :: sec
-    integer,        intent(in)    :: ii, edge
+    integer,        intent(in)    :: i, edge
     character(10),  intent(in)    :: char_vert, char_cut
-
-    integer :: i
 
     ! Reset parameters
     call Input_Reset_Parameter
@@ -236,7 +234,7 @@ subroutine Input_Initialize_Report(prob, geom, mesh, ii, sec, edge, char_vert, c
     call Input_Set_Command
 
     ! Set parameters of problem
-    prob.sel_prob    = ii
+    prob.sel_prob    = i
     prob.sel_sec     = sec
     prob.sel_bp_edge = edge
 
@@ -327,6 +325,9 @@ subroutine Input_Initialize_Report(prob, geom, mesh, ii, sec, edge, char_vert, c
 
     ! Write initial geometry
     call Input_Chimera_Init_Geometry(prob, geom)
+
+    ! Write initial geometry for Tecplot
+    call Input_Tecplot_Init_Geometry(prob, geom)
 
     ! Generate Schlegel diagram
     call Input_Generate_Schlegel_Diagram(prob, geom)
