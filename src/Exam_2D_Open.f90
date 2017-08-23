@@ -1000,8 +1000,8 @@ subroutine Exam_Open2D_Cairo_Penta_Tiles(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Pentagon"
-    prob.name_file = "11_Pentagon"//&
+    prob.name_prob = "Cairo Penta Tiles"
+    prob.name_file = "11_Cairo_Penta_Tiles"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -1010,8 +1010,8 @@ subroutine Exam_Open2D_Cairo_Penta_Tiles(prob, geom)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
     ! The number of points and faces
-    geom.n_iniP =   36
-    geom.n_face =   16
+    geom.n_iniP = 36
+    geom.n_face = 16
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
