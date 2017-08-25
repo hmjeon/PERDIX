@@ -514,6 +514,79 @@ end subroutine Exam_Chiral_Biscribed_Pentagonal_Icositetrahedron
 
 ! ---------------------------------------------------------------------------------------
 
+! Example of asymmetric object
+subroutine Exam_Chiral_Asym_Object(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Chiral Asym Object"
+    prob.name_file = "Chiral_Asym_Object"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! Preset parameters
+    if(para_preset == "on") then
+        if(para_vertex_design == "flat") then
+            para_junc_ang        = "min"    ! Junctional gap
+            para_unpaired_scaf   = "off"    ! Unpaired scaffold nucleotides
+            para_n_base_tn       = 7        ! The number of nucleotides
+
+            ! Folding conditions
+            para_const_edge_mesh = "on"     ! Constant edge length
+        else if(para_vertex_design == "beveled") then
+            para_junc_ang        = "opt"    ! Junctional gap
+            para_unpaired_scaf   = "on"     ! Unpaired scaffold nucleotides
+            para_n_base_tn       = -1       ! The number of nucleotides
+        end if
+    end if
+
+    ! Allocate point and face structure
+    geom.n_iniP = 9
+    geom.n_face = 14
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set point position vectors
+    geom.iniP(1).pos(1:3) = [  0.000000d0,  0.000000d0,  1.000000d0 ]
+    geom.iniP(2).pos(1:3) = [  0.000000d0,  0.000000d0, -1.000000d0 ]
+    geom.iniP(3).pos(1:3) = [  0.000000d0,  1.000000d0,  0.000000d0 ]
+    geom.iniP(4).pos(1:3) = [  0.000000d0, -1.000000d0,  0.000000d0 ]
+    geom.iniP(5).pos(1:3) = [  1.000000d0,  0.000000d0,  0.000000d0 ]
+    geom.iniP(6).pos(1:3) = [ -1.000000d0,  0.000000d0,  0.000000d0 ]
+    geom.iniP(7).pos(1:3) = [ -1.000000d0,  1.000000d0, -1.000000d0 ]
+    geom.iniP(8).pos(1:3) = [  0.333333d0,  1.333333d0, -1.333333d0 ]
+    geom.iniP(9).pos(1:3) = [  1.000000d0,  1.000000d0,  1.000000d0 ]
+
+    ! Set face connnectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [ 1, 5, 9 ]
+    geom.face( 2).n_poi = 3; allocate(geom.face( 2).poi(3)); geom.face( 2).poi(1:3) = [ 1, 9, 3 ]
+    geom.face( 3).n_poi = 3; allocate(geom.face( 3).poi(3)); geom.face( 3).poi(1:3) = [ 9, 5, 3 ]
+    geom.face( 4).n_poi = 3; allocate(geom.face( 4).poi(3)); geom.face( 4).poi(1:3) = [ 1, 4, 5 ]
+    geom.face( 5).n_poi = 3; allocate(geom.face( 5).poi(3)); geom.face( 5).poi(1:3) = [ 1, 6, 4 ]
+    geom.face( 6).n_poi = 3; allocate(geom.face( 6).poi(3)); geom.face( 6).poi(1:3) = [ 1, 3, 6 ]
+    geom.face( 7).n_poi = 3; allocate(geom.face( 7).poi(3)); geom.face( 7).poi(1:3) = [ 2, 3, 5 ]
+    geom.face( 8).n_poi = 3; allocate(geom.face( 8).poi(3)); geom.face( 8).poi(1:3) = [ 2, 5, 4 ]
+    geom.face( 9).n_poi = 3; allocate(geom.face( 9).poi(3)); geom.face( 9).poi(1:3) = [ 2, 4, 6 ]
+    geom.face(10).n_poi = 3; allocate(geom.face(10).poi(3)); geom.face(10).poi(1:3) = [ 2, 6, 7 ]
+    geom.face(11).n_poi = 3; allocate(geom.face(11).poi(3)); geom.face(11).poi(1:3) = [ 3, 7, 6 ]
+    geom.face(12).n_poi = 3; allocate(geom.face(12).poi(3)); geom.face(12).poi(1:3) = [ 3, 8, 7 ]
+    geom.face(13).n_poi = 3; allocate(geom.face(13).poi(3)); geom.face(13).poi(1:3) = [ 3, 2, 8 ]
+    geom.face(14).n_poi = 3; allocate(geom.face(14).poi(3)); geom.face(14).poi(1:3) = [ 2, 7, 8 ]
+end subroutine Exam_Chiral_Asym_Object
+
+! ---------------------------------------------------------------------------------------
+
 ! Example of asymmetric tetrahedron
 subroutine Exam_Chiral_Asym_Tetrahedron(prob, geom)
     type(ProbType), intent(inout) :: prob

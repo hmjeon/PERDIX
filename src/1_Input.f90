@@ -1028,6 +1028,8 @@ subroutine Input_Select_Problem(prob, geom)
         case (23); call Exam_Open2D_L_Shape_63bp      (prob, geom)
         case (24); call Exam_Open2D_L_Shape_84bp      (prob, geom)
 
+        case (99); call Exam_Chiral_Asym_Object       (prob, geom)
+
         ! 3D open geometry
         case (101); call Exam_Open3D_End_Cube_Quad             (prob, geom)
         case (102); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
