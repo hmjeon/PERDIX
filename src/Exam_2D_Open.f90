@@ -530,6 +530,15 @@ subroutine Exam_Open2D_Rhombic_Tiles(prob, geom)
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
 
+    ! Preset parameters
+    if(para_preset == "on") then
+        if(para_vertex_design == "beveled") then
+            para_junc_ang      = "opt"  ! Junctional gap
+            para_unpaired_scaf = "on"   ! Unpaired nucleotides in the scaffold
+            para_n_base_tn     = -1     ! The number of nucleotides
+        end if
+    end if
+
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
 
@@ -1005,6 +1014,15 @@ subroutine Exam_Open2D_Cairo_Penta_Tiles(prob, geom)
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
+
+    ! Preset parameters
+    if(para_preset == "on") then
+        if(para_vertex_design == "beveled") then
+            para_junc_ang        = "opt"    ! Junctional gap
+            para_unpaired_scaf   = "on"     ! Unpaired scaffold nucleotides
+            para_n_base_tn       = -1       ! The number of nucleotides
+        end if
+    end if
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
