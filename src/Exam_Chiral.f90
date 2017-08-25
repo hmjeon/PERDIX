@@ -544,6 +544,7 @@ subroutine Exam_Chiral_Asym_Object(prob, geom)
             ! Folding conditions
             para_const_edge_mesh = "on"     ! Constant edge length
         else if(para_vertex_design == "beveled") then
+            para_const_edge_mesh = "on"     ! Constant edge length
             para_junc_ang        = "opt"    ! Junctional gap
             para_unpaired_scaf   = "on"     ! Unpaired scaffold nucleotides
             para_n_base_tn       = -1       ! The number of nucleotides

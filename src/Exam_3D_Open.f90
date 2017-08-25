@@ -23,6 +23,8 @@ module Exam_3D_Open
 
     implicit none
 
+    public Exam_Open3D_Cubeoctahedron
+
     ! Quad mesh
     public Exam_Open3D_End_Triangular_Prism_Quad    ! Open end triangular prism with quad mesh
     public Exam_Open3D_End_Cube_Quad                ! Open end cube with quad mesh
@@ -39,6 +41,75 @@ module Exam_3D_Open
     public Exam_Open3D_Cooling_Tower_Tri            ! Cooling tower with tri mesh
 
 contains
+
+! ---------------------------------------------------------------------------------------
+
+! Example of Cubeoctahedron
+subroutine Exam_Open3D_Cubeoctahedron(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Cubeoctahedron"
+    prob.name_file = "Cubeoctahedron"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&     ! Cross-section
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&      ! Edge length
+        "_"//trim(para_vertex_design)//&                ! Vertex design
+        "_"//trim(para_cut_stap_method)                 ! Cutting method
+
+    ! Preset parameters
+    if(para_preset == "on") then
+        if(para_vertex_design == "flat") then
+            para_junc_ang        = "min"    ! Junctional gap
+            para_unpaired_scaf   = "off"    ! Unpaired scaffold nucleotides
+            para_n_base_tn       = 7        ! The number of nucleotides
+        else if(para_vertex_design == "beveled") then
+            para_const_edge_mesh = "on"     ! Constant edge length
+            para_junc_ang        = "opt"    ! Junctional gap
+            para_unpaired_scaf   = "on"     ! Unpaired scaffold nucleotides
+            para_n_base_tn       = -1       ! The number of nucleotides
+        end if
+    end if
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 12
+    geom.n_face = 14
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set point position vectors
+    geom.iniP( 1).pos(1:3) = [  0.00000d0,  0.00000d0, 10.00000d0 ]; geom.iniP( 2).pos(1:3) = [  8.66026d0,  0.00000d0,   5.00000d0 ]
+    geom.iniP( 3).pos(1:3) = [  2.88675d0,  8.16497d0,  5.00000d0 ]; geom.iniP( 4).pos(1:3) = [ -8.66026d0,  0.00000d0,   5.00000d0 ]
+    geom.iniP( 5).pos(1:3) = [ -2.88675d0, -8.16497d0,  5.00000d0 ]; geom.iniP( 6).pos(1:3) = [  8.66026d0,  0.00000d0,  -5.00000d0 ]
+    geom.iniP( 7).pos(1:3) = [  5.77351d0, -8.16497d0,  0.00000d0 ]; geom.iniP( 8).pos(1:3) = [ -5.77351d0,  8.16497d0,   0.00000d0 ]
+    geom.iniP( 9).pos(1:3) = [  2.88675d0,  8.16497d0, -5.00000d0 ]; geom.iniP(10).pos(1:3) = [ -8.66026d0,  0.00000d0,  -5.00000d0 ]
+    geom.iniP(11).pos(1:3) = [ -2.88675d0, -8.16497d0, -5.00000d0 ]; geom.iniP(12).pos(1:3) = [  0.00000d0,  0.00000d0, -10.00000d0 ]
+
+    ! Set face connnectivity
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  1,  2,  3 ]
+    geom.face( 2).n_poi = 3; allocate(geom.face( 2).poi(3)); geom.face( 2).poi(1:3) = [  1,  4,  5 ]
+    geom.face( 3).n_poi = 3; allocate(geom.face( 3).poi(3)); geom.face( 3).poi(1:3) = [  2,  7,  6 ]
+    geom.face( 4).n_poi = 3; allocate(geom.face( 4).poi(3)); geom.face( 4).poi(1:3) = [  3,  9,  8 ]
+    geom.face( 5).n_poi = 3; allocate(geom.face( 5).poi(3)); geom.face( 5).poi(1:3) = [  4,  8, 10 ]
+    geom.face( 6).n_poi = 3; allocate(geom.face( 6).poi(3)); geom.face( 6).poi(1:3) = [  5, 11,  7 ]
+    geom.face( 7).n_poi = 3; allocate(geom.face( 7).poi(3)); geom.face( 7).poi(1:3) = [  6, 12,  9 ]
+    geom.face( 8).n_poi = 3; allocate(geom.face( 8).poi(3)); geom.face( 8).poi(1:3) = [ 10, 12, 11 ]
+    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [  1,  3,  8,  4 ]
+    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [  1,  5,  7,  2 ]
+    geom.face(11).n_poi = 4; allocate(geom.face(11).poi(4)); geom.face(11).poi(1:4) = [  2,  6,  9,  3 ]
+    geom.face(12).n_poi = 4; allocate(geom.face(12).poi(4)); geom.face(12).poi(1:4) = [  4, 10, 11,  5 ]
+    geom.face(13).n_poi = 4; allocate(geom.face(13).poi(4)); geom.face(13).poi(1:4) = [  6,  7, 11, 12 ]
+    geom.face(14).n_poi = 4; allocate(geom.face(14).poi(4)); geom.face(14).poi(1:4) = [  8,  9, 12, 10 ]
+end subroutine Exam_Open3D_Cubeoctahedron
 
 ! ---------------------------------------------------------------------------------------
 
