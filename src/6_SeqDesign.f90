@@ -58,8 +58,14 @@ module SeqDesign
     private SeqDesign_Get_M13mp18
     private SeqDesign_Import_Sequence
     private SeqDesign_Set_Rand_Sequence
-    private SeqDesign_Write_Strand
-    private SeqDesign_Write_Graphical_Output
+
+    private SeqDesign_Write_Outputs
+    private SeqDesign_Write_Out_Sequences
+    private SeqDesign_Write_Out_Unpaired
+    private SeqDesign_Write_Out_Graphics
+    private SeqDesign_Write_Out_Strand_Base
+    private SeqDesign_Write_Out_JSON
+
     private SeqDesign_Chimera_Atom
     private SeqDesign_Chimera_Curved_Cylinder
     private SeqDesign_Chimera_Route
@@ -138,8 +144,8 @@ subroutine SeqDesign_Design(prob, geom, mesh, dna)
     ! Assign DNA sequence according to para_set_seq_scaf
     call SeqDesign_Assign_Sequence(dna)
 
-    ! Write strand data
-    call SeqDesign_Write_Strand(prob, geom, mesh, dna)
+    ! Write outputs
+    call SeqDesign_Write_Outputs(prob, geom, mesh, dna)
 
     ! Write atom model by dnaTop and strand data
     call SeqDesign_Chimera_Atom(prob, dna)
@@ -4322,20 +4328,20 @@ subroutine SeqDesign_Assign_Sequence(dna)
     ! Print progress
     do i = 0, 11, 11
         call Space(i, 11)
-        write(i, "(a)"), "* Detailed bases data builded"
+        write(i, "(a)"), "* Detailed DNAtop data builded"
     end do
 
     ! Print detail information
     do i = 1, dna.n_top
-        write(11, "(i20, a$)"), dna.top(i).id, " th base ->"
-        write(11, "(a,  i7$)"), "  up : ",         dna.top(i).up
-        write(11, "(a,  i7$)"), ", down : ",       dna.top(i).dn
-        write(11, "(a,  i7$)"), ", across : ",     dna.top(i).across
-        write(11, "(a,  i7$)"), ", xover : ",      dna.top(i).xover
-        write(11, "(a,  i7$)"), ", node : ",       dna.top(i).node
-        write(11, "(a,  a8$)"), ", seq : ", dna.top(i).seq
-        write(11, "(a,  i7$)"), ", strand : ",     dna.top(i).strand
-        write(11, "(a,  i7 )"), ", address : ",    dna.top(i).address
+        write(11, "(i20, a$)"), dna.top(i).id, " base ==>"
+        write(11, "(a,  i7$)"), "  up: ",   dna.top(i).up
+        write(11, "(a,  i7$)"), ", dn: ",   dna.top(i).dn
+        write(11, "(a,  i7$)"), ", ac: ",   dna.top(i).across
+        write(11, "(a,  i7$)"), ", xo: ",   dna.top(i).xover
+        write(11, "(a,  i7$)"), ", nde: ",  dna.top(i).node
+        write(11, "(a,  a3$)"), ", seq: ",  dna.top(i).seq
+        write(11, "(a,  i3$)"), ", strd: ", dna.top(i).strand
+        write(11, "(a,  i7 )"), ", addr: ", dna.top(i).address
     end do
     write(0, "(a)"); write(11, "(a)")
 end subroutine SeqDesign_Assign_Sequence
@@ -4745,27 +4751,17 @@ end subroutine SeqDesign_Set_Rand_Sequence
 
 ! ---------------------------------------------------------------------------------------
 
-! Write txt file for strand data
-subroutine SeqDesign_Write_Strand(prob, geom, mesh, dna)
-    type(ProbType), intent(in)    :: prob
-    type(GeomType), intent(in)    :: geom
-    type(MeshType), intent(in)    :: mesh
+! Write output file
+subroutine SeqDesign_Write_Outputs(prob, geom, mesh, dna)
+    type(ProbType), intent(in) :: prob
+    type(GeomType), intent(in) :: geom
+    type(MeshType), intent(in) :: mesh
     type(DNAType),  intent(inout) :: dna
 
-    integer, allocatable :: length_stap(:)
-
-    double precision :: length
-    integer :: start_iniL, end_iniL, start_sec, end_sec
-    integer :: i, j, base, strt_base, end_base, n_base, count
-    character(4)   :: types
-    character(100) :: seq
-    character(200) :: path
-
     if(para_write_701 == .false.) return
+    open(unit=701, file=trim(prob.path_work1)//"TXT_Sequence.txt", form="formatted")
 
-    path = trim(prob.path_work1)
-    open(unit=701, file=trim(path)//"TXT_Sequence.txt",   form="formatted")
-
+    ! Write output of sequence data
     write(701, "(a)")
     write(701, "(a)"), "--------------------------------------------------------------------"
     write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
@@ -4775,29 +4771,100 @@ subroutine SeqDesign_Write_Strand(prob, geom, mesh, dna)
     write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
     write(701, "(a)"), "--------------------------------------------------------------------"
     write(701, "(a)")
+    call SeqDesign_Write_Out_Sequences(prob, mesh, dna, 701)
+
+    ! Write output of graphical representation
+    write(701, "(a)")
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|+                      2. Graphical output                       +|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)")
+    write(701, "(a)"), "1. [-], [num], [.], [>], [<] : Nucleotide"
+    write(701, "(a)"), "2. [|]                       : Crossover"
+    write(701, "(a)"), "3. [A], [T], [G], [C]        : Sequence"
+    write(701, "(a)"), "4. [ a: b], c                : From starting base ID(a) to ending base ID(b), total # of bases (c)"
+    write(701, "(a)"), "5. [5'], [3']                : Strand direction"
+    write(701, "(a)")
+    call SeqDesign_Write_Out_Graphics(prob, geom, mesh, dna, 701)
+
+    ! Write output of unpaired nucleotides
+    write(701, "(a)")
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|+     3. Unpaired nucleotides and poly Tn loop information       +|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)")
+    call SeqDesign_Write_Out_Unpaired(mesh, dna, 701)
+
+    ! Outputs based on strands and nucleotides
+    write(701, "(a)")
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|+              4. Strand and nucleotide based outputs            +|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)")
+    call SeqDesign_Write_Out_Strand_Base(mesh, dna, 701)
+
+    ! Output of staple length
+    write(701, "(a)")
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|+                       5. Staple length                         +|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)")
+    call SeqDesign_Write_Out_Staple_Length(dna, 701)
+
+    ! JSON output
+    call SeqDesign_Write_Out_JSON(prob, geom, mesh, dna)
+
+    close(unit=701)
+end subroutine SeqDesign_Write_Outputs
+
+! ---------------------------------------------------------------------------------------
+
+! Write output of sequence data
+subroutine SeqDesign_Write_Out_Sequences(prob, mesh, dna, unit)
+    type(ProbType), intent(in) :: prob
+    type(MeshType), intent(in) :: mesh
+    type(DNAType),  intent(inout) :: dna
+    integer, intent(in) :: unit
+
+    integer :: i, j, base
 
     ! DNA strand data
-    write(701, "(a, i7)"), " The total number of strands : ", dna.n_strand
-    write(701, "(a)")
+    write(unit, "(a)"), " The total number of strands: "//trim(adjustl(Int2Str(dna.n_strand)))
 
     dna.len_min_stap =  10000
     dna.len_max_stap = -10000
 
     ! Write sequence data
     do i = 1, dna.n_strand
-        write(701, "(i10, a$)"), i, " th strand "
+        write(unit, "(i10, a$)"), i, " strand "
 
         if(dna.strand(i).types == "scaf") then
-            write(701, "(a$)"), "[[scaf]]"
+            write(unit, "(a$)"), "[[scaf]]"
         else if(dna.strand(i).types == "stap") then
-            write(701, "(a$)"), "( stap )"
+            write(unit, "(a$)"), "( stap )"
 
             if(dna.strand(i).n_base < dna.len_min_stap) dna.len_min_stap = dna.strand(i).n_base
             if(dna.strand(i).n_base > dna.len_max_stap) dna.len_max_stap = dna.strand(i).n_base
 
-            if(0 .and. dna.strand(i).n_base > 70) then
+            if(0 .and. dna.strand(i).n_base > 80) then
 
-                do j = 0, 701, 701
+                do j = 0, unit, unit
                     call space(j, 5)
                     write(j, "(a     )"), "=================================================="
                     call space(j, 5)
@@ -4817,207 +4884,50 @@ subroutine SeqDesign_Write_Strand(prob, geom, mesh, dna)
             end if
         end if
 
-        write(701, "(a, i4$)"), ", # of 14nts :", dna.strand(i).n_14nt
-        write(701, "(a, i4$)"), ", start edge # :", mesh.node(dna.top(dna.strand(i).base(1)).node).iniL
-        write(701, "(a$    )"), ", # of bases :"
-        write(701, "(i6, a$)"), dna.strand(i).n_base, " -> "
+        write(unit, "(a, i4$)"), ", # of 14nts :", dna.strand(i).n_14nt
+        write(unit, "(a, i4$)"), ", start edge # :", mesh.node(dna.top(dna.strand(i).base(1)).node).iniL
+        write(unit, "(a$    )"), ", # of bases :"
+        write(unit, "(i6, a$)"), dna.strand(i).n_base, " -> "
 
         do j = 1, dna.strand(i).n_base
             base = dna.strand(i).base(j)
-            write(701, "(a$)"), dna.top(base).seq
+            write(unit, "(a$)"), dna.top(base).seq
         end do
-        write(701, "(a)")
+        write(unit, "(a)")
     end do
-    write(701, "(a)")
+    write(unit, "(a)")
 
     ! Write csv file for squence data
-    if(para_write_711 == .true.) then
-        open(unit=702, file=trim(path)//"sequence.csv", form="formatted")
+    if(para_write_711 == .false.) return
+    open(unit=702, file=trim(prob.path_work1)//"sequence.csv", form="formatted")
 
-        ! DNA strand data
-        write(702, "(a)"), " The total number of strands : "//trim(adjustl(Int2Str(dna.n_strand)))
-        write(702, "(a)"), ","
-        write(702, "(a)"), " Type, num, # nucleo, sequence"
+    ! DNA strand data
+    write(702, "(a)"), " The total number of strands : "//trim(adjustl(Int2Str(dna.n_strand)))
+    write(702, "(a)"), ","
+    write(702, "(a)"), " Type, num, # nucleo, sequence"
 
-        ! Write sequence data
-        do i = 1, dna.n_strand
-            if(dna.strand(i).types == "scaf") then
-                write(702, "(a$)"), "scaf,"//trim(adjustl(Int2Str(i)))//","
-            else if(dna.strand(i).types == "stap") then
-                write(702, "(a$)"), "stap,"//trim(adjustl(Int2Str(i)))//","
-            end if
-            write(702, "(a$)"), trim(adjustl(Int2Str(dna.strand(i).n_base)))//","
-
-            do j = 1, dna.strand(i).n_base
-                base = dna.strand(i).base(j)
-                write(702, "(a$)"), dna.top(base).seq
-            end do
-            write(702, "(a)")
-        end do
-        close(unit=702)
-    end if
-
-    ! Write graphical output
-    call SeqDesign_Write_Graphical_Output(prob, geom, mesh, dna, 701)
-
-    ! Write unpaired nucleotide and poly Tn loop information
-    write(701, "(a)"), " ======================================================== "
-    write(701, "(a)")
-    write(701, "(a)"), "    [Unpaired nucleotides and poly Tn loop information]   "
-    write(701, "(a)")
-    write(701, "(a)"), " ======================================================== "
-    write(701, "(a)")
-
-    dna.n_nt_unpaired_scaf = 0
-    dna.n_nt_unpaired_stap = 0
-    dna.n_unpaired_scaf    = 0
-    dna.n_unpaired_stap    = 0
-
-    n_base = 0
-    do i = 1, dna.n_top
-
-        ! Find the end bases in basepairs
-        if(dna.top(i).up /= -1 .and. dna.top(i).dn /= -1) then
-            !
-            !                i
-            ! *--*--*--*--*->*--*--*--*-->
-            ! |  |  |  |  |  |
-            ! *<-*--*--*--*--*
-            if( dna.top(i).across /= -1 .and. &
-                dna.top(dna.top(i).up).node == -1 .and. &
-                dna.top(dna.top(i).dn).node /= -1 ) then
-
-                base       = dna.top(i).id
-                types      = dna.strand(dna.top(i).strand).types
-                start_iniL = mesh.node(dna.top(dna.top(base).dn).node).iniL
-                start_sec  = mesh.node(dna.top(dna.top(base).dn).node).sec
-                count      = 0
-                n_base     = n_base + 1
-                strt_base  = base
-
-                if(types == "scaf") dna.n_unpaired_scaf = dna.n_unpaired_scaf + 1
-                if(types == "stap") dna.n_unpaired_stap = dna.n_unpaired_stap + 1
-
-                ! Count the number of bases
-                do
-                    base = dna.top(base).up
-                    if(dna.top(base).across /= -1) exit
-                    count = count + 1
-                    seq(count:count) = dna.top(base).seq
-
-                    if(types == "scaf") dna.n_nt_unpaired_scaf = dna.n_nt_unpaired_scaf + 1
-                    if(types == "stap") dna.n_nt_unpaired_stap = dna.n_nt_unpaired_stap + 1
-                end do
-
-                end_iniL = mesh.node(dna.top(base).node).iniL
-                end_sec  = mesh.node(dna.top(base).node).sec
-                end_base = dna.top(base).id
-                length   = Norm(dna.top(strt_base).pos - dna.top(end_base).pos)
-
-                write(701, "(i10, a$        )"), n_base, "th "//trim(types)
-                write(701, "(a, i3, a, f5.2$)"), ", # of bases : ", count, ", Total length : ", length
-                !write(701, "(a, f5.2, a$    )"), ", Divided length : ", length/dble(count+1), ", Edge(Section)) : "
-                write(701, "(a, f5.2, a$    )"), ", Divided length : ", length/dble(para_dist_pp) - 1.0d0, ", Edge(Section)) : "
-                write(701, "(i3, a, i3, a$  )"), start_iniL, "(", start_sec, ") -> "
-                write(701, "(i3, a, i3, a$  )"), end_iniL,   "(", end_sec,   "), Sequence : "
-
-                do j = 1, count
-                    write(701, "(a$)"), seq(j:j)
-                end do
-                write(701, "(a)")
-            end if
-        end if
-    end do
-    write(701, "(a)")
-
-    write(701, "(a)")
-    write(701, "(a)"), "--------------------------------------------------------------------"
-    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
-    write(701, "(a)"), "|+                                                                +|"
-    write(701, "(a)"), "|+                     3. Strand information                      +|"
-    write(701, "(a)"), "|+                                                                +|"
-    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
-    write(701, "(a)"), "--------------------------------------------------------------------"
-    write(701, "(a)")
-
-    ! Strand information
+    ! Write sequence data
     do i = 1, dna.n_strand
-        write(701, "(i10, a$)"), i, " th strand -> type : "//trim(dna.strand(i).types)
-        write(701, "(a, i6$ )"), ", # of bases : ", dna.strand(i).n_base
-        write(701, "(a, l, a)"), ", circular : ",   dna.strand(i).b_circular, ", bases : "
+        if(dna.strand(i).types == "scaf") then
+            write(702, "(a$)"), "scaf,"//trim(adjustl(Int2Str(i)))//","
+        else if(dna.strand(i).types == "stap") then
+            write(702, "(a$)"), "stap,"//trim(adjustl(Int2Str(i)))//","
+        end if
+        write(702, "(a$)"), trim(adjustl(Int2Str(dna.strand(i).n_base)))//","
 
-        ! Print bases numbering
-        write(701, "(i20, a$)"), dna.strand(i).base(1), " -> "
-        do j = 2, dna.strand(i).n_base - 1
-            if(mod(j, 100)== 0) then
-                write(701, "(a9)"), trim(adjustl(Int2Str(dna.strand(i).base(j))))//" -> "
-            else if(mod(j, 100)== 1) then
-                call space(701, 15)
-                write(701, "(a9$)"), trim(adjustl(Int2Str(dna.strand(i).base(j))))//" -> "
-            else
-                write(701, "(a9$)"), trim(adjustl(Int2Str(dna.strand(i).base(j))))//" -> "
-            end if
+        do j = 1, dna.strand(i).n_base
+            base = dna.strand(i).base(j)
+            write(702, "(a$)"), dna.top(base).seq
         end do
-        write(701, "(i7)"), dna.strand(i).base(dna.strand(i).n_base)
-        write(701, "(a )")
+        write(702, "(a)")
     end do
-
-    ! DNA base information
-    write(701, "(a )")
-    write(701, "(a )"), " DNA base information in detail"
-    write(701, "(a$)"), " The total number of bases : "
-    write(701, "(i7)"), dna.n_top
-
-    do i = 1, dna.n_top
-        write(701, "(i10, a$)"), dna.top(i).id, " th base ->"
-        write(701, "(a$     )"), " type : "//trim(dna.strand(dna.top(i).strand).types)
-        write(701, "(a$     )"), ", seq : "//trim(dna.top(i).seq)
-        write(701, "(a, i6$ )"), ", up : ",       dna.top(i).up
-        write(701, "(a, i6$ )"), ", down : ",     dna.top(i).dn
-        write(701, "(a, i6$ )"), ", across : ",   dna.top(i).across
-        write(701, "(a, i6$ )"), ", basepair : ", dna.top(i).node
-        write(701, "(a, i4$ )"), ", strand : ",   dna.top(i).strand
-        write(701, "(a, i5  )"), ", address : ",  dna.top(i).address
-    end do
-
-    write(701, "(a)")
-    write(701, "(a)"), "--------------------------------------------------------------------"
-    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
-    write(701, "(a)"), "|+                                                                +|"
-    write(701, "(a)"), "|+                       4. Staple length                         +|"
-    write(701, "(a)"), "|+                                                                +|"
-    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
-    write(701, "(a)"), "--------------------------------------------------------------------"
-    write(701, "(a)")
-
-    ! Allocate and initialize memory
-    allocate(length_stap(dna.len_min_stap:dna.len_max_stap))
-    length_stap(dna.len_min_stap:dna.len_max_stap) = 0
-
-    ! Find staple length
-    do i = 1, dna.n_strand
-        if(dna.strand(i).types == "stap") then
-            length_stap(dna.strand(i).n_base) = length_stap(dna.strand(i).n_base) + 1
-        end if
-    end do
-
-    ! Write staple length
-    do i = dna.len_min_stap, dna.len_max_stap
-        if(length_stap(i) /= 0) then
-            write(701, "(2i6)"), i, length_stap(i)
-        end if
-    end do
-
-    ! Deallocate memory
-    deallocate(length_stap)
-
-    close(unit=701)
-end subroutine SeqDesign_Write_Strand
+    close(unit=702)
+end subroutine SeqDesign_Write_Out_Sequences
 
 ! ---------------------------------------------------------------------------------------
 
 ! Write graphical output
-subroutine SeqDesign_Write_Graphical_Output(prob, geom, mesh, dna, unit)
+subroutine SeqDesign_Write_Out_Graphics(prob, geom, mesh, dna, unit)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
     type(MeshType), intent(in) :: mesh
@@ -5312,21 +5222,7 @@ subroutine SeqDesign_Write_Graphical_Output(prob, geom, mesh, dna, unit)
             !end do
             !write(unit, "(a)"); write(unit, "(a)")
 
-            write(unit, "(a)")
-            write(unit, "(a)"), "--------------------------------------------------------------------"
-            write(unit, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
-            write(unit, "(a)"), "|+                                                                +|"
-            write(unit, "(a)"), "|+                      2. Graphical output                       +|"
-            write(unit, "(a)"), "|+                                                                +|"
-            write(unit, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
-            write(unit, "(a)"), "--------------------------------------------------------------------"
-            write(unit, "(a)")
-            write(unit, "(a)"), "1. [-], [num], [.], [>], [<] : Nucleotide"
-            write(unit, "(a)"), "2. [|]                       : Crossover"
-            write(unit, "(a)"), "3. [A], [T], [G], [C]        : Sequence"
-            write(unit, "(a)"), "4. [ a: b], c                : From starting base ID(a) to ending base ID(b), total # of bases (c)"
-            write(unit, "(a)"), "5. [5'], [3']                : Strand direction"
-            write(unit, "(a)"); write(unit, "(a)")
+            
         end if
 
         ! --------------------------------------------------
@@ -6217,7 +6113,296 @@ subroutine SeqDesign_Write_Graphical_Output(prob, geom, mesh, dna, unit)
         deallocate(tec)
         close(unit=709)
     end if
-end subroutine SeqDesign_Write_Graphical_Output
+end subroutine SeqDesign_Write_Out_Graphics
+
+! ---------------------------------------------------------------------------------------
+
+! Write output of unpaired nucleotides
+subroutine SeqDesign_Write_Out_Unpaired(mesh, dna, unit)
+    type(MeshType), intent(in) :: mesh
+    type(DNAType),  intent(inout) :: dna
+    integer, intent(in) :: unit
+
+    double precision :: length
+    integer :: s_base, e_base, s_iniL, e_iniL, s_sec, e_sec
+    integer :: i, j, n_base, base, count
+    character(100) :: seq
+    character(4) :: types
+
+    dna.n_nt_unpaired_scaf = 0
+    dna.n_nt_unpaired_stap = 0
+    dna.n_unpaired_scaf    = 0
+    dna.n_unpaired_stap    = 0
+
+    n_base = 0
+    do i = 1, dna.n_top
+
+        ! Find the end bases in basepairs
+        if(dna.top(i).up /= -1 .and. dna.top(i).dn /= -1) then
+            !
+            !                i
+            ! *--*--*--*--*->*--*--*--*-->
+            ! |  |  |  |  |  |
+            ! *<-*--*--*--*--*
+            if( dna.top(i).across /= -1 .and. &
+                dna.top(dna.top(i).up).node == -1 .and. &
+                dna.top(dna.top(i).dn).node /= -1 ) then
+
+                base   = dna.top(i).id
+                types  = dna.strand(dna.top(i).strand).types
+                s_iniL = mesh.node(dna.top(dna.top(base).dn).node).iniL
+                s_sec  = mesh.node(dna.top(dna.top(base).dn).node).sec
+                count  = 0
+                n_base = n_base + 1
+                s_base = base
+
+                if(types == "scaf") dna.n_unpaired_scaf = dna.n_unpaired_scaf + 1
+                if(types == "stap") dna.n_unpaired_stap = dna.n_unpaired_stap + 1
+
+                ! Count the number of bases
+                do
+                    base = dna.top(base).up
+                    if(dna.top(base).across /= -1) exit
+                    count = count + 1
+                    seq(count:count) = dna.top(base).seq
+
+                    if(types == "scaf") dna.n_nt_unpaired_scaf = dna.n_nt_unpaired_scaf + 1
+                    if(types == "stap") dna.n_nt_unpaired_stap = dna.n_nt_unpaired_stap + 1
+                end do
+
+                e_iniL = mesh.node(dna.top(base).node).iniL
+                e_sec  = mesh.node(dna.top(base).node).sec
+                e_base = dna.top(base).id
+                length = Norm(dna.top(s_base).pos - dna.top(e_base).pos)
+
+                write(unit, "(i10, a$        )"), n_base, "th "//trim(types)
+                write(unit, "(a, i3, a, f5.2$)"), ", # of bases : ", count, ", Total length : ", length
+                !write(unit, "(a, f5.2, a$    )"), ", Divided length : ", length/dble(count+1), ", Edge(Section)) : "
+                write(unit, "(a, f5.2, a$    )"), ", Divided length : ", length/dble(para_dist_pp) - 1.0d0, ", Edge(Section)) : "
+                write(unit, "(i3, a, i3, a$  )"), s_iniL, "(", s_sec, ") -> "
+                write(unit, "(i3, a, i3, a$  )"), e_iniL,   "(", e_sec,   "), Sequence : "
+
+                do j = 1, count
+                    write(unit, "(a$)"), seq(j:j)
+                end do
+                write(unit, "(a)")
+            end if
+        end if
+    end do
+    write(unit, "(a)")
+end subroutine SeqDesign_Write_Out_Unpaired
+
+! ---------------------------------------------------------------------------------------
+
+! Outputs based on strands and nucleotides
+subroutine SeqDesign_Write_Out_Strand_Base(mesh, dna, unit)
+    type(MeshType), intent(in) :: mesh
+    type(DNAType),  intent(in) :: dna
+    integer, intent(in) :: unit
+
+    integer :: i, j
+
+    write(unit, "(a)"), " Output based on strands"
+    write(unit, "(a)"), " The total number of strands : "//trim(adjustl(Int2Str(dna.n_strand)))
+    write(unit, "(a)")
+
+    ! Strand based output
+    do i = 1, dna.n_strand
+        write(unit, "(i10,a$)"), i, " "//trim(dna.strand(i).types)//" ==>"
+        write(unit, "(a, i6$)"), " # of nts : ", dna.strand(i).n_base
+        write(unit, "(a, l  )"), ", circular : ", dna.strand(i).b_circular
+
+        ! Print bases numbering
+        call space(unit, 15)
+        write(unit, "(a9$)"), trim(adjustl(Int2Str(dna.strand(i).base(1))))//"->"
+        do j = 2, dna.strand(i).n_base - 1
+            if(mod(j, 10) == 0) then
+                write(unit, "(a9)"), trim(adjustl(Int2Str(dna.strand(i).base(j))))//"->"
+            else if(mod(j, 10) == 1) then
+                call space(unit, 15)
+                write(unit, "(a9$)"), trim(adjustl(Int2Str(dna.strand(i).base(j))))//"->"
+            else
+                write(unit, "(a9$)"), trim(adjustl(Int2Str(dna.strand(i).base(j))))//"->"
+            end if
+        end do
+        if(mod(j, 10) == 1) call space(unit, 15)
+        write(unit, "(a7)"), trim(adjustl(Int2Str(dna.strand(i).base(dna.strand(i).n_base))))
+        write(unit, "(a )")
+    end do
+
+    ! DNA base information
+    write(unit, "(a)"), " Output based on nucleotides"
+    write(unit, "(a)"), " The total number of nucleotides : "//trim(adjustl(Int2Str(dna.n_top)))
+    write(unit, "(a)")
+
+    ! node-bp-InitL-sec-up-dn-ac-xo
+    do i = 1, dna.n_top
+        write(unit, "(i10, a$)"), dna.top(i).id, " nt ==>"
+        write(unit, "(a$     )"), trim(dna.strand(dna.top(i).strand).types)
+        write(unit, "(a$     )"), ", seq: "//trim(dna.top(i).seq)
+        write(unit, "(a, i6$ )"), ", nde: ", dna.top(i).node
+
+        if(dna.top(i).node /= -1) then
+            write(unit, "(a, i6$)"), ", bp: ",   mesh.node(dna.top(i).node).bp
+            write(unit, "(a, i3$)"), ", iniL: ", mesh.node(dna.top(i).node).iniL
+            write(unit, "(a, i3$)"), ", sec: ",  mesh.node(dna.top(i).node).sec
+        else
+            write(unit, "(a$)"), ",      UNPAIRED NUCLEOTIDES      "
+        end if
+
+        write(unit, "(a, i6$)"), ", up: ", dna.top(i).up
+        write(unit, "(a, i6$)"), ", dn: ", dna.top(i).dn
+        write(unit, "(a, i6$)"), ", xo: ", dna.top(i).xover
+        write(unit, "(a, i6$)"), ", ac: ", dna.top(i).across
+        write(unit, "(a, i4$ )"), ", strd: ", dna.top(i).strand
+        !write(unit, "(a, i5  )"), ", addr: ", dna.top(i).address
+        write(unit, "(a)")
+    end do
+end subroutine SeqDesign_Write_Out_Strand_Base
+
+! ---------------------------------------------------------------------------------------
+
+! Output about staple length
+subroutine SeqDesign_Write_Out_Staple_Length(dna, unit)
+    type(DNAType), intent(in) :: dna
+    integer, intent(in) :: unit
+
+    integer, allocatable :: length_stap(:)
+    integer :: i
+
+    ! Allocate and initialize memory
+    allocate(length_stap(dna.len_min_stap:dna.len_max_stap))
+    length_stap(dna.len_min_stap:dna.len_max_stap) = 0
+
+    ! Find staple length
+    do i = 1, dna.n_strand
+        if(dna.strand(i).types == "stap") then
+            length_stap(dna.strand(i).n_base) = length_stap(dna.strand(i).n_base) + 1
+        end if
+    end do
+
+    ! Write staple length
+    do i = dna.len_min_stap, dna.len_max_stap
+        if(length_stap(i) /= 0) then
+            write(unit, "(2i6)"), i, length_stap(i)
+        end if
+    end do
+
+    ! Deallocate memory
+    deallocate(length_stap)
+end subroutine SeqDesign_Write_Out_Staple_Length
+
+! ---------------------------------------------------------------------------------------
+
+! Write JSON output
+subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna)
+    type(ProbType), intent(in) :: prob
+    type(GeomType), intent(in) :: geom
+    type(MeshType), intent(in) :: mesh
+    type(DNAType),  intent(in) :: dna
+
+    ! Conn type data
+    type :: ConnType
+        integer :: dn_sec
+        integer :: dn_id
+        integer :: up_sec
+        integer :: up_id
+    end type ConnType
+
+    ! Section type data - Global section => (E-1)*iniE + sec
+    type :: SecType
+        type(ConnType), allocatable :: scaf(:)
+        type(ConnType), allocatable :: stap(:)
+    end type SecType
+
+    ! Initial line data
+    type :: EdgeType
+        integer :: n_sec
+        type(SecType), allocatable :: sec(:)
+    end type EdgeType
+
+    type(EdgeType), allocatable :: edge(:)
+    integer :: i, j, k, min_bp, max_bp, n_edge
+    integer :: c_edge, c_sec, c_dn_sec, c_dn_id, c_up_sec, c_up_id
+
+    open(unit=999, file=trim(prob.path_work1)//"check.txt", form="formatted")
+
+    ! Find maximum and minimum bp ID
+    max_bp = mesh.node(1).bp
+    min_bp = mesh.node(1).bp
+    do i = 2, mesh.n_node
+        if(mesh.node(i).bp > max_bp) max_bp = mesh.node(i).bp
+        if(mesh.node(i).bp < min_bp) min_bp = mesh.node(i).bp
+    end do
+
+    min_bp = min_bp + para_start_bp_ID - 1
+    max_bp = max_bp + para_start_bp_ID - 1
+
+    !print *, min_bp, max_bp, para_start_bp_ID
+
+    ! Allocate and initialize edge data
+    n_edge = geom.n_iniL
+    allocate(edge(n_edge))
+
+    do i = 1, n_edge
+        edge(i).n_sec = geom.n_sec
+        allocate(edge(i).sec(edge(i).n_sec))
+
+        do j = 1, edge(i).n_sec
+            allocate(edge(i).sec(j).scaf(min_bp:max_bp))
+            allocate(edge(i).sec(j).stap(min_bp:max_bp))
+
+            do k = min_bp, max_bp
+                edge(i).sec(j).scaf(k).dn_sec = -1
+                edge(i).sec(j).scaf(k).dn_id  = -1
+                edge(i).sec(j).scaf(k).up_sec = -1
+                edge(i).sec(j).scaf(k).up_id  = -1
+
+                edge(i).sec(j).stap(k).dn_sec = -1
+                edge(i).sec(j).stap(k).dn_id  = -1
+                edge(i).sec(j).stap(k).up_sec = -1
+                edge(i).sec(j).stap(k).up_id  = -1
+            end do
+        end do
+    end do
+
+    ! Nucleotide based loop
+    do i = 1, dna.n_top
+        if(dna.top(i).node /= -1) then      ! Double strand only
+        c_edge = mesh.node(dna.top(i).node).iniL
+        c_sec  = mesh.node(dna.top(i).node).sec
+
+        !dn_sec
+        !dn_id
+        !up_sec
+        !up_id
+        end if
+    end do
+
+    ! Print JSON-style data structure
+    do i = 1, n_edge
+        write(999, "(i)"), i
+        do j = 1, edge(i).n_sec
+            do k = min_bp, max_bp
+                write(999, "(i3$)"), edge(i).sec(j).stap(k).dn_sec
+            end do
+            write(999, "(a)")
+        end do
+        write(999, "(a)")
+    end do
+
+    ! Deallocate edge data
+    do i = 1, n_edge
+        do j = 1, edge(i).n_sec
+            deallocate(edge(i).sec(j).scaf)
+            deallocate(edge(i).sec(j).stap)
+        end do
+        deallocate(edge(i).sec)
+    end do
+    deallocate(edge)
+
+    !stop
+end subroutine SeqDesign_Write_Out_JSON
 
 ! ---------------------------------------------------------------------------------------
 

@@ -356,15 +356,15 @@ subroutine Route_Set_Base_Position(geom, mesh, dna)
         dna.base_stap(i).pos(1:3) = mesh.node(i).pos + matmul(rot, pos_stap)
 
         write(11, "(i20$)"), mesh.node(i).id
-        write(11, "(a, a3$)"), " th node -> base ID : ", trim(adjustl(Int2Str(mesh.node(i).bp)))
-        write(11, "(a, a6$)"), ", up : ",   trim(adjustl(Int2Str(mesh.node(i).up)))
-        write(11, "(a, a6$)"), ", down : ", trim(adjustl(Int2Str(mesh.node(i).dn)))
-        write(11, "(a, a2$)"), ", sec : ",  trim(adjustl(Int2Str(mesh.node(i).sec)))
-        write(11, "(a, a3$)"), ", iniL : ", trim(adjustl(Int2Str(mesh.node(i).iniL)))
-        write(11, "(a, a3$)"), ", croL : ", trim(adjustl(Int2Str(mesh.node(i).croL)))
-        write(11, "(a, a6$)"), ", start ang : ", trim(adjustl(Dble2Str(ang_start)))
-        write(11, "(a, a6$)"), ", scaf ang  : ", trim(adjustl(Dble2Str(ang_scaf)))
-        write(11, "(a, a6 )"), ", stap ang  : ", trim(adjustl(Dble2Str(ang_stap)))
+        write(11, "(a, a3$)"), " node ==> bp: ", trim(adjustl(Int2Str(mesh.node(i).bp)))
+        write(11, "(a, a6$)"), ", up: ",   trim(adjustl(Int2Str(mesh.node(i).up)))
+        write(11, "(a, a6$)"), ", dn: ",   trim(adjustl(Int2Str(mesh.node(i).dn)))
+        write(11, "(a, a2$)"), ", sec: ",  trim(adjustl(Int2Str(mesh.node(i).sec)))
+        write(11, "(a, a3$)"), ", iniL: ", trim(adjustl(Int2Str(mesh.node(i).iniL)))
+        write(11, "(a, a3$)"), ", croL: ", trim(adjustl(Int2Str(mesh.node(i).croL)))
+        write(11, "(a, a6$)"), ", start ang: ", trim(adjustl(Dble2Str(ang_start)))
+        write(11, "(a, a6$)"), ", scaf ang: ",  trim(adjustl(Dble2Str(ang_scaf)))
+        write(11, "(a, a6 )"), ", stap ang: ",  trim(adjustl(Dble2Str(ang_stap)))
     end do
 
     ! Print progress
@@ -913,36 +913,45 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
 
     ! Print progress
     do i = 0, 11, 11
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of nucleotides in the scaffold  : "&
+        call Space(i, 11); write(i, "(a)"), "* The number of nts in scaffold          : "&
             //trim(adjustl(Int2Str(dna.n_base_scaf)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of nucleotides in staples       : "&
+        call Space(i, 11); write(i, "(a)"), "* The number of nts in staples           : "&
             //trim(adjustl(Int2Str(dna.n_base_stap)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of unpaired nts in the scaffold : "&
+        call Space(i, 11); write(i, "(a)"), "* The number of unpaired nts in scaffold : "&
             //trim(adjustl(Int2Str(n_add_nt_scaf)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of unpaired nts in staples      : "&
+        call Space(i, 11); write(i, "(a)"), "* The number of unpaired nts in staples  : "&
             //trim(adjustl(Int2Str(n_add_nt_stap)))
     end do
 
+    ! Scaffold
     do j = 1, dna.n_base_scaf
         write(11, "(i20$  )"), dna.base_scaf(j).id
-        write(11, "(a, i5$)"), " th scaf -> node # : ", dna.base_scaf(j).node
-        write(11, "(a, i5$)"), ", up # : ",             dna.base_scaf(j).up
-        write(11, "(a, i5$)"), ", down # : ",           dna.base_scaf(j).dn
-        write(11, "(a, i5$)"), ", xover # : ",          dna.base_scaf(j).xover
-        write(11, "(a, i5 )"), ", across # : ",         dna.base_scaf(j).across
+        write(11, "(a, i5$)"), " scaf ==> node: ", dna.base_scaf(j).node
+        if(dna.base_scaf(j).node == -1) then
+            write(11, "(a, i5$)"), ", bp: ", -1
+        else
+            write(11, "(a, i5$)"), ", bp: ", mesh.node(dna.base_scaf(j).node).bp
+        end if
+        write(11, "(a, i5$)"), ", up: ", dna.base_scaf(j).up
+        write(11, "(a, i5$)"), ", dn: ", dna.base_scaf(j).dn
+        write(11, "(a, i5$)"), ", xo: ", dna.base_scaf(j).xover
+        write(11, "(a, i5 )"), ", ac: ", dna.base_scaf(j).across
     end do
+    write(11, "(a)")
 
+    ! Staple
     do j = 1, dna.n_base_stap
         write(11, "(i20$  )"), dna.base_stap(j).id
-        write(11, "(a, i5$)"), " th stap -> node # : ", dna.base_stap(j).node
-        write(11, "(a, i5$)"), ", up # : ",             dna.base_stap(j).up
-        write(11, "(a, i5$)"), ", down # : ",           dna.base_stap(j).dn
-        write(11, "(a, i5$)"), ", xover # : ",          dna.base_stap(j).xover
-        write(11, "(a, i5 )"), ", across # : ",         dna.base_stap(j).across
+        write(11, "(a, i5$)"), " stap ==> node: ", dna.base_stap(j).node
+        if(dna.base_stap(j).node == -1) then
+            write(11, "(a, i5$)"), ", bp: ", -1
+        else
+            write(11, "(a, i5$)"), ", bp: ", mesh.node(dna.base_stap(j).node).bp
+        end if
+        write(11, "(a, i5$)"), ", up: ", dna.base_stap(j).up
+        write(11, "(a, i5$)"), ", dn: ", dna.base_stap(j).dn
+        write(11, "(a, i5$)"), ", xo: ", dna.base_stap(j).xover
+        write(11, "(a, i5 )"), ", ac: ", dna.base_stap(j).across
     end do
     write(0, "(a)"); write(11, "(a)")
 end subroutine Route_Connect_Strand_Junc
