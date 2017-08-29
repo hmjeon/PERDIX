@@ -4758,6 +4758,8 @@ subroutine SeqDesign_Write_Outputs(prob, geom, mesh, dna)
     type(MeshType), intent(in) :: mesh
     type(DNAType),  intent(inout) :: dna
 
+    integer :: max_unpaired
+
     if(para_write_701 == .false.) return
     open(unit=701, file=trim(prob.path_work1)//"TXT_Sequence.txt", form="formatted")
 
@@ -4801,7 +4803,7 @@ subroutine SeqDesign_Write_Outputs(prob, geom, mesh, dna)
     write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
     write(701, "(a)"), "--------------------------------------------------------------------"
     write(701, "(a)")
-    call SeqDesign_Write_Out_Unpaired(mesh, dna, 701)
+    max_unpaired = SeqDesign_Write_Out_Unpaired(mesh, dna, 701)
 
     ! Outputs based on strands and nucleotides
     write(701, "(a)")
@@ -4828,7 +4830,7 @@ subroutine SeqDesign_Write_Outputs(prob, geom, mesh, dna)
     call SeqDesign_Write_Out_Staple_Length(dna, 701)
 
     ! JSON output
-    call SeqDesign_Write_Out_JSON(prob, geom, mesh, dna)
+    call SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
 
     close(unit=701)
 end subroutine SeqDesign_Write_Outputs
@@ -6118,13 +6120,13 @@ end subroutine SeqDesign_Write_Out_Graphics
 ! ---------------------------------------------------------------------------------------
 
 ! Write output of unpaired nucleotides
-subroutine SeqDesign_Write_Out_Unpaired(mesh, dna, unit)
+function SeqDesign_Write_Out_Unpaired(mesh, dna, unit) result(max_base)
     type(MeshType), intent(in) :: mesh
     type(DNAType),  intent(inout) :: dna
     integer, intent(in) :: unit
 
     double precision :: length
-    integer :: s_base, e_base, s_iniL, e_iniL, s_sec, e_sec
+    integer :: s_base, e_base, s_iniL, e_iniL, s_sec, e_sec, max_base
     integer :: i, j, n_base, base, count
     character(100) :: seq
     character(4) :: types
@@ -6134,7 +6136,8 @@ subroutine SeqDesign_Write_Out_Unpaired(mesh, dna, unit)
     dna.n_unpaired_scaf    = 0
     dna.n_unpaired_stap    = 0
 
-    n_base = 0
+    max_base = 0
+    n_base   = 0
     do i = 1, dna.n_top
 
         ! Find the end bases in basepairs
@@ -6175,12 +6178,15 @@ subroutine SeqDesign_Write_Out_Unpaired(mesh, dna, unit)
                 e_base = dna.top(base).id
                 length = Norm(dna.top(s_base).pos - dna.top(e_base).pos)
 
-                write(unit, "(i10, a$        )"), n_base, "th "//trim(types)
+                write(unit, "(i10, a$        )"), n_base, trim(types)
                 write(unit, "(a, i3, a, f5.2$)"), ", # of bases : ", count, ", Total length : ", length
                 !write(unit, "(a, f5.2, a$    )"), ", Divided length : ", length/dble(count+1), ", Edge(Section)) : "
                 write(unit, "(a, f5.2, a$    )"), ", Divided length : ", length/dble(para_dist_pp) - 1.0d0, ", Edge(Section)) : "
                 write(unit, "(i3, a, i3, a$  )"), s_iniL, "(", s_sec, ") -> "
                 write(unit, "(i3, a, i3, a$  )"), e_iniL,   "(", e_sec,   "), Sequence : "
+
+                ! Check maximum number of unpaired nucleotides
+                if(max_base < count) max_base = count
 
                 do j = 1, count
                     write(unit, "(a$)"), seq(j:j)
@@ -6190,7 +6196,7 @@ subroutine SeqDesign_Write_Out_Unpaired(mesh, dna, unit)
         end if
     end do
     write(unit, "(a)")
-end subroutine SeqDesign_Write_Out_Unpaired
+end function SeqDesign_Write_Out_Unpaired
 
 ! ---------------------------------------------------------------------------------------
 
@@ -6295,11 +6301,12 @@ end subroutine SeqDesign_Write_Out_Staple_Length
 ! ---------------------------------------------------------------------------------------
 
 ! Write JSON output
-subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna)
+subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
     type(MeshType), intent(in) :: mesh
     type(DNAType),  intent(in) :: dna
+    integer, intent(in) :: max_unpaired
 
     ! Conn type data
     type :: ConnType
@@ -6322,10 +6329,10 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna)
     end type EdgeType
 
     type(EdgeType), allocatable :: edge(:)
-    integer :: i, j, k, min_bp, max_bp, n_edge
-    integer :: c_edge, c_sec, c_dn_sec, c_dn_id, c_up_sec, c_up_id
+    integer :: i, j, k, min_bp, max_bp, n_edge, width
+    integer :: base, up, dn, num
 
-    open(unit=999, file=trim(prob.path_work1)//"check.txt", form="formatted")
+    open(unit=999, file=trim(prob.path_work1)//"check.json", form="formatted")
 
     ! Find maximum and minimum bp ID
     max_bp = mesh.node(1).bp
@@ -6338,7 +6345,9 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna)
     min_bp = min_bp + para_start_bp_ID - 1
     max_bp = max_bp + para_start_bp_ID - 1
 
-    !print *, min_bp, max_bp, para_start_bp_ID
+    ! Possible maximum edge length = max_bp - min_bp + 1 + max_unpaired
+    width = (max_bp - min_bp + 1 + max_unpaired) + 2 * para_start_bp_ID
+    !print *, min_bp, max_bp, para_start_bp_ID, max_unpaired, max_bp - min_bp + 1 + max_unpaired
 
     ! Allocate and initialize edge data
     n_edge = geom.n_iniL
@@ -6349,10 +6358,10 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna)
         allocate(edge(i).sec(edge(i).n_sec))
 
         do j = 1, edge(i).n_sec
-            allocate(edge(i).sec(j).scaf(min_bp:max_bp))
-            allocate(edge(i).sec(j).stap(min_bp:max_bp))
+            allocate(edge(i).sec(j).scaf(width))
+            allocate(edge(i).sec(j).stap(width))
 
-            do k = min_bp, max_bp
+            do k = 1, width
                 edge(i).sec(j).scaf(k).dn_sec = -1
                 edge(i).sec(j).scaf(k).dn_id  = -1
                 edge(i).sec(j).scaf(k).up_sec = -1
@@ -6366,30 +6375,89 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna)
         end do
     end do
 
-    ! Nucleotide based loop
-    do i = 1, dna.n_top
-        if(dna.top(i).node /= -1) then      ! Double strand only
-        c_edge = mesh.node(dna.top(i).node).iniL
-        c_sec  = mesh.node(dna.top(i).node).sec
-
-        !dn_sec
-        !dn_id
-        !up_sec
-        !up_id
+    ! Strand based loop
+    do i = 1, dna.n_strand
+        if(dna.strand(i).types == "scaf") then
+            do j = 1, dna.strand(i).n_base
+                base = dna.strand(i).base(j)
+                up = dna.top(base).up
+                dn = dna.top(base).dn
+                !print *, up, dn
+                ! 현재의 edge와 sec과 bp를 찾자
+                ! up과 dn의 sec과 bp를 찾자
+            end do
+        else if(dna.strand(i).types == "stap") then
+            do j = 1, dna.strand(i).n_base
+            end do
         end if
     end do
 
     ! Print JSON-style data structure
+    write(999, "(a)"), "{"
+    write(999, "(a)"), '"vstrands":'
+    write(999, "(a)"), '['
+
     do i = 1, n_edge
-        write(999, "(i)"), i
         do j = 1, edge(i).n_sec
-            do k = min_bp, max_bp
-                write(999, "(i3$)"), edge(i).sec(j).stap(k).dn_sec
+            write(999, "(a)"), '{'
+
+            ! Skip
+            write(999, "(a$)"), '"skip":['
+            do k = 1, width - 1
+                write(999, "(a$)"), "0,"
             end do
-            write(999, "(a)")
+            write(999, "(a)"), "0],"
+
+            ! Stap
+            write(999, "(a$)"), '"stap":['
+            do k = 1, width - 1
+                write(999, "(a$)"), "[-1,-1,-1,-1],"
+            end do
+            write(999, "(a)"), "[-1,-1,-1,-1]],"
+
+            ! Scaffold loop
+            write(999, "(a)"), '"scafLoop":[],'
+
+            ! Staple colors
+            write(999, "(a)"), '"stap_colors":[],'
+
+            ! Scaffold loop
+            write(999, "(a)"), '"stapLoop":[],'
+
+            ! Scaffold routing
+            write(999, "(a$)"), '"scaf":['
+            do k = 1, width
+                if(k /= width) then
+                    write(999, "(a$)"), "[-1,-1,-1,-1],"
+                else
+                    write(999, "(a)"), "[-1,-1,-1,-1]],"
+                end if
+            end do
+
+            num = (i - 1) * edge(i).n_sec + j
+            write(999, "(a)"), '"num":'//trim(adjustl(Int2Str(num - 1)))//","
+            write(999, "(a)"), '"col":'//trim(adjustl(Int2Str(num + mod(num, 2) - 1)))//","
+
+            ! Loop
+            write(999, "(a$)"), '"loop":['
+            do k = 1, width - 1
+                write(999, "(a$)"), "0,"
+            end do
+            write(999, "(a)"), "0],"
+
+            write(999, "(a)"), '"row":'//trim(adjustl(Int2Str(15 - mod(num + 1, 2))))
+
+            if(i == n_edge .and. j == edge(i).n_sec) then
+                write(999, "(a)"), '}'
+            else
+                write(999, "(a)"), '},'
+            end if
         end do
-        write(999, "(a)")
     end do
+
+    write(999, "(a)"), '],'
+    write(999, "(a)"), '"name":"2D lattice design by PERDIX-OPEN"'
+    write(999, "(a)"), "}"
 
     ! Deallocate edge data
     do i = 1, n_edge
@@ -6401,7 +6469,7 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna)
     end do
     deallocate(edge)
 
-    !stop
+    stop
 end subroutine SeqDesign_Write_Out_JSON
 
 ! ---------------------------------------------------------------------------------------
