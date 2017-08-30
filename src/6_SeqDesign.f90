@@ -6310,10 +6310,7 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
 
     ! Conn type data
     type :: ConnType
-        integer :: dn_sec
-        integer :: dn_id
-        integer :: up_sec
-        integer :: up_id
+        integer :: conn(4)  ! [ down sec | down bp | up sec | up bp ]
     end type ConnType
 
     ! Section type data - Global section => (E-1)*iniE + sec
@@ -6329,8 +6326,10 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     end type EdgeType
 
     type(EdgeType), allocatable :: edge(:)
-    integer :: i, j, k, min_bp, max_bp, n_edge, width
-    integer :: base, up, dn, num
+    integer :: i, j, k, min_bp, max_bp, n_edge, width, num, shift
+    integer :: c_base, c_node, c_edge, c_sec, c_bp
+    integer :: dn_base, dn_node, dn_edge, dn_sec, dn_bp
+    integer :: up_base, up_node, up_edge, up_sec, up_bp
 
     open(unit=999, file=trim(prob.path_work1)//"check.json", form="formatted")
 
@@ -6345,8 +6344,10 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     min_bp = min_bp + para_start_bp_ID - 1
     max_bp = max_bp + para_start_bp_ID - 1
 
+    shift = para_start_bp_ID + 21 - 1
+
     ! Possible maximum edge length = max_bp - min_bp + 1 + max_unpaired
-    width = (max_bp - min_bp + 1 + max_unpaired) + 2 * para_start_bp_ID
+    width = (max_bp - min_bp + 1 + max_unpaired) + 2 * para_start_bp_ID + 21
     !print *, min_bp, max_bp, para_start_bp_ID, max_unpaired, max_bp - min_bp + 1 + max_unpaired
 
     ! Allocate and initialize edge data
@@ -6362,15 +6363,8 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
             allocate(edge(i).sec(j).stap(width))
 
             do k = 1, width
-                edge(i).sec(j).scaf(k).dn_sec = -1
-                edge(i).sec(j).scaf(k).dn_id  = -1
-                edge(i).sec(j).scaf(k).up_sec = -1
-                edge(i).sec(j).scaf(k).up_id  = -1
-
-                edge(i).sec(j).stap(k).dn_sec = -1
-                edge(i).sec(j).stap(k).dn_id  = -1
-                edge(i).sec(j).stap(k).up_sec = -1
-                edge(i).sec(j).stap(k).up_id  = -1
+                edge(i).sec(j).scaf(k).conn(1:4) = -1
+                edge(i).sec(j).stap(k).conn(1:4) = -1
             end do
         end do
     end do
@@ -6379,12 +6373,39 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     do i = 1, dna.n_strand
         if(dna.strand(i).types == "scaf") then
             do j = 1, dna.strand(i).n_base
-                base = dna.strand(i).base(j)
-                up = dna.top(base).up
-                dn = dna.top(base).dn
-                !print *, up, dn
-                ! 현재의 edge와 sec과 bp를 찾자
-                ! up과 dn의 sec과 bp를 찾자
+
+                c_base  = dna.strand(i).base(j)
+                dn_base = dna.top(c_base).dn
+                up_base = dna.top(c_base).up
+
+                if(c_base == -1 .or. dn_base == -1 .or. up_base == -1) cycle
+
+                c_node  = dna.top(c_base).node
+                dn_node = dna.top(dn_base).node
+                up_node = dna.top(up_base).node
+                if(c_node == -1 .or. dn_node == -1 .or. up_node == -1) cycle
+
+                c_edge = mesh.node(c_node).iniL
+                c_sec  = mesh.node(c_node).sec
+                c_bp   = mesh.node(c_node).bp + shift
+
+                dn_edge = mesh.node(dn_node).iniL
+                dn_sec  = mesh.node(dn_node).sec
+                dn_bp   = mesh.node(dn_node).bp + shift
+
+                up_edge = mesh.node(up_node).iniL
+                up_sec  = mesh.node(up_node).sec
+                up_bp   = mesh.node(up_node).bp + shift
+
+                ! Downward nucleotide
+                edge(c_edge).sec(c_sec+1).stap(c_bp).conn(1) = (dn_edge - 1) * edge(1).n_sec + dn_sec
+                edge(c_edge).sec(c_sec+1).stap(c_bp).conn(2) = dn_bp - 1
+
+                ! Upward nucleotide
+                edge(c_edge).sec(c_sec+1).stap(c_bp).conn(3) = (up_edge - 1) * edge(1).n_sec + up_sec
+                edge(c_edge).sec(c_sec+1).stap(c_bp).conn(4) = up_bp - 1
+
+                !write(0, "(4i6)"), edge(c_edge).sec(c_sec+1).stap(c_bp).conn(1:4)
             end do
         else if(dna.strand(i).types == "stap") then
             do j = 1, dna.strand(i).n_base
@@ -6428,10 +6449,37 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
             write(999, "(a$)"), '"scaf":['
             do k = 1, width
                 if(k /= width) then
-                    write(999, "(a$)"), "[-1,-1,-1,-1],"
+                    if(mod(j,2 ) == 1) then
+                        write(999, "(a$)"), "["//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(1))))//","//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(2))))//","//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(3))))//","//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(4))))//"],"
+                    else
+                        write(999, "(a$)"), "["//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(3))))//","//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(4))))//","//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(1))))//","//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(2))))//"],"
+                    end if
                 else
-                    write(999, "(a)"), "[-1,-1,-1,-1]],"
+                    if(mod(j,2 ) == 1) then
+                        write(999, "(a$)"), "["//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(1))))//","//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(2))))//","//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(3))))//","//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(4))))//"]],"
+                    else
+                        write(999, "(a$)"), "["//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(3))))//","//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(4))))//","//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(1))))//","//&
+                            trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(2))))//"]],"
+                    end if
                 end if
+
+                !if(k /= width) write(999, "(a$)"), "]"
+                !write(999, "(a$)"), "],"
             end do
 
             num = (i - 1) * edge(i).n_sec + j
