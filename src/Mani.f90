@@ -41,6 +41,7 @@ module Mani
     public Mani_Init_StrandType
     public Mani_Copy_BaseType
     public Mani_Go_Start_Base
+    public Mani_Go_Base
 
 contains
 
@@ -393,7 +394,7 @@ end subroutine Mani_Copy_BaseType
 
 ! ---------------------------------------------------------------------------
 
-! Go to starting point (down = -1)
+! Go to starting position (down = -1)
 function Mani_Go_Start_Base(dna, strand) result(base)
     type(DNAType), intent(in) :: dna
     integer,       intent(in) :: strand
@@ -406,6 +407,23 @@ function Mani_Go_Start_Base(dna, strand) result(base)
         base = dna.top(base).dn
     end do
 end function Mani_Go_Start_Base
+
+! ---------------------------------------------------------------------------
+
+! Move to base far away n from start position
+function Mani_Go_Base(dna, strand, n) result(base)
+    type(DNAType), intent(in) :: dna
+    integer,       intent(in) :: strand
+    integer,       intent(in) :: n
+
+    integer :: i, base
+
+    base = Mani_Go_Start_Base(dna, strand)
+
+    do i = 1, n
+        base = dna.top(base).up
+    end do
+end function Mani_Go_Base
 
 ! ---------------------------------------------------------------------------
 
