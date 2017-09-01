@@ -6317,6 +6317,8 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     type :: SecType
         type(ConnType), allocatable :: scaf(:)
         type(ConnType), allocatable :: stap(:)
+        integer :: n_stap_col
+        integer :: stap_col(20,2)
     end type SecType
 
     ! Initial line data
@@ -6330,9 +6332,23 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     integer :: c_base, c_node, c_edge, c_sec, c_bp
     integer :: dn_base, dn_node, dn_edge, dn_sec, dn_bp
     integer :: up_base, up_node, up_edge, up_sec, up_bp
-    integer :: cup_bp, cdn_bp
+    integer :: cup_bp, cdn_bp, col, row, col_shift, row_shift, color(12)
 
     open(unit=999, file=trim(prob.path_work1)//"check.json", form="formatted")
+
+    ! Hex color code
+    color( 1) = 13369344    ! #cc0000
+    color( 2) = 16204552    ! #f74308
+    color( 3) = 16225054    ! #f7931e
+    color( 4) = 11184640    ! #aaaa00
+    color( 5) = 5749504     ! #57bb00
+    color( 6) = 29184       ! #007200
+    color( 7) = 243362      ! #03b6a2
+    color( 8) = 1507550     ! #1700de
+    color( 9) = 7536862     ! #7300de
+    color(10) = 12060012    ! #b8056c
+    color(11) = 3355443     ! #333333
+    color(12) = 8947848     ! #888888
 
     ! Find maximum and minimum bp ID
     max_bp = mesh.node(1).bp
@@ -6365,6 +6381,9 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
             allocate(edge(i).sec(j).scaf(width))
             allocate(edge(i).sec(j).stap(width))
 
+            edge(i).sec(j).n_stap_col = 0
+            edge(i).sec(j).stap_col   = 0
+
             do k = 1, width
                 edge(i).sec(j).scaf(k).conn(1:4) = -1
                 edge(i).sec(j).stap(k).conn(1:4) = -1
@@ -6374,7 +6393,6 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
 
     ! Strand based loop
     do i = 1, dna.n_strand
-        !if(dna.strand(i).types == "scaf") then
 
         c_base = Mani_Go_Start_Base(dna, i)
         do j = 1, dna.strand(i).n_base
@@ -6387,9 +6405,11 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                 c_bp   = mesh.node(c_node).bp + shift
             else
                 if(mod(c_sec, 2) == 0) then
-                    c_bp = c_bp + 1
+                    if(dna.strand(i).types == "scaf") c_bp = c_bp + 1
+                    if(dna.strand(i).types == "stap") c_bp = c_bp - 1
                 else
-                    c_bp = c_bp - 1
+                    if(dna.strand(i).types == "scaf") c_bp = c_bp - 1
+                    if(dna.strand(i).types == "stap") c_bp = c_bp + 1
                 end if
             end if
 
@@ -6403,18 +6423,27 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                     dn_bp   = mesh.node(dn_node).bp + shift
                 else
                     if(mod(c_sec, 2) == 0) then
-                        dn_bp = dn_bp + 1
+                        if(dna.strand(i).types == "scaf") dn_bp = dn_bp + 1
+                        if(dna.strand(i).types == "stap") dn_bp = dn_bp - 1
                     else
-                        dn_bp = dn_bp - 1
+                        if(dna.strand(i).types == "scaf") dn_bp = dn_bp - 1
+                        if(dna.strand(i).types == "stap") dn_bp = dn_bp + 1
                     end if
                 end if
                 if(dna.strand(i).types == "scaf") then
                     edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(1) = (dn_edge - 1) * edge(1).n_sec + dn_sec
                     edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(2) = dn_bp - 1
                 else
-                    !edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(1) = (dn_edge - 1) * edge(1).n_sec + dn_sec
-                    !edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(2) = dn_bp - 1
+                    edge(c_edge).sec(c_sec+1).stap(c_bp).conn(1) = (dn_edge - 1) * edge(1).n_sec + dn_sec
+                    edge(c_edge).sec(c_sec+1).stap(c_bp).conn(2) = dn_bp - 1
                 end if
+            else if(dn_base == -1 .and. dna.strand(i).types == "stap") then
+                ! Set color
+                edge(c_edge).sec(c_sec+1).n_stap_col = edge(c_edge).sec(c_sec+1).n_stap_col + 1
+                num = edge(c_edge).sec(c_sec+1).n_stap_col
+                edge(c_edge).sec(c_sec+1).stap_col(num,1) = c_bp - 1
+                edge(c_edge).sec(c_sec+1).stap_col(num,2) = color(mod(i, 12)+1)
+                !print *, i, c_edge, c_sec, num, edge(c_edge).sec(c_sec+1).stap_col(num,1:2) 
             end if
 
             ! Upper base
@@ -6427,37 +6456,33 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                     up_bp   = mesh.node(up_node).bp + shift
                 else
                     if(mod(c_sec, 2) == 0) then
-                        up_bp = up_bp + 1
+                        if(dna.strand(i).types == "scaf") up_bp = up_bp + 1
+                        if(dna.strand(i).types == "stap") up_bp = up_bp - 1
                     else
-                        up_bp = up_bp - 1
+                        if(dna.strand(i).types == "scaf") up_bp = up_bp - 1
+                        if(dna.strand(i).types == "stap") up_bp = up_bp + 1
                     end if
                 end if
                 if(dna.strand(i).types == "scaf") then
                     edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(3) = (up_edge - 1) * edge(1).n_sec + up_sec
                     edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(4) = up_bp - 1
                 else
-                    !edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(3) = (up_edge - 1) * edge(1).n_sec + up_sec
-                    !edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(4) = up_bp - 1
+                    edge(c_edge).sec(c_sec+1).stap(c_bp).conn(3) = (up_edge - 1) * edge(1).n_sec + up_sec
+                    edge(c_edge).sec(c_sec+1).stap(c_bp).conn(4) = up_bp - 1
                 end if
             end if
 
             ! Update base
             c_base = dna.Top(c_base).up
         end do
-        !else if(dna.strand(i).types == "stap") then
-        !    do j = 1, dna.strand(i).n_base
-        !
-        !    end do
-        !end if
     end do
-
-    print *, "aaa"
 
     ! Print JSON-style data structure
     write(999, "(a)"), "{"
     write(999, "(a)"), '"vstrands":'
     write(999, "(a)"), '['
 
+    row_shift = 0
     do i = 1, n_edge
         do j = 1, edge(i).n_sec
             write(999, "(a)"), '{'
@@ -6473,10 +6498,10 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
             write(999, "(a$)"), '"stap":['
             do k = 1, width
                 write(999, "(a$)"), "["//&
-                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(3))))//","//&
-                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(4))))//","//&
                     trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(1))))//","//&
-                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(2))))
+                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(2))))//","//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(3))))//","//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(4))))
 
                 if(k /= width) write(999, "(a$)"), "]"
                 if(k == width) write(999, "(a )"), "]],"
@@ -6486,8 +6511,18 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
             write(999, "(a)"), '"scafLoop":[],'
 
             ! Staple colors
-            write(999, "(a)"), '"stap_colors":[],'
+            write(999, "(a$)"), '"stap_colors":['
+            do k = 1, edge(i).sec(j).n_stap_col
+                write(999, "(a$)"), '['//trim(adjustl(Int2Str(edge(i).sec(j).stap_col(k,1))))
+                write(999, "(a$)"), ','//trim(adjustl(Int2Str(edge(i).sec(j).stap_col(k,2))))
+                
+                if(k /= edge(i).sec(j).n_stap_col) write(999, "(a$)"), '],'
+                if(k == edge(i).sec(j).n_stap_col) write(999, "(a$)"), ']'
+            end do
+            write(999, "(a )"), '],'
 
+            
+            
             ! Scaffold loop
             write(999, "(a)"), '"stapLoop":[],'
 
@@ -6504,18 +6539,26 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                 if(k == width) write(999, "(a )"), "]],"
             end do
 
+            ! Cross-section position
+            col_shift = mod(i, 15)
+            if(col_shift == 1 .and. j == 1) row_shift = row_shift + 2
+            if(col_shift == 0) col_shift = 15
+            col_shift = 2*col_shift
+
             num = (i - 1) * edge(i).n_sec + j
+            col = col_shift - geom.sec.posR(j)
+            row = row_shift - geom.sec.posC(j)
+
             write(999, "(a)"), '"num":'//trim(adjustl(Int2Str(num - 1)))//","
-            write(999, "(a)"), '"col":'//trim(adjustl(Int2Str(num + mod(num, 2) - 1)))//","
+            write(999, "(a)"), '"col":'//trim(adjustl(Int2Str(col)))//","
+            write(999, "(a)"), '"row":'//trim(adjustl(Int2Str(row)))//","
 
             ! Loop
             write(999, "(a$)"), '"loop":['
             do k = 1, width - 1
                 write(999, "(a$)"), "0,"
             end do
-            write(999, "(a)"), "0],"
-
-            write(999, "(a)"), '"row":'//trim(adjustl(Int2Str(15 - mod(num + 1, 2))))
+            write(999, "(a)"), "0]"
 
             if(i == n_edge .and. j == edge(i).n_sec) then
                 write(999, "(a)"), '}'
