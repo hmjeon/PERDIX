@@ -6443,7 +6443,6 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                 num = edge(c_edge).sec(c_sec+1).n_stap_col
                 edge(c_edge).sec(c_sec+1).stap_col(num,1) = c_bp - 1
                 edge(c_edge).sec(c_sec+1).stap_col(num,2) = color(mod(i, 12)+1)
-                !print *, i, c_edge, c_sec, num, edge(c_edge).sec(c_sec+1).stap_col(num,1:2) 
             end if
 
             ! Upper base
@@ -6521,8 +6520,6 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
             end do
             write(999, "(a )"), '],'
 
-            
-            
             ! Scaffold loop
             write(999, "(a)"), '"stapLoop":[],'
 
@@ -6581,8 +6578,6 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
         deallocate(edge(i).sec)
     end do
     deallocate(edge)
-
-    stop
 end subroutine SeqDesign_Write_Out_JSON
 
 ! ---------------------------------------------------------------------------------------
