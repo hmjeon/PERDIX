@@ -6349,6 +6349,8 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
 
     ! Possible maximum edge length = max_bp - min_bp + 1 + max_unpaired
     width = (max_bp - min_bp + 1 + max_unpaired) + 2 * para_start_bp_ID + 21
+    width = (width / 21) * 21 + 21
+
     !print *, min_bp, max_bp, para_start_bp_ID, max_unpaired, max_bp - min_bp + 1 + max_unpaired
 
     ! Allocate and initialize edge data
@@ -6372,141 +6374,81 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
 
     ! Strand based loop
     do i = 1, dna.n_strand
-        if(dna.strand(i).types == "scaf") then
+        !if(dna.strand(i).types == "scaf") then
 
-            c_base = Mani_Go_Start_Base(dna, i)
-            do j = 1, dna.strand(i).n_base
+        c_base = Mani_Go_Start_Base(dna, i)
+        do j = 1, dna.strand(i).n_base
 
-                dn_base = dna.top(c_base).dn
-                up_base = dna.top(c_base).up
+            ! Current base
+            c_node = dna.top(c_base).node
+            if(c_node /= -1) then
+                c_edge = mesh.node(c_node).iniL
+                c_sec  = mesh.node(c_node).sec
+                c_bp   = mesh.node(c_node).bp + shift
+            else
+                if(mod(c_sec, 2) == 0) then
+                    c_bp = c_bp + 1
+                else
+                    c_bp = c_bp - 1
+                end if
+            end if
 
-                ! Down base
-                if(dn_base /= -1) then
-                    c_node  = dna.top(c_base).node
-                    dn_node = dna.top(dn_base).node
-
-                    if(dn_node == -1 .or. c_node == -1) then
-
-                        if(c_node /= -1 .and. dn_node == -1) then   ! need to change == -1
-
-                            !c_edge = mesh.node(c_node).iniL
-                            !c_sec  = mesh.node(c_node).sec
-                            !c_bp   = mesh.node(c_node).bp + shift
-
-                            !if(mod(c_sec, 2) == 0) then
-                            !    dn_bp = c_bp - 1
-                            !else
-                            !    dn_bp = c_bp + 1
-                            !end if
-
-                            !edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(1) = (c_edge - 1) * edge(1).n_sec + c_sec
-                            !edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(2) = dn_bp - 1
-                        else if(dn_node /= -1 .and. c_node == -1) then
-
-                            !dn_edge = mesh.node(dn_node).iniL
-                            !dn_sec  = mesh.node(dn_node).sec
-                            !dn_bp   = mesh.node(dn_node).bp + shift
-
-                            !if(mod(dn_sec, 2) == 0) then
-                            !    cdn_bp = dn_bp + 1
-                            !else
-                            !    cdn_bp = dn_bp - 1
-                            !end if
-
-                            !edge(c_edge).sec(c_sec+1).scaf(cdn_bp).conn(1) = (dn_edge - 1) * edge(1).n_sec + dn_sec
-                            !edge(c_edge).sec(c_sec+1).scaf(cdn_bp).conn(2) = dn_bp - 1
-                        else
-
-                            !if(mod(c_sec, 2) == 0) then
-                            !    cdn_bp = cdn_bp + 1
-                            !    dn_bp  = cdn_bp - 1
-                            !else
-                            !    cdn_bp = cdn_bp - 1
-                            !    dn_bp  = cdn_bp + 1
-                            !end if
-
-                            !edge(c_edge).sec(c_sec+1).scaf(cdn_bp).conn(1) = (c_edge - 1) * edge(1).n_sec + c_sec
-                            !edge(c_edge).sec(c_sec+1).scaf(cdn_bp).conn(2) = dn_bp - 1
-                        end if
+            ! Downward base
+            dn_base = dna.top(c_base).dn
+            if(dn_base /= -1) then
+                dn_node = dna.top(dn_base).node
+                if(dn_node /= -1) then
+                    dn_edge = mesh.node(dn_node).iniL
+                    dn_sec  = mesh.node(dn_node).sec
+                    dn_bp   = mesh.node(dn_node).bp + shift
+                else
+                    if(mod(c_sec, 2) == 0) then
+                        dn_bp = dn_bp + 1
                     else
-                        c_edge = mesh.node(c_node).iniL
-                        c_sec  = mesh.node(c_node).sec
-                        c_bp   = mesh.node(c_node).bp + shift
-
-                        dn_edge = mesh.node(dn_node).iniL
-                        dn_sec  = mesh.node(dn_node).sec
-                        dn_bp   = mesh.node(dn_node).bp + shift
-
-                        edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(1) = (dn_edge - 1) * edge(1).n_sec + dn_sec
-                        edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(2) = dn_bp - 1
+                        dn_bp = dn_bp - 1
                     end if
                 end if
+                if(dna.strand(i).types == "scaf") then
+                    edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(1) = (dn_edge - 1) * edge(1).n_sec + dn_sec
+                    edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(2) = dn_bp - 1
+                else
+                    !edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(1) = (dn_edge - 1) * edge(1).n_sec + dn_sec
+                    !edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(2) = dn_bp - 1
+                end if
+            end if
 
-                ! Up base
-                if(up_base /= -1) then
-                    c_node  = dna.top(c_base).node
-                    up_node = dna.top(up_base).node
-
-                    if(up_node == -1 .or. c_node == -1) then
-
-                        if(c_node /= -1 .and. up_node == -1) then
-
-                            !c_edge = mesh.node(c_node).iniL
-                            !c_sec  = mesh.node(c_node).sec
-                            !c_bp   = mesh.node(c_node).bp + shift
-                            !cup_bp = c_bp
-
-                            !if(mod(c_sec, 2) == 0) then
-                            !    up_bp = cup_bp + 1
-                            !else
-                            !    up_bp = cup_bp - 1
-                            !end if
-
-                            !edge(c_edge).sec(c_sec+1).scaf(cup_bp).conn(3) = (c_edge - 1) * edge(1).n_sec + c_sec
-                            !edge(c_edge).sec(c_sec+1).scaf(cup_bp).conn(4) = up_bp - 1
-                        else if(up_node /= -1 .and. c_node == -1) then
-
-                            !up_edge = mesh.node(up_node).iniL
-                            !up_sec  = mesh.node(up_node).sec
-                            !up_bp   = mesh.node(up_node).bp + shift
-
-                            !edge(c_edge).sec(c_sec+1).scaf(cup_bp).conn(3) = (up_edge - 1) * edge(1).n_sec + up_sec
-                            !edge(c_edge).sec(c_sec+1).scaf(cup_bp).conn(4) = up_bp - 1
-                        else
-
-                            !if(mod(c_sec, 2) == 0) then
-                            !    cup_bp = cup_bp + 1
-                            !    up_bp  = cup_bp + 1
-                            !else
-                            !    cup_bp = cup_bp - 1
-                            !    up_bp  = cup_bp - 1
-                            !end if
-
-                            !edge(c_edge).sec(c_sec+1).scaf(cup_bp).conn(3) = (c_edge - 1) * edge(1).n_sec + c_sec
-                            !edge(c_edge).sec(c_sec+1).scaf(cup_bp).conn(4) = up_bp - 1
-                        end if
+            ! Upper base
+            up_base = dna.top(c_base).up
+            if(up_base /= -1) then
+                up_node = dna.top(up_base).node
+                if(up_node /= -1) then
+                    up_edge = mesh.node(up_node).iniL
+                    up_sec  = mesh.node(up_node).sec
+                    up_bp   = mesh.node(up_node).bp + shift
+                else
+                    if(mod(c_sec, 2) == 0) then
+                        up_bp = up_bp + 1
                     else
-                        c_edge = mesh.node(c_node).iniL
-                        c_sec  = mesh.node(c_node).sec
-                        c_bp   = mesh.node(c_node).bp + shift
-
-                        up_edge = mesh.node(up_node).iniL
-                        up_sec  = mesh.node(up_node).sec
-                        up_bp   = mesh.node(up_node).bp + shift
-
-                        edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(3) = (up_edge - 1) * edge(1).n_sec + up_sec
-                        edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(4) = up_bp - 1
+                        up_bp = up_bp - 1
                     end if
                 end if
+                if(dna.strand(i).types == "scaf") then
+                    edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(3) = (up_edge - 1) * edge(1).n_sec + up_sec
+                    edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(4) = up_bp - 1
+                else
+                    !edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(3) = (up_edge - 1) * edge(1).n_sec + up_sec
+                    !edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(4) = up_bp - 1
+                end if
+            end if
 
-                ! Update base
-                c_base = dna.Top(c_base).up
-            end do
-        else if(dna.strand(i).types == "stap") then
-            do j = 1, dna.strand(i).n_base
-
-            end do
-        end if
+            ! Update base
+            c_base = dna.Top(c_base).up
+        end do
+        !else if(dna.strand(i).types == "stap") then
+        !    do j = 1, dna.strand(i).n_base
+        !
+        !    end do
+        !end if
     end do
 
     print *, "aaa"
@@ -6529,10 +6471,16 @@ subroutine SeqDesign_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
 
             ! Stap
             write(999, "(a$)"), '"stap":['
-            do k = 1, width - 1
-                write(999, "(a$)"), "[-1,-1,-1,-1],"
+            do k = 1, width
+                write(999, "(a$)"), "["//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(3))))//","//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(4))))//","//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(1))))//","//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(2))))
+
+                if(k /= width) write(999, "(a$)"), "]"
+                if(k == width) write(999, "(a )"), "]],"
             end do
-            write(999, "(a)"), "[-1,-1,-1,-1]],"
 
             ! Scaffold loop
             write(999, "(a)"), '"scafLoop":[],'
