@@ -112,7 +112,7 @@ module Para
     logical :: para_write_710   = .false.       !  Edge-based sequence design,              SeqDesign_Write_Graphical_Output, "_design_edgeX"
     logical :: para_write_801   = .false.       !  Txt on basepair based data,              Output_Write_Basepair,            "_basepair.txt"
     logical :: para_write_802   = .false.       !  Txt on nucleotide based data,            Output_Write_Base,                "_base.txt"
-    logical :: para_write_803   = .true.        ! *CanDo input file,                        Output_Write_CanDo,               "_13_cndo.cndo"
+    logical :: para_write_803   = .true.        ! *CanDo input file,                        Output_Write_CanDo,               "_15_cndo.cndo"
     logical :: para_write_804   = .false.       !  Tecplot input file,                      Output_Write_TecPlot,             "_tecplot.dat"
     logical :: para_write_805   = .false.       !  ADINA input file,                        Output_Write_ADINA,               "_adina.in"
     logical :: para_write_808   = .false.       !  Txt on sectional edges based sequence,   Output_Write_Sequence_CroL,       "_seq_line.txt"

@@ -144,7 +144,7 @@ end subroutine Mani_Progress_Bar
 subroutine Mani_Init_LineType(line, n_line)
     type(LineType), allocatable, intent(inout) :: line(:)
     integer, intent(in) :: n_line
-    
+
     integer :: i, j
 
     do i = 1, n_line
@@ -365,7 +365,8 @@ subroutine Mani_Init_StrandType(strand, n_strand)
     do i = 1, n_strand
         strand(i).n_base     = 0
         strand(i).b_circular = .false.
-        strand(i).types      = "NNNN"
+        strand(i).type1      = "NNNN"
+        strand(i).type2      = "edge"
     end do
 end subroutine Mani_Init_StrandType
 

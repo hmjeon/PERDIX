@@ -166,7 +166,7 @@ subroutine ModGeo_Set_Neighbor_Point(prob, geom)
         write(i, "(a)"), "2.1. Neighbor points from two faces sharing with the line"
     end do
     do i = 1, geom.n_iniL
-        write(11, "(i20, a, i3, a, i3, a$)"), i, " th edge (", geom.iniL(i).poi(1), "->", geom.iniL(i).poi(2), ") "
+        write(11, "(i20, a, i3, a, i3, a$)"), i, " edge (", geom.iniL(i).poi(1), "->", geom.iniL(i).poi(2), ") "
         write(11, "(a,   i3$)"), "| (Poi 1) -> left(+) : ", geom.iniL(i).neiP(1, 1)
         write(11, "(a,   i3$)"), ", right(-) : ",           geom.iniL(i).neiP(1, 2)
         write(11, "(a,   i3$)"), ", (Poi 2) -> left(+) : ", geom.iniL(i).neiP(2, 1)
@@ -339,7 +339,7 @@ subroutine ModGeo_Set_Neighbor_Line(prob, geom, bound)
         write(i, "(a)"), "2.2. Find neighboring edges from initial geometry"
     end do
     do i = 1, geom.n_iniL
-        write(11, "(i20, a$ )"), i, " th line"
+        write(11, "(i20, a$ )"), i, " line"
         write(11, "(a,   i4$)"), ", (point 1) -> left : ", geom.iniL(i).neiL(1, 1)
         write(11, "(a,   i4$)"), ", right : ",             geom.iniL(i).neiL(1, 2)
         write(11, "(a,   i4$)"), ", (point 2) -> left : ", geom.iniL(i).neiL(2, 1)
@@ -663,7 +663,7 @@ subroutine ModGeo_Set_Junction_Data(geom, bound)
     end do
     do i = 1, bound.n_junc
         ! 1 th junction : 3-arms -> center point # 1, lines # : (1, 2, 3)
-        write(11, "(i20, a$)"), i, " th junc : "
+        write(11, "(i20, a$)"), i, " junc : "
         write(11, "(i4,  a$)"), bound.junc(i).n_arm, "-arms -> center point # : "
         write(11, "(i4,  a$)"), bound.junc(i).poi_c, ", lines # : ("
         do j = 1, bound.junc(i).n_arm - 1
@@ -696,7 +696,7 @@ subroutine ModGeo_Set_Local_Coorindate(geom)
 
         ! Print detailed information
         ! 1 th line : t1 -> [**, **, **], t2 -> [**, **, **], t3 -> [**, **, **]
-        write(11, "(i20,  a$)"), i, " th line : t1 -> [ "
+        write(11, "(i20,  a$)"), i, " line : t1 -> [ "
         write(11, "(f5.2, a$)"), geom.iniL(i).t(1, 1), ", "
         write(11, "(f5.2, a$)"), geom.iniL(i).t(1, 2), ", "
         write(11, "(f5.2, a$)"), geom.iniL(i).t(1, 3), " ], t2 -> [ "
@@ -1088,7 +1088,7 @@ subroutine ModGeo_Seperate_Line(geom, bound)
 
     do i = 1, bound.n_junc
         ! 1 th junction : 3-arms -> mod points # : (1, 2, 3)
-        write(11, "(i20, a$)"), i, " th junc : "
+        write(11, "(i20, a$)"), i, " junc : "
         write(11, "(i3,  a$)"), bound.junc(i).n_arm, "-arms -> seperated points - ("
         do j = 1, bound.junc(i).n_arm - 1
             write(11, "(i4, a$)"), bound.junc(i).modP(j), ", "
@@ -1652,7 +1652,7 @@ subroutine ModGeo_Set_Gap_Junction(geom, bound)
             remain = 0.0d0
         end if
 
-        write(11, "(i20,  a$)"), i,      " th edge -> edge length : "
+        write(11, "(i20,  a$)"), i,      " edge -> edge length : "
         write(11, "(f8.3, a$)"), length, " [nm] -> "
         write(11, "(i4,   a$)"), n_bp,   " BP, remaining length : "
         write(11, "(f8.3, a )"), remain, " [nm]"
@@ -1721,7 +1721,7 @@ subroutine ModGeo_Set_Const_Geometric_Ratio(geom)
 
         ! Print progress
         call space(0, 11)
-        write(0, "(a$)"), trim(adjustl(Int2Str(i)))//" - th edge"
+        write(0, "(a$)"), trim(adjustl(Int2Str(i)))//" - edge"
         write(0, "(a$)"), ", len(mesh) : "//trim(adjustl(Dble2Str(len_ini)))
         write(0, "(a$)"), " ["//trim(adjustl(Dble2Str(42.0d0*(len_ini/len_ref))))//"] "
         write(0, "(a$)"), ", len(mod) : "//trim(adjustl(Dble2Str(len_mod)))

@@ -801,7 +801,7 @@ subroutine SpanTree_Print_All_Trees(idx, src, dst)
 
     do i = 1, n_tree
         call Space(0, 18)
-        write(0, "(i3, a$)"), i, " th spanning tree : "
+        write(0, "(i3, a$)"), i, " spanning tree : "
 
         do j = 1, n_bran
             write(0, "(a, i2, a, i2, a$)"), "(", &
@@ -1359,7 +1359,7 @@ subroutine SpanTree_Interface_1_Sort(tail, head, cost, up, down, listup, listdn,
     integer, allocatable, intent(inout) :: down(:)
     integer, allocatable, intent(inout) :: listup(:)
     integer, allocatable, intent(inout) :: listdn(:)
-    character(*),        intent(in)     :: mode
+    character(*),         intent(in)    :: mode
 
     integer :: i, k, x, kk, n_edge
 

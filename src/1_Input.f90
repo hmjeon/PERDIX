@@ -271,7 +271,7 @@ subroutine Input_Initialize_Report(prob, geom, mesh, i, sec, edge, char_vert, ch
     para_write_710   = .false.       !  Edge-based sequence design,              SeqDesign_Write_Graphical_Output, "_design_edgeX"
     para_write_801   = .false.       !  Txt on basepair based data,              Output_Write_Basepair,            "_basepair.txt"
     para_write_802   = .false.       !  Txt on nucleotide based data,            Output_Write_Base,                "_base.txt"
-    para_write_803   = .true.        ! *CanDo input file,                        Output_Write_CanDo,               "_13_cndo.cndo"
+    para_write_803   = .true.        ! *CanDo input file,                        Output_Write_CanDo,               "_15_cndo.cndo"
     para_write_804   = .false.       !  Tecplot input file,                      Output_Write_TecPlot,             "_tecplot.dat"
     para_write_805   = .false.       !  ADINA input file,                        Output_Write_ADINA,               "_adina.in"
     para_write_808   = .false.       !  Txt on sectional edges based sequence,   Output_Write_Sequence_CroL,       "_seq_line.txt"
@@ -719,7 +719,7 @@ subroutine Input_Set_Parameter_Dependence
             para_write_710   = .false.      !  Edge-based sequence design,              SeqDesign_Write_Graphical_Output, "_design_edgeX"
             para_write_801   = .false.      !  Txt on basepair based data,              Output_Write_Basepair,            "_basepair.txt"
             para_write_802   = .false.      !  Txt on nucleotide based data,            Output_Write_Base,                "_base.txt"
-            para_write_803   = .true.       ! *CanDo input file,                        Output_Write_CanDo,               "_13_cndo.cndo"
+            para_write_803   = .true.       ! *CanDo input file,                        Output_Write_CanDo,               "_15_cndo.cndo"
             para_write_804   = .false.      !  Tecplot input file,                      Output_Write_TecPlot,             "_tecplot.dat"
             para_write_805   = .false.      !  ADINA input file,                        Output_Write_ADINA,               "_adina.in"
             para_write_808   = .false.      !  Txt on sectional edges based sequence,   Output_Write_Sequence_CroL,       "_seq_line.txt"
@@ -1318,10 +1318,10 @@ subroutine Input_Set_Section_Connectivity(prob, geom)
     write(0, "(a)"), "   --------------------------------------------------"
     do i = 1, geom.n_sec
 
-        write(0, "(i10, a$)"), geom.sec.id(i), " th section  ->"
+        write(0, "(i10, a$)"), geom.sec.id(i), " section  ->"
 
         if(geom.sec.conn(i) /= -1) then
-            write(0, "(i7, a)"), geom.sec.conn(i), "    th section"
+            write(0, "(i7, a)"), geom.sec.conn(i), "    section"
         else
             write(0, "(a)"), "  Neighbor connection"
             count = count + 1

@@ -56,8 +56,8 @@ subroutine Exam_Prism_Triangular(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Prism Triangular"
-    prob.name_file = "Prism Triangular"//&
+    prob.name_prob = "Prism_Triangular"
+    prob.name_file = "Prism_Triangular"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -101,7 +101,7 @@ subroutine Exam_Prism_Pentagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Prism Pentagonal"
+    prob.name_prob = "Prism_Pentagonal"
     prob.name_file = "Prism_Pentagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -152,7 +152,7 @@ subroutine Exam_Prism_Hexagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Prism Hexagonal"
+    prob.name_prob = "Prism_Hexagonal"
     prob.name_file = "Prism_Hexagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -206,7 +206,7 @@ subroutine Exam_Prism_Heptagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Prism Heptagonal"
+    prob.name_prob = "Prism_Heptagonal"
     prob.name_file = "Prism_Heptagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -263,8 +263,8 @@ subroutine Exam_Prism_Octagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Prism Octagonal"
-    prob.name_file = "16_Prism_Octagonal"//&
+    prob.name_prob = "Prism_Octagonal"
+    prob.name_file = "Prism_Octagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -323,8 +323,8 @@ subroutine Exam_Prism_Enneagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Prism Enneagonal"
-    prob.name_file = "17_Prism_Enneagonal"//&
+    prob.name_prob = "Prism_Enneagonal"
+    prob.name_file = "Prism_Enneagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -386,7 +386,7 @@ subroutine Exam_Prism_Decagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Prism Decagonal"
+    prob.name_prob = "Prism_Decagonal"
     prob.name_file = "Prism_Decagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -452,7 +452,7 @@ subroutine Exam_Antiprism_Square(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Antiprism Square"
+    prob.name_prob = "Antiprism_Square"
     prob.name_file = "Antiprism_Square"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -504,8 +504,8 @@ subroutine Exam_Antiprism_Pentagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Antiprism Pentagonal"
-    prob.name_file = "18_Antiprism_Pentagonal"//&
+    prob.name_prob = "Antiprism_Pentagonal"
+    prob.name_file = "Antiprism_Pentagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -560,8 +560,8 @@ subroutine Exam_Antiprism_Hexagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Antiprism Hexagonal"
-    prob.name_file = "19_Antiprism_Hexagonal"//&
+    prob.name_prob = "Antiprism_Hexagonal"
+    prob.name_file = "Antiprism_Hexagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -620,8 +620,8 @@ subroutine Exam_Antiprism_Heptagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Antiprism Heptagonal"
-    prob.name_file = "20_Antiprism_Heptagonal"//&
+    prob.name_prob = "Antiprism_Heptagonal"
+    prob.name_file = "Antiprism_Heptagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -684,7 +684,7 @@ subroutine Exam_Antiprism_Octagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Antiprism Octagonal"
+    prob.name_prob = "Antiprism_Octagonal"
     prob.name_file = "Antiprism_Octagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -752,7 +752,7 @@ subroutine Exam_Antiprism_Enneagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Antiprism Enneagonal"
+    prob.name_prob = "Antiprism_Enneagonal"
     prob.name_file = "Antiprism_Enneagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -824,7 +824,7 @@ subroutine Exam_Antiprism_Decagonal(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Antiprism Decagonal"
+    prob.name_prob = "Antiprism_Decagonal"
     prob.name_file = "Antiprism_Decagonal"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&

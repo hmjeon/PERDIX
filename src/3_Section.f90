@@ -103,8 +103,8 @@ function Section_Connection_Scaf(geom, sec_cur, sec_com, bp_id) result(b_connect
     row_com = geom.sec.posR(sec_com + 1)
     col_com = geom.sec.posC(sec_com + 1)
 
-    !write(0, "(i10, a, 2i)"), sec_cur, " th : section(current),   row and col # : ", row_cur, col_cur
-    !write(0, "(i10, a, 2i)"), sec_com, " th : section(comparing), row and col # : ", row_com, col_com
+    !write(0, "(i10, a, 2i)"), sec_cur, " : section(current),   row and col # : ", row_cur, col_cur
+    !write(0, "(i10, a, 2i)"), sec_com, " : section(comparing), row and col # : ", row_com, col_com
     !write(0, "(a)")
 
     ! determine whether the section connects or not
@@ -401,8 +401,8 @@ function Section_Connection_Stap(geom, sec_cur, sec_com, bp_id) result(b_connect
     row_com = geom.sec.posR(sec_com + 1)
     col_com = geom.sec.posC(sec_com + 1)
 
-    !write(0, "(i10, a, 2i)"), sec_cur, " th : section(current),   row and col # : ", row_cur, col_cur
-    !write(0, "(i10, a, 2i)"), sec_com, " th : section(comparing), row and col # : ", row_com, col_com
+    !write(0, "(i10, a, 2i)"), sec_cur, " : section(current),   row and col # : ", row_cur, col_cur
+    !write(0, "(i10, a, 2i)"), sec_com, " : section(comparing), row and col # : ", row_com, col_com
     !write(0, "(a)")
 
     ! --------------------------------------------------
@@ -754,7 +754,7 @@ subroutine Section_Set_Sectional_Data(geom, bound)
     do m = 1, bound.n_junc
 
         write(11, "(i20$)"), m
-        write(11, "(a$  )"), " th junc, the number of arms : "
+        write(11, "(a$  )"), " junc, the number of arms : "
         write(11, "(i5  )"), bound.junc(m).n_arm
 
         do n = 1, bound.junc(m).n_arm

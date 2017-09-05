@@ -54,7 +54,8 @@ module Data_DNA
         integer      :: n_base         ! The number of bases in this strand
         integer      :: n_14nt, n_4nt  ! The number of 14nt and 4nt seeds
         logical      :: b_circular     ! Is it circular strand
-        character(4) :: types          ! The strand type, scaffold or staple
+        character(4) :: type1          ! Type 1 - Scaffold or staple
+        character(6) :: type2          ! Type 2 - Edge or vertex strand
 
         integer, allocatable :: base(:)
     end type StrandType

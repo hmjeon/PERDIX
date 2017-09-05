@@ -3,7 +3,7 @@
 !
 !                                   Module - Output
 !
-!                                                                    Updated : 2017/03/27
+!                                                                    Updated : 2017/09/05
 !
 ! Comments: This module is for outputs.
 !
@@ -17,6 +17,7 @@ module Output
     use Ifport
     use Data_Mesh
     use Data_DNA
+    use Data_Bound
 
     use Mani
     use Para
@@ -28,6 +29,14 @@ module Output
     implicit none
 
     public  Output_Generation
+
+    private Output_Write_Outputs
+    private Output_Write_Out_Sequences
+    private Output_Write_Out_Unpaired
+    private Output_Write_Out_Graphics
+    private Output_Write_Out_Strand_Base
+    private Output_Write_Out_Guide_JSON
+    private Output_Write_Out_JSON
 
     private Output_Check_Output
     private Output_Write_Basepair
@@ -47,10 +56,12 @@ contains
 ! ---------------------------------------------------------------------------------------
 
 ! Generate output files and run postprocessing tools
-subroutine Output_Generation(prob, mesh, dna)
-    type(ProbType), intent(in) :: prob
-    type(MeshType), intent(in) :: mesh
-    type(DNAType),  intent(in) :: dna
+subroutine Output_Generation(prob, geom, bound, mesh, dna)
+    type(ProbType),  intent(in) :: prob
+    type(GeomType),  intent(in) :: geom
+    type(BoundType), intent(in) :: bound
+    type(MeshType),  intent(in) :: mesh
+    type(DNAType),   intent(inout) :: dna
 
     integer :: i
 
@@ -69,6 +80,9 @@ subroutine Output_Generation(prob, mesh, dna)
 
     ! Check connectivity in dna data
     !call Output_Check_Output(dna)
+
+    ! Write outputs
+    call Output_Write_Outputs(prob, geom, bound, mesh, dna)
 
     ! Write information related with basepair
     call Output_Write_Basepair(prob, mesh, dna)
@@ -216,7 +230,1987 @@ subroutine Output_Check_Output(dna)
         deallocate(base)
     end do
 end subroutine Output_Check_Output
-    
+
+! ---------------------------------------------------------------------------------------
+
+! Write output file
+subroutine Output_Write_Outputs(prob, geom, bound, mesh, dna)
+    type(ProbType),  intent(in) :: prob
+    type(GeomType),  intent(in) :: geom
+    type(BoundType), intent(in) :: bound
+    type(MeshType),  intent(in) :: mesh
+    type(DNAType),   intent(inout) :: dna
+
+    integer :: max_unpaired
+
+    if(para_write_701 == .false.) return
+    open(unit = 701, file=trim(prob.path_work1)//"TXT_Sequence.txt", form="formatted")
+
+    ! Write output of sequence data
+    write(701, "(a)")
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|+                      1. Sequence data                          +|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)")
+    call Output_Write_Out_Sequences(prob, mesh, dna, 701)
+
+    ! Write output of graphical representation
+    write(701, "(a)")
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|+                      2. Graphical output                       +|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)")
+    write(701, "(a)"), "1. [-], [num], [.], [>], [<] : Nucleotide"
+    write(701, "(a)"), "2. [|]                       : Crossover"
+    write(701, "(a)"), "3. [A], [T], [G], [C]        : Sequence"
+    write(701, "(a)"), "4. [ a: b], c                : From starting base ID(a) to ending base ID(b), total # of bases (c)"
+    write(701, "(a)"), "5. [5'], [3']                : Strand direction"
+    write(701, "(a)")
+    call Output_Write_Out_Graphics(prob, geom, mesh, dna, 701)
+
+    ! Write output of unpaired nucleotides
+    write(701, "(a)")
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|+     3. Unpaired nucleotides and poly Tn loop information       +|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)")
+    max_unpaired = Output_Write_Out_Unpaired(mesh, dna, 701)
+
+    ! Outputs based on strands and nucleotides
+    write(701, "(a)")
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|+              4. Strand and nucleotide based outputs            +|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)")
+    call Output_Write_Out_Strand_Base(mesh, dna, 701)
+
+    ! Output of staple length
+    write(701, "(a)")
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|+                       5. Staple length                         +|"
+    write(701, "(a)"), "|+                                                                +|"
+    write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
+    write(701, "(a)"), "--------------------------------------------------------------------"
+    write(701, "(a)")
+    call Output_Write_Out_Staple_Length(dna, 701)
+
+    ! JSON output
+    call Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
+    call Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
+
+    close(unit=701)
+end subroutine Output_Write_Outputs
+
+! ---------------------------------------------------------------------------------------
+
+! Write output of sequence data
+subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
+    type(ProbType), intent(in) :: prob
+    type(MeshType), intent(in) :: mesh
+    type(DNAType),  intent(inout) :: dna
+    integer, intent(in) :: unit
+
+    integer :: i, j, base, n_scaf, n_stap
+    character(200) :: path
+
+    n_scaf = 0
+    n_stap = 0
+    dna.len_min_stap =  10000
+    dna.len_max_stap = -10000
+
+    ! Write sequence data
+    do i = 1, dna.n_strand
+        if(dna.strand(i).type1 == "scaf") then
+            n_scaf = n_scaf + 1
+            write(unit, "(i8, a$)"), n_scaf, " - [scaf]"
+        else if(dna.strand(i).type1 == "stap") then
+            n_stap = n_stap + 1
+            write(unit, "(i8, a$)"), n_stap, " - (stap)"
+        end if
+
+        if(dna.strand(i).n_base < dna.len_min_stap) dna.len_min_stap = dna.strand(i).n_base
+        if(dna.strand(i).n_base > dna.len_max_stap) dna.len_max_stap = dna.strand(i).n_base
+
+        if(0 .and. dna.strand(i).n_base > 80) then
+            do j = 0, unit, unit
+                call space(j,5); write(j, "(a     )"), "=================================================="
+                call space(j,5); write(j, "(a     )"), "There are long staple strand"
+                call space(j,5); write(j, "(a, i4$)"), "Strand #", i
+                call space(j,5); write(j, "(a, i4 )"), ", # of nucleotides : ", dna.strand(i).n_base
+                call space(j,5); write(j, "(a, i4 )"), "The current parameter, para-gap_xover_nick : ", para_gap_xover_nick
+                call space(j,5); write(j, "(a, i4 )"), "The recommended parameter value is ", para_gap_xover_nick - 1
+                call space(j,5); write(j, "(a     )"), "=================================================="
+                stop
+            end do
+        end if
+
+        if(dna.strand(i).type1 == "stap") then
+            write(unit, "(a$)"), "-"//dna.strand(i).type2
+            write(unit, "(a$)"), ", # of 14nt seeds: "//trim(adjustl(Int2Str(dna.strand(i).n_14nt)))
+        end if
+        write(unit, "(a$)"), ", # of nts: "//trim(adjustl(Int2Str(dna.strand(i).n_base)))//" -> "
+
+        base = Mani_Go_Start_Base(dna, i)
+        do j = 1, dna.strand(i).n_base
+            write(unit, "(a$)"), dna.top(base).seq
+            base = dna.Top(base).up
+        end do
+        write(unit, "(a)")
+        if(dna.strand(i).type1 == "scaf") write(unit, "(a)")
+    end do
+    write(unit, "(a)")
+
+    ! Open files
+    path = trim(prob.path_work1)//trim(prob.name_file)
+    open(unit=702, file=trim(path)//"_16_sequence.csv", form="formatted")
+
+    ! DNA sequence data according to strands
+    write(702, "(a)")
+    write(702, "(a)"), "No, Type1, Type2, ABCD, Name, # of nts, Sequence"
+    write(702, "(a)")
+
+    ! Write sequence data
+    n_scaf = 0
+    n_stap = 0
+    do i = 1, dna.n_strand
+        if(dna.strand(i).type1 == "scaf") then
+            n_scaf = n_scaf + 1
+            write(702, "(a$)"), trim(adjustl(Int2Str(n_scaf)))//", "
+            write(702, "(a$)"), "scaffold, -, -, -, "
+        else if(dna.strand(i).type1 == "stap") then
+            n_stap = n_stap + 1
+            write(702, "(a$)"), trim(adjustl(Int2Str(n_stap)))//", "
+            write(702, "(a$)"), "staple, "//dna.strand(i).type2//", "
+
+            write(702, "(a$)"), "A"//trim(adjustl(Int2Str(mod(n_stap, 12))))//", "
+여기부터 다시 정리
+            write(702, "(a$)"), trim(adjustl(prob.name_prob))//"_"
+            if(para_vertex_design == "flat")    write(702, "(a$)"), "F_"
+            if(para_vertex_design == "beveled") write(702, "(a$)"), "M_"
+            write(702, "(a$)"), trim(adjustl(Int2Str(prob.n_bp_edge)))//"bp_"
+            write(702, "(a$)"), trim(adjustl(Int2Str(n_stap)))//", "
+        end if
+        write(702, "(a$)"), trim(adjustl(Int2Str(dna.strand(i).n_base)))//", "
+
+        base = Mani_Go_Start_Base(dna, i)
+        do j = 1, dna.strand(i).n_base
+            write(702, "(a$)"), dna.top(base).seq
+            base = dna.Top(base).up
+        end do
+
+        if(dna.strand(i).type1 == "scaf") write(702, "(a)")
+        write(702, "(a)")
+    end do
+    close(unit=702)
+end subroutine Output_Write_Out_Sequences
+
+! ---------------------------------------------------------------------------------------
+
+! Write graphical output
+subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
+    type(ProbType), intent(in) :: prob
+    type(GeomType), intent(in) :: geom
+    type(MeshType), intent(in) :: mesh
+    type(DNAType),  intent(in) :: dna
+    integer,        intent(in) :: unit
+
+    ! Section type data
+    type :: SecType
+        integer :: start_bp, end_bp
+        integer :: start_nei_edge, start_nei_sec
+        integer :: end_nei_sec, end_nei_edge
+
+        integer,   allocatable :: bp(:)
+        integer,   allocatable :: node(:)
+        integer,   allocatable :: strnd_scaf(:), strnd_stap(:)
+        integer,   allocatable :: xover_scaf(:), xover_stap(:)
+        integer,   allocatable :: nick_scaf(:),  nick_stap(:)
+        character, allocatable :: seq_scaf(:),   seq_stap(:)
+    end type SecType
+
+    ! Initial line data
+    type :: EdgeType
+        integer :: n_sec
+        type(SecType), allocatable :: sec(:)
+    end type EdgeType
+
+    ! Tecplot drawing data type
+    type :: TecType
+        integer :: types
+        double precision :: size
+        double precision :: color
+        double precision :: pos_cen(3)
+        double precision :: pos_node1(3)
+        double precision :: pos_node2(3)
+    end type TecType
+
+    type(EdgeType), allocatable :: edge(:)
+    type(TecType),  allocatable :: tec(:)
+    integer,        allocatable :: conn_scaf(:,:), conn_stap(:,:)
+
+    integer :: i, j, k, m, iniL, sec, strnd, factor, pos, type_tec(6), tec_factor
+    integer :: node, dn_node, up_node, bp, max_bp, min_bp, mid_bp, mid_sec
+    integer :: n_conn_scaf, n_conn_stap, n_edge, n_tec
+    logical :: b_conn_scaf, b_conn_stap, b_sec
+    character(200) :: path
+    character(20)  :: col_list(20)
+
+    col_list(1:4)   = ["magenta",         "orange red",   "deep pink",     "turquoise"      ]
+    col_list(5:8)   = ["tan",             "salmon",       "orange",        "gold"           ]
+    col_list(9:12)  = ["dark green",      "dark cyan",    "medium purple", "rosy brown"     ]
+    col_list(13:16) = ["dark slate gray", "dark magenta", "sea green",     "olive drab"     ]
+    col_list(17:20) = ["goldenrod",       "firebrick",    "sienna",        "dark slate blue"]
+
+    ! Find maximum and minimum base pair ID
+    max_bp = mesh.node(1).bp
+    min_bp = mesh.node(1).bp
+    do i = 1, mesh.n_node
+        if(mesh.node(i).bp > max_bp) max_bp = mesh.node(i).bp
+        if(mesh.node(i).bp < min_bp) min_bp = mesh.node(i).bp
+    end do
+    min_bp = min_bp - 2
+    max_bp = max_bp + 2
+
+    ! Allocate and initialize edge data
+    n_edge = geom.n_iniL
+    allocate(edge(n_edge))
+    do i = 1, n_edge
+        edge(i).n_sec = geom.n_sec
+        allocate(edge(i).sec(edge(i).n_sec))
+
+        do j = 1, edge(i).n_sec
+            allocate(edge(i).sec(j).bp        (min_bp:max_bp))
+            allocate(edge(i).sec(j).node      (min_bp:max_bp))
+            allocate(edge(i).sec(j).strnd_scaf(min_bp:max_bp))
+            allocate(edge(i).sec(j).strnd_stap(min_bp:max_bp))
+            allocate(edge(i).sec(j).xover_scaf(min_bp:max_bp))
+            allocate(edge(i).sec(j).xover_stap(min_bp:max_bp))
+            allocate(edge(i).sec(j).nick_scaf (min_bp:max_bp))
+            allocate(edge(i).sec(j).nick_stap (min_bp:max_bp))
+            allocate(edge(i).sec(j).seq_scaf  (min_bp:max_bp))
+            allocate(edge(i).sec(j).seq_stap  (min_bp:max_bp))
+
+            do k = min_bp, max_bp
+                edge(i).sec(j).bp(k)         = k
+                edge(i).sec(j).node(k)       = -1
+                edge(i).sec(j).strnd_scaf(k) = -1
+                edge(i).sec(j).strnd_stap(k) = -1
+                edge(i).sec(j).xover_scaf(k) = -1
+                edge(i).sec(j).xover_stap(k) = -1
+                edge(i).sec(j).nick_scaf(k)  = -1
+                edge(i).sec(j).nick_stap(k)  = -1
+                edge(i).sec(j).seq_scaf(k)   = "N"
+                edge(i).sec(j).seq_stap(k)   = "N"
+            end do
+        end do
+    end do
+
+    ! Allocate conn data
+    allocate(conn_scaf(dna.n_xover_scaf, 3))
+    allocate(conn_stap(dna.n_xover_stap, 3))
+
+    ! Build node information based on initial edges with cross-section
+    do i = 1, mesh.n_node
+
+        ! Find starting node depending on cross-section ID
+        node = mesh.node(i).id
+        sec  = mesh.node(i).sec
+        iniL = mesh.node(node).iniL
+
+        ! It depends on cross-section ID and direction
+        if(mesh.node(i).dn == -1 .and. mod(mesh.node(i).sec, 2) == 0) then
+
+            ! If section ID is even and negative z-direction
+            ! Find neiboring edge and section
+            if(dna.top(node).dn /= -1) then
+
+                ! To avoid unpaired nucleotide
+                dn_node = dna.top(node).dn
+                do
+                    if(dna.top(dn_node).across /= -1) exit
+                    dn_node = dna.top(dn_node).dn
+                end do
+
+                edge(iniL).sec(sec+1).start_nei_edge = mesh.node(dn_node).iniL
+                edge(iniL).sec(sec+1).start_nei_sec  = mesh.node(dn_node).sec
+            else
+                edge(iniL).sec(sec+1).start_nei_edge = -1
+                edge(iniL).sec(sec+1).start_nei_sec  = -1
+            end if
+
+            edge(iniL).sec(sec+1).start_bp = mesh.node(node).bp
+            do
+                bp = mesh.node(node).bp
+                edge(iniL).sec(sec+1).node(bp) = node
+                node = mesh.node(node).up
+                if(node == -1) exit
+            end do
+            edge(iniL).sec(sec+1).end_bp = bp
+
+            ! Find neiboring edge and section
+            if(dna.top(edge(iniL).sec(sec+1).node(bp)).up /= -1) then
+
+                ! To avoid unpaired nucleotide
+                up_node = dna.top(edge(iniL).sec(sec+1).node(bp)).up
+                do
+                    if(dna.top(up_node).across /= -1) exit
+                    up_node = dna.top(up_node).up
+                end do
+
+                edge(iniL).sec(sec+1).end_nei_edge = mesh.node(up_node).iniL
+                edge(iniL).sec(sec+1).end_nei_sec  = mesh.node(up_node).sec
+            else
+                edge(iniL).sec(sec+1).end_nei_edge = -1
+                edge(iniL).sec(sec+1).end_nei_sec  = -1
+            end if
+        else if(mesh.node(i).up == -1 .and. mod(mesh.node(i).sec, 2) == 1) then
+
+            ! If section ID is odd and positive z-direction
+            ! Find neiboring edge and section
+            if(dna.top(node).up /= -1) then
+                
+                ! To avoid unpaired nucleotide
+                up_node = dna.top(node).up
+                do
+                    if(dna.top(up_node).across /= -1) exit
+                    up_node = dna.top(up_node).up
+                end do
+                
+                edge(iniL).sec(sec+1).start_nei_edge = mesh.node(up_node).iniL
+                edge(iniL).sec(sec+1).start_nei_sec  = mesh.node(up_node).sec
+            else
+                edge(iniL).sec(sec+1).start_nei_edge = -1
+                edge(iniL).sec(sec+1).start_nei_sec  = -1
+            end if
+
+            edge(iniL).sec(sec+1).start_bp = mesh.node(node).bp
+            do
+                bp = mesh.node(node).bp
+                edge(iniL).sec(sec+1).node(bp) = node
+                node = mesh.node(node).dn
+                if(node == -1) exit
+            end do
+            edge(iniL).sec(sec+1).end_bp = bp
+
+            ! Find neiboring edge and section
+            if(dna.top(edge(iniL).sec(sec+1).node(bp)).dn /= -1) then
+
+                ! To avoid unpaired nucleotide
+                dn_node = dna.top(edge(iniL).sec(sec+1).node(bp)).dn
+                do
+                    if(dna.top(dn_node).across /= -1) exit
+                    dn_node = dna.top(dn_node).dn
+                end do
+
+                edge(iniL).sec(sec+1).end_nei_edge = mesh.node(dn_node).iniL
+                edge(iniL).sec(sec+1).end_nei_sec  = mesh.node(dn_node).sec
+            else
+                edge(iniL).sec(sec+1).end_nei_edge = -1
+                edge(iniL).sec(sec+1).end_nei_sec  = -1
+            end if
+        end if
+    end do
+
+    ! Build additional data fields
+    do i = 1, dna.n_top
+        node = dna.top(i).node
+
+        ! Skip the loop if poly Tn loop and unpaired nucleotides
+        if(node == -1) cycle
+
+        strnd = dna.top(i).strand
+        sec   = mesh.node(node).sec
+        iniL  = mesh.node(node).iniL
+        bp    = mesh.node(node).bp
+
+        if(dna.strand(strnd).type1 == "scaf") then
+
+            ! For scaffold strand
+            edge(iniL).sec(sec+1).seq_scaf(bp) = dna.top(i).seq
+            if(dna.top(i).xover /= -1) then
+                edge(iniL).sec(sec+1).xover_scaf(bp) = &
+                    mesh.node(dna.top(dna.top(i).xover).node).sec
+            end if
+            if(dna.top(i).up == -1) then
+                if(mod(sec, 2) == 0) then
+                    edge(iniL).sec(sec+1).nick_scaf(bp) = 2
+                else
+                    edge(iniL).sec(sec+1).nick_scaf(bp) = 3
+                end if
+            end if
+            if(dna.top(i).dn == -1) edge(iniL).sec(sec+1).nick_scaf(bp) = 1
+            edge(iniL).sec(sec+1).strnd_scaf(bp) = strnd
+        else if(dna.strand(strnd).type1 == "stap") then
+
+            ! for staple strand
+            edge(iniL).sec(sec+1).seq_stap(bp) = dna.top(i).seq
+            if(dna.top(i).xover /= -1) then
+                edge(iniL).sec(sec+1).xover_stap(bp) = &
+                    mesh.node(dna.top(dna.top(i).xover).node).sec
+            end if
+            if(dna.top(i).up == -1) then
+                if(mod(sec, 2) == 0) then
+                    edge(iniL).sec(sec+1).nick_stap(bp) = 3
+                else
+                    edge(iniL).sec(sec+1).nick_stap(bp) = 2
+                end if
+            end if
+            if(dna.top(i).dn == -1) edge(iniL).sec(sec+1).nick_stap(bp) = 1
+            edge(iniL).sec(sec+1).strnd_stap(bp) = strnd
+        end if
+    end do
+
+    ! Open file stream
+    if(para_write_710 == .true.) then
+        path = trim(prob.path_work1)//trim(prob.name_file)
+        do i = 1, n_edge
+            open(unit = 710+i, file=trim(path)//"_design_edge"&
+                //trim(adjustl(Int2Str(i)))//".bild", form="formatted")
+        end do
+
+        ! Tecplot drawing
+        if(para_output_Tecplot == "on") then
+
+            ! 1 - normal base, 2 - xover base, 3, xover, 4 - nick, 5 - right arrow, 6- left arrow
+            allocate(tec(2*dna.n_top))
+
+            do i = 1, 2*dna.n_top
+                tec(i).types          = 0
+                tec(i).pos_cen(1:3)   = 0.0d0
+                tec(i).pos_node1(1:3) = 0.0d0
+                tec(i).pos_node2(1:3) = 0.0d0
+                tec(i).size           = 0.0d0
+                tec(i).color          = 0.0d0
+            end do
+            type_tec(1:6) = 0
+            n_tec         = 0
+        end if
+    end if
+
+    ! Print information based on edges
+    do i = 1, n_edge
+
+        ! Print base pair ID
+        if(i == 1) then
+            !do k = min_bp, max_bp
+            !    write(unit, "(i5$)"), edge(i).sec(j).bp(k)
+            !end do
+            !write(unit, "(a)"); write(unit, "(a)")
+
+            !do k = min_bp, max_bp
+            !    write(unit, "(a5$)"), "-----"
+            !end do
+            !write(unit, "(a)"); write(unit, "(a)")
+
+            
+        end if
+
+        ! --------------------------------------------------
+        !
+        ! Scaffold strand
+        !
+        ! --------------------------------------------------
+        n_conn_scaf = 0
+        do j = 1, edge(i).n_sec
+
+            ! Factor : 0,0,1,1,2,2,3,3,...
+            mid_sec    = int((6*edge(i).n_sec-5+1)/2)
+            factor     = 3*(int(j+1)/2-1) + mid_sec
+            tec_factor = (i-1)*(5+6*edge(i).n_sec-5-3*(int(edge(i).n_sec+1)/2-1))
+
+            ! Print edge and point information, Edge 1 - (point 1 -> point 2)
+            if(j == 1) then
+                write(unit, "(a)") " ==================================================="
+                call Space(unit, 10)
+                write(unit, "(a)"), " [Edge "//trim(adjustl(Int2Str(i)))//&
+                    " : point "//trim(adjustl(Int2Str(geom.iniL(i).poi(1))))//&
+                    " -> point "//trim(adjustl(Int2Str(geom.iniL(i).poi(2))))//"]"
+                write(unit, "(a)") " ==================================================="
+            end if
+
+            if(j == 1) then
+                write(unit, "(a)")
+                write(unit, "(a)"), "       [[ SCAFFOLD STRAND ]]"
+                write(unit, "(a)")
+            end if
+
+            ! Print section ID and base length, sec xx -->> [xxx:xxx], xxx : - 26 length
+            write(unit, "(a5$)"), " sec "
+            write(unit, "(a2$)"), trim(adjustl(Int2Str(j-1)))
+            write(unit, "(a4$)"), " - ["
+            write(unit, "(a3$)"), trim(adjustl(Int2Str(edge(i).sec(j).start_bp + para_start_bp_ID - 1)))
+            write(unit, "(a1$)"), ":"
+            write(unit, "(a3$)"), trim(adjustl(Int2Str(edge(i).sec(j).end_bp + para_start_bp_ID - 1)))
+            write(unit, "(a3$)"), "], "
+            write(unit, "(a3$)"), trim(adjustl(Int2Str(edge(i).sec(j).end_bp - edge(i).sec(j).start_bp + 1)))
+            write(unit, "(a2$)"), " :"
+            call Space(unit, 4)
+
+            ! Graphic representation, bases with crossover and nick
+            do k = min_bp, max_bp
+
+                mid_bp = int((max_bp + min_bp) / 2)
+
+                if(edge(i).sec(j).node(k) == -1) then
+                    if(edge(i).sec(j).start_bp - 2 == k) then
+                        if(mod(j-1, 2) == 0) write(unit, "(a$)"), "5"
+                        if(mod(j-1, 2) == 1) write(unit, "(a$)"), "3"
+                    else if(edge(i).sec(j).end_bp + 1 == k) then
+                        if(mod(j-1, 2) == 0) write(unit, "(a$)"), "3"
+                        if(mod(j-1, 2) == 1) write(unit, "(a$)"), "5"
+                    else if(edge(i).sec(j).start_bp - 1 == k .or. edge(i).sec(j).end_bp + 2 == k) then
+                        write(unit, "(a$)"), "'"
+                    else
+                        write(unit, "(a$)"), " "
+                    end if
+                else
+
+                    if(edge(i).sec(j).xover_scaf(k) /= -1) then
+                        !write(unit, "(a$)"), "+"
+
+                        if(para_output_design == "arrow") then
+                            if(edge(i).sec(j).xover_scaf(k) >= 10) then
+                                write(unit, "(a$)"), achar(55+edge(i).sec(j).xover_scaf(k))
+                            else
+                                write(unit, "(a$)"), trim(adjustl(Int2Str(edge(i).sec(j).xover_scaf(k))))
+                            end if
+                        end if
+
+                        if(para_output_design == "seq") write(unit, "(a$)"), edge(i).sec(j).seq_scaf(k)
+
+                        if(para_output_design == "strand") then
+                            if(edge(i).sec(j).strnd_scaf(k) >= 10) then
+                                write(unit, "(a$)"), achar(55+edge(i).sec(j).strnd_scaf(k))
+                            else if(edge(i).sec(j).strnd_scaf(k) >= 36) then
+                                write(unit, "(a$)"), achar(61+edge(i).sec(j).strnd_scaf(k))
+                            else
+                                write(unit, "(a$)"), trim(adjustl(Int2Str(edge(i).sec(j).strnd_scaf(k))))
+                            end if
+                        end if
+
+                        n_conn_scaf = n_conn_scaf + 1
+                        conn_scaf(n_conn_scaf, 1) = edge(i).sec(j).xover_scaf(k)
+                        conn_scaf(n_conn_scaf, 2) = k
+                        conn_scaf(n_conn_scaf, 3) = edge(i).sec(j).strnd_scaf(k)
+
+                        ! Draw sphere (crossover point)
+                        if(para_write_710 == .true.) then
+                            write(710+i, "(a$    )"), ".sphere "
+                            write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-5-factor), 0.0d0
+                            write(710+i, "(1f9.2 )"), 0.25d0
+
+                            if(para_output_Tecplot == "on") then
+                                n_tec                 = n_tec + 1
+                                type_tec(3)           = type_tec(3) + 1
+                                tec(n_tec).types      = 3
+                                tec(n_tec).pos_cen(1) = dble(k-mid_bp)
+                                tec(n_tec).pos_cen(2) = -dble(6*j-5-factor) - tec_factor
+                                tec(n_tec).size       = 0.25d0
+                                tec(n_tec).color      = dble(1)
+                            end if
+                        end if
+                    else if(edge(i).sec(j).nick_scaf(k) == 1) then
+
+                        if(para_output_design == "arrow") write(unit, "(a$)"), "."
+                        if(para_output_design == "seq")   write(unit, "(a$)"), edge(i).sec(j).seq_scaf(k)
+                        if(para_output_design == "strand") then
+                            if(edge(i).sec(j).strnd_scaf(k) >= 10) then
+                                write(unit, "(a$)"), achar(55+edge(i).sec(j).strnd_scaf(k))
+                            else if(edge(i).sec(j).strnd_scaf(k) >= 36) then
+                                write(unit, "(a$)"), achar(61+edge(i).sec(j).strnd_scaf(k))
+                            else
+                                write(unit, "(a$)"), trim(adjustl(Int2Str(edge(i).sec(j).strnd_scaf(k))))
+                            end if
+                        end if
+
+                        ! Draw sphere (nick point)
+                        if(para_write_710 == .true.) then
+                            write(710+i, "(a$    )"), ".sphere "
+                            write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-5-factor), 0.0d0
+                            write(710+i, "(1f9.2 )"), 0.25d0
+
+                            if(para_output_Tecplot == "on") then
+                                n_tec                 = n_tec + 1
+                                type_tec(4)           = type_tec(4) + 1
+                                tec(n_tec).types      = 4
+                                tec(n_tec).pos_cen(1) = dble(k-mid_bp)
+                                tec(n_tec).pos_cen(2) = -dble(6*j-5-factor) - tec_factor
+                                tec(n_tec).size       = 0.25d0
+                                tec(n_tec).color      = dble(1)
+                            end if
+                        end if
+                    else if(edge(i).sec(j).nick_scaf(k) == 2) then
+
+                        if(para_output_design == "arrow")  write(unit, "(a$)"), ">"
+                        if(para_output_design == "seq")    write(unit, "(a$)"), edge(i).sec(j).seq_scaf(k)
+                        if(para_output_design == "strand") then
+                            if(edge(i).sec(j).strnd_scaf(k) >= 10) then
+                                write(unit, "(a$)"), achar(55+edge(i).sec(j).strnd_scaf(k))
+                            else if(edge(i).sec(j).strnd_scaf(k) >= 36) then
+                                write(unit, "(a$)"), achar(61+edge(i).sec(j).strnd_scaf(k))
+                            else
+                                write(unit, "(a$)"), trim(adjustl(Int2Str(edge(i).sec(j).strnd_scaf(k))))
+                            end if
+                        end if
+
+                        ! Draw arrow (right arrow, >)
+                        if(para_write_710 == .true.) then
+                            write(710+i, "(a$    )"), ".arrow "
+                            write(710+i, "(3f8.2$)"), dble(k-mid_bp)-0.5d0, -dble(6*j-5-factor), 0.0d0
+                            write(710+i, "(3f8.2$)"), dble(k-mid_bp)+0.4d0, -dble(6*j-5-factor), 0.0d0
+                            write(710+i, "(3f8.2 )"), 0.1d0, 0.4d0, 0.55d0
+
+                            if(para_output_Tecplot == "on") then
+                                n_tec                   = n_tec + 1
+                                type_tec(5)             = type_tec(5) + 1
+                                tec(n_tec).types        = 5
+                                tec(n_tec).pos_cen(1)   = dble(k-mid_bp) - 0.05d0
+                                tec(n_tec).pos_cen(2)   = -dble(6*j-5-factor) - tec_factor
+                                tec(n_tec).pos_node1(1) = 0.9d0
+                                tec(n_tec).color        = dble(1)
+                            end if
+                        end if
+                    else if(edge(i).sec(j).nick_scaf(k) == 3) then
+
+                        if(para_output_design == "arrow") write(unit, "(a$)"), "<"
+                        if(para_output_design == "seq")   write(unit, "(a$)"), edge(i).sec(j).seq_scaf(k)
+                        if(para_output_design == "strand") then
+                            if(edge(i).sec(j).strnd_scaf(k) >= 10) then
+                                write(unit, "(a$)"), achar(55+edge(i).sec(j).strnd_scaf(k))
+                            else if(edge(i).sec(j).strnd_scaf(k) >= 36) then
+                                write(unit, "(a$)"), achar(61+edge(i).sec(j).strnd_scaf(k))
+                            else
+                                write(unit, "(a$)"), trim(adjustl(Int2Str(edge(i).sec(j).strnd_scaf(k))))
+                            end if
+                        end if
+
+                        ! Draw arrow (left arrow, <)
+                        if(para_write_710 == .true.) then
+                            write(710+i, "(a$    )"), ".arrow "
+                            write(710+i, "(3f8.2$)"), dble(k-mid_bp)+0.5d0, -dble(6*j-5-factor), 0.0d0
+                            write(710+i, "(3f8.2$)"), dble(k-mid_bp)-0.4d0, -dble(6*j-5-factor), 0.0d0
+                            write(710+i, "(3f8.2 )"), 0.1d0, 0.4d0, 0.55d0
+
+                            if(para_output_Tecplot == "on") then
+                                n_tec                   = n_tec + 1
+                                type_tec(6)             = type_tec(6) + 1
+                                tec(n_tec).types        = 6
+                                tec(n_tec).pos_cen(1)   = dble(k-mid_bp) + 0.05d0
+                                tec(n_tec).pos_cen(2)   = -dble(6*j-5-factor) - tec_factor
+                                tec(n_tec).pos_node1(1) =-0.9d0
+                                tec(n_tec).color        = dble(1)
+                            end if
+                        end if
+                    else
+
+                        if(para_output_design == "arrow") write(unit, "(a$)"), "-"
+                        if(para_output_design == "seq")   write(unit, "(a$)"), edge(i).sec(j).seq_scaf(k)
+                        if(para_output_design == "strand") then
+                            if(edge(i).sec(j).strnd_scaf(k) >= 10) then
+                                write(unit, "(a$)"), achar(55+edge(i).sec(j).strnd_scaf(k))
+                            else if(edge(i).sec(j).strnd_scaf(k) >= 36) then
+                                write(unit, "(a$)"), achar(61+edge(i).sec(j).strnd_scaf(k))
+                            else
+                                write(unit, "(a$)"), trim(adjustl(Int2Str(edge(i).sec(j).strnd_scaf(k))))
+                            end if
+                        end if
+
+                        ! Draw cylinder (normal base)
+                        if(para_write_710 == .true.) then
+                            strnd = edge(i).sec(j).strnd_scaf(k)
+
+                            if(mesh.node(edge(i).sec(j).node(k)).up == -1 .and. mod(mesh.node(edge(i).sec(j).node(k)).sec, 2) == 0) then
+                                write(710+i, "(a$    )"), ".arrow "
+                                write(710+i, "(3f8.2$)"), dble(k-mid_bp)-0.5d0, -dble(6*j-5-factor), 0.0d0
+                                write(710+i, "(3f8.2$)"), dble(k-mid_bp)+0.5d0, -dble(6*j-5-factor), 0.0d0
+                                write(710+i, "(3f8.2 )"), 0.1d0, 0.4d0, 0.55d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                   = n_tec + 1
+                                    type_tec(5)             = type_tec(5) + 1
+                                    tec(n_tec).types        = 5
+                                    tec(n_tec).pos_cen(1)   = dble(k-mid_bp)
+                                    tec(n_tec).pos_cen(2)   = -dble(6*j-5-factor) - tec_factor
+                                    tec(n_tec).pos_node1(1) = 1.0d0
+                                    tec(n_tec).color        = dble(1)
+                                end if
+                            else if(mesh.node(edge(i).sec(j).node(k)).up == -1 .and. mod(mesh.node(edge(i).sec(j).node(k)).sec, 2) == 1) then
+                                write(710+i, "(a$    )"), ".arrow "
+                                write(710+i, "(3f8.2$)"), dble(k-mid_bp)+0.5d0, -dble(6*j-5-factor), 0.0d0
+                                write(710+i, "(3f8.2$)"), dble(k-mid_bp)-0.5d0, -dble(6*j-5-factor), 0.0d0
+                                write(710+i, "(3f8.2 )"), 0.1d0, 0.4d0, 0.55d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                   = n_tec + 1
+                                    type_tec(6)             = type_tec(6) + 1
+                                    tec(n_tec).types        = 6
+                                    tec(n_tec).pos_cen(1)   = dble(k-mid_bp)
+                                    tec(n_tec).pos_cen(2)   = -dble(6*j-5-factor) - tec_factor
+                                    tec(n_tec).pos_node1(1) =-1.0d0
+                                    tec(n_tec).color        = dble(1)
+                                end if
+                            else
+                                write(710+i, "(a     )"), ".color steel blue"
+                                write(710+i, "(a$    )"), ".cylinder "
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp)-0.5d0, -dble(6*j-5-factor), 0.0d0
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp)+0.5d0, -dble(6*j-5-factor), 0.0d0
+                                write(710+i, "(1f9.2 )"), 0.1d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                = n_tec + 1
+                                    type_tec(1)          = type_tec(1) + 1
+                                    tec(n_tec).types     = 1
+                                    tec(n_tec).pos_node1 = [dble(k-mid_bp)-0.5d0, -dble(6*j-5-factor) - tec_factor, 0.0d0]
+                                    tec(n_tec).pos_node2 = [dble(k-mid_bp)+0.5d0, -dble(6*j-5-factor) - tec_factor, 0.0d0]
+                                    tec(n_tec).color     = dble(1)
+                                end if
+                            end if
+                        end if
+                    end if
+                end if
+            end do
+
+            ! For Neighbor connection status, [ START : 3( 3), END : 5( 0)]
+            call Space(unit, 5)
+            write(unit, "(a, i2$)"), "[ START : ", edge(i).sec(j).start_nei_edge
+            write(unit, "(a, i2$)"), "(",          edge(i).sec(j).start_nei_sec
+            write(unit, "(a, i2$)"), "), END : ",  edge(i).sec(j).end_nei_edge
+            write(unit, "(a, i2$)"), "(",          edge(i).sec(j).end_nei_sec
+            write(unit, "(a$    )"), ") ]"
+            write(unit, "(a     )")
+
+            ! Draw crossovers
+            call Space(unit, 30)
+            do k = min_bp, max_bp
+                if(edge(i).sec(j).node(k) == -1) then
+                    write(unit, "(a$)"), " "
+                else
+                    b_conn_scaf = .false.
+                    do m = 1, n_conn_scaf
+                        if(conn_scaf(m, 1) >= j .and. conn_scaf(m, 2) == k) then
+                            b_conn_scaf = .true.
+                            exit
+                        end if
+                    end do
+
+                    if(b_conn_scaf == .true.) then
+                        write(unit, "(a$)"), "|"
+
+                        ! Draw cylinder
+                        if(para_write_710 == .true.) then
+                            if(mod(j, 2) == 1) then
+                                write(710+i, "(a$    )"), ".cylinder "
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0, 0.0d0
+                                write(710+i, "(1f9.2 )"), 0.1d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                = n_tec + 1
+                                    type_tec(2)          = type_tec(2) + 1
+                                    tec(n_tec).types     = 2
+                                    tec(n_tec).pos_node1 = [dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).color     = dble(1)
+                                end if
+                            else
+                                write(710+i, "(a$    )"), ".cylinder "
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-0.2d0, 0.0d0
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
+                                write(710+i, "(1f9.2 )"), 0.1d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                = n_tec + 1
+                                    type_tec(2)          = type_tec(2) + 1
+                                    tec(n_tec).types     = 2
+                                    tec(n_tec).pos_node1 = [dble(k-mid_bp), -dble(6*j-2-factor)-0.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).color     = dble(1)
+                                end if
+                            end if
+                        end if
+                    else
+                        if( edge(i).sec(j).start_nei_edge == i .and. &
+                            edge(i).sec(j).start_bp       == k .and. &
+                            edge(i).sec(j).start_nei_sec  == j ) then
+
+                            ! Neighbor connection for starting bp
+                            write(unit, "(a$)"), "|"
+
+                            ! Draw cylinder
+                            if(para_write_710 == .true.) then
+                                if(mod(j, 2) == 1) then
+                                    write(710+i, "(a$    )"), ".cylinder "
+                                    write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
+                                    write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0, 0.0d0
+                                    write(710+i, "(1f9.2 )"), 0.1d0
+
+                                    if(para_output_Tecplot == "on") then
+                                        n_tec                = n_tec + 1
+                                        type_tec(2)          = type_tec(2) + 1
+                                        tec(n_tec).types     = 2
+                                        tec(n_tec).pos_node1 = [dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0 - tec_factor, 0.0d0]
+                                        tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0 - tec_factor, 0.0d0]
+                                        tec(n_tec).color     = dble(1)
+                                    end if
+                                else
+                                    write(710+i, "(a$    )"), ".cylinder "
+                                    write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-0.2d0, 0.0d0
+                                    write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
+                                    write(710+i, "(1f9.2 )"), 0.1d0
+
+                                    if(para_output_Tecplot == "on") then
+                                        n_tec                = n_tec + 1
+                                        type_tec(2)          = type_tec(2) + 1
+                                        tec(n_tec).types     = 2
+                                        tec(n_tec).pos_node1 = [dble(k-mid_bp), -dble(6*j-2-factor)-0.2d0 - tec_factor, 0.0d0]
+                                        tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0 - tec_factor, 0.0d0]
+                                        tec(n_tec).color     = dble(1)
+                                    end if
+                                end if
+                            end if
+                        else if( edge(i).sec(j).end_nei_edge == i .and. &
+                            edge(i).sec(j).end_bp       == k .and. &
+                            edge(i).sec(j).end_nei_sec  == j ) then
+
+                        ! Neighbor connection for ending bp
+                        write(unit, "(a$)"), "|"
+
+                        ! Draw cylinder
+                        if(para_write_710 == .true.) then
+                            if(mod(j, 2) == 1) then
+                                write(710+i, "(a$    )"), ".cylinder "
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0, 0.0d0
+                                write(710+i, "(1f9.2 )"), 0.1d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                = n_tec + 1
+                                    type_tec(2)          = type_tec(2) + 1
+                                    tec(n_tec).types     = 2
+                                    tec(n_tec).pos_node1 = [dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).color     = dble(1)
+                                end if
+                            else
+                                write(710+i, "(a$    )"), ".cylinder "
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-0.2d0, 0.0d0
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
+                                write(710+i, "(1f9.2 )"), 0.1d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                = n_tec + 1
+                                    type_tec(2)          = type_tec(2) + 1
+                                    tec(n_tec).types     = 2
+                                    tec(n_tec).pos_node1 = [dble(k-mid_bp), -dble(6*j-2-factor)-0.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).color     = dble(1)
+                                end if
+                            end if
+                        end if
+                        else
+                            write(unit, "(a$)"), " "
+                        end if
+                    end if
+                end if
+            end do
+            write(unit, "(a)")
+        end do
+
+        ! ==================================================
+        !
+        ! Staple strand
+        !
+        ! ==================================================
+        n_conn_stap = 0
+        b_sec       = .true.
+        do j = 1, edge(i).n_sec
+
+            ! Factor : 0,0,1,1,2,2,3,3,...
+            mid_sec    = int((6*edge(i).n_sec-5+1)/2)
+            factor     = 3*(int(j + 1)/2 - 1) + mid_sec
+            tec_factor = (i-1)*(5+6*edge(i).n_sec-5-3*(int(edge(i).n_sec+1)/2-1))
+
+            if(j == 1) then
+                write(unit, "(a)")
+                write(unit, "(a)"), "       [[ STAPLE STRAND ]]"
+                write(unit, "(a)")
+            end if
+
+            ! Print section ID and base length, sec xx -->> [xxx:xxx], xxx : - 26 length
+            write(unit, "(a5$)"), " sec "
+            write(unit, "(a2$)"), trim(adjustl(Int2Str(j-1)))
+            write(unit, "(a4$)"), " - ["
+            write(unit, "(a3$)"), trim(adjustl(Int2Str(edge(i).sec(j).start_bp + para_start_bp_ID - 1)))
+            write(unit, "(a1$)"), ":"
+            write(unit, "(a3$)"), trim(adjustl(Int2Str(edge(i).sec(j).end_bp + para_start_bp_ID - 1)))
+            write(unit, "(a3$)"), "], "
+            write(unit, "(a3$)"), trim(adjustl(Int2Str(edge(i).sec(j).end_bp - edge(i).sec(j).start_bp + 1)))
+            write(unit, "(a2$)"), " :"
+            call Space(unit, 4)
+
+            ! Graphic representation, bases with crossover and nick
+            do k = min_bp, max_bp
+                mid_bp = int((min_bp+max_bp)/2)
+                if(edge(i).sec(j).node(k) == -1) then
+                    if(edge(i).sec(j).start_bp - 2 == k) then
+                        if(mod(j-1, 2) == 0) write(unit, "(a$)"), "3"
+                        if(mod(j-1, 2) == 1) write(unit, "(a$)"), "5"
+                    else if(edge(i).sec(j).end_bp + 1 == k) then
+                        if(mod(j-1, 2) == 0) write(unit, "(a$)"), "5"
+                        if(mod(j-1, 2) == 1) write(unit, "(a$)"), "3"
+                    else if(edge(i).sec(j).start_bp - 1 == k .or. edge(i).sec(j).end_bp + 2 == k) then
+                        write(unit, "(a$)"), "'"
+                    else
+                        write(unit, "(a$)"), " "
+                    end if
+                else
+
+                    if(mod(j, 2) == 1) then
+                        pos = 6*int((j+1)/2)-5 + 1
+                    else
+                        pos = 6*int((j+1)/2)-5 + 2
+                    end if
+                    pos = 2*pos-1-factor
+
+                    if(edge(i).sec(j).xover_stap(k) /= -1) then
+                        !write(unit, "(a$)"), "+"
+
+                        if(para_output_design == "arrow") then
+                            if(edge(i).sec(j).xover_stap(k) >= 10) then
+                                write(unit, "(a$)"), achar(55+edge(i).sec(j).xover_stap(k))
+                            else
+                                write(unit, "(a$)"), trim(adjustl(Int2Str(edge(i).sec(j).xover_stap(k))))
+                            end if
+                        end if
+
+                        if(para_output_design == "seq") write(unit, "(a$)"), edge(i).sec(j).seq_stap(k)
+
+                        if(para_output_design == "strand") then
+                            if(edge(i).sec(j).strnd_stap(k) >= 10) then
+                                write(unit, "(a$)"), achar(55+edge(i).sec(j).strnd_stap(k))
+                            else if(edge(i).sec(j).strnd_stap(k) >= 36) then
+                                write(unit, "(a$)"), achar(61+edge(i).sec(j).strnd_stap(k))
+                            else
+                                write(unit, "(a$)"), trim(adjustl(Int2Str(edge(i).sec(j).strnd_stap(k))))
+                            end if
+                        end if
+
+                        n_conn_stap = n_conn_stap + 1
+                        conn_stap(n_conn_stap, 1) = edge(i).sec(j).xover_stap(k)
+                        conn_stap(n_conn_stap, 2) = k
+                        conn_stap(n_conn_stap, 3) = edge(i).sec(j).strnd_stap(k)
+
+                        ! Draw sphere (crossover point)
+                        if(para_write_710 == .true.) then
+                            strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
+                            write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
+                            write(710+i, "(a$    )"), ".sphere "
+                            write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(pos), 0.0d0
+                            write(710+i, "(1f9.2 )"), 0.25d0
+
+                            if(para_output_Tecplot == "on") then
+                                n_tec                 = n_tec + 1
+                                type_tec(3)           = type_tec(3) + 1
+                                tec(n_tec).types      = 3
+                                tec(n_tec).pos_cen(1) = dble(k-mid_bp)
+                                tec(n_tec).pos_cen(2) = -dble(pos) - tec_factor
+                                tec(n_tec).size       = 0.25d0
+                                tec(n_tec).color      = dble(strnd)
+                            end if
+                        end if
+                    else if(edge(i).sec(j).nick_stap(k) == 1) then
+
+                        if(para_output_design == "arrow") write(unit, "(a$)"), "."
+                        if(para_output_design == "seq")   write(unit, "(a$)"), edge(i).sec(j).seq_stap(k)
+                        if(para_output_design == "strand") then
+                            if(edge(i).sec(j).strnd_stap(k) >= 10) then
+                                write(unit, "(a$)"), achar(55+edge(i).sec(j).strnd_stap(k))
+                            else if(edge(i).sec(j).strnd_stap(k) >= 36) then
+                                write(unit, "(a$)"), achar(61+edge(i).sec(j).strnd_stap(k))
+                            else
+                                write(unit, "(a$)"), trim(adjustl(Int2Str(edge(i).sec(j).strnd_stap(k))))
+                            end if
+                        end if
+
+                        ! Draw sphere (nick point)
+                        if(para_write_710 == .true.) then
+                            strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
+                            write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
+                            write(710+i, "(a$    )"), ".sphere "
+                            write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(pos), 0.0d0
+                            write(710+i, "(1f9.2 )"), 0.25d0
+
+                            if(para_output_Tecplot == "on") then
+                                n_tec                 = n_tec + 1
+                                type_tec(4)           = type_tec(4) + 1
+                                tec(n_tec).types      = 4
+                                tec(n_tec).pos_cen(1) = dble(k-mid_bp)
+                                tec(n_tec).pos_cen(2) = -dble(pos) - tec_factor
+                                tec(n_tec).size       = 0.25d0
+                                tec(n_tec).color      = dble(strnd)
+                            end if
+                        end if
+                    else if(edge(i).sec(j).nick_stap(k) == 2) then
+
+                        if(para_output_design == "arrow") write(unit, "(a$)"), ">"
+                        if(para_output_design == "seq")   write(unit, "(a$)"), edge(i).sec(j).seq_stap(k)
+                        if(para_output_design == "strand") then
+                            if(edge(i).sec(j).strnd_stap(k) >= 10) then
+                                write(unit, "(a$)"), achar(55+edge(i).sec(j).strnd_stap(k))
+                            else if(edge(i).sec(j).strnd_stap(k) >= 36) then
+                                write(unit, "(a$)"), achar(61+edge(i).sec(j).strnd_stap(k))
+                            else
+                                write(unit, "(a$)"), trim(adjustl(Int2Str(edge(i).sec(j).strnd_stap(k))))
+                            end if
+                        end if
+
+                        ! Draw arrow (right arrow, >)
+                        if(para_write_710 == .true.) then
+                            strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
+                            write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
+                            write(710+i, "(a$    )"), ".arrow "
+                            write(710+i, "(3f8.2$)"), dble(k-mid_bp)-0.4d0, -dble(pos), 0.0d0
+                            write(710+i, "(3f8.2$)"), dble(k-mid_bp)+0.4d0, -dble(pos), 0.0d0
+                            write(710+i, "(3f8.2 )"), 0.1d0, 0.4d0, 0.55d0
+
+                            if(para_output_Tecplot == "on") then
+                                n_tec                   = n_tec + 1
+                                type_tec(5)             = type_tec(5) + 1
+                                tec(n_tec).types        = 5
+                                tec(n_tec).pos_cen(1)   = dble(k-mid_bp)
+                                tec(n_tec).pos_cen(2)   = -dble(pos) - tec_factor
+                                tec(n_tec).pos_node1(1) = 0.8d0
+                                tec(n_tec).color        = dble(strnd)
+                            end if
+                        end if
+                    else if(edge(i).sec(j).nick_stap(k) == 3) then
+
+                        if(para_output_design == "arrow") write(unit, "(a$)"), "<"
+                        if(para_output_design == "seq")   write(unit, "(a$)"), edge(i).sec(j).seq_stap(k)
+                        if(para_output_design == "strand") then
+                            if(edge(i).sec(j).strnd_stap(k) >= 10) then
+                                write(unit, "(a$)"), achar(55+edge(i).sec(j).strnd_stap(k))
+                            else if(edge(i).sec(j).strnd_stap(k) >= 36) then
+                                write(unit, "(a$)"), achar(61+edge(i).sec(j).strnd_stap(k))
+                            else
+                                write(unit, "(a$)"), trim(adjustl(Int2Str(edge(i).sec(j).strnd_stap(k))))
+                            end if
+                        end if
+
+                        ! Draw arrow (left arrow, <)
+                        if(para_write_710 == .true.) then
+                            strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
+                            write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
+                            write(710+i, "(a$    )"), ".arrow "
+                            write(710+i, "(3f8.2$)"), dble(k-mid_bp)+0.4d0, -dble(pos), 0.0d0
+                            write(710+i, "(3f8.2$)"), dble(k-mid_bp)-0.4d0, -dble(pos), 0.0d0
+                            write(710+i, "(3f8.2 )"), 0.1d0, 0.4d0, 0.55d0
+
+                            if(para_output_Tecplot == "on") then
+                                n_tec                   = n_tec + 1
+                                type_tec(6)             = type_tec(6) + 1
+                                tec(n_tec).types        = 6
+                                tec(n_tec).pos_cen(1)   = dble(k-mid_bp)
+                                tec(n_tec).pos_cen(2)   = -dble(pos) - tec_factor
+                                tec(n_tec).pos_node1(1) =-0.8d0
+                                tec(n_tec).color        = dble(strnd)
+                            end if
+                        end if
+                    else
+
+                        if(para_output_design == "arrow") write(unit, "(a$)"), "-"
+                        if(para_output_design == "seq")   write(unit, "(a$)"), edge(i).sec(j).seq_stap(k)
+                        if(para_output_design == "strand") then
+                            if(edge(i).sec(j).strnd_stap(k) >= 10) then
+                                write(unit, "(a$)"), achar(55+edge(i).sec(j).strnd_stap(k))
+                            else if(edge(i).sec(j).strnd_stap(k) >= 36) then
+                                write(unit, "(a$)"), achar(61+edge(i).sec(j).strnd_stap(k))
+                            else
+                                write(unit, "(a$)"), trim(adjustl(Int2Str(edge(i).sec(j).strnd_stap(k))))
+                            end if
+                        end if
+
+                        ! Write Chimera
+                        if(para_write_710 == .true.) then
+                            strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
+                            if(mesh.node(edge(i).sec(j).node(k)).dn == -1 .and. mod(mesh.node(edge(i).sec(j).node(k)).sec, 2) == 1) then
+                                ! Draw arrow (right arrow, >)
+                                write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
+                                write(710+i, "(a$    )"), ".arrow "
+                                write(710+i, "(3f8.2$)"), dble(k-mid_bp)-0.5d0, -dble(pos), 0.0d0
+                                write(710+i, "(3f8.2$)"), dble(k-mid_bp)+0.5d0, -dble(pos), 0.0d0
+                                write(710+i, "(3f8.2 )"), 0.09d0, 0.4d0, 0.55d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                   = n_tec + 1
+                                    type_tec(5)             = type_tec(5) + 1
+                                    tec(n_tec).types        = 5
+                                    tec(n_tec).pos_cen(1)   = dble(k-mid_bp)
+                                    tec(n_tec).pos_cen(2)   = -dble(pos) - tec_factor
+                                    tec(n_tec).pos_node1(1) = 1.0d0
+                                    tec(n_tec).color        = dble(strnd)
+                                end if
+                            else if(mesh.node(edge(i).sec(j).node(k)).dn == -1 .and. mod(mesh.node(edge(i).sec(j).node(k)).sec, 2) == 0) then
+                                ! Draw arrow (left arrow, <)
+                                write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
+                                write(710+i, "(a$    )"), ".arrow "
+                                write(710+i, "(3f8.2$)"), dble(k-mid_bp)+0.5d0, -dble(pos), 0.0d0
+                                write(710+i, "(3f8.2$)"), dble(k-mid_bp)-0.5d0, -dble(pos), 0.0d0
+                                write(710+i, "(3f8.2 )"), 0.09d0, 0.4d0, 0.55d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                   = n_tec + 1
+                                    type_tec(6)             = type_tec(6) + 1
+                                    tec(n_tec).types        = 6
+                                    tec(n_tec).pos_cen(1)   = dble(k-mid_bp)
+                                    tec(n_tec).pos_cen(2)   = -dble(pos) - tec_factor
+                                    tec(n_tec).pos_node1(1) =-1.0d0
+                                    tec(n_tec).color        = dble(strnd)
+                                end if
+                            else
+                                ! Draw cylinder, standard base
+                                write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
+                                write(710+i, "(a$    )"), ".cylinder "
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp)-0.4d0, -dble(pos), 0.0d0
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp)+0.4d0, -dble(pos), 0.0d0
+                                write(710+i, "(1f9.2 )"), 0.1d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                = n_tec + 1
+                                    type_tec(1)          = type_tec(1) + 1
+                                    tec(n_tec).types     = 1
+                                    tec(n_tec).pos_node1 = [dble(k-mid_bp)-0.4d0, -dble(pos) - tec_factor, 0.0d0]
+                                    tec(n_tec).pos_node2 = [dble(k-mid_bp)+0.4d0, -dble(pos) - tec_factor, 0.0d0]
+                                    tec(n_tec).color     = dble(strnd)
+                                end if
+                            end if
+                        end if
+                    end if
+
+                    if(para_write_710 == .true.) then
+                        ! Draw sequence
+                        if(mod(j, 2) == 0) then
+                            write(710+i, "(a, 3f9.3)"), ".cmov ", dble(k-mid_bp-0.3d0), -dble(pos)-1.0d0, 0.0d0
+                        else
+                            write(710+i, "(a, 3f9.3)"), ".cmov ", dble(k-mid_bp-0.3d0), -dble(pos)+0.4d0, 0.0d0
+                        end if
+                        write(710+i, "(a)"), ".font arial 20 bold"
+                        write(710+i, "(a)"), dna.top(dna.top(edge(i).sec(j).node(k)).across).seq
+
+                        ! Draw section ID
+                        if(b_sec == .true.) then
+                            write(710+i, "(a)"), ".color red"
+                            if(mod(j, 2) == 0) then
+                                write(710+i, "(a, 3f9.3)"), ".cmov ", dble(min_bp-mid_bp-5.0d0), -dble(pos)-1.0d0, 0.0d0
+                            else
+                                write(710+i, "(a, 3f9.3)"), ".cmov ", dble(min_bp-mid_bp-5.0d0), -dble(pos)+0.4d0, 0.0d0
+                            end if
+                            write(710+i, "(a)"), ".font arial 20 bold"
+                            write(710+i, "(a)"), "sec "//trim(adjustl(Int2Str(j-1)))
+                            b_sec = .false.
+                        end if
+                    end if
+                end if
+            end do
+            b_sec = .true.
+
+            ! For Neighbor connection status, [ START : 3( 3), END : 5( 0)]
+            call Space(unit, 5)
+            do k = 1, edge(i).n_sec
+                if(edge(i).sec(k).start_nei_edge == i) then
+                    edge(i).sec(k).start_nei_edge = -1
+                    edge(i).sec(k).start_nei_sec  = -1
+                end if
+                if(edge(i).sec(k).end_nei_edge == i) then
+                    edge(i).sec(k).end_nei_edge = -1
+                    edge(i).sec(k).end_nei_sec  = -1
+                end if
+            end do
+            write(unit, "(a, i2$)"), "[ START : ", edge(i).sec(j).start_nei_edge
+            write(unit, "(a, i2$)"), "(",          edge(i).sec(j).start_nei_sec
+            write(unit, "(a, i2$)"), "), END : ",  edge(i).sec(j).end_nei_edge
+            write(unit, "(a, i2$)"), "(",          edge(i).sec(j).end_nei_sec
+            write(unit, "(a$    )"), ") ]"
+            write(unit, "(a     )")
+
+            ! Draw crossovers
+            call Space(unit, 30)
+            do k = min_bp, max_bp
+                if(edge(i).sec(j).node(k) == -1) then
+                    write(unit, "(a$)"), " "
+                else
+                    b_conn_stap = .false.
+                    do m = 1, n_conn_stap
+                        if(conn_stap(m, 1) >= j .and. conn_stap(m, 2) == k) then
+                            b_conn_stap = .true.
+                            exit
+                        end if
+                    end do
+
+                    if(b_conn_stap == .true.) then
+                        write(unit, "(a$)"), "|"
+
+                        ! Draw cylinder
+                        if(para_write_710 == .true.) then
+                            strnd = mod(conn_stap(m, 3), 20) + 1
+                            if(mod(j, 2) == 0) then
+                                write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
+                                write(710+i, "(a$    )"), ".cylinder "
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-5+5-factor)+0.2d0, 0.0d0
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-5-factor)-0.2d0, 0.0d0
+                                write(710+i, "(1f9.2 )"), 0.1d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                = n_tec + 1
+                                    type_tec(2)          = type_tec(2) + 1
+                                    tec(n_tec).types     = 2
+                                    tec(n_tec).pos_node1 = [dble(k-mid_bp), -dble(6*j-5+5-factor)+0.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-5-factor)-0.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).color     = dble(strnd)
+                                end if
+                            else
+                                write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
+                                write(710+i, "(a$    )"), ".cylinder "
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2+1-factor)+0.2d0, 0.0d0
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-1-factor)-0.2d0, 0.0d0
+                                write(710+i, "(1f9.2 )"), 0.1d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                = n_tec + 1
+                                    type_tec(2)          = type_tec(2) + 1
+                                    tec(n_tec).types     = 2
+                                    tec(n_tec).pos_node1 = [dble(k-mid_bp), -dble(6*j-2+1-factor)+0.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-1-factor)-0.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).color     = dble(strnd)
+                                end if
+                            end if
+                        end if
+                    else
+                        write(unit, "(a$)"), " "
+                    end if
+                end if
+            end do
+            write(unit, "(a)")
+        end do
+        write(unit, "(a)")
+    end do
+
+    ! Write tecplot output
+    if(para_output_Tecplot == "on") then
+
+        ! Open file stream
+        path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
+        open(unit=709, file=trim(path)//"_design_edge.dat", form="formatted")
+        do i = 1, 6
+
+            if(type_tec(i) == 0) cycle
+
+            write(709, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
+            write(709, "(a )"), 'VARIABLES = "X", "Y", "Z", "t1", "t2", "t3", "c"'
+            write(709, "(a$)"), 'ZONE F = FEPOINT'
+
+            if(i == 1 .or. i == 2) then
+
+                write(709, "(a$)"), ', N='//trim(adjustl(Int2Str(2*type_tec(i))))
+                write(709, "(a$)"), ', E='//trim(adjustl(Int2Str(type_tec(i))))
+                write(709, "(a )"), ', ET=LINESEG'
+
+                ! Set nodal connectivity
+                do j = 1, n_tec
+                    if(tec(j).types == i) then
+                        write(709, "(7f8.2)"), tec(j).pos_node1(1:3), 1.0d0, 1.0d0, 1.0d0, tec(j).color
+                        write(709, "(7f8.2)"), tec(j).pos_node2(1:3), 1.0d0, 1.0d0, 1.0d0, tec(j).color
+                    end if
+                end do
+
+                ! Set connectivity
+                do j = 1, type_tec(i)
+                    write(709, "(2i8)"), j*2-1, j*2
+                end do
+            else if(type_tec(i) > 0 .and. (i == 3 .or. i == 4)) then
+
+                write(709, "(a$)"), ', N='//trim(adjustl(Int2Str(type_tec(i))))
+                write(709, "(a$)"), ', E='//trim(adjustl(Int2Str(type_tec(i))))
+                write(709, "(a )"), ', ET=LINESEG'
+
+                ! Set nodal position
+                do j = 1, n_tec
+                    if(tec(j).types == i) then
+                        write(709, "(7f8.2)"), tec(j).pos_cen(1:3), tec(j).size, 1.0d0, 1.0d0, tec(j).color
+                    end if
+                end do
+
+                ! Set connectivity
+                do j = 1, type_tec(i)
+                    write(709, "(2i8)"), j, j
+                end do
+            else if(type_tec(i) > 0 .and. (i == 5 .or. i == 6)) then
+                write(709, "(a$)"), ', N='//trim(adjustl(Int2Str(type_tec(i))))
+                write(709, "(a$)"), ', E='//trim(adjustl(Int2Str(type_tec(i))))
+                write(709, "(a )"), ', ET=LINESEG'
+
+                ! Set nodal position
+                do j = 1, n_tec
+                    if(tec(j).types == i) then
+                        write(709, "(7f8.2)"), tec(j).pos_cen(1:3), tec(j).pos_node1(1:3), tec(j).color
+                    end if
+                end do
+
+                ! Set connectivity
+                do j = 1, type_tec(i)
+                    write(709, "(2i8)"), j, j
+                end do
+            end if
+        end do
+    end if
+
+    ! Deallocate memory
+    do i = 1, n_edge
+        do j = 1, edge(i).n_sec
+            deallocate(edge(i).sec(j).bp        )
+            deallocate(edge(i).sec(j).node      )
+            deallocate(edge(i).sec(j).strnd_scaf)
+            deallocate(edge(i).sec(j).strnd_stap)
+            deallocate(edge(i).sec(j).xover_scaf)
+            deallocate(edge(i).sec(j).xover_stap)
+            deallocate(edge(i).sec(j).nick_scaf )
+            deallocate(edge(i).sec(j).nick_stap )
+            deallocate(edge(i).sec(j).seq_scaf  )
+            deallocate(edge(i).sec(j).seq_stap  )
+        end do
+        deallocate(edge(i).sec)
+    end do
+    deallocate(edge)
+    deallocate(conn_scaf)
+    deallocate(conn_stap)
+
+    do i = 1, n_edge
+        close(unit = 710+i)
+    end do
+
+    ! Deallocate memory and close file for Tecplot output
+    if(para_output_Tecplot == "on") then
+        deallocate(tec)
+        close(unit=709)
+    end if
+end subroutine Output_Write_Out_Graphics
+
+! ---------------------------------------------------------------------------------------
+
+! Write output of unpaired nucleotides
+function Output_Write_Out_Unpaired(mesh, dna, unit) result(max_base)
+    type(MeshType), intent(in) :: mesh
+    type(DNAType),  intent(inout) :: dna
+    integer, intent(in) :: unit
+
+    double precision :: length
+    integer :: s_base, e_base, s_iniL, e_iniL, s_sec, e_sec, max_base
+    integer :: i, j, n_base, base, count
+    character(100) :: seq
+    character(4) :: types
+
+    dna.n_nt_unpaired_scaf = 0
+    dna.n_nt_unpaired_stap = 0
+    dna.n_unpaired_scaf    = 0
+    dna.n_unpaired_stap    = 0
+
+    max_base = 0
+    n_base   = 0
+    do i = 1, dna.n_top
+
+        ! Find the end bases in basepairs
+        if(dna.top(i).up /= -1 .and. dna.top(i).dn /= -1) then
+            !
+            !                i
+            ! *--*--*--*--*->*--*--*--*-->
+            ! |  |  |  |  |  |
+            ! *<-*--*--*--*--*
+            if( dna.top(i).across /= -1 .and. &
+                dna.top(dna.top(i).up).node == -1 .and. &
+                dna.top(dna.top(i).dn).node /= -1 ) then
+
+                base   = dna.top(i).id
+                types  = dna.strand(dna.top(i).strand).type1
+                s_iniL = mesh.node(dna.top(dna.top(base).dn).node).iniL
+                s_sec  = mesh.node(dna.top(dna.top(base).dn).node).sec
+                count  = 0
+                n_base = n_base + 1
+                s_base = base
+
+                if(types == "scaf") dna.n_unpaired_scaf = dna.n_unpaired_scaf + 1
+                if(types == "stap") dna.n_unpaired_stap = dna.n_unpaired_stap + 1
+
+                ! Count the number of bases
+                do
+                    base = dna.top(base).up
+                    if(dna.top(base).across /= -1) exit
+                    count = count + 1
+                    seq(count:count) = dna.top(base).seq
+
+                    if(types == "scaf") dna.n_nt_unpaired_scaf = dna.n_nt_unpaired_scaf + 1
+                    if(types == "stap") dna.n_nt_unpaired_stap = dna.n_nt_unpaired_stap + 1
+                end do
+
+                e_iniL = mesh.node(dna.top(base).node).iniL
+                e_sec  = mesh.node(dna.top(base).node).sec
+                e_base = dna.top(base).id
+                length = Norm(dna.top(s_base).pos - dna.top(e_base).pos)
+
+                write(unit, "(i10, a$        )"), n_base, trim(types)
+                write(unit, "(a, i3, a, f5.2$)"), ", # of bases : ", count, ", Total length : ", length
+                !write(unit, "(a, f5.2, a$    )"), ", Divided length : ", length/dble(count+1), ", Edge(Section)) : "
+                write(unit, "(a, f5.2, a$    )"), ", Divided length : ", length/dble(para_dist_pp) - 1.0d0, ", Edge(Section)) : "
+                write(unit, "(i3, a, i3, a$  )"), s_iniL, "(", s_sec, ") -> "
+                write(unit, "(i3, a, i3, a$  )"), e_iniL,   "(", e_sec,   "), Sequence : "
+
+                ! Check maximum number of unpaired nucleotides
+                if(max_base < count) max_base = count
+
+                do j = 1, count
+                    write(unit, "(a$)"), seq(j:j)
+                end do
+                write(unit, "(a)")
+            end if
+        end if
+    end do
+    write(unit, "(a)")
+end function Output_Write_Out_Unpaired
+
+! ---------------------------------------------------------------------------------------
+
+! Outputs based on strands and nucleotides
+subroutine Output_Write_Out_Strand_Base(mesh, dna, unit)
+    type(MeshType), intent(in) :: mesh
+    type(DNAType),  intent(in) :: dna
+    integer, intent(in) :: unit
+
+    integer :: i, j
+
+    write(unit, "(a)"), " Output based on strands"
+    write(unit, "(a)"), " The total number of strands : "//trim(adjustl(Int2Str(dna.n_strand)))
+    write(unit, "(a)")
+
+    ! Strand based output
+    do i = 1, dna.n_strand
+        write(unit, "(i10,a$)"), i, " "//trim(dna.strand(i).type1)//" ==>"
+        write(unit, "(a, i6$)"), " # of nts : ", dna.strand(i).n_base
+        write(unit, "(a, l  )"), ", circular : ", dna.strand(i).b_circular
+
+        ! Print bases numbering
+        call space(unit, 15)
+        write(unit, "(a9$)"), trim(adjustl(Int2Str(dna.strand(i).base(1))))//"->"
+        do j = 2, dna.strand(i).n_base - 1
+            if(mod(j, 10) == 0) then
+                write(unit, "(a9)"), trim(adjustl(Int2Str(dna.strand(i).base(j))))//"->"
+            else if(mod(j, 10) == 1) then
+                call space(unit, 15)
+                write(unit, "(a9$)"), trim(adjustl(Int2Str(dna.strand(i).base(j))))//"->"
+            else
+                write(unit, "(a9$)"), trim(adjustl(Int2Str(dna.strand(i).base(j))))//"->"
+            end if
+        end do
+        if(mod(j, 10) == 1) call space(unit, 15)
+        write(unit, "(a7)"), trim(adjustl(Int2Str(dna.strand(i).base(dna.strand(i).n_base))))
+        write(unit, "(a )")
+    end do
+
+    ! DNA base information
+    write(unit, "(a)"), " Output based on nucleotides"
+    write(unit, "(a)"), " The total number of nucleotides : "//trim(adjustl(Int2Str(dna.n_top)))
+    write(unit, "(a)")
+
+    ! node-bp-InitL-sec-up-dn-ac-xo
+    do i = 1, dna.n_top
+        write(unit, "(i10, a$)"), dna.top(i).id, " nt ==>"
+        write(unit, "(a$     )"), trim(dna.strand(dna.top(i).strand).type1)
+        write(unit, "(a$     )"), ", seq: "//trim(dna.top(i).seq)
+        write(unit, "(a, i6$ )"), ", nde: ", dna.top(i).node
+
+        if(dna.top(i).node /= -1) then
+            write(unit, "(a, i6$)"), ", bp: ",   mesh.node(dna.top(i).node).bp
+            write(unit, "(a, i3$)"), ", iniL: ", mesh.node(dna.top(i).node).iniL
+            write(unit, "(a, i3$)"), ", sec: ",  mesh.node(dna.top(i).node).sec
+        else
+            write(unit, "(a$)"), ",      UNPAIRED NUCLEOTIDES      "
+        end if
+
+        write(unit, "(a, i6$)"), ", up: ", dna.top(i).up
+        write(unit, "(a, i6$)"), ", dn: ", dna.top(i).dn
+        write(unit, "(a, i6$)"), ", xo: ", dna.top(i).xover
+        write(unit, "(a, i6$)"), ", ac: ", dna.top(i).across
+        write(unit, "(a, i4$ )"), ", strd: ", dna.top(i).strand
+        !write(unit, "(a, i5  )"), ", addr: ", dna.top(i).address
+        write(unit, "(a)")
+    end do
+end subroutine Output_Write_Out_Strand_Base
+
+! ---------------------------------------------------------------------------------------
+
+! Output about staple length
+subroutine Output_Write_Out_Staple_Length(dna, unit)
+    type(DNAType), intent(in) :: dna
+    integer, intent(in) :: unit
+
+    integer, allocatable :: length_stap(:)
+    integer :: i
+
+    ! Allocate and initialize memory
+    allocate(length_stap(dna.len_min_stap:dna.len_max_stap))
+    length_stap(dna.len_min_stap:dna.len_max_stap) = 0
+
+    ! Find staple length
+    do i = 1, dna.n_strand
+        if(dna.strand(i).type1 == "stap") then
+            length_stap(dna.strand(i).n_base) = length_stap(dna.strand(i).n_base) + 1
+        end if
+    end do
+
+    ! Write staple length
+    do i = dna.len_min_stap, dna.len_max_stap
+        if(length_stap(i) /= 0) then
+            write(unit, "(2i6)"), i, length_stap(i)
+        end if
+    end do
+
+    ! Deallocate memory
+    deallocate(length_stap)
+end subroutine Output_Write_Out_Staple_Length
+
+! ---------------------------------------------------------------------------------------
+
+! Write JSON guide model
+subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
+    type(ProbType),  intent(in) :: prob
+    type(GeomType),  intent(in) :: geom
+    type(BoundType), intent(in) :: bound
+    type(MeshType),  intent(in) :: mesh
+
+    double precision :: pos_1(3), pos_2(3), pos_c(3), pos_a(3), pos_b(3)
+    double precision :: length, t1(3), t2(3), t3(3)
+    integer :: i, j, iter, nbp, add
+    logical :: f_axis, f_info
+    character(200) :: path
+
+    ! Set option
+    f_axis = para_chimera_axis
+
+    path = trim(prob.path_work1)//trim(prob.name_file)
+    open(unit=998, file=trim(path)//"_13_json_guide.bild", form="formatted")
+
+    ! Write cross-sectional points
+    write(998, "(a)"), ".color red"
+    do i = 1, geom.n_croP
+
+        write(998, "(a$    )"), ".sphere "
+        write(998, "(3f9.3$)"), geom.croP(i).pos(1:3)
+        write(998, "(1f9.3 )"), 0.35d0
+    end do
+
+    ! Write cross-sectional edges
+    write(998, "(a)"), ".color dark green"
+    do i = 1, geom.n_croL
+
+        pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
+        pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
+
+        write(998, "(a$   )"), ".cylinder "
+        write(998, "(7f9.3)"), pos_1(1:3), pos_2(1:3), 0.15d0
+    end do
+
+    ! Information on edge number
+    add = 0
+    do i = 1, geom.n_croL
+        pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
+        pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
+        pos_c(1:3) = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
+
+        write(998, "(a$   )"), ".cmov "
+        write(998, "(3f9.3)"), pos_c(1:2) + 0.6d0, pos_c(3)
+        write(998, "(a    )"), ".color dark green"
+        write(998, "(a    )"), ".font Helvetica 12 bold"
+
+        add = i / (geom.n_croL / geom.n_sec)
+        write(998, "(i7)"), mod(2*i-1, geom.n_croL) + add - 1
+    end do
+
+    do i = 1, bound.n_junc
+        do j = 1, geom.n_sec*bound.junc(i).n_arm
+
+            pos_1(1:3) = mesh.node(bound.junc(i).conn(j,1)).pos(1:3)
+            pos_2(1:3) = mesh.node(bound.junc(i).conn(j,2)).pos(1:3)
+
+            write(998, "(a$   )"), ".cylinder "
+            write(998, "(7f9.3)"), pos_1(1:3), pos_2(1:3), 0.05d0
+
+        end do
+    end do
+
+    ! Local coordinate system on cross-sectional edges
+    do i = 1, geom.n_croL
+        pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
+        pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
+        pos_c(1:3) = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
+
+        t1(1:3) = geom.croL(i).t(1, 1:3)
+        t2(1:3) = geom.croL(i).t(2, 1:3)
+        t3(1:3) = geom.croL(i).t(3, 1:3)
+
+        write(998, "(a     )"), ".color red"    ! x-axis
+        write(998, "(a$    )"), ".arrow "
+        write(998, "(3f8.2$)"), pos_c(1:3)
+        write(998, "(3f8.2$)"), pos_c(1:3) + t1(1:3) * 1.5d0
+        write(998, "(3f8.2 )"), 0.18d0, 0.36d0, 0.6d0
+    end do
+
+    ! Write global axis
+    if(f_axis == .true.) then
+        write(998, "(a)"), ".translate 0.0 0.0 0.0"
+        write(998, "(a)"), ".scale 0.5"
+        write(998, "(a)"), ".color grey"
+        write(998, "(a)"), ".sphere 0 0 0 0.5"      ! Center
+        write(998, "(a)"), ".color red"             ! x-axis
+        write(998, "(a)"), ".arrow 0 0 0 4 0 0 "
+        write(998, "(a)"), ".color blue"            ! y-axis
+        write(998, "(a)"), ".arrow 0 0 0 0 4 0 "
+        write(998, "(a)"), ".color yellow"          ! z-axis
+        write(998, "(a)"), ".arrow 0 0 0 0 0 4 "
+    end if
+    close(unit=998)
+
+    ! ---------------------------------------------
+    !
+    ! Write the file for Tecplot
+    !
+    ! ---------------------------------------------
+    if(para_output_Tecplot == "off") return
+
+    path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
+    open(unit=998, file=trim(path)//"_13_json_guide.dat", form="formatted")
+
+    write(998, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
+    write(998, "(a )"), 'VARIABLES = "X", "Y", "Z", "weight"'
+    write(998, "(a$)"), 'ZONE F = FEPOINT'
+    write(998, "(a$)"), ', N='//trim(adjustl(Int2Str(geom.n_croP)))
+    write(998, "(a$)"), ', E='//trim(adjustl(Int2Str(geom.n_croL)))
+    write(998, "(a )"), ', ET=LINESEG'
+
+    ! Write points
+    do i = 1, geom.n_croP
+        write(998, "(3f9.3$)"), geom.croP(i).pos(1:3)
+        write(998, "(1f9.3 )"), 1.0d0
+    end do
+
+    ! Write edges
+    do i = 1, geom.n_croL
+        write(998, "(1i7$)"), geom.croL(i).poi(1)
+        write(998, "(1i7 )"), geom.croL(i).poi(2)
+    end do
+
+    close(unit=998)
+end subroutine Output_Write_Out_Guide_JSON
+
+! ---------------------------------------------------------------------------------------
+
+! Write JSON output
+subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
+    type(ProbType), intent(in) :: prob
+    type(GeomType), intent(in) :: geom
+    type(MeshType), intent(in) :: mesh
+    type(DNAType),  intent(in) :: dna
+    integer, intent(in) :: max_unpaired
+
+    ! Conn type data
+    type :: ConnType
+        integer :: conn(4)  ! [ down sec | down bp | up sec | up bp ]
+    end type ConnType
+
+    ! Section type data - Global section => (E-1)*iniE + sec
+    type :: SecType
+        type(ConnType), allocatable :: scaf(:)
+        type(ConnType), allocatable :: stap(:)
+        integer :: n_stap_col
+        integer :: stap_col(20,2)
+    end type SecType
+
+    ! Initial line data
+    type :: EdgeType
+        integer :: n_sec
+        type(SecType), allocatable :: sec(:)
+    end type EdgeType
+
+    type(EdgeType), allocatable :: edge(:)
+    integer :: i, j, k, min_bp, max_bp, n_edge, width, num, shift
+    integer :: c_base, c_node, c_edge, c_sec, c_bp
+    integer :: dn_base, dn_node, dn_edge, dn_sec, dn_bp
+    integer :: up_base, up_node, up_edge, up_sec, up_bp
+    integer :: cup_bp, cdn_bp, col, row, col_shift, row_shift, color(12)
+    character(200) :: path
+
+    path = trim(prob.path_work1)//trim(prob.name_file)
+    open(unit=999, file=trim(path)//"_14_json.json", form="formatted")
+
+    ! Hex color code
+    color( 1) = 13369344    ! #cc0000
+    color( 2) = 16204552    ! #f74308
+    color( 3) = 16225054    ! #f7931e
+    color( 4) = 11184640    ! #aaaa00
+    color( 5) = 5749504     ! #57bb00
+    color( 6) = 29184       ! #007200
+    color( 7) = 243362      ! #03b6a2
+    color( 8) = 1507550     ! #1700de
+    color( 9) = 7536862     ! #7300de
+    color(10) = 12060012    ! #b8056c
+    color(11) = 3355443     ! #333333
+    color(12) = 8947848     ! #888888
+
+    ! Find maximum and minimum bp ID
+    max_bp = mesh.node(1).bp
+    min_bp = mesh.node(1).bp
+    do i = 2, mesh.n_node
+        if(mesh.node(i).bp > max_bp) max_bp = mesh.node(i).bp
+        if(mesh.node(i).bp < min_bp) min_bp = mesh.node(i).bp
+    end do
+
+    min_bp = min_bp + para_start_bp_ID - 1
+    max_bp = max_bp + para_start_bp_ID - 1
+
+    shift = para_start_bp_ID + 21
+
+    ! Possible maximum edge length = max_bp - min_bp + 1 + max_unpaired
+    width = (max_bp - min_bp + 1 + max_unpaired) + 2 * para_start_bp_ID + 21
+    width = (width / 21) * 21 + 21
+
+    !print *, min_bp, max_bp, para_start_bp_ID, max_unpaired, max_bp - min_bp + 1 + max_unpaired
+
+    ! Allocate and initialize edge data
+    n_edge = geom.n_iniL
+    allocate(edge(n_edge))
+
+    do i = 1, n_edge
+        edge(i).n_sec = geom.n_sec
+        allocate(edge(i).sec(edge(i).n_sec))
+
+        do j = 1, edge(i).n_sec
+            allocate(edge(i).sec(j).scaf(width))
+            allocate(edge(i).sec(j).stap(width))
+
+            edge(i).sec(j).n_stap_col = 0
+            edge(i).sec(j).stap_col   = 0
+
+            do k = 1, width
+                edge(i).sec(j).scaf(k).conn(1:4) = -1
+                edge(i).sec(j).stap(k).conn(1:4) = -1
+            end do
+        end do
+    end do
+
+    ! Strand based loop
+    do i = 1, dna.n_strand
+
+        c_base = Mani_Go_Start_Base(dna, i)
+        do j = 1, dna.strand(i).n_base
+
+            ! Current base
+            c_node = dna.top(c_base).node
+            if(c_node /= -1) then
+                c_edge = mesh.node(c_node).iniL
+                c_sec  = mesh.node(c_node).sec
+                c_bp   = mesh.node(c_node).bp + shift
+            else
+                if(mod(c_sec, 2) == 0) then
+                    if(dna.strand(i).type1 == "scaf") c_bp = c_bp + 1
+                    if(dna.strand(i).type1 == "stap") c_bp = c_bp - 1
+                else
+                    if(dna.strand(i).type1 == "scaf") c_bp = c_bp - 1
+                    if(dna.strand(i).type1 == "stap") c_bp = c_bp + 1
+                end if
+            end if
+
+            ! Downward base
+            dn_base = dna.top(c_base).dn
+            if(dn_base /= -1) then
+                dn_node = dna.top(dn_base).node
+                if(dn_node /= -1) then
+                    dn_edge = mesh.node(dn_node).iniL
+                    dn_sec  = mesh.node(dn_node).sec
+                    dn_bp   = mesh.node(dn_node).bp + shift
+                else
+                    if(mod(c_sec, 2) == 0) then
+                        if(dna.strand(i).type1 == "scaf") dn_bp = dn_bp + 1
+                        if(dna.strand(i).type1 == "stap") dn_bp = dn_bp - 1
+                    else
+                        if(dna.strand(i).type1 == "scaf") dn_bp = dn_bp - 1
+                        if(dna.strand(i).type1 == "stap") dn_bp = dn_bp + 1
+                    end if
+                end if
+                if(dna.strand(i).type1 == "scaf") then
+                    edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(1) = (dn_edge - 1) * edge(1).n_sec + dn_sec
+                    edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(2) = dn_bp - 1
+                else
+                    edge(c_edge).sec(c_sec+1).stap(c_bp).conn(1) = (dn_edge - 1) * edge(1).n_sec + dn_sec
+                    edge(c_edge).sec(c_sec+1).stap(c_bp).conn(2) = dn_bp - 1
+                end if
+            else if(dn_base == -1 .and. dna.strand(i).type1 == "stap") then
+                ! Set color
+                edge(c_edge).sec(c_sec+1).n_stap_col = edge(c_edge).sec(c_sec+1).n_stap_col + 1
+                num = edge(c_edge).sec(c_sec+1).n_stap_col
+                edge(c_edge).sec(c_sec+1).stap_col(num,1) = c_bp - 1
+                edge(c_edge).sec(c_sec+1).stap_col(num,2) = color(mod(i, 12)+1)
+            end if
+
+            ! Upper base
+            up_base = dna.top(c_base).up
+            if(up_base /= -1) then
+                up_node = dna.top(up_base).node
+                if(up_node /= -1) then
+                    up_edge = mesh.node(up_node).iniL
+                    up_sec  = mesh.node(up_node).sec
+                    up_bp   = mesh.node(up_node).bp + shift
+                else
+                    if(mod(c_sec, 2) == 0) then
+                        if(dna.strand(i).type1 == "scaf") up_bp = up_bp + 1
+                        if(dna.strand(i).type1 == "stap") up_bp = up_bp - 1
+                    else
+                        if(dna.strand(i).type1 == "scaf") up_bp = up_bp - 1
+                        if(dna.strand(i).type1 == "stap") up_bp = up_bp + 1
+                    end if
+                end if
+                if(dna.strand(i).type1 == "scaf") then
+                    edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(3) = (up_edge - 1) * edge(1).n_sec + up_sec
+                    edge(c_edge).sec(c_sec+1).scaf(c_bp).conn(4) = up_bp - 1
+                else
+                    edge(c_edge).sec(c_sec+1).stap(c_bp).conn(3) = (up_edge - 1) * edge(1).n_sec + up_sec
+                    edge(c_edge).sec(c_sec+1).stap(c_bp).conn(4) = up_bp - 1
+                end if
+            end if
+
+            ! Update base
+            c_base = dna.Top(c_base).up
+        end do
+    end do
+
+    ! Print JSON-style data structure
+    write(999, "(a)"), "{"
+    write(999, "(a)"), '"vstrands":'
+    write(999, "(a)"), '['
+
+    row_shift = 0
+    do i = 1, n_edge
+        do j = 1, edge(i).n_sec
+            write(999, "(a)"), '{'
+
+            ! Skip
+            write(999, "(a$)"), '"skip":['
+            do k = 1, width - 1
+                write(999, "(a$)"), "0,"
+            end do
+            write(999, "(a)"), "0],"
+
+            ! Stap
+            write(999, "(a$)"), '"stap":['
+            do k = 1, width
+                write(999, "(a$)"), "["//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(1))))//","//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(2))))//","//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(3))))//","//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(4))))
+
+                if(k /= width) write(999, "(a$)"), "]"
+                if(k == width) write(999, "(a )"), "]],"
+            end do
+
+            ! Scaffold loop
+            write(999, "(a)"), '"scafLoop":[],'
+
+            ! Staple colors
+            write(999, "(a$)"), '"stap_colors":['
+            do k = 1, edge(i).sec(j).n_stap_col
+                write(999, "(a$)"), '['//trim(adjustl(Int2Str(edge(i).sec(j).stap_col(k,1))))
+                write(999, "(a$)"), ','//trim(adjustl(Int2Str(edge(i).sec(j).stap_col(k,2))))
+                
+                if(k /= edge(i).sec(j).n_stap_col) write(999, "(a$)"), '],'
+                if(k == edge(i).sec(j).n_stap_col) write(999, "(a$)"), ']'
+            end do
+            write(999, "(a )"), '],'
+
+            ! Scaffold loop
+            write(999, "(a)"), '"stapLoop":[],'
+
+            ! Scaffold routing
+            write(999, "(a$)"), '"scaf":['
+            do k = 1, width
+                write(999, "(a$)"), "["//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).scaf(k).conn(1))))//","//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).scaf(k).conn(2))))//","//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).scaf(k).conn(3))))//","//&
+                    trim(adjustl(Int2Str(edge(i).sec(j).scaf(k).conn(4))))
+
+                if(k /= width) write(999, "(a$)"), "]"
+                if(k == width) write(999, "(a )"), "]],"
+            end do
+
+            ! Cross-section position
+            col_shift = mod(i, 15)
+            if(col_shift == 1 .and. j == 1) row_shift = row_shift + 2
+            if(col_shift == 0) col_shift = 15
+            col_shift = 2*col_shift
+
+            num = (i - 1) * edge(i).n_sec + j
+            col = col_shift - geom.sec.posR(j)
+            row = row_shift - geom.sec.posC(j)
+
+            write(999, "(a)"), '"num":'//trim(adjustl(Int2Str(num - 1)))//","
+            write(999, "(a)"), '"col":'//trim(adjustl(Int2Str(col)))//","
+            write(999, "(a)"), '"row":'//trim(adjustl(Int2Str(row)))//","
+
+            ! Loop
+            write(999, "(a$)"), '"loop":['
+            do k = 1, width - 1
+                write(999, "(a$)"), "0,"
+            end do
+            write(999, "(a)"), "0]"
+
+            if(i == n_edge .and. j == edge(i).n_sec) then
+                write(999, "(a)"), '}'
+            else
+                write(999, "(a)"), '},'
+            end if
+        end do
+    end do
+
+    write(999, "(a)"), '],'
+    write(999, "(a)"), '"name":"2D lattice design by PERDIX-OPEN"'
+    write(999, "(a)"), "}"
+
+    ! Deallocate edge data
+    do i = 1, n_edge
+        do j = 1, edge(i).n_sec
+            deallocate(edge(i).sec(j).scaf)
+            deallocate(edge(i).sec(j).stap)
+        end do
+        deallocate(edge(i).sec)
+    end do
+    deallocate(edge)
+end subroutine Output_Write_Out_JSON
+
 ! ---------------------------------------------------------------------------------------
 
 ! Write information related with basepair
@@ -323,7 +2317,7 @@ subroutine Output_Write_CanDo(prob, mesh, dna)
 
     ! Open files
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=803, file=trim(path)//"_13_cndo.cndo", form="formatted")
+    open(unit=803, file=trim(path)//"_15_cndo.cndo", form="formatted")
 
     write(803, "(a)"), '"CanDo (.cndo) file format version 1.0"'
     write(803, "(a)")
@@ -373,9 +2367,9 @@ subroutine Output_Write_CanDo(prob, mesh, dna)
                 trim(dna.top(i).seq)                      //","
 
             strand = dna.top(i).strand
-            if(dna.strand(strand).types == "scaf") then
+            if(dna.strand(strand).type1 == "scaf") then
                 write(803, "(a)"), trim("0")
-            else if(dna.strand(strand).types == "stap") then
+            else if(dna.strand(strand).type1 == "stap") then
                 write(803, "(a)"), trim("1")
             end if
         end do
@@ -457,7 +2451,7 @@ subroutine Output_Write_CanDo(prob, mesh, dna)
     ! nt1, and nt2 based on basepair
     allocate(node_nt(mesh.n_node, 2))
     do i = 1, dna.n_strand
-        if(dna.strand(i).types == "scaf") then
+        if(dna.strand(i).type1 == "scaf") then
             do j = 1, dna.strand(i).n_base
                 base = dna.strand(i).base(j)
                 if(dna.top(base).across /= -1) then
@@ -503,7 +2497,7 @@ subroutine Output_Write_CanDo_New(prob, mesh, dna)
 
     ! Open files
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=803, file=trim(path)//"_13_cndo.cndo", form="formatted")
+    open(unit=803, file=trim(path)//"_15_cndo.cndo", form="formatted")
 
     ! For dnatoop data that is defined by bases
     write(803, "(i10)"), dna.n_top
@@ -518,9 +2512,9 @@ subroutine Output_Write_CanDo_New(prob, mesh, dna)
         write(803, "(a10$)"), dna.top(i).seq
 
         strand = dna.top(i).strand
-        if(dna.strand(strand).types == "scaf") then
+        if(dna.strand(strand).type1 == "scaf") then
             write(803, "(i10)"), 0
-        else if(dna.strand(strand).types == "stap") then
+        else if(dna.strand(strand).type1 == "stap") then
             write(803, "(i10)"), 1
         end if
     end do
@@ -552,7 +2546,7 @@ subroutine Output_Write_CanDo_New(prob, mesh, dna)
     ! nt1, and nt2 based on basepair
     allocate(node_nt(mesh.n_node, 2))
     do i = 1, dna.n_strand
-        if(dna.strand(i).types == "scaf") then
+        if(dna.strand(i).type1 == "scaf") then
             do j = 1, dna.strand(i).n_base
                 base = dna.strand(i).base(j)
                 if(dna.top(base).across /= -1) then
@@ -990,7 +2984,7 @@ subroutine Output_Write_Sequence_CroL(prob, mesh, dna)
     do i = 1, dna.n_strand
 
         ! For staple strand
-        if(dna.strand(i).types /= "stap") cycle
+        if(dna.strand(i).type1 /= "stap") cycle
         do j = 1, dna.strand(i).n_base
             base = dna.strand(i).base(j)
             node = dna.top(base).node
@@ -1008,7 +3002,7 @@ subroutine Output_Write_Sequence_CroL(prob, mesh, dna)
     ! Write information on sequence
     do i = 1, mesh.n_node
         write(808, "(i5$)"), mesh.node(i).croL
-        write(808, "(a$ )"), " th sectional line -> node ID : "
+        write(808, "(a$ )"), " multi line -> node ID : "
         write(808, "(i5$)"), mesh.node(i).id
         write(808, "(a$ )"), ", BP ID : "
         write(808, "(i5$)"), mesh.node(i).bp

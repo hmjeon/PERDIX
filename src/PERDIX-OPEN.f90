@@ -74,7 +74,7 @@ subroutine Main()
     call SeqDesign_Design(prob, geom, mesh, dna)
 
     ! 7th step : Generate outputs and run post-processing tools
-    call Output_Generation(prob, mesh, dna)
+    call Output_Generation(prob, geom, bound, mesh, dna)
 
     ! Print information
     call Print_Information(prob, geom, bound, mesh, dna)
@@ -171,7 +171,7 @@ subroutine Report()
         call SeqDesign_Design(prob, geom, mesh, dna)
 
         ! 7th step : Generate outputs and run post-processing tools
-        call Output_Generation(prob, mesh, dna)
+        call Output_Generation(prob, geom, bound, mesh, dna)
 
         ! Print information
         call Print_Information(prob, geom, bound, mesh, dna)

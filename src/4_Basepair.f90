@@ -283,7 +283,7 @@ subroutine Basepair_Generate_Basepair(geom, bound, mesh)
 
         ! Print progress
         write(11, "(i20$  )"), i
-        write(11, "(a, i3$)"), " th line (",             n_node-node_start + 1
+        write(11, "(a, i3$)"), " line (",             n_node-node_start + 1
         write(11, "(a, i6$)"), "-bp) - start node # : ", node_start
         write(11, "(a, i6$)"), ", end node # : ",        n_node
         write(11, "(a, i3$)"), ", sec # : ",             geom.croL(i).sec
@@ -993,14 +993,14 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
 
         ! Print progress
         write(11, "(i20$)"), i
-        write(11, "(a$  )"), " th junc -> # of nodes to be connected : "
+        write(11, "(a$  )"), " junc -> # of nodes to be connected : "
         write(11, "(i7  )"), n_conn
 
         ! Modify the edge length
         do j = 1, n_conn
 
-            write(11, "(i30, a$)"), conn(j, 1), " th node --> "
-            write(11, "(i7,  a$)"), conn(j, 2), " th node,"
+            write(11, "(i30, a$)"), conn(j, 1), " node --> "
+            write(11, "(i7,  a$)"), conn(j, 2), " node,"
             write(11, "(a12, i5)"), "type :", type_conn(j)
 
             ! Modify junction depending on connection type
@@ -2065,7 +2065,7 @@ subroutine Basepair_Make_Sticky_End(geom, bound, mesh)
         call Mani_Progress_Bar(i, bound.n_junc)
 
         ! Print progress
-        write(11, "(i20, a$)"), i, " th junc, # of arms : "
+        write(11, "(i20, a$)"), i, " junc, # of arms : "
         write(11, "(i4,  a$)"), bound.junc(i).n_arm, " --> Added node # : "
 
         do j = 1, bound.junc(i).n_arm
@@ -2230,7 +2230,7 @@ subroutine Basepair_Make_Sticky_End(geom, bound, mesh)
     ! Print modified junction connectivity
     do i = 1, bound.n_junc
 
-        write (11, "(i20, a, i2, a$)"), i, " th junc : ", bound.junc(i).n_arm, "-arms --> node # : "
+        write (11, "(i20, a, i2, a$)"), i, " junc : ", bound.junc(i).n_arm, "-arms --> node # : "
         do j = 1, geom.n_sec
             do k = 1, bound.junc(i).n_arm
                 write (11, "(i7$)"), bound.junc(i).node(k, j)

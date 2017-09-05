@@ -813,12 +813,12 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
 
         ! Print progress
         write(11, "(i20$)"), i
-        write(11, "(a$  )"), " th junc -> # of nodes to be connected : "
+        write(11, "(a$  )"), " junc -> # of nodes to be connected : "
         write(11, "(i7  )"), geom.n_sec*bound.junc(i).n_arm
 
         do j = 1, geom.n_sec*bound.junc(i).n_arm
-            write(11, "(i30, a$)"), conn(j, 1), " th node --> "
-            write(11, "(i7, a  )"), conn(j, 2), " th node"
+            write(11, "(i30, a$)"), conn(j, 1), " node --> "
+            write(11, "(i7, a  )"), conn(j, 2), " node"
         end do
 
         ! ==================================================
@@ -2462,8 +2462,8 @@ end subroutine Route_Graph_Set_Data
 
 ! Write Adjacent matrix
 subroutine Route_Graph_Write_Adjacent(prob, adj)
-    type(ProbType),   intent(in) :: prob
-    integer,          intent(in) :: adj(:,:)
+    type(ProbType), intent(in) :: prob
+    integer,        intent(in) :: adj(:,:)
 
     character(200) :: path
     integer :: i, j, dim
@@ -3049,7 +3049,7 @@ subroutine Route_Make_Scaf_Origami(prob, mesh, dna)
         if(mod(count, 100) == 0) then
             write(11, "(i7 , a )"), up,    "->"
         else if(mod(count, 100) == 1) then
-            write(11, "(i20, a$)"), count, " th base - "
+            write(11, "(i20, a$)"), count, " base - "
             write(11, "(i7 , a$)"), up,    "->"
         else
             write(11, "(i7 , a$)"), up,    "->"

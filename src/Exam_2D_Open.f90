@@ -96,7 +96,7 @@ subroutine Exam_Open2D_Plate_Cross(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Plate Cross"
+    prob.name_prob = "Plate_Cross"
     prob.name_file = "01_Plate_Cross"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -524,7 +524,7 @@ subroutine Exam_Open2D_Rhombic_Tiles(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Rhombic Tiles"
+    prob.name_prob = "Rhombic_Tiles"
     prob.name_file = "06_Rhombic_Tiles"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -598,7 +598,7 @@ subroutine Exam_Open2D_L_Shape(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "L Shape"
+    prob.name_prob = "L_Shape"
     prob.name_file = "07_L_Shape"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -776,7 +776,7 @@ subroutine Exam_Open2D_Quarter_Circle(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Quarter Circle"
+    prob.name_prob = "Quarter_Circle"
     prob.name_file = "09_Quarter_Circle"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -1009,7 +1009,7 @@ subroutine Exam_Open2D_Cairo_Penta_Tiles(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Cairo Penta Tiles"
+    prob.name_prob = "Cairo_Penta"
     prob.name_file = "11_Cairo_Penta_Tiles"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -1104,7 +1104,7 @@ subroutine Exam_Open2D_Prismatic_Penta_Tiles(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Prismatic Penta Tiles"
+    prob.name_prob = "Prismatic_Penta"
     prob.name_file = "12_Prismatic_Penta_Tiles"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -1183,7 +1183,7 @@ subroutine Exam_Open2D_Hexagonal_Mesh(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Hexagonal Mesh"
+    prob.name_prob = "Hexagonal_Mesh"
     prob.name_file = "13_Hexagonal_Mesh"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -1267,7 +1267,7 @@ subroutine Exam_Open2D_Hepta_Penta_Tiles(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Hepta Penta Tiles"
+    prob.name_prob = "Hepta_Penta"
     prob.name_file = "14_Hepta_Penta_Tiles"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -1425,7 +1425,7 @@ subroutine Exam_Open2D_4_Sided_Polygon(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "4-Sided Polygon"
+    prob.name_prob = "4_Sided_Polygon"
     prob.name_file = "16_4_Sided_Polygon"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -1491,7 +1491,7 @@ subroutine Exam_Open2D_5_Sided_Polygon(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "5-Sided Polygon"
+    prob.name_prob = "5_Sided_Polygon"
     prob.name_file = "17_5_Sided_Polygon"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -1556,7 +1556,7 @@ subroutine Exam_Open2D_6_Sided_Polygon(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "6-Sided Polygon"
+    prob.name_prob = "6_Sided_Polygon"
     prob.name_file = "18_6_Sided_Polygon"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -1620,7 +1620,7 @@ subroutine Exam_Open2D_Plate_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Plate Quad"
+    prob.name_prob = "Plate_Quad"
     prob.name_file = "19_Plate_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -1691,7 +1691,7 @@ subroutine Exam_Open2D_Plate_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Plate Tri"
+    prob.name_prob = "Plate_Tri"
     prob.name_file = "20_Plate_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -1778,7 +1778,7 @@ subroutine Exam_Open2D_Plate_Eng(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Plate Eng"
+    prob.name_prob = "Plate_Eng"
     prob.name_file = "21_Plate_Eng"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -1863,7 +1863,7 @@ subroutine Exam_Open2D_L_Shape_42bp(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "L-shape 42bp"
+    prob.name_prob = "L_shape_42bp"
     prob.name_file = "22_L_shape_42bp"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -1933,7 +1933,7 @@ subroutine Exam_Open2D_L_Shape_63bp(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "L-shape 63bp"
+    prob.name_prob = "L_shape_63bp"
     prob.name_file = "23_L_shape_63bp"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -2003,7 +2003,7 @@ subroutine Exam_Open2D_L_Shape_84bp(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "L-shape 84bp"
+    prob.name_prob = "L_shape_84bp"
     prob.name_file = "24_L_shape_84bp"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -2073,7 +2073,7 @@ subroutine Exam_Open2D_Plate_3x4(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Plate 3x4"
+    prob.name_prob = "Plate_3x4"
     prob.name_file = "Plate_3x4"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -2454,7 +2454,7 @@ subroutine Exam_Open2D_L_Shape_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "L Shape Tri"
+    prob.name_prob = "L_Shape_Tri"
     prob.name_file = "L_Shape_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -2539,7 +2539,7 @@ subroutine Exam_Open2D_Quarter_Circle_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Quarter Circle Tri"
+    prob.name_prob = "Quarter_Circle_Tri"
     prob.name_file = "Quarter_Circle_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -2745,7 +2745,7 @@ subroutine Exam_Open2D_Disk_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Disk Tri"
+    prob.name_prob = "Disk_Tri"
     prob.name_file = "Disk_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -2859,7 +2859,7 @@ subroutine Exam_Open2D_circle_Tri_Fine(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Circle Tri Fine"
+    prob.name_prob = "Circle_Tri_Fine"
     prob.name_file = "Circle_Tri_Fine"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -2996,7 +2996,7 @@ subroutine Exam_Open2D_Ellipse_Tri_Fine(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Ellipse Tri Fine"
+    prob.name_prob = "Ellipse_Tri_Fine"
     prob.name_file = "Ellipse_Tri_Fine"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -3138,7 +3138,7 @@ subroutine Exam_Open2D_L_Shape_Irregular(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "L Shape Irregular"
+    prob.name_prob = "L_Shape_Irregular"
     prob.name_file = "L_Shape_Irregular"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -3431,7 +3431,7 @@ subroutine Exam_Open2D_Plate_Distorted_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Plate Distorted Quad"
+    prob.name_prob = "Plate_Dist_Quad"
     prob.name_file = "Plate_Distorted_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -3535,7 +3535,7 @@ subroutine Exam_Open2D_Plate_Distorted_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Plate Distorted Tri"
+    prob.name_prob = "Plate_Dist_Tri"
     prob.name_file = "Plate_Distorted_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -3653,7 +3653,7 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Hyperbolic Paraboloid Quad"
+    prob.name_prob = "Hyper_Para_Quad"
     prob.name_file = "Hyperbolic_Paraboloid_Quad"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -3717,7 +3717,7 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Hyperbolic Paraboloid Tri"
+    prob.name_prob = "Hyper_Para_Tri"
     prob.name_file = "Hyperbolic_Paraboloid_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
@@ -3799,7 +3799,7 @@ subroutine Exam_Open2D_N_Polygon(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "N Polygon"
+    prob.name_prob = "N_Polygon"
     prob.name_file = "N_Polygon_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
