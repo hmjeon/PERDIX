@@ -2320,58 +2320,20 @@ subroutine Output_Write_CanDo(prob, mesh, dna)
     write(803, "(a)"), '"CanDo (.cndo) file format version 1.0"'
     write(803, "(a)")
 
-    ! Set viewpoint and RGB color
-    if(para_type_cndo /= 1) then
-        write(803, "(a)"), trim(para_fig_view)
-        write(803, "(a)")
-
-        write(803, "(f8.2)"), prob.scale
-        write(803, "(a)")
-
-        write(803, "(3i)"), prob.color(1:3)
-        write(803, "(a)")
-    end if
-
     ! For dnatop data that is defined by bases
-    if(para_type_cndo == 1) then
+    write(803, "(a)"), 'dnaTop,id,up,down,across,seq'
+    do i = 1, dna.n_top
 
-        ! For cndo 1.0
-        write(803, "(a)"), 'dnaTop,id,up,down,across,seq'
-        do i = 1, dna.n_top
+        ! ID, up, down, across and sequence
+        write(803, "(a$)"), &
+            trim(adjustl(Int2Str(i)))//","//&
+            trim(adjustl(Int2Str(dna.top(i).id)))//","//&
+            trim(adjustl(Int2Str(dna.top(i).dn)))//","//&   ! cndo convention is opposite
+            trim(adjustl(Int2Str(dna.top(i).up)))//","//&   ! cndo convention is opposite
+            trim(adjustl(Int2Str(dna.top(i).across)))//","
 
-            ! ID, up, down, across and sequence
-            write(803, "(a$)"), &
-                trim(adjustl(Int2Str(i)))                 //","//&
-                trim(adjustl(Int2Str(dna.top(i).id)))     //","//&
-                trim(adjustl(Int2Str(dna.top(i).dn)))     //","//&      ! cndo convention is opposite
-                trim(adjustl(Int2Str(dna.top(i).up)))     //","//&      ! cndo convention is opposite
-                trim(adjustl(Int2Str(dna.top(i).across))) //","
-
-            write(803, "(a)"), trim(dna.top(i).seq)
-        end do
-    else
-
-        ! For updated cndo with strand type
-        write(803, "(a)"), 'dnaTop,id,up,down,across,seq,strand'
-        do i = 1, dna.n_top
-
-            ! ID, up, down, across and sequence
-            write(803, "(a$)"), &
-                trim(adjustl(Int2Str(i)))                 //","//&
-                trim(adjustl(Int2Str(dna.top(i).id)))     //","//&
-                trim(adjustl(Int2Str(dna.top(i).dn)))     //","//&      ! cndo convention is opposite
-                trim(adjustl(Int2Str(dna.top(i).up)))     //","//&      ! cndo convention is opposite
-                trim(adjustl(Int2Str(dna.top(i).across))) //","//&
-                trim(dna.top(i).seq)                      //","
-
-            strand = dna.top(i).strand
-            if(dna.strand(strand).type1 == "scaf") then
-                write(803, "(a)"), trim("0")
-            else if(dna.strand(strand).type1 == "stap") then
-                write(803, "(a)"), trim("1")
-            end if
-        end do
-    end if
+        write(803, "(a)"), trim(dna.top(i).seq)
+    end do
     write(803, "(a)")
 
     ! Pre-calculation
@@ -2468,6 +2430,35 @@ subroutine Output_Write_CanDo(prob, mesh, dna)
             trim(adjustl(Int2Str(node_nt(i, 1))))//","//&
             trim(adjustl(Int2Str(node_nt(i, 2))))
     end do
+
+    ! Start modified cndo format
+    if(para_type_cndo == 2) then
+
+        write(803, "(a)")
+
+        ! Set viewpoint and RGB color
+        write(803, "(a)"), trim(para_fig_view)
+        write(803, "(a)")
+
+        write(803, "(f8.2)"), prob.scale
+        write(803, "(a)")
+
+        write(803, "(3i)"), prob.color(1:3)
+        write(803, "(a)")
+
+        ! For updated cndo with strand type
+        do i = 1, dna.n_top
+            strand = dna.top(i).strand
+            if(dna.strand(strand).type1 == "scaf") then
+                write(803, "(a)"), trim("0")
+            else if(dna.strand(strand).type1 == "stap") then
+                write(803, "(a)"), trim("1")
+            end if
+        end do
+        write(803, "(a)")
+    end if
+
+    ! Deallocate memory
     deallocate(node_nt)
 
     ! Print progress
