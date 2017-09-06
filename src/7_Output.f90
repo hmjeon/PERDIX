@@ -30,6 +30,8 @@ module Output
 
     public  Output_Generation
 
+    private Output_Write_Cylinder_Xover
+
     private Output_Write_Out_All
     private Output_Write_Out_Sequences
     private Output_Write_Out_Unpaired
@@ -80,6 +82,9 @@ subroutine Output_Generation(prob, geom, bound, mesh, dna)
 
     ! Check connectivity in dna data
     !call Output_Check_Output(dna)
+
+    ! Write cylinderical model with crossovers
+    call Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
 
     ! Write outputs
     call Output_Write_Out_All(prob, geom, bound, mesh, dna)
@@ -233,6 +238,115 @@ end subroutine Output_Check_Output
 
 ! ---------------------------------------------------------------------------------------
 
+! Write cylinderical model with crossovers
+subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
+    type(ProbType),  intent(in) :: prob
+    type(GeomType),  intent(in) :: geom
+    type(BoundType), intent(in) :: bound
+    type(MeshType),  intent(in) :: mesh
+    type(DNAType),   intent(in) :: dna
+
+    double precision :: pos_1(3), pos_2(3), radius
+    integer :: i, j, node
+    logical :: f_axis
+    character(200) :: path
+
+    ! Set flag for drawing option
+    f_axis = para_chimera_axis
+
+    path = trim(prob.path_work1)//trim(prob.name_file)//"_13_cylinder_xover"
+    open(unit=701, file=trim(path)//".bild", form="formatted")
+
+    ! Cylinder radius
+    radius = para_rad_helix + para_gap_helix / 2.0d0
+
+    ! Write cylinder model base on edges
+    do i = 1, geom.n_croL
+
+        ! Draw cylinder before the beveled design
+        pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).ori_pos(1:3)
+        pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).ori_pos(1:3)
+
+        write(701, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
+        write(701, "(a$    )"), ".cylinder "
+        write(701, "(3f9.3$)"), pos_1(1:3)
+        write(701, "(3f9.3$)"), pos_2(1:3)
+        write(701, "(1f9.3 )"), radius
+
+        ! Draw cylinder for the beveled parts
+        pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
+        pos_2(1:3) = geom.croP(geom.croL(i).poi(1)).ori_pos(1:3)
+
+        if(Is_Same_Vector(pos_1, pos_2) == .false.) then
+            if(Norm(pos_1 - pos_2) > 0.4d0) then
+                !write(701, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/200.0d0
+                !write(701, "(a)"), ".color orange"
+                write(701, "(a)"), ".color dark gray"
+            else
+                write(701, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
+            end if
+            write(701, "(a$     )"), ".cylinder "
+            write(701, "(3f12.5$)"), pos_1(1:3)
+            write(701, "(3f12.5$)"), pos_2(1:3)
+            write(701, "(1f9.3  )"), radius
+        end if
+
+        pos_1(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
+        pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).ori_pos(1:3)
+
+        if(Is_Same_Vector(pos_1, pos_2) ==.false.) then
+            if(Norm(pos_1 - pos_2) > 0.4d0) then
+                !write(701, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/200.0d0
+                !write(701, "(a)"), ".color orange"
+                write(701, "(a)"), ".color dark gray"
+            else
+                write(701, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
+            end if
+            write(701, "(a$     )"), ".cylinder "
+            write(701, "(3f12.5$)"), pos_1(1:3)
+            write(701, "(3f12.5$)"), pos_2(1:3)
+            write(701, "(1f9.3  )"), radius
+        end if
+    end do
+
+    ! Write centered scaffold crossovers
+    do i = 1, dna.n_strand
+        do j = 1, dna.strand(i).n_base
+            if(dna.top(dna.strand(i).base(j)).xover /= -1) then
+                node       = dna.top(dna.strand(i).base(j)).node
+                pos_1(1:3) = mesh.node(mesh.node(node).up).pos(1:3)
+                pos_2(1:3) = mesh.node(mesh.node(node).dn).pos(1:3)
+
+                if(dna.strand(i).type1 == "scaf") write(701, "(a)"), ".color steel blue"
+                if(dna.strand(i).type1 == "stap") write(701, "(a)"), ".color orange"
+
+                write(701, "(a$    )"), ".cylinder "
+                write(701, "(3f9.3$)"), pos_1(1:3)
+                write(701, "(3f9.3$)"), pos_2(1:3)
+                write(701, "(1f9.3 )"), radius*1.1d0
+            end if
+        end do
+    end do
+
+    ! Write global axis
+    if(f_axis == .true.) then
+        write(701, "(a)"), ".translate 0.0 0.0 0.0"
+        write(701, "(a)"), ".scale 0.5"
+        write(701, "(a)"), ".color grey"
+        write(701, "(a)"), ".sphere 0 0 0 0.5"      ! Center
+        write(701, "(a)"), ".color red"             ! x-axis
+        write(701, "(a)"), ".arrow 0 0 0 4 0 0 "
+        write(701, "(a)"), ".color blue"            ! y-axis
+        write(701, "(a)"), ".arrow 0 0 0 0 4 0 "
+        write(701, "(a)"), ".color yellow"          ! z-axis
+        write(701, "(a)"), ".arrow 0 0 0 0 0 4 "
+    end if
+
+    close(unit=701)
+end subroutine Output_Write_Cylinder_Xover
+
+! ---------------------------------------------------------------------------------------
+
 ! Write output file for sequence and json
 subroutine Output_Write_Out_All(prob, geom, bound, mesh, dna)
     type(ProbType),  intent(in) :: prob
@@ -380,7 +494,7 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
 
     ! Open files
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=702, file=trim(path)//"_16_sequence.csv", form = "formatted")
+    open(unit=702, file=trim(path)//"_17_sequence.csv", form = "formatted")
 
     ! DNA sequence data according to strands
     write(702, "(a)")
@@ -1812,7 +1926,7 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     f_axis = para_chimera_axis
 
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=998, file=trim(path)//"_13_json_guide.bild", form="formatted")
+    open(unit=998, file=trim(path)//"_14_json_guide.bild", form="formatted")
 
     ! Write points for multi lines
     write(998, "(a, 3f6.2)"), ".color ", 0.0d0/255.0d0, 114.0d0/255.0d0, 178.0d0/255.0d0
@@ -1899,7 +2013,7 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
-    open(unit=998, file=trim(path)//"_13_json_guide.dat", form="formatted")
+    open(unit=998, file=trim(path)//"_14_json_guide.dat", form="formatted")
 
     write(998, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
     write(998, "(a )"), 'VARIABLES = "X", "Y", "Z", "weight"'
@@ -1961,7 +2075,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     character(200) :: path
 
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=999, file=trim(path)//"_14_json.json", form="formatted")
+    open(unit=999, file=trim(path)//"_15_json.json", form="formatted")
 
     ! Hex color code
     color( 1) = 13369344    ! #cc0000
@@ -2315,7 +2429,7 @@ subroutine Output_Write_CanDo(prob, mesh, dna)
 
     ! Open files
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=803, file=trim(path)//"_15_cndo.cndo", form="formatted")
+    open(unit=803, file=trim(path)//"_16_cndo.cndo", form="formatted")
 
     write(803, "(a)"), '"CanDo (.cndo) file format version 1.0"'
     write(803, "(a)")
@@ -2486,7 +2600,7 @@ subroutine Output_Write_CanDo_New(prob, mesh, dna)
 
     ! Open files
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=803, file=trim(path)//"_15_cndo.cndo", form="formatted")
+    open(unit=803, file=trim(path)//"_16_cndo.cndo", form="formatted")
 
     ! For dnatoop data that is defined by bases
     write(803, "(i10)"), dna.n_top
