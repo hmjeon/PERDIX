@@ -328,7 +328,7 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
     type(DNAType),  intent(inout) :: dna
     integer, intent(in) :: unit
 
-    integer :: i, j, base, n_scaf, n_stap
+    integer :: i, j, base, n_scaf, n_stap, dozen, add
     character(200) :: path
 
     n_scaf = 0
@@ -380,28 +380,32 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
 
     ! Open files
     path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=702, file=trim(path)//"_16_sequence.csv", form="formatted")
+    open(unit=702, file=trim(path)//"_16_sequence.csv", form = "formatted")
 
     ! DNA sequence data according to strands
     write(702, "(a)")
-    write(702, "(a)"), "No, Type1, Type2, ABCD, Name, # of nts, Sequence"
+    write(702, "(a)"), "No, Type1, Type2, ABCD, Strand name, # of nts, Sequence"
     write(702, "(a)")
 
     ! Write sequence data
     n_scaf = 0
     n_stap = 0
+    add = 0
     do i = 1, dna.n_strand
         if(dna.strand(i).type1 == "scaf") then
             n_scaf = n_scaf + 1
             write(702, "(a$)"), trim(adjustl(Int2Str(n_scaf)))//", "
-            write(702, "(a$)"), "scaffold, -, -, -, "
+            write(702, "(a$)"), "Scaffold, -, -, -, "
         else if(dna.strand(i).type1 == "stap") then
             n_stap = n_stap + 1
             write(702, "(a$)"), trim(adjustl(Int2Str(n_stap)))//", "
-            write(702, "(a$)"), "staple, "//dna.strand(i).type2//", "
+            write(702, "(a$)"), "Staple, "//dna.strand(i).type2//", "
 
-            write(702, "(a$)"), "A"//trim(adjustl(Int2Str(mod(n_stap, 12))))//", "
-여기부터 다시 정리
+            dozen = mod(n_stap, 12)
+            if(dozen == 0) dozen = 12
+            if(dozen == 1) add = add + 1
+            write(702, "(a$)"), achar(65 + add - 1)//trim(adjustl(Int2Str(dozen)))//", "
+
             write(702, "(a$)"), trim(adjustl(prob.name_prob))//"_"
             if(para_vertex_design == "flat")    write(702, "(a$)"), "F_"
             if(para_vertex_design == "beveled") write(702, "(a$)"), "M_"
