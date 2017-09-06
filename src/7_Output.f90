@@ -3,7 +3,7 @@
 !
 !                                   Module - Output
 !
-!                                                                    Updated : 2017/09/05
+!                                                                    Updated : 2017/09/06
 !
 ! Comments: This module is for outputs.
 !
@@ -30,7 +30,7 @@ module Output
 
     public  Output_Generation
 
-    private Output_Write_Outputs
+    private Output_Write_Out_All
     private Output_Write_Out_Sequences
     private Output_Write_Out_Unpaired
     private Output_Write_Out_Graphics
@@ -82,7 +82,7 @@ subroutine Output_Generation(prob, geom, bound, mesh, dna)
     !call Output_Check_Output(dna)
 
     ! Write outputs
-    call Output_Write_Outputs(prob, geom, bound, mesh, dna)
+    call Output_Write_Out_All(prob, geom, bound, mesh, dna)
 
     ! Write information related with basepair
     call Output_Write_Basepair(prob, mesh, dna)
@@ -234,7 +234,7 @@ end subroutine Output_Check_Output
 ! ---------------------------------------------------------------------------------------
 
 ! Write output file for sequence and json
-subroutine Output_Write_Outputs(prob, geom, bound, mesh, dna)
+subroutine Output_Write_Out_All(prob, geom, bound, mesh, dna)
     type(ProbType),  intent(in) :: prob
     type(GeomType),  intent(in) :: geom
     type(BoundType), intent(in) :: bound
@@ -317,7 +317,7 @@ subroutine Output_Write_Outputs(prob, geom, bound, mesh, dna)
     call Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
 
     close(unit=701)
-end subroutine Output_Write_Outputs
+end subroutine Output_Write_Out_All
 
 ! ---------------------------------------------------------------------------------------
 
@@ -384,7 +384,7 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
 
     ! DNA sequence data according to strands
     write(702, "(a)")
-    write(702, "(a)"), "No, Type1, Type2, ABCD, Strand name, # of nts, Sequence"
+    write(702, "(a)"), "No, Type1, Type2, ABCD, Strand name, Length, Sequence"
     write(702, "(a)")
 
     ! Write sequence data
@@ -428,7 +428,7 @@ end subroutine Output_Write_Out_Sequences
 
 ! ---------------------------------------------------------------------------------------
 
-! Write graphical output
+! Write graphical routing
 subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
@@ -723,15 +723,11 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
             !    write(unit, "(a5$)"), "-----"
             !end do
             !write(unit, "(a)"); write(unit, "(a)")
-
-            
         end if
 
-        ! --------------------------------------------------
-        !
+        ! ==================================================
         ! Scaffold strand
-        !
-        ! --------------------------------------------------
+        ! ==================================================
         n_conn_scaf = 0
         do j = 1, edge(i).n_sec
 
@@ -1139,9 +1135,7 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
         end do
 
         ! ==================================================
-        !
         ! Staple strand
-        !
         ! ==================================================
         n_conn_stap = 0
         b_sec       = .true.
@@ -1761,7 +1755,6 @@ subroutine Output_Write_Out_Strand_Base(mesh, dna, unit)
         write(unit, "(a, i6$)"), ", xover: ",  dna.top(i).xover
         write(unit, "(a, i6$)"), ", across: ", dna.top(i).across
         write(unit, "(a, i3$)"), ", strand: ", dna.top(i).strand
-        !write(unit, "(a, i5)"), ", addr: ", dna.top(i).address
         write(unit, "(a)")
     end do
     write(unit, "(a)")
@@ -1994,14 +1987,11 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
 
     min_bp = min_bp + para_start_bp_ID - 1
     max_bp = max_bp + para_start_bp_ID - 1
-
-    shift = para_start_bp_ID + 21
+    shift  = para_start_bp_ID + 21
 
     ! Possible maximum edge length = max_bp - min_bp + 1 + max_unpaired
     width = (max_bp - min_bp + 1 + max_unpaired) + 2 * para_start_bp_ID + 21
     width = (width / 21) * 21 + 21
-
-    !print *, min_bp, max_bp, para_start_bp_ID, max_unpaired, max_bp - min_bp + 1 + max_unpaired
 
     ! Allocate and initialize edge data
     n_edge = geom.n_iniL
@@ -2125,6 +2115,17 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
         do j = 1, edge(i).n_sec
             write(999, "(a)"), '{'
 
+            ! Staple colors
+            write(999, "(a$)"), '"stap_colors":['
+            do k = 1, edge(i).sec(j).n_stap_col
+                write(999, "(a$)"), '['//trim(adjustl(Int2Str(edge(i).sec(j).stap_col(k,1))))
+                write(999, "(a$)"), ','//trim(adjustl(Int2Str(edge(i).sec(j).stap_col(k,2))))
+                
+                if(k /= edge(i).sec(j).n_stap_col) write(999, "(a$)"), '],'
+                if(k == edge(i).sec(j).n_stap_col) write(999, "(a$)"), ']'
+            end do
+            write(999, "(a)"), '],'
+
             ! Skip
             write(999, "(a$)"), '"skip":['
             do k = 1, width - 1
@@ -2141,23 +2142,12 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                     trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(3))))//","//&
                     trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(4))))
 
-                if(k /= width) write(999, "(a$)"), "]"
+                if(k /= width) write(999, "(a$)"), "],"
                 if(k == width) write(999, "(a )"), "]],"
             end do
 
             ! Scaffold loop
             write(999, "(a)"), '"scafLoop":[],'
-
-            ! Staple colors
-            write(999, "(a$)"), '"stap_colors":['
-            do k = 1, edge(i).sec(j).n_stap_col
-                write(999, "(a$)"), '['//trim(adjustl(Int2Str(edge(i).sec(j).stap_col(k,1))))
-                write(999, "(a$)"), ','//trim(adjustl(Int2Str(edge(i).sec(j).stap_col(k,2))))
-                
-                if(k /= edge(i).sec(j).n_stap_col) write(999, "(a$)"), '],'
-                if(k == edge(i).sec(j).n_stap_col) write(999, "(a$)"), ']'
-            end do
-            write(999, "(a )"), '],'
 
             ! Scaffold loop
             write(999, "(a)"), '"stapLoop":[],'
@@ -2171,7 +2161,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                     trim(adjustl(Int2Str(edge(i).sec(j).scaf(k).conn(3))))//","//&
                     trim(adjustl(Int2Str(edge(i).sec(j).scaf(k).conn(4))))
 
-                if(k /= width) write(999, "(a$)"), "]"
+                if(k /= width) write(999, "(a$)"), "],"
                 if(k == width) write(999, "(a )"), "]],"
             end do
 
@@ -2186,8 +2176,8 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
             row = row_shift - geom.sec.posC(j)
 
             write(999, "(a)"), '"num":'//trim(adjustl(Int2Str(num - 1)))//","
-            write(999, "(a)"), '"col":'//trim(adjustl(Int2Str(col)))//","
             write(999, "(a)"), '"row":'//trim(adjustl(Int2Str(row)))//","
+            write(999, "(a)"), '"col":'//trim(adjustl(Int2Str(col)))//","
 
             ! Loop
             write(999, "(a$)"), '"loop":['
@@ -2205,7 +2195,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     end do
 
     write(999, "(a)"), '],'
-    write(999, "(a)"), '"name":"2D lattice design by PERDIX-OPEN"'
+    write(999, "(a)"), '"name":"'//trim(adjustl(prob.name_prob))//'"'
     write(999, "(a)"), "}"
 
     ! Deallocate edge data
