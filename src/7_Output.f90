@@ -233,7 +233,7 @@ end subroutine Output_Check_Output
 
 ! ---------------------------------------------------------------------------------------
 
-! Write output file
+! Write output file for sequence and json
 subroutine Output_Write_Outputs(prob, geom, bound, mesh, dna)
     type(ProbType),  intent(in) :: prob
     type(GeomType),  intent(in) :: geom
@@ -246,7 +246,7 @@ subroutine Output_Write_Outputs(prob, geom, bound, mesh, dna)
     if(para_write_701 == .false.) return
     open(unit = 701, file=trim(prob.path_work1)//"TXT_Sequence.txt", form="formatted")
 
-    ! Write output of sequence data
+    ! Write staple sequence results
     write(701, "(a)")
     write(701, "(a)"), "--------------------------------------------------------------------"
     write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
@@ -258,12 +258,12 @@ subroutine Output_Write_Outputs(prob, geom, bound, mesh, dna)
     write(701, "(a)")
     call Output_Write_Out_Sequences(prob, mesh, dna, 701)
 
-    ! Write output of graphical representation
+    ! Write graphical routing
     write(701, "(a)")
     write(701, "(a)"), "--------------------------------------------------------------------"
     write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
     write(701, "(a)"), "|+                                                                +|"
-    write(701, "(a)"), "|+                      2. Graphical output                       +|"
+    write(701, "(a)"), "|+                     2. Graphical routing                       +|"
     write(701, "(a)"), "|+                                                                +|"
     write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
     write(701, "(a)"), "--------------------------------------------------------------------"
@@ -276,12 +276,12 @@ subroutine Output_Write_Outputs(prob, geom, bound, mesh, dna)
     write(701, "(a)")
     call Output_Write_Out_Graphics(prob, geom, mesh, dna, 701)
 
-    ! Write output of unpaired nucleotides
+    ! Write information on unpaired nucleotides and poly Tn loop
     write(701, "(a)")
     write(701, "(a)"), "--------------------------------------------------------------------"
     write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
     write(701, "(a)"), "|+                                                                +|"
-    write(701, "(a)"), "|+     3. Unpaired nucleotides and poly Tn loop information       +|"
+    write(701, "(a)"), "|+    3. Information on unpaired nucleotides and poly Tn loop     +|"
     write(701, "(a)"), "|+                                                                +|"
     write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
     write(701, "(a)"), "--------------------------------------------------------------------"
@@ -293,7 +293,7 @@ subroutine Output_Write_Outputs(prob, geom, bound, mesh, dna)
     write(701, "(a)"), "--------------------------------------------------------------------"
     write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
     write(701, "(a)"), "|+                                                                +|"
-    write(701, "(a)"), "|+              4. Strand and nucleotide based outputs            +|"
+    write(701, "(a)"), "|+             4. Strand and nucleotide based outputs             +|"
     write(701, "(a)"), "|+                                                                +|"
     write(701, "(a)"), "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|"
     write(701, "(a)"), "--------------------------------------------------------------------"
@@ -1621,9 +1621,9 @@ end subroutine Output_Write_Out_Graphics
 
 ! Write output of unpaired nucleotides
 function Output_Write_Out_Unpaired(mesh, dna, unit) result(max_base)
-    type(MeshType), intent(in) :: mesh
+    type(MeshType), intent(in)    :: mesh
     type(DNAType),  intent(inout) :: dna
-    integer, intent(in) :: unit
+    integer,        intent(in)    :: unit
 
     double precision :: length
     integer :: s_base, e_base, s_iniL, e_iniL, s_sec, e_sec, max_base
@@ -1678,12 +1678,12 @@ function Output_Write_Out_Unpaired(mesh, dna, unit) result(max_base)
                 e_base = dna.top(base).id
                 length = Norm(dna.top(s_base).pos - dna.top(e_base).pos)
 
-                write(unit, "(i10, a$        )"), n_base, trim(types)
-                write(unit, "(a, i3, a, f5.2$)"), ", # of bases : ", count, ", Total length : ", length
-                !write(unit, "(a, f5.2, a$    )"), ", Divided length : ", length/dble(count+1), ", Edge(Section)) : "
-                write(unit, "(a, f5.2, a$    )"), ", Divided length : ", length/dble(para_dist_pp) - 1.0d0, ", Edge(Section)) : "
-                write(unit, "(i3, a, i3, a$  )"), s_iniL, "(", s_sec, ") -> "
-                write(unit, "(i3, a, i3, a$  )"), e_iniL,   "(", e_sec,   "), Sequence : "
+                write(unit, "(i10, a$ )"), n_base, " "//trim(types)
+                write(unit, "(a$      )"), ", # of unpaired nts : "//trim(adjustl(Int2Str(count)))
+                write(unit, "(a, f5.2$)"), " <-- Total length : ", length
+                write(unit, "(a$      )"), ", Edge(sec)) : "
+                write(unit, "(a$      )"), trim(adjustl(Int2Str(s_iniL)))//"("//trim(adjustl(Int2Str(s_sec)))//") -> "
+                write(unit, "(a$      )"), trim(adjustl(Int2Str(e_iniL)))//"("//trim(adjustl(Int2Str(e_sec)))//"), Sequence : "
 
                 ! Check maximum number of unpaired nucleotides
                 if(max_base < count) max_base = count
@@ -1756,14 +1756,15 @@ subroutine Output_Write_Out_Strand_Base(mesh, dna, unit)
             write(unit, "(a$)"), ",      UNPAIRED NUCLEOTIDES      "
         end if
 
-        write(unit, "(a, i6$)"), ", up: ", dna.top(i).up
-        write(unit, "(a, i6$)"), ", dn: ", dna.top(i).dn
-        write(unit, "(a, i6$)"), ", xo: ", dna.top(i).xover
-        write(unit, "(a, i6$)"), ", ac: ", dna.top(i).across
-        write(unit, "(a, i4$ )"), ", strd: ", dna.top(i).strand
-        !write(unit, "(a, i5  )"), ", addr: ", dna.top(i).address
+        write(unit, "(a, i6$)"), ", up: ",     dna.top(i).up
+        write(unit, "(a, i6$)"), ", dn: ",     dna.top(i).dn
+        write(unit, "(a, i6$)"), ", xover: ",  dna.top(i).xover
+        write(unit, "(a, i6$)"), ", across: ", dna.top(i).across
+        write(unit, "(a, i3$)"), ", strand: ", dna.top(i).strand
+        !write(unit, "(a, i5)"), ", addr: ", dna.top(i).address
         write(unit, "(a)")
     end do
+    write(unit, "(a)")
 end subroutine Output_Write_Out_Strand_Base
 
 ! ---------------------------------------------------------------------------------------
@@ -1771,7 +1772,7 @@ end subroutine Output_Write_Out_Strand_Base
 ! Output about staple length
 subroutine Output_Write_Out_Staple_Length(dna, unit)
     type(DNAType), intent(in) :: dna
-    integer, intent(in) :: unit
+    integer,       intent(in) :: unit
 
     integer, allocatable :: length_stap(:)
     integer :: i
@@ -1788,9 +1789,11 @@ subroutine Output_Write_Out_Staple_Length(dna, unit)
     end do
 
     ! Write staple length
+    write(unit, "(a)"), "   Edge length     Number"
+    write(unit, "(a)"), "   ----------------------"
     do i = dna.len_min_stap, dna.len_max_stap
         if(length_stap(i) /= 0) then
-            write(unit, "(2i6)"), i, length_stap(i)
+            write(unit, "(2i11)"), i, length_stap(i)
         end if
     end do
 
@@ -1807,8 +1810,7 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     type(BoundType), intent(in) :: bound
     type(MeshType),  intent(in) :: mesh
 
-    double precision :: pos_1(3), pos_2(3), pos_c(3), pos_a(3), pos_b(3)
-    double precision :: length, t1(3), t2(3), t3(3)
+    double precision :: length, pos_1(3), pos_2(3), pos_c(3), t1(3)
     integer :: i, j, iter, nbp, add
     logical :: f_axis, f_info
     character(200) :: path
@@ -1819,17 +1821,17 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     path = trim(prob.path_work1)//trim(prob.name_file)
     open(unit=998, file=trim(path)//"_13_json_guide.bild", form="formatted")
 
-    ! Write cross-sectional points
-    write(998, "(a)"), ".color red"
+    ! Write points for multi lines
+    write(998, "(a, 3f6.2)"), ".color ", 0.0d0/255.0d0, 114.0d0/255.0d0, 178.0d0/255.0d0
     do i = 1, geom.n_croP
 
         write(998, "(a$    )"), ".sphere "
         write(998, "(3f9.3$)"), geom.croP(i).pos(1:3)
-        write(998, "(1f9.3 )"), 0.35d0
+        write(998, "(1f9.3 )"), 0.3d0
     end do
 
-    ! Write cross-sectional edges
-    write(998, "(a)"), ".color dark green"
+    ! Write multi lines
+    write(998, "(a, 3f6.2)"), ".color ", 0.0d0/255.0d0, 114.0d0/255.0d0, 178.0d0/255.0d0
     do i = 1, geom.n_croL
 
         pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
@@ -1839,22 +1841,8 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
         write(998, "(7f9.3)"), pos_1(1:3), pos_2(1:3), 0.15d0
     end do
 
-    ! Information on edge number
-    add = 0
-    do i = 1, geom.n_croL
-        pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
-        pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
-        pos_c(1:3) = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
-
-        write(998, "(a$   )"), ".cmov "
-        write(998, "(3f9.3)"), pos_c(1:2) + 0.6d0, pos_c(3)
-        write(998, "(a    )"), ".color dark green"
-        write(998, "(a    )"), ".font Helvetica 12 bold"
-
-        add = i / (geom.n_croL / geom.n_sec)
-        write(998, "(i7)"), mod(2*i-1, geom.n_croL) + add - 1
-    end do
-
+    ! Write junctional connection
+    write(998, "(a, 3f6.2)"), ".color ", 213.0d0/255.0d0, 94.0d0/255.0d0, 0.0d0/255.0d0
     do i = 1, bound.n_junc
         do j = 1, geom.n_sec*bound.junc(i).n_arm
 
@@ -1863,25 +1851,38 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
 
             write(998, "(a$   )"), ".cylinder "
             write(998, "(7f9.3)"), pos_1(1:3), pos_2(1:3), 0.05d0
-
         end do
     end do
 
-    ! Local coordinate system on cross-sectional edges
+    ! Write scaffold direction
+    write(998, "(a)"), ".color red"
     do i = 1, geom.n_croL
         pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
         pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
         pos_c(1:3) = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
 
         t1(1:3) = geom.croL(i).t(1, 1:3)
-        t2(1:3) = geom.croL(i).t(2, 1:3)
-        t3(1:3) = geom.croL(i).t(3, 1:3)
 
-        write(998, "(a     )"), ".color red"    ! x-axis
         write(998, "(a$    )"), ".arrow "
         write(998, "(3f8.2$)"), pos_c(1:3)
         write(998, "(3f8.2$)"), pos_c(1:3) + t1(1:3) * 1.5d0
-        write(998, "(3f8.2 )"), 0.18d0, 0.36d0, 0.6d0
+        write(998, "(3f8.2 )"), 0.2d0, 0.6d0, 0.6d0
+    end do
+
+    ! Write edge number
+    add = 0
+    write(998, "(a)"), ".color dark green"
+    do i = 1, geom.n_croL
+        pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
+        pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
+        pos_c(1:3) = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
+
+        add = i / (geom.n_croL / geom.n_sec)
+
+        write(998, "(a$   )"), ".cmov "
+        write(998, "(3f9.3)"), pos_c(1:2) + 0.6d0, pos_c(3) - 0.6d0
+        write(998, "(a    )"), ".font Helvetica 12 bold"
+        write(998, "(i7)"), mod(2*i-1, geom.n_croL) + add - 1
     end do
 
     ! Write global axis
@@ -1900,9 +1901,7 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     close(unit=998)
 
     ! ---------------------------------------------
-    !
     ! Write the file for Tecplot
-    !
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
@@ -1939,7 +1938,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     type(GeomType), intent(in) :: geom
     type(MeshType), intent(in) :: mesh
     type(DNAType),  intent(in) :: dna
-    integer, intent(in) :: max_unpaired
+    integer,        intent(in) :: max_unpaired
 
     ! Conn type data
     type :: ConnType
@@ -2073,9 +2072,14 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                     edge(c_edge).sec(c_sec+1).stap(c_bp).conn(2) = dn_bp - 1
                 end if
             else if(dn_base == -1 .and. dna.strand(i).type1 == "stap") then
+
                 ! Set color
                 edge(c_edge).sec(c_sec+1).n_stap_col = edge(c_edge).sec(c_sec+1).n_stap_col + 1
                 num = edge(c_edge).sec(c_sec+1).n_stap_col
+                if(num >= 21) then
+                    write(0, "(a)"), "Error: Check the number of crossovers per edge"
+                    stop
+                end if
                 edge(c_edge).sec(c_sec+1).stap_col(num,1) = c_bp - 1
                 edge(c_edge).sec(c_sec+1).stap_col(num,2) = color(mod(i, 12)+1)
             end if
