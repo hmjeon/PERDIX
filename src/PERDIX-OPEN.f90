@@ -3,7 +3,7 @@
 !
 !                                   PERDIX-OPEN
 !
-!                                                                    Updated : 2017/08/02
+!                                                                    Updated : 2017/09/07
 !
 ! Comments: PERDIX is an open-source Fortran library, which allows scientists
 ! to build and solve the sequence design of complex DNA nanostructures.

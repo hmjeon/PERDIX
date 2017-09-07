@@ -37,3 +37,4 @@ make/Output
 *.11
 *.101
 fort.*
+/make/Report_2D_Flat_max.txt
