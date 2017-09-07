@@ -45,6 +45,7 @@ module Output
     private Output_Write_Base
     private Output_Write_CanDo
     private Output_Write_CanDo_New
+    private Output_Write_PLY
     private Output_Write_DNA_Info
     private Output_Write_TecPlot
     private Output_Write_ADINA
@@ -98,6 +99,9 @@ subroutine Output_Generation(prob, geom, bound, mesh, dna)
     ! Write cndo file for PDB atom generation and CanDo simulation
     call Output_Write_CanDo(prob, mesh, dna)
     !call Output_Write_CanDo_New(prob, mesh, dna)
+
+    ! Write PLY file
+    call Output_Write_PLY(prob, geom)
 
     !call Output_Write_DNA_Info(prob, dna)
 
@@ -2115,7 +2119,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
 
     ! Possible maximum edge length = max_bp - min_bp + 1 + max_unpaired
     width = (max_bp - min_bp + 1 + max_unpaired) + 2 * para_start_bp_ID + 21
-    width = (width / 21) * 21 + 21
+    width = (width / 21) * 21 + 21 + 21
 
     ! Allocate and initialize edge data
     n_edge = geom.n_iniL
@@ -2682,6 +2686,45 @@ subroutine Output_Write_CanDo_New(prob, mesh, dna)
 
     close(unit=803)
 end subroutine Output_Write_CanDo_New
+
+! ---------------------------------------------------------------------------------------
+
+! Write PLY
+subroutine Output_Write_PLY(prob, geom)
+    type(ProbType), intent(in) :: prob
+    type(GeomType), intent(in) :: geom
+
+    integer :: i, j
+    character(200) :: path
+
+    ! Open files
+    path = trim(prob.path_work1)//trim(prob.name_file)
+    open(unit=704, file=trim(path)//"_18_ply.ply", form="formatted")
+
+    write(704, "(a)"), "ply"
+    write(704, "(a)"), "format ascii 1.0"
+    write(704, "(a)"), "element vertex "//trim(adjustl(Int2Str(geom.n_iniP)))
+    write(704, "(a)"), "property float32 x"
+    write(704, "(a)"), "property float32 y"
+    write(704, "(a)"), "property float32 z"
+    write(704, "(a)"), "element face "//trim(adjustl(Int2Str(geom.n_face)))
+    write(704, "(a)"), "property list uint8 int32 vertex_indices"
+    write(704, "(a)"), "end_header"
+
+    do i = 1, geom.n_iniP
+        write(704, "(3f15.4)"), geom.iniP(i).pos(1:3)
+    end do
+
+    do i = 1, geom.n_face
+        write(704, "(a$)"), trim(adjustl(Int2Str(geom.face(i).n_poi)))
+        do j = 1, geom.face(i).n_poi
+            write(704, "(a$)"), " "//trim(adjustl(Int2Str(geom.face(i).poi(j)-1)))
+        end do
+        write(704, "(a)")
+    end do
+
+    close(unit=704)
+end subroutine Output_Write_PLY
 
 ! ---------------------------------------------------------------------------------------
 
