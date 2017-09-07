@@ -279,8 +279,6 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
 
         if(Is_Same_Vector(pos_1, pos_2) == .false.) then
             if(Norm(pos_1 - pos_2) > 0.4d0) then
-                !write(701, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/200.0d0
-                !write(701, "(a)"), ".color orange"
                 write(701, "(a)"), ".color dark gray"
             else
                 write(701, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
@@ -296,8 +294,6 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
 
         if(Is_Same_Vector(pos_1, pos_2) ==.false.) then
             if(Norm(pos_1 - pos_2) > 0.4d0) then
-                !write(701, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/200.0d0
-                !write(701, "(a)"), ".color orange"
                 write(701, "(a)"), ".color dark gray"
             else
                 write(701, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
@@ -317,13 +313,13 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
                 pos_1(1:3) = mesh.node(mesh.node(node).up).pos(1:3)
                 pos_2(1:3) = mesh.node(mesh.node(node).dn).pos(1:3)
 
-                if(dna.strand(i).type1 == "scaf") write(701, "(a)"), ".color steel blue"
+                if(dna.strand(i).type1 == "scaf") write(701, "(a)"), ".color medium blue"
                 if(dna.strand(i).type1 == "stap") write(701, "(a)"), ".color orange"
 
                 write(701, "(a$    )"), ".cylinder "
                 write(701, "(3f9.3$)"), pos_1(1:3)
                 write(701, "(3f9.3$)"), pos_2(1:3)
-                write(701, "(1f9.3 )"), radius*1.1d0
+                write(701, "(1f9.3 )"), radius*1.05d0
             end if
         end do
     end do
@@ -333,12 +329,12 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
         write(701, "(a)"), ".translate 0.0 0.0 0.0"
         write(701, "(a)"), ".scale 0.5"
         write(701, "(a)"), ".color grey"
-        write(701, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(701, "(a)"), ".color red"             ! x-axis
+        write(701, "(a)"), ".sphere 0 0 0 0.5"
+        write(701, "(a)"), ".color red"
         write(701, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(701, "(a)"), ".color blue"            ! y-axis
+        write(701, "(a)"), ".color blue"
         write(701, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(701, "(a)"), ".color yellow"          ! z-axis
+        write(701, "(a)"), ".color yellow"
         write(701, "(a)"), ".arrow 0 0 0 0 0 4 "
     end if
 
@@ -498,7 +494,7 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
 
     ! DNA sequence data according to strands
     write(702, "(a)")
-    write(702, "(a)"), "No, Type1, Type2, ABCD, Strand name, Length, Sequence"
+    write(702, "(a)"), "No, Type1, Type2, A12, Strand name, Length, Sequence"
     write(702, "(a)")
 
     ! Write sequence data
