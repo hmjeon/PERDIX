@@ -142,12 +142,17 @@ subroutine Report()
     do i = 1, 24
 
         ! Edge length
-        if(i == 5 .or. i == 10 .or. i == 15) then
-            edge = edge_in - 1
+        if(i == 15) then
+            edge = 36       ! Minimum 36bp - one edge has one crossover
+        else if(i == 5) then
+            edge = 27       ! Minimum 38bp
+        else if(i == 10) then
+            edge = 35       ! Minimum 38bp
         else if(i == 23) then
-            edge = edge_in + 2
-        else if(i == 24) then
-            edge = edge_in + 4
+            edge = 63
+        else if(i ==  4 .or. i == 16 .or. i == 17 .or. i == 18 .or. &
+                i == 19 .or. i == 20 .or. i == 21 .or. i == 24) then
+            edge = 84
         else
             edge = edge_in
         end if

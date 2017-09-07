@@ -454,10 +454,10 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
         else if(dna.strand(i).type1 == "stap") then
             n_stap = n_stap + 1
             write(unit, "(i8, a$)"), n_stap, " - (stap)"
-        end if
 
-        if(dna.strand(i).n_base < dna.len_min_stap) dna.len_min_stap = dna.strand(i).n_base
-        if(dna.strand(i).n_base > dna.len_max_stap) dna.len_max_stap = dna.strand(i).n_base
+            if(dna.strand(i).n_base < dna.len_min_stap) dna.len_min_stap = dna.strand(i).n_base
+            if(dna.strand(i).n_base > dna.len_max_stap) dna.len_max_stap = dna.strand(i).n_base
+        end if
 
         if(0 .and. dna.strand(i).n_base > 80) then
             do j = 0, unit, unit
@@ -2097,7 +2097,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
 
     min_bp = min_bp + para_start_bp_ID - 1
     max_bp = max_bp + para_start_bp_ID - 1
-    shift  = para_start_bp_ID + 21
+    shift  = para_start_bp_ID + 21 + 21
 
     ! Possible maximum edge length = max_bp - min_bp + 1 + max_unpaired
     width = (max_bp - min_bp + 1 + max_unpaired) + 2 * para_start_bp_ID + 21
