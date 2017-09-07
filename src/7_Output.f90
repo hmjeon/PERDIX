@@ -318,7 +318,7 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
                 pos_2(1:3) = mesh.node(mesh.node(node).dn).pos(1:3)
 
                 if(dna.strand(i).type1 == "scaf") write(701, "(a)"), ".color medium blue"
-                if(dna.strand(i).type1 == "stap") write(701, "(a)"), ".color orange"
+                if(dna.strand(i).type1 == "stap") write(701, "(a)"), ".color orange red"
 
                 write(701, "(a$    )"), ".cylinder "
                 write(701, "(3f9.3$)"), pos_1(1:3)
