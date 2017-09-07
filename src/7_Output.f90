@@ -700,14 +700,14 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
             ! If section ID is odd and positive z-direction
             ! Find neiboring edge and section
             if(dna.top(node).up /= -1) then
-                
+
                 ! To avoid unpaired nucleotide
                 up_node = dna.top(node).up
                 do
                     if(dna.top(up_node).across /= -1) exit
                     up_node = dna.top(up_node).up
                 end do
-                
+
                 edge(iniL).sec(sec+1).start_nei_edge = mesh.node(up_node).iniL
                 edge(iniL).sec(sec+1).start_nei_sec  = mesh.node(up_node).sec
             else
@@ -848,12 +848,12 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
 
             ! Print edge and point information, Edge 1 - (point 1 -> point 2)
             if(j == 1) then
-                write(unit, "(a)") " ==================================================="
+                write(unit, "(a )"), " ==================================================="
                 call Space(unit, 10)
-                write(unit, "(a)"), " [Edge "//trim(adjustl(Int2Str(i)))//&
-                    " : point "//trim(adjustl(Int2Str(geom.iniL(i).poi(1))))//&
-                    " -> point "//trim(adjustl(Int2Str(geom.iniL(i).poi(2))))//"]"
-                write(unit, "(a)") " ==================================================="
+                write(unit, "(a$)"), " [Edge "//trim(adjustl(Int2Str(i)))
+                write(unit, "(a$)"), " : point "//trim(adjustl(Int2Str(geom.iniL(i).poi(1))))
+                write(unit, "(a )"), " -> point "//trim(adjustl(Int2Str(geom.iniL(i).poi(2))))//"]"
+                write(unit, "(a )"), " ==================================================="
             end if
 
             if(j == 1) then
@@ -892,10 +892,9 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                         write(unit, "(a$)"), " "
                     end if
                 else
-
                     if(edge(i).sec(j).xover_scaf(k) /= -1) then
-                        !write(unit, "(a$)"), "+"
 
+                        !write(unit, "(a$)"), "+"
                         if(para_output_design == "arrow") then
                             if(edge(i).sec(j).xover_scaf(k) >= 10) then
                                 write(unit, "(a$)"), achar(55+edge(i).sec(j).xover_scaf(k))
@@ -926,7 +925,6 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                             write(710+i, "(a$    )"), ".sphere "
                             write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-5-factor), 0.0d0
                             write(710+i, "(1f9.2 )"), 0.25d0
-
                             if(para_output_Tecplot == "on") then
                                 n_tec                 = n_tec + 1
                                 type_tec(3)           = type_tec(3) + 1
@@ -938,7 +936,6 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                             end if
                         end if
                     else if(edge(i).sec(j).nick_scaf(k) == 1) then
-
                         if(para_output_design == "arrow") write(unit, "(a$)"), "."
                         if(para_output_design == "seq")   write(unit, "(a$)"), edge(i).sec(j).seq_scaf(k)
                         if(para_output_design == "strand") then
@@ -968,7 +965,6 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                             end if
                         end if
                     else if(edge(i).sec(j).nick_scaf(k) == 2) then
-
                         if(para_output_design == "arrow")  write(unit, "(a$)"), ">"
                         if(para_output_design == "seq")    write(unit, "(a$)"), edge(i).sec(j).seq_scaf(k)
                         if(para_output_design == "strand") then
@@ -1030,7 +1026,6 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                             end if
                         end if
                     else
-
                         if(para_output_design == "arrow") write(unit, "(a$)"), "-"
                         if(para_output_design == "seq")   write(unit, "(a$)"), edge(i).sec(j).seq_scaf(k)
                         if(para_output_design == "strand") then
@@ -1044,10 +1039,10 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                         end if
 
                         ! Draw cylinder (normal base)
-                        if(para_write_710 == .true.) then
-                            strnd = edge(i).sec(j).strnd_scaf(k)
+                        strnd = edge(i).sec(j).strnd_scaf(k)
 
-                            if(mesh.node(edge(i).sec(j).node(k)).up == -1 .and. mod(mesh.node(edge(i).sec(j).node(k)).sec, 2) == 0) then
+                        if(mesh.node(edge(i).sec(j).node(k)).up == -1 .and. mod(mesh.node(edge(i).sec(j).node(k)).sec, 2) == 0) then
+                            if(para_write_710 == .true.) then
                                 write(710+i, "(a$    )"), ".arrow "
                                 write(710+i, "(3f8.2$)"), dble(k-mid_bp)-0.5d0, -dble(6*j-5-factor), 0.0d0
                                 write(710+i, "(3f8.2$)"), dble(k-mid_bp)+0.5d0, -dble(6*j-5-factor), 0.0d0
@@ -1062,7 +1057,9 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                                     tec(n_tec).pos_node1(1) = 1.0d0
                                     tec(n_tec).color        = dble(1)
                                 end if
-                            else if(mesh.node(edge(i).sec(j).node(k)).up == -1 .and. mod(mesh.node(edge(i).sec(j).node(k)).sec, 2) == 1) then
+                            end if
+                        else if(mesh.node(edge(i).sec(j).node(k)).up == -1 .and. mod(mesh.node(edge(i).sec(j).node(k)).sec, 2) == 1) then
+                            if(para_write_710 == .true.) then
                                 write(710+i, "(a$    )"), ".arrow "
                                 write(710+i, "(3f8.2$)"), dble(k-mid_bp)+0.5d0, -dble(6*j-5-factor), 0.0d0
                                 write(710+i, "(3f8.2$)"), dble(k-mid_bp)-0.5d0, -dble(6*j-5-factor), 0.0d0
@@ -1077,7 +1074,9 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                                     tec(n_tec).pos_node1(1) =-1.0d0
                                     tec(n_tec).color        = dble(1)
                                 end if
-                            else
+                            end if
+                        else
+                            if(para_write_710 == .true.) then
                                 write(710+i, "(a     )"), ".color steel blue"
                                 write(710+i, "(a$    )"), ".cylinder "
                                 write(710+i, "(3f9.2$)"), dble(k-mid_bp)-0.5d0, -dble(6*j-5-factor), 0.0d0
@@ -1125,8 +1124,8 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                         write(unit, "(a$)"), "|"
 
                         ! Draw cylinder
-                        if(para_write_710 == .true.) then
-                            if(mod(j, 2) == 1) then
+                        if(mod(j, 2) == 1) then
+                            if(para_write_710 == .true.) then
                                 write(710+i, "(a$    )"), ".cylinder "
                                 write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
                                 write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0, 0.0d0
@@ -1140,7 +1139,9 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                                     tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0 - tec_factor, 0.0d0]
                                     tec(n_tec).color     = dble(1)
                                 end if
-                            else
+                            end if
+                        else
+                            if(para_write_710 == .true.) then
                                 write(710+i, "(a$    )"), ".cylinder "
                                 write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-0.2d0, 0.0d0
                                 write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
@@ -1161,51 +1162,12 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                             edge(i).sec(j).start_bp       == k .and. &
                             edge(i).sec(j).start_nei_sec  == j ) then
 
-                            ! Neighbor connection for starting bp
-                            write(unit, "(a$)"), "|"
-
-                            ! Draw cylinder
-                            if(para_write_710 == .true.) then
-                                if(mod(j, 2) == 1) then
-                                    write(710+i, "(a$    )"), ".cylinder "
-                                    write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
-                                    write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0, 0.0d0
-                                    write(710+i, "(1f9.2 )"), 0.1d0
-
-                                    if(para_output_Tecplot == "on") then
-                                        n_tec                = n_tec + 1
-                                        type_tec(2)          = type_tec(2) + 1
-                                        tec(n_tec).types     = 2
-                                        tec(n_tec).pos_node1 = [dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0 - tec_factor, 0.0d0]
-                                        tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0 - tec_factor, 0.0d0]
-                                        tec(n_tec).color     = dble(1)
-                                    end if
-                                else
-                                    write(710+i, "(a$    )"), ".cylinder "
-                                    write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-0.2d0, 0.0d0
-                                    write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
-                                    write(710+i, "(1f9.2 )"), 0.1d0
-
-                                    if(para_output_Tecplot == "on") then
-                                        n_tec                = n_tec + 1
-                                        type_tec(2)          = type_tec(2) + 1
-                                        tec(n_tec).types     = 2
-                                        tec(n_tec).pos_node1 = [dble(k-mid_bp), -dble(6*j-2-factor)-0.2d0 - tec_factor, 0.0d0]
-                                        tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0 - tec_factor, 0.0d0]
-                                        tec(n_tec).color     = dble(1)
-                                    end if
-                                end if
-                            end if
-                        else if( edge(i).sec(j).end_nei_edge == i .and. &
-                            edge(i).sec(j).end_bp       == k .and. &
-                            edge(i).sec(j).end_nei_sec  == j ) then
-
-                        ! Neighbor connection for ending bp
+                        ! Neighbor connection for starting bp
                         write(unit, "(a$)"), "|"
 
                         ! Draw cylinder
-                        if(para_write_710 == .true.) then
-                            if(mod(j, 2) == 1) then
+                        if(mod(j, 2) == 1) then
+                            if(para_write_710 == .true.) then
                                 write(710+i, "(a$    )"), ".cylinder "
                                 write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
                                 write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0, 0.0d0
@@ -1219,7 +1181,51 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                                     tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0 - tec_factor, 0.0d0]
                                     tec(n_tec).color     = dble(1)
                                 end if
-                            else
+                            end if
+                        else
+                            if(para_write_710 == .true.) then
+                                write(710+i, "(a$    )"), ".cylinder "
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-0.2d0, 0.0d0
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
+                                write(710+i, "(1f9.2 )"), 0.1d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                = n_tec + 1
+                                    type_tec(2)          = type_tec(2) + 1
+                                    tec(n_tec).types     = 2
+                                    tec(n_tec).pos_node1 = [dble(k-mid_bp), -dble(6*j-2-factor)-0.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).color     = dble(1)
+                                end if
+                            end if
+                        end if
+
+                        else if( edge(i).sec(j).end_nei_edge == i .and. &
+                                 edge(i).sec(j).end_bp       == k .and. &
+                                 edge(i).sec(j).end_nei_sec  == j ) then
+
+                        ! Neighbor connection for ending bp
+                        write(unit, "(a$)"), "|"
+
+                        ! Draw cylinder
+                        if(mod(j, 2) == 1) then
+                            if(para_write_710 == .true.) then
+                                write(710+i, "(a$    )"), ".cylinder "
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
+                                write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0, 0.0d0
+                                write(710+i, "(1f9.2 )"), 0.1d0
+
+                                if(para_output_Tecplot == "on") then
+                                    n_tec                = n_tec + 1
+                                    type_tec(2)          = type_tec(2) + 1
+                                    tec(n_tec).types     = 2
+                                    tec(n_tec).pos_node1 = [dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-factor)-3.2d0 - tec_factor, 0.0d0]
+                                    tec(n_tec).color     = dble(1)
+                                end if
+                            end if
+                        else
+                            if(para_write_710 == .true.) then
                                 write(710+i, "(a$    )"), ".cylinder "
                                 write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)-0.2d0, 0.0d0
                                 write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2-factor)+3.2d0, 0.0d0
@@ -1299,8 +1305,8 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                     pos = 2*pos-1-factor
 
                     if(edge(i).sec(j).xover_stap(k) /= -1) then
-                        !write(unit, "(a$)"), "+"
 
+                        !write(unit, "(a$)"), "+"
                         if(para_output_design == "arrow") then
                             if(edge(i).sec(j).xover_stap(k) >= 10) then
                                 write(unit, "(a$)"), achar(55+edge(i).sec(j).xover_stap(k))
@@ -1327,8 +1333,8 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                         conn_stap(n_conn_stap, 3) = edge(i).sec(j).strnd_stap(k)
 
                         ! Draw sphere (crossover point)
+                        strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
                         if(para_write_710 == .true.) then
-                            strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
                             write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
                             write(710+i, "(a$    )"), ".sphere "
                             write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(pos), 0.0d0
@@ -1345,7 +1351,6 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                             end if
                         end if
                     else if(edge(i).sec(j).nick_stap(k) == 1) then
-
                         if(para_output_design == "arrow") write(unit, "(a$)"), "."
                         if(para_output_design == "seq")   write(unit, "(a$)"), edge(i).sec(j).seq_stap(k)
                         if(para_output_design == "strand") then
@@ -1359,8 +1364,8 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                         end if
 
                         ! Draw sphere (nick point)
+                        strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
                         if(para_write_710 == .true.) then
-                            strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
                             write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
                             write(710+i, "(a$    )"), ".sphere "
                             write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(pos), 0.0d0
@@ -1377,7 +1382,6 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                             end if
                         end if
                     else if(edge(i).sec(j).nick_stap(k) == 2) then
-
                         if(para_output_design == "arrow") write(unit, "(a$)"), ">"
                         if(para_output_design == "seq")   write(unit, "(a$)"), edge(i).sec(j).seq_stap(k)
                         if(para_output_design == "strand") then
@@ -1391,8 +1395,8 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                         end if
 
                         ! Draw arrow (right arrow, >)
+                        strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
                         if(para_write_710 == .true.) then
-                            strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
                             write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
                             write(710+i, "(a$    )"), ".arrow "
                             write(710+i, "(3f8.2$)"), dble(k-mid_bp)-0.4d0, -dble(pos), 0.0d0
@@ -1424,8 +1428,8 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                         end if
 
                         ! Draw arrow (left arrow, <)
+                        strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
                         if(para_write_710 == .true.) then
-                            strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
                             write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
                             write(710+i, "(a$    )"), ".arrow "
                             write(710+i, "(3f8.2$)"), dble(k-mid_bp)+0.4d0, -dble(pos), 0.0d0
@@ -1457,10 +1461,11 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                         end if
 
                         ! Write Chimera
-                        if(para_write_710 == .true.) then
-                            strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
-                            if(mesh.node(edge(i).sec(j).node(k)).dn == -1 .and. mod(mesh.node(edge(i).sec(j).node(k)).sec, 2) == 1) then
-                                ! Draw arrow (right arrow, >)
+                        strnd = mod(edge(i).sec(j).strnd_stap(k), 20) + 1
+                        if(mesh.node(edge(i).sec(j).node(k)).dn == -1 .and. mod(mesh.node(edge(i).sec(j).node(k)).sec, 2) == 1) then
+
+                            ! Draw arrow (right arrow, >)
+                            if(para_write_710 == .true.) then
                                 write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
                                 write(710+i, "(a$    )"), ".arrow "
                                 write(710+i, "(3f8.2$)"), dble(k-mid_bp)-0.5d0, -dble(pos), 0.0d0
@@ -1476,8 +1481,11 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                                     tec(n_tec).pos_node1(1) = 1.0d0
                                     tec(n_tec).color        = dble(strnd)
                                 end if
-                            else if(mesh.node(edge(i).sec(j).node(k)).dn == -1 .and. mod(mesh.node(edge(i).sec(j).node(k)).sec, 2) == 0) then
-                                ! Draw arrow (left arrow, <)
+                            end if
+                        else if(mesh.node(edge(i).sec(j).node(k)).dn == -1 .and. mod(mesh.node(edge(i).sec(j).node(k)).sec, 2) == 0) then
+
+                            ! Draw arrow (left arrow, <)
+                            if(para_write_710 == .true.) then
                                 write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
                                 write(710+i, "(a$    )"), ".arrow "
                                 write(710+i, "(3f8.2$)"), dble(k-mid_bp)+0.5d0, -dble(pos), 0.0d0
@@ -1493,8 +1501,11 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                                     tec(n_tec).pos_node1(1) =-1.0d0
                                     tec(n_tec).color        = dble(strnd)
                                 end if
-                            else
-                                ! Draw cylinder, standard base
+                            end if
+                        else
+
+                            ! Draw cylinder, standard base
+                            if(para_write_710 == .true.) then
                                 write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
                                 write(710+i, "(a$    )"), ".cylinder "
                                 write(710+i, "(3f9.2$)"), dble(k-mid_bp)-0.4d0, -dble(pos), 0.0d0
@@ -1514,6 +1525,7 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                     end if
 
                     if(para_write_710 == .true.) then
+
                         ! Draw sequence
                         if(mod(j, 2) == 0) then
                             write(710+i, "(a, 3f9.3)"), ".cmov ", dble(k-mid_bp-0.3d0), -dble(pos)-1.0d0, 0.0d0
@@ -1577,9 +1589,9 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                         write(unit, "(a$)"), "|"
 
                         ! Draw cylinder
-                        if(para_write_710 == .true.) then
-                            strnd = mod(conn_stap(m, 3), 20) + 1
-                            if(mod(j, 2) == 0) then
+                        strnd = mod(conn_stap(m, 3), 20) + 1
+                        if(mod(j, 2) == 0) then
+                            if(para_write_710 == .true.) then
                                 write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
                                 write(710+i, "(a$    )"), ".cylinder "
                                 write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-5+5-factor)+0.2d0, 0.0d0
@@ -1594,7 +1606,9 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                                     tec(n_tec).pos_node2 = [dble(k-mid_bp), -dble(6*j-2-5-factor)-0.2d0 - tec_factor, 0.0d0]
                                     tec(n_tec).color     = dble(strnd)
                                 end if
-                            else
+                            end if
+                        else
+                            if(para_write_710 == .true.) then
                                 write(710+i, "(a     )"), ".color "//trim(col_list(strnd))
                                 write(710+i, "(a$    )"), ".cylinder "
                                 write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-2+1-factor)+0.2d0, 0.0d0
@@ -1622,7 +1636,7 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
     end do
 
     ! Write tecplot output
-    if(para_output_Tecplot == "on") then
+    if(para_write_710 == .true. .and. para_output_Tecplot == "on") then
 
         ! Open file stream
         path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
@@ -1715,7 +1729,7 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
     end do
 
     ! Deallocate memory and close file for Tecplot output
-    if(para_output_Tecplot == "on") then
+    if(para_write_710 == .true. .and. para_output_Tecplot == "on") then
         deallocate(tec)
         close(unit=709)
     end if

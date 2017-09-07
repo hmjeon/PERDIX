@@ -603,7 +603,7 @@ subroutine Input_Reset_Parameter
 
     ! Program parameters
     para_preset          = "on"       ! [on, off], Preset parameter defined in pre-defined examples
-    para_output_Tecplot  = "off"      ! [off, on], Output files for Tecplot(http://www.tecplot.com/) to draw vector image
+    para_output_Tecplot  = "on"       ! [off, on], Output files for Tecplot(http://www.tecplot.com/) to draw vector image
     para_cmd_Tecplot     = "off"      ! [off, on], Command file to run TecPlot automatically
     para_cmd_Chimera     = "off"      ! [off, on], Command file to run UCSF Chimera(https://www.cgl.ucsf.edu/chimera/) automatically
     para_fig_output      = "off"      ! [off, on], Automatic figure generation from outputs

@@ -5633,15 +5633,13 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     close(unit=705)
 
     ! ---------------------------------------------
-    !
     ! Write the file for Tecplot
-    !
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
     open(unit=705, file=trim(path)//"_12_route_all.dat", form="formatted")
-    open(unit=706, file=trim(path)//"_init_geo_col.dat",    form="formatted")
+    open(unit=706, file=trim(path)//"_15_sep_line.dat", form="formatted")
 
     ! For scaffold bases
     write(705, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
@@ -5675,9 +5673,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     end do
 
     ! ---------------------------------------------
-    !
     ! New initial geometry
-    !
     ! ---------------------------------------------
     write(706, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
     write(706, "(a )"), 'VARIABLES = "X", "Y", "Z", "weight"'
