@@ -2243,7 +2243,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
         do j = 1, edge(i).n_sec
             write(999, "(a)"), '{'
 
-            ! Staple colors
+            ! 1. Staple colors
             write(999, "(a$)"), '"stap_colors":['
             do k = 1, edge(i).sec(j).n_stap_col
                 write(999, "(a$)"), '['//trim(adjustl(Int2Str(edge(i).sec(j).stap_col(k,1))))
@@ -2254,14 +2254,23 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
             end do
             write(999, "(a)"), '],'
 
-            ! Skip
-            write(999, "(a$)"), '"skip":['
-            do k = 1, width - 1
-                write(999, "(a$)"), "0,"
-            end do
-            write(999, "(a)"), "0],"
+            ! Cross-section position
+            col_shift = mod(i, 15)
+            if(col_shift == 1 .and. j == 1) row_shift = row_shift + 2
+            if(col_shift == 0) col_shift = 15
+            col_shift = 2*col_shift
 
-            ! Stap
+            num = (i - 1) * edge(i).n_sec + j
+            col = col_shift - geom.sec.posR(j)
+            row = row_shift - geom.sec.posC(j)
+
+            ! 2. Num
+            write(999, "(a)"), '"num":'//trim(adjustl(Int2Str(num - 1)))//","
+
+            ! 3. Scaffold loop
+            write(999, "(a)"), '"scafLoop":[],'
+
+            ! 4. Staple
             write(999, "(a$)"), '"stap":['
             do k = 1, width
                 write(999, "(a$)"), "["//&
@@ -2274,13 +2283,14 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                 if(k == width) write(999, "(a )"), "]],"
             end do
 
-            ! Scaffold loop
-            write(999, "(a)"), '"scafLoop":[],'
+            ! 5. Skip
+            write(999, "(a$)"), '"skip":['
+            do k = 1, width - 1
+                write(999, "(a$)"), "0,"
+            end do
+            write(999, "(a)"), "0],"
 
-            ! Scaffold loop
-            write(999, "(a)"), '"stapLoop":[],'
-
-            ! Scaffold routing
+            ! 6. Scaffold
             write(999, "(a$)"), '"scaf":['
             do k = 1, width
                 write(999, "(a$)"), "["//&
@@ -2293,26 +2303,21 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                 if(k == width) write(999, "(a )"), "]],"
             end do
 
-            ! Cross-section position
-            col_shift = mod(i, 15)
-            if(col_shift == 1 .and. j == 1) row_shift = row_shift + 2
-            if(col_shift == 0) col_shift = 15
-            col_shift = 2*col_shift
+            ! 7. Staple loop
+            write(999, "(a)"), '"stapLoop":[],'
 
-            num = (i - 1) * edge(i).n_sec + j
-            col = col_shift - geom.sec.posR(j)
-            row = row_shift - geom.sec.posC(j)
-
-            write(999, "(a)"), '"num":'//trim(adjustl(Int2Str(num - 1)))//","
-            write(999, "(a)"), '"row":'//trim(adjustl(Int2Str(row)))//","
+            ! 8. Col
             write(999, "(a)"), '"col":'//trim(adjustl(Int2Str(col)))//","
 
-            ! Loop
+            ! 9. Loop
             write(999, "(a$)"), '"loop":['
             do k = 1, width - 1
                 write(999, "(a$)"), "0,"
             end do
-            write(999, "(a)"), "0]"
+            write(999, "(a)"), "0],"
+
+            ! 10. Row
+            write(999, "(a)"), '"row":'//trim(adjustl(Int2Str(row)))
 
             if(i == n_edge .and. j == edge(i).n_sec) then
                 write(999, "(a)"), '}'
