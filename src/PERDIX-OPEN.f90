@@ -108,7 +108,7 @@ subroutine Report()
     logical :: results
 
     sec       = 1           ! Section number
-    edge_in   = 2           ! Edge length
+    edge_in   = 42          ! Edge length
     char_vert = "beveled"   ! Flat or beveled vertex
     char_cut  = "max"       ! Staple-break rule
 
