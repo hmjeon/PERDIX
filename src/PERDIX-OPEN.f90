@@ -150,7 +150,7 @@ subroutine Report()
             edge = 35       ! Minimum 38bp
         else if(i == 23) then
             edge = 63
-        else if(i ==  4 .or. i == 16 .or. i == 17 .or. i == 18 .or. &
+        else if(i ==  6 .or. i == 16 .or. i == 17 .or. i == 18 .or. &
                 i == 19 .or. i == 20 .or. i == 21 .or. i == 24) then
             edge = 84
         else
