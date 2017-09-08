@@ -2174,7 +2174,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                     dn_sec  = mesh.node(dn_node).sec
                     dn_bp   = mesh.node(dn_node).bp + shift
                 else
-                    if(mod(c_sec, 2) == 0) then
+                    if(mod(dn_sec, 2) == 0) then
                         if(dna.strand(i).type1 == "scaf") dn_bp = dn_bp + 1
                         if(dna.strand(i).type1 == "stap") dn_bp = dn_bp - 1
                     else
@@ -2234,14 +2234,15 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     end do
 
     ! Print JSON-style data structure
-    write(999, "(a)"), "{"
-    write(999, "(a)"), '"vstrands":'
-    write(999, "(a)"), '['
+    write(999, "(a$)"), "{"
+    write(999, "(a$)"), '"name":"'//trim(adjustl(prob.name_prob))//'",'
+    write(999, "(a$)"), '"vstrands":'
+    write(999, "(a$)"), '['
 
     row_shift = 0
     do i = 1, n_edge
         do j = 1, edge(i).n_sec
-            write(999, "(a)"), '{'
+            write(999, "(a$)"), '{'
 
             ! 1. Staple colors
             write(999, "(a$)"), '"stap_colors":['
@@ -2252,7 +2253,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                 if(k /= edge(i).sec(j).n_stap_col) write(999, "(a$)"), '],'
                 if(k == edge(i).sec(j).n_stap_col) write(999, "(a$)"), ']'
             end do
-            write(999, "(a)"), '],'
+            write(999, "(a$)"), '],'
 
             ! Cross-section position
             col_shift = mod(i, 15)
@@ -2265,10 +2266,10 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
             row = row_shift - geom.sec.posC(j)
 
             ! 2. Num
-            write(999, "(a)"), '"num":'//trim(adjustl(Int2Str(num - 1)))//","
+            write(999, "(a$)"), '"num":'//trim(adjustl(Int2Str(num - 1)))//","
 
             ! 3. Scaffold loop
-            write(999, "(a)"), '"scafLoop":[],'
+            write(999, "(a$)"), '"scafLoop":[],'
 
             ! 4. Staple
             write(999, "(a$)"), '"stap":['
@@ -2280,7 +2281,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                     trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(4))))
 
                 if(k /= width) write(999, "(a$)"), "],"
-                if(k == width) write(999, "(a )"), "]],"
+                if(k == width) write(999, "(a$)"), "]],"
             end do
 
             ! 5. Skip
@@ -2288,7 +2289,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
             do k = 1, width - 1
                 write(999, "(a$)"), "0,"
             end do
-            write(999, "(a)"), "0],"
+            write(999, "(a$)"), "0],"
 
             ! 6. Scaffold
             write(999, "(a$)"), '"scaf":['
@@ -2300,36 +2301,35 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                     trim(adjustl(Int2Str(edge(i).sec(j).scaf(k).conn(4))))
 
                 if(k /= width) write(999, "(a$)"), "],"
-                if(k == width) write(999, "(a )"), "]],"
+                if(k == width) write(999, "(a$)"), "]],"
             end do
 
             ! 7. Staple loop
-            write(999, "(a)"), '"stapLoop":[],'
+            write(999, "(a$)"), '"stapLoop":[],'
 
             ! 8. Col
-            write(999, "(a)"), '"col":'//trim(adjustl(Int2Str(col)))//","
+            write(999, "(a$)"), '"col":'//trim(adjustl(Int2Str(col)))//","
 
             ! 9. Loop
             write(999, "(a$)"), '"loop":['
             do k = 1, width - 1
                 write(999, "(a$)"), "0,"
             end do
-            write(999, "(a)"), "0],"
+            write(999, "(a$)"), "0],"
 
             ! 10. Row
-            write(999, "(a)"), '"row":'//trim(adjustl(Int2Str(row)))
+            write(999, "(a$)"), '"row":'//trim(adjustl(Int2Str(row)))
 
             if(i == n_edge .and. j == edge(i).n_sec) then
-                write(999, "(a)"), '}'
+                write(999, "(a$)"), '}'
             else
-                write(999, "(a)"), '},'
+                write(999, "(a$)"), '},'
             end if
         end do
     end do
 
-    write(999, "(a)"), '],'
-    write(999, "(a)"), '"name":"'//trim(adjustl(prob.name_prob))//'"'
-    write(999, "(a)"), "}"
+    write(999, "(a$)"), ']'
+    write(999, "(a$)"), "}"
 
     ! Deallocate edge data
     do i = 1, n_edge
