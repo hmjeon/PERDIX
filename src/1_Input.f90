@@ -35,7 +35,7 @@ module Input
 
     private Input_Print_Parameters
     private Input_Read_Parameter
-    private Input_Reset_Parameter
+    private Input_Reset_Para_Report
     private Input_Set_Parameter_Dependence
     private Input_Set_Command
     private Input_Print_Problem
@@ -219,7 +219,7 @@ subroutine Input_Initialize_Report(prob, geom, mesh, i, sec, edge, char_vert, ch
     character(10),  intent(in)    :: char_vert, char_cut
 
     ! Reset parameters
-    call Input_Reset_Parameter
+    call Input_Reset_Para_Report
     para_external        = "on"
     para_vertex_design   = char_vert    ! Flat or beveled vertex
     para_cut_stap_method = char_cut     ! Staple-break
@@ -599,11 +599,11 @@ end subroutine Input_Read_Parameter
 ! ---------------------------------------------------------------------------------------
 
 ! Reset paramters as default values
-subroutine Input_Reset_Parameter
+subroutine Input_Reset_Para_Report
 
     ! Program parameters
     para_preset          = "on"       ! [on, off], Preset parameter defined in pre-defined examples
-    para_output_Tecplot  = "on"       ! [off, on], Output files for Tecplot(http://www.tecplot.com/) to draw vector image
+    para_output_Tecplot  = "on"       ! [on, off], Output files for Tecplot(http://www.tecplot.com/) to draw vector image
     para_cmd_Tecplot     = "off"      ! [off, on], Command file to run TecPlot automatically
     para_cmd_Chimera     = "off"      ! [off, on], Command file to run UCSF Chimera(https://www.cgl.ucsf.edu/chimera/) automatically
     para_fig_output      = "off"      ! [off, on], Automatic figure generation from outputs
@@ -662,7 +662,7 @@ subroutine Input_Reset_Parameter
 
     ! Set parameter dependence
     call Input_Set_Parameter_Dependence
-end subroutine Input_Reset_Parameter
+end subroutine Input_Reset_Para_Report
 
 ! ---------------------------------------------------------------------------------------
 
