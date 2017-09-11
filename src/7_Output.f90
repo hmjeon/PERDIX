@@ -250,7 +250,7 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
     type(MeshType),  intent(in) :: mesh
     type(DNAType),   intent(in) :: dna
 
-    double precision :: pos_1(3), pos_2(3), radius
+    double precision :: pos_1(3), pos_2(3), radius, rad_mod
     integer :: i, j, node
     logical :: f_axis
     character(200) :: path
@@ -275,7 +275,7 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
         write(701, "(a$    )"), ".cylinder "
         write(701, "(3f9.3$)"), pos_1(1:3)
         write(701, "(3f9.3$)"), pos_2(1:3)
-        write(701, "(1f9.3 )"), radius
+        write(701, "(1f9.3 )"), rad_mod
 
         ! Draw cylinder for the beveled parts
         pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
@@ -284,13 +284,15 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
         if(Is_Same_Vector(pos_1, pos_2) == .false.) then
             if(Norm(pos_1 - pos_2) > 0.4d0) then
                 write(701, "(a)"), ".color dark gray"
+                rad_mod = radius * 1.02d0
             else
                 write(701, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
+                rad_mod = radius
             end if
             write(701, "(a$     )"), ".cylinder "
             write(701, "(3f12.5$)"), pos_1(1:3)
             write(701, "(3f12.5$)"), pos_2(1:3)
-            write(701, "(1f9.3  )"), radius
+            write(701, "(1f9.3  )"), rad_mod
         end if
 
         pos_1(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
@@ -299,13 +301,15 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
         if(Is_Same_Vector(pos_1, pos_2) ==.false.) then
             if(Norm(pos_1 - pos_2) > 0.4d0) then
                 write(701, "(a)"), ".color dark gray"
+                rad_mod = radius * 1.02d0
             else
                 write(701, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
+                rad_mod = radius
             end if
             write(701, "(a$     )"), ".cylinder "
             write(701, "(3f12.5$)"), pos_1(1:3)
             write(701, "(3f12.5$)"), pos_2(1:3)
-            write(701, "(1f9.3  )"), radius
+            write(701, "(1f9.3  )"), rad_mod
         end if
     end do
 
