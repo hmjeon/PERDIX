@@ -929,6 +929,7 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
                             write(710+i, "(a$    )"), ".sphere "
                             write(710+i, "(3f9.2$)"), dble(k-mid_bp), -dble(6*j-5-factor), 0.0d0
                             write(710+i, "(1f9.2 )"), 0.25d0
+
                             if(para_output_Tecplot == "on") then
                                 n_tec                 = n_tec + 1
                                 type_tec(3)           = type_tec(3) + 1
