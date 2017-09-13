@@ -1953,7 +1953,7 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
 
         write(998, "(a$    )"), ".sphere "
         write(998, "(3f9.3$)"), geom.croP(i).pos(1:3)
-        write(998, "(1f9.3 )"), 0.3d0
+        write(998, "(1f9.3 )"), 0.2d0
     end do
 
     ! Write multi lines
@@ -1964,7 +1964,7 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
         pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
 
         write(998, "(a$   )"), ".cylinder "
-        write(998, "(7f9.3)"), pos_1(1:3), pos_2(1:3), 0.15d0
+        write(998, "(7f9.3)"), pos_1(1:3), pos_2(1:3), 0.1d0
     end do
 
     ! Write junctional connection
@@ -1976,7 +1976,7 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
             pos_2(1:3) = mesh.node(bound.junc(i).conn(j,2)).pos(1:3)
 
             write(998, "(a$   )"), ".cylinder "
-            write(998, "(7f9.3)"), pos_1(1:3), pos_2(1:3), 0.05d0
+            write(998, "(7f9.3)"), pos_1(1:3), pos_2(1:3), 0.04d0
         end do
     end do
 
@@ -1991,8 +1991,8 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
 
         write(998, "(a$    )"), ".arrow "
         write(998, "(3f8.2$)"), pos_c(1:3)
-        write(998, "(3f8.2$)"), pos_c(1:3) + t1(1:3) * 1.5d0
-        write(998, "(3f8.2 )"), 0.2d0, 0.6d0, 0.6d0
+        write(998, "(3f8.2$)"), pos_c(1:3) + t1(1:3) * 1.6d0
+        write(998, "(3f8.2 )"), 0.16d0, 0.45d0, 0.5d0
     end do
 
     ! Write edge number
@@ -2091,6 +2091,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     integer :: dn_base, dn_node, dn_edge, dn_sec, dn_bp
     integer :: up_base, up_node, up_edge, up_sec, up_bp
     integer :: cup_bp, cdn_bp, col, row, col_shift, row_shift, color(12)
+    logical :: b_stap_json = .true.
     character(200) :: path
 
     path = trim(prob.path_work1)//trim(prob.name_file)
@@ -2279,11 +2280,15 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
             ! 4. Staple
             write(999, "(a$)"), '"stap":['
             do k = 1, width
-                write(999, "(a$)"), "["//&
-                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(1))))//","//&
-                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(2))))//","//&
-                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(3))))//","//&
-                    trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(4))))
+                if(b_stap_json == .true.) then
+                    write(999, "(a$)"), "["//&
+                        trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(1))))//","//&
+                        trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(2))))//","//&
+                        trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(3))))//","//&
+                        trim(adjustl(Int2Str(edge(i).sec(j).stap(k).conn(4))))
+                else
+                    write(999, "(a$)"), "[-1, -1, -1, -1"
+                end if
 
                 if(k /= width) write(999, "(a$)"), "],"
                 if(k == width) write(999, "(a$)"), "]],"
