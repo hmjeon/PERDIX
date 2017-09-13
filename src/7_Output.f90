@@ -275,7 +275,7 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
         write(701, "(a$    )"), ".cylinder "
         write(701, "(3f9.3$)"), pos_1(1:3)
         write(701, "(3f9.3$)"), pos_2(1:3)
-        write(701, "(1f9.3 )"), rad_mod
+        write(701, "(1f9.3 )"), radius
 
         ! Draw cylinder for the beveled parts
         pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
