@@ -56,7 +56,7 @@ subroutine Exam_Chiral_Biscribed_Propello_Tetrahedron(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.15d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 16
@@ -128,7 +128,7 @@ subroutine Exam_Chiral_Biscribed_Propello_Cube(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.08d0, 0.5d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 32
@@ -229,7 +229,7 @@ subroutine Exam_Chiral_Biscribed_Propello_Octahedron(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.08d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 30
@@ -330,7 +330,7 @@ subroutine Exam_Chiral_Biscribed_Snub_Cube(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.1d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 24
@@ -431,7 +431,7 @@ subroutine Exam_Chiral_Biscribed_Pentagonal_Icositetrahedron(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.15d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 38
@@ -532,7 +532,7 @@ subroutine Exam_Chiral_Asym_Object(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy")
 
     ! Preset parameters
     if(para_preset == "on") then
@@ -606,7 +606,7 @@ subroutine Exam_Chiral_Asym_Tetrahedron(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 4
@@ -648,7 +648,7 @@ subroutine Exam_Chiral_Asym_Cube(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xyz")
 
     ! The number of points and faces
     geom.n_iniP = 8
@@ -696,7 +696,7 @@ subroutine Exam_Chiral_Asym_Octahedron(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 6
@@ -744,7 +744,7 @@ subroutine Exam_Chiral_Asym_Dodecahedron(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "xz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xz")
 
     ! The number of points and faces
     geom.n_iniP = 20
@@ -810,7 +810,7 @@ subroutine Exam_Chiral_Asym_Icosahedron(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [150, 58, 228], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [150, 58, 228], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 12

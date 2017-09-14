@@ -971,7 +971,7 @@ subroutine Input_Select_File(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
 
     ! Print filename and type
     call Space(0, 11)

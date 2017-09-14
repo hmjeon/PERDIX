@@ -62,7 +62,7 @@ subroutine Exam_Johnson_Square_Pyramid_J1(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 5
@@ -106,7 +106,7 @@ subroutine Exam_Johnson_Pentagonal_Pyramid_J2(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 6
@@ -152,7 +152,7 @@ subroutine Exam_Johnson_Triangular_Cupola_J3(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 9
@@ -203,7 +203,7 @@ subroutine Exam_Johnson_Square_Cupola_J4(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 12
@@ -259,7 +259,7 @@ subroutine Exam_Johnson_Pentagonal_Cupola_J5(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 15
@@ -320,7 +320,7 @@ subroutine Exam_Johnson_Pentagonal_Rotunda_J6(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 20
@@ -391,7 +391,7 @@ subroutine Exam_Johnson_Elongated_Triangular_Cupola_J18(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 15
@@ -454,7 +454,7 @@ subroutine Exam_Johnson_Elongated_Square_Cupola_J19(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 20
@@ -526,7 +526,7 @@ subroutine Exam_Johnson_Elongated_Pentagonal_Cupola_J20(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 25
@@ -607,7 +607,7 @@ subroutine Exam_Johnson_Elongated_Pentagonal_Rotunda_J21(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 30
@@ -698,7 +698,7 @@ subroutine Exam_Johnson_Gyroelongated_Triangular_Cupola_J22(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 15
@@ -767,7 +767,7 @@ subroutine Exam_Johnson_Gyroelongated_Square_Cupola_J23(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 20
@@ -847,7 +847,7 @@ subroutine Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 25
@@ -938,7 +938,7 @@ subroutine Exam_Johnson_Gyroelongated_Pentagonal_Rotunda_J25(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 30
@@ -1039,7 +1039,7 @@ subroutine Exam_Johnson_Gyrobifastigium_J26(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 8

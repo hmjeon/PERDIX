@@ -77,7 +77,7 @@ subroutine Exam_Open3D_Cubeoctahedron(prob, geom)
     end if
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xz")
 
     ! The number of points and faces
     geom.n_iniP = 12
@@ -133,7 +133,7 @@ subroutine Exam_Open3D_End_Triangular_Prism_Quad(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz")
 
     ! Set mesh
     n  = 2
@@ -210,7 +210,7 @@ subroutine Exam_Open3D_End_Cube_Quad(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz1", 1.0d0, 1.3d0, 0.0d0, 0.5d0)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz1")
 
     ! Set mesh
     n  = 3
@@ -287,7 +287,7 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Quad(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz1", 1.0d0, 1.14d0, 2.2d0, -2.5d0)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz1")
 
     ! Set mesh
     n  = 3
@@ -364,7 +364,7 @@ subroutine Exam_Open3D_End_Cylinder_Quad(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz1", 1.0d0, 1.00d0, 0.5d0, 0.5d0)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz1")
 
     ! Set mesh
     n  = 4
@@ -441,7 +441,7 @@ subroutine Exam_Open3D_Hemisphere_Quad(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.06d0, -4.5d0, 20.0d0)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz")
 
     ! Set mesh
     n  = 3
@@ -519,7 +519,7 @@ subroutine Exam_Open3D_End_Triangular_Prism_Tri(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz")
 
     ! Set mesh
     n  = 3
@@ -604,7 +604,7 @@ subroutine Exam_Open3D_End_Cube_Tri(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz")
 
     ! Set mesh
     n  = 3
@@ -689,7 +689,7 @@ subroutine Exam_Open3D_End_Pentagonal_Prism_Tri(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz")
 
     ! Set mesh
     n  = 3
@@ -774,7 +774,7 @@ subroutine Exam_Open3D_End_Cylinder_Tri(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz")
 
     ! Set mesh
     n  = 5
@@ -859,7 +859,7 @@ subroutine Exam_Open3D_Hemisphere_Tri(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz", 1.0d0, 1.0d0, 0.0d0, 0.0d0)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz")
 
     ! Set mesh
     n  = 3
@@ -951,7 +951,7 @@ subroutine Exam_Open3D_Cooling_Tower_Tri(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz1", 1.0d0, 1.1d0, 3.0d0, -5.5d0)
+    call Mani_Set_View_Color(prob, [231, 76, 60], "xyz1")
 
     n = 5
 
