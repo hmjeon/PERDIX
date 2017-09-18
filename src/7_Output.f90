@@ -317,9 +317,20 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
     do i = 1, dna.n_strand
         do j = 1, dna.strand(i).n_base
             if(dna.top(dna.strand(i).base(j)).xover /= -1) then
-                node       = dna.top(dna.strand(i).base(j)).node
-                pos_1(1:3) = mesh.node(mesh.node(node).up).pos(1:3)
-                pos_2(1:3) = mesh.node(mesh.node(node).dn).pos(1:3)
+
+                node = dna.top(dna.strand(i).base(j)).node
+
+                if(mesh.node(node).up == -1) then
+                    pos_1(1:3) = mesh.node(node).pos(1:3)
+                else
+                    pos_1(1:3) = mesh.node(mesh.node(node).up).pos(1:3)
+                end if
+
+                if(mesh.node(node).dn == -1) then
+                    pos_2(1:3) = mesh.node(node).pos(1:3)
+                else
+                    pos_2(1:3) = mesh.node(mesh.node(node).dn).pos(1:3)
+                end if
 
                 if(dna.strand(i).type1 == "scaf") write(701, "(a)"), ".color medium blue"
                 if(dna.strand(i).type1 == "stap") write(701, "(a)"), ".color orange red"
