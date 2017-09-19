@@ -2071,11 +2071,11 @@ end subroutine Output_Write_Out_Guide_JSON
 
 ! Write JSON output
 subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
-    type(ProbType), intent(in) :: prob
-    type(GeomType), intent(in) :: geom
-    type(MeshType), intent(in) :: mesh
-    type(DNAType),  intent(in) :: dna
-    integer,        intent(in) :: max_unpaired
+    type(ProbType), intent(in)    :: prob
+    type(GeomType), intent(in)    :: geom
+    type(MeshType), intent(in)    :: mesh
+    type(DNAType),  intent(inout) :: dna
+    integer,        intent(in)    :: max_unpaired
 
     ! Conn type data
     type :: ConnType
@@ -2086,8 +2086,11 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     type :: SecType
         type(ConnType), allocatable :: scaf(:)
         type(ConnType), allocatable :: stap(:)
+
         integer :: n_stap_col
         integer :: stap_col(20,2)
+        integer :: n_xover_stap
+        integer :: n_xover_scaf
     end type SecType
 
     ! Initial line data
@@ -2102,6 +2105,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     integer :: dn_base, dn_node, dn_edge, dn_sec, dn_bp
     integer :: up_base, up_node, up_edge, up_sec, up_bp
     integer :: cup_bp, cdn_bp, col, row, col_shift, row_shift, color(12)
+    integer :: n_xover, min_xover, min_xover_edge, min_xover_sec
     logical :: b_stap_json = .true.
     character(200) :: path
 
@@ -2150,8 +2154,10 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
             allocate(edge(i).sec(j).scaf(width))
             allocate(edge(i).sec(j).stap(width))
 
-            edge(i).sec(j).n_stap_col = 0
-            edge(i).sec(j).stap_col   = 0
+            edge(i).sec(j).n_stap_col   = 0
+            edge(i).sec(j).stap_col     = 0
+            edge(i).sec(j).n_xover_stap = 0
+            edge(i).sec(j).n_xover_scaf = 0
 
             do k = 1, width
                 edge(i).sec(j).scaf(k).conn(1:4) = -1
@@ -2242,6 +2248,16 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                 else
                     edge(c_edge).sec(c_sec+1).stap(c_bp).conn(3) = (up_edge - 1) * edge(1).n_sec + up_sec
                     edge(c_edge).sec(c_sec+1).stap(c_bp).conn(4) = up_bp - 1
+                end if
+            end if
+
+            ! Count xover of scaffold and staple
+            if(dna.top(c_base).xover /= -1) then
+                if(dna.strand(i).type1 == "scaf") then
+                    edge(c_edge).sec(c_sec+1).n_xover_scaf = edge(c_edge).sec(c_sec+1).n_xover_scaf + 1
+                end if
+                if(dna.strand(i).type1 == "stap") then
+                    edge(c_edge).sec(c_sec+1).n_xover_stap = edge(c_edge).sec(c_sec+1).n_xover_stap + 1
                 end if
             end if
 
@@ -2351,6 +2367,23 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
 
     write(999, "(a$)"), ']'
     write(999, "(a$)"), "}"
+
+    ! Count minimum number of xovers of scaffold and staple
+    min_xover = 999999
+    do i = 1, n_edge
+        do j = 1, edge(i).n_sec
+            n_xover = edge(i).sec(j).n_xover_scaf / 2 + edge(i).sec(j).n_xover_stap / 2
+            if(min_xover > n_xover) then
+                min_xover      = n_xover
+                min_xover_edge = i
+                min_xover_sec  = j
+            end if
+        end do
+    end do
+
+    ! Print minimum number of crossovers per edge
+    dna.min_xover_scaf = edge(min_xover_edge).sec(min_xover_sec).n_xover_scaf / 2
+    dna.min_xover_stap = edge(min_xover_edge).sec(min_xover_sec).n_xover_stap / 2
 
     ! Deallocate edge data
     do i = 1, n_edge

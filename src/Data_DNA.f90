@@ -82,6 +82,7 @@ module Data_DNA
         integer :: n_unpaired_scaf, n_nt_unpaired_scaf
         integer :: n_unpaired_stap, n_nt_unpaired_stap
         integer :: graph_node, graph_edge
+        integer :: min_xover_scaf, min_xover_stap
 
         type(BaseType),   allocatable :: base_scaf(:)       ! Base in scaffold strand
         type(BaseType),   allocatable :: base_stap(:)       ! Base in staple strand

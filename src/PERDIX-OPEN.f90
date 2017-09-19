@@ -354,6 +354,11 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         write(i, "(a)"), "* Edge length [ min - max ] : ["//&
             trim(adjustl(Int2Str(geom.min_edge_length)))//" - "// &
             trim(adjustl(Int2Str(geom.max_edge_length)))//"]"
+        call Space(i, 16)
+        write(i, "(a)"), "* Min # xovers [scaf, stap] : "//&
+            trim(adjustl(Int2Str(dna.min_xover_scaf+dna.min_xover_stap)))//" ["// &
+            trim(adjustl(Int2Str(dna.min_xover_scaf)))//", "// &
+            trim(adjustl(Int2Str(dna.min_xover_stap)))//"]"
         write(i, "(a)")
 
         ! ============================================================
