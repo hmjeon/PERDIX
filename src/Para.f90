@@ -36,7 +36,7 @@ module Para
 
     ! Parameters for junction modification
     character(10)  :: para_junc_ang        = "opt"      ! [opt, max, ave, min], Junction gap modification for different arm angle
-    character(10)  :: para_const_edge_mesh = "off"      ! [off, on], Constant edge length from polyhedra mesh
+    character(10)  :: para_const_edge_mesh = "off"      ! [off, on, round], Constant edge length from polyhedra mesh
     character(10)  :: para_sticky_self     = "off"      ! [off, on], Sticky-end for self connection on henycomb cross-section
     character(10)  :: para_unpaired_scaf   = "on"       ! [on, off], Unpaired scaffold nucleotides
     character(10)  :: para_vertex_modify   = "const"    ! [const, mod], Vertex modification to avoid clash

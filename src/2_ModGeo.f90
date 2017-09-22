@@ -115,7 +115,8 @@ subroutine ModGeo_Modification(prob, geom, bound)
     call ModGeo_Set_Gap_Junction(geom, bound)
 
     ! Set constant modified edge ratio based on original geometry
-    if(para_const_edge_mesh == "on") call ModGeo_Set_Const_Geometric_Ratio(geom)
+    if(para_const_edge_mesh == "on"   ) call ModGeo_Set_Const_Geometric_Ratio(geom)
+    if(para_const_edge_mesh == "round") call ModGeo_Set_Round_Geometric_Ratio(prob, geom)
 
     ! Write seperated geometry
     call ModGeo_Chimera_Sep_Geometry(prob, geom, "sep")
@@ -1730,6 +1731,93 @@ subroutine ModGeo_Set_Const_Geometric_Ratio(geom)
         write(0, "(a )"), " ["//trim(adjustl(Int2Str(nint(len_new/0.34d0) + 1)))//"] "
     end do
 end subroutine ModGeo_Set_Const_Geometric_Ratio
+
+! ---------------------------------------------------------------------------------------
+
+! Set modified edge length based on multiple of 10.5-bp length
+subroutine ModGeo_Set_Round_Geometric_Ratio(prob, geom)
+    type(ProbType), intent(in)    :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: length, vec_a(3), vec_b(3), pos_c(3), pos_1(3), pos_2(3)
+    double precision :: ref_length, len_ini1, len_ini2, len_mod, len_new, len_ref, ratio, magic
+    integer :: i, ref_edge, iniP1, iniP2, modP1, modP2
+
+    ! Calculate magic depending on types of section
+    if(geom.sec.types == "square")    magic = 0.0d0
+    if(geom.sec.types == "honeycomb") magic = 0.34d0
+
+    ! Find reference edge
+    do i = 1, geom.n_iniL
+        iniP1  = geom.iniL(i).poi(1)
+        iniP2  = geom.iniL(i).poi(2)
+        length = Norm(geom.modP(iniP1).pos - geom.modP(iniP2).pos)
+
+        ! Find reference edge
+        if(i == 1 .or. ref_length > length) then
+            ref_length = length
+            ref_edge   = i
+        end if
+    end do
+
+    ! Find ratio divied by initial edge length
+    modP1    = geom.iniL(ref_edge).poi(1)
+    modP2    = geom.iniL(ref_edge).poi(2)
+    iniP1    = geom.iniL(ref_edge).iniP(1)
+    iniP2    = geom.iniL(ref_edge).iniP(2)
+    len_ini1 = Norm(geom.iniP(iniP1).pos - geom.iniP(iniP2).pos)
+    len_mod  = Norm(geom.modP(modP1).pos - geom.modP(modP2).pos)
+    len_ref  = len_ini1
+    ratio    = (len_mod + magic) / len_ini1
+
+    ! Rescale the edge with ratio
+    do i = 1, geom.n_iniL
+        iniP1 = geom.iniL(i).iniP(1)
+        iniP2 = geom.iniL(i).iniP(2)
+        modP1 = geom.iniL(i).poi(1)
+        modP2 = geom.iniL(i).poi(2)
+
+        pos_1(1:3) = geom.iniP(iniP1).pos(1:3)
+        pos_2(1:3) = geom.iniP(iniP2).pos(1:3)
+        pos_c(1:3) = 0.5d0 * (pos_1 + pos_2)
+        len_ini1   = Norm(geom.iniP(iniP1).pos - geom.iniP(iniP2).pos)
+        len_ini2   = len_ini1
+        len_ini2   = ModGeo_Find_Round_Length(prob.n_bp_edge*(len_ini1/len_ref))*len_ref/prob.n_bp_edge
+        len_mod    = Norm(geom.modP(modP1).pos - geom.modP(modP2).pos)
+
+        vec_a(1:3) = Normalize(pos_1(1:3) - pos_c(1:3))
+        vec_b(1:3) = Normalize(pos_2(1:3) - pos_c(1:3))
+
+        ! Recalculate point position
+        geom.modP(modP1).pos(1:3) = pos_c(1:3) + vec_a(1:3) * (prob.n_bp_edge*(len_ini2/len_ref) * 0.34d0 / 2.0d0 - 2.0d0*magic/2.0d0 + 0.0d0)
+        geom.modP(modP2).pos(1:3) = pos_c(1:3) + vec_b(1:3) * (prob.n_bp_edge*(len_ini2/len_ref) * 0.34d0 / 2.0d0 - 2.0d0*magic/2.0d0 + 0.0d0)
+
+        len_new = Norm(geom.modP(modP1).pos - geom.modP(modP2).pos)
+
+        ! Print progress
+        call space(0, 11)
+        write(0, "(a16$)"), trim(adjustl(Int2Str(i)))//" - edge length"
+        write(0, "(a$)"), ", Init1: "//trim(adjustl(Dble2Str(len_ini1)))
+        write(0, "(a$)"), " ["//trim(adjustl(Dble2Str(prob.n_bp_edge*(len_ini1/len_ref))))//"]"
+        write(0, "(a$)"), ", Init2: "//trim(adjustl(Dble2Str(len_ini2)))
+        write(0, "(a$)"), " ["//trim(adjustl(Dble2Str(prob.n_bp_edge*(len_ini2/len_ref))))//"]"
+        write(0, "(a$)"), "], Mod: "//trim(adjustl(Dble2Str(len_mod)))
+        write(0, "(a$)"), " ["//trim(adjustl(Int2Str(nint(len_mod/0.34d0) + 1)))//"]"
+        write(0, "(a$)"), ", New: "//trim(adjustl(Dble2Str(len_new)))
+        write(0, "(a )"), " ["//trim(adjustl(Int2Str(nint(len_new/0.34d0) + 1)))//"]"
+    end do
+end subroutine ModGeo_Set_Round_Geometric_Ratio
+
+! ---------------------------------------------------------------------------------------
+
+! Find round up edge length
+function ModGeo_Find_Round_Length(len_in) result(len_out)
+    double precision, intent(in) :: len_in
+
+    double precision :: len_out
+
+    len_out = dble(floor(idnint(len_in / 10.5d0)*10.5d0))
+end function
 
 ! ---------------------------------------------------------------------------------------
 

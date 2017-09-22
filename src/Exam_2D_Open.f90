@@ -105,6 +105,24 @@ subroutine Exam_Open2D_Plate_Cross(prob, geom)
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
 
+    ! Case 1 - Round edge length without ssDNA
+    para_const_edge_mesh = "round"      ! Constant edge length from polyhedra mesh
+    para_vertex_design   = "flat"       ! Vertex design
+    para_unpaired_scaf   = "off"        ! Unpaired scaffold nucleotides
+    para_n_base_tn       = 5            ! The number of nucleotides in poly T loop, -1 : depending on distance
+
+    ! Case 2 - Beveled edge length without ssDNA
+    para_const_edge_mesh = "off"        ! Constant edge length from polyhedra mesh
+    para_vertex_design   = "beveled"    ! Vertex design
+    para_unpaired_scaf   = "off"        ! Unpaired scaffold nucleotides
+    para_n_base_tn       = 5            ! The number of nucleotides in poly T loop, -1 : depending on distance
+
+    ! Case 3 - Beveled edge with ssDNA
+    para_const_edge_mesh = "off"        ! Constant edge length from polyhedra mesh
+    para_vertex_design   = "beveled"    ! Vertex design
+    para_unpaired_scaf   = "on"         ! Unpaired scaffold nucleotides
+    para_n_base_tn       = -1           ! The number of nucleotides in poly T loop, -1 : depending on distance
+
     ! Set options
     nx = 4
     ny = 4
@@ -784,6 +802,24 @@ subroutine Exam_Open2D_Quarter_Circle(prob, geom)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xy")
+
+    ! Case 1 - Round edge length without ssDNA
+    para_const_edge_mesh = "round"      ! Constant edge length from polyhedra mesh
+    para_vertex_design   = "flat"       ! Vertex design
+    para_unpaired_scaf   = "off"        ! Unpaired scaffold nucleotides
+    para_n_base_tn       = 7            ! The number of nucleotides in poly T loop, -1 : depending on distance
+
+    ! Case 2 - Beveled edge length without ssDNA
+    para_const_edge_mesh = "off"        ! Constant edge length from polyhedra mesh
+    para_vertex_design   = "beveled"    ! Vertex design
+    para_unpaired_scaf   = "off"        ! Unpaired scaffold nucleotides
+    para_n_base_tn       = 7            ! The number of nucleotides in poly T loop, -1 : depending on distance
+
+    ! Case 3 - Beveled edge with ssDNA
+    para_const_edge_mesh = "off"        ! Constant edge length from polyhedra mesh
+    para_vertex_design   = "beveled"    ! Vertex design
+    para_unpaired_scaf   = "on"         ! Unpaired scaffold nucleotides
+    para_n_base_tn       = -1           ! The number of nucleotides in poly T loop, -1 : depending on distance
 
     n = 2
 
