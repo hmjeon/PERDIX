@@ -1847,9 +1847,22 @@ subroutine Input_Chimera_Init_Geometry(prob, geom)
     close(unit=102)
 
     ! ==================================================
-    !
+    ! Write the FE format output
+    ! ==================================================
+    open(unit=102, file=trim(path)//"_19_FE_Format.txt", form="formatted")
+    write(102, "(i)"), geom.n_iniP
+    do i = 1, geom.n_iniP
+        write(102, "(4f10.3, 2i10)"), geom.iniP(i).pos(1:2), 0.0d0, 0.0d0, 1, 1
+    end do
+
+    write(102, "(i)"), geom.n_iniL
+    do i = 1, geom.n_iniL
+        write(102, "(2i10)"), geom.iniL(i).poi(1), geom.iniL(i).poi(2)
+    end do
+    close(unit=102)
+
+    ! ==================================================
     ! Write the file for Tecplot
-    !
     ! ==================================================
     if(para_output_Tecplot == "off") return
 
