@@ -180,7 +180,7 @@ subroutine Importer_GEO(prob, geom)
         read(1002, *), temp, geom.iniP(i).pos(1:2)
         geom.iniP(i).pos(3) = 0.0d0
 
-        if(b_face == .true.) geom.iniP(i).pos(2) = -geom.iniP(i).pos(2)
+        geom.iniP(i).pos(2) = -geom.iniP(i).pos(2)
     end do
 
     ! Read face
