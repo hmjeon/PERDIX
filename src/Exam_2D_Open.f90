@@ -91,6 +91,7 @@ subroutine Exam_Open2D_Plate_Cross(prob, geom)
     double precision :: x_width, y_width, del_x, del_y
     integer :: i, j, index, n_i_poi, n_j_poi, nx, ny, emesh
     character(10) :: char_sec, char_bp, char_start_bp
+    character :: p_mesh
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
@@ -127,6 +128,8 @@ subroutine Exam_Open2D_Plate_Cross(prob, geom)
     nx = 4
     ny = 4
 
+    p_mesh = "e"
+
     n_i_poi = nx + 1
     n_j_poi = ny + 1
     x_width = dble(nx)
@@ -161,7 +164,7 @@ subroutine Exam_Open2D_Plate_Cross(prob, geom)
         do i = 1, nx
 
             emesh = mod(i+j, 2)
-            if(emesh == 1) then
+            if(p_mesh == "a" .or. (p_mesh == "e" .and. emesh == 1)) then
 
                 ! Mesh pattern, \
                 index = 2*(nx * (j-1) + i) - 1
@@ -173,7 +176,7 @@ subroutine Exam_Open2D_Plate_Cross(prob, geom)
                 geom.face(index).poi(1) = n_i_poi * (j-1) + i + 1
                 geom.face(index).poi(2) = n_i_poi * j + i + 1
                 geom.face(index).poi(3) = n_i_poi * j + i
-            else
+            else if(p_mesh == "b" .or. (p_mesh == "e" .and. emesh == 0)) then
 
                 ! Mesh pattern, /
                 index = 2*(nx * (j-1) + i) - 1
