@@ -52,9 +52,9 @@ module Exam_2D_Open
     public Exam_Open2D_6_Sided_Polygon          ! 18. 6-sided polygon
 
     ! Different mesh patterns with the square
-    public Exam_Open2D_Plate_Quad               ! 19. Plate with quad mesh
-    public Exam_Open2D_Plate_Tri                ! 20. Plate with tri mesh
-    public Exam_Open2D_Plate_Eng                ! 21. Plate with eng mesh
+    public Exam_Open2D_S_Shape_Quad             ! 19. S-shape with quad mesh
+    public Exam_Open2D_S_Shape_Tri              ! 20. S-shape with tri mesh
+    public Exam_Open2D_S_Shape_Eng              ! 21. S-shape with eng mesh
 
     ! Different edge lengths
     public Exam_Open2D_L_Shape_42bp             ! 22. L-shape with 42-bp edge length
@@ -133,20 +133,26 @@ subroutine Exam_Open2D_Plate_Cross(prob, geom)
     n_i_poi = nx + 1
     n_j_poi = ny + 1
     x_width = dble(nx)
-    y_width = dble(ny)
+    y_width = dble(ny) * 1.5d0
     del_x   = x_width / dble(n_i_poi - 1)
     del_y   = y_width / dble(n_j_poi - 1)
 
     ! The number of points and faces
     geom.n_iniP = n_i_poi * n_j_poi
-    geom.n_face = nx  * ny * 2
-    
+    geom.n_face = nx * ny
+    if(p_mesh /= "r") geom.n_face = geom.n_face * 2
+
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
     do i = 1, geom.n_face
-        geom.face(i).n_poi = 3
-        allocate(geom.face(i).poi(3))
+        if(p_mesh == "r") then
+            geom.face(i).n_poi = 4
+            allocate(geom.face(i).poi(4))
+        else
+            geom.face(i).n_poi = 3
+            allocate(geom.face(i).poi(3))
+        end if
     end do
 
     ! Set position vector
@@ -160,37 +166,49 @@ subroutine Exam_Open2D_Plate_Cross(prob, geom)
     end do
 
     ! Set connectivity
-    do j = 1, ny
-        do i = 1, nx
-
-            emesh = mod(i+j, 2)
-            if(p_mesh == "a" .or. (p_mesh == "e" .and. emesh == 1)) then
-
-                ! Mesh pattern, \
-                index = 2*(nx * (j-1) + i) - 1
-                geom.face(index).poi(1) = n_i_poi * (j-1) + i
-                geom.face(index).poi(2) = n_i_poi * (j-1) + i + 1
-                geom.face(index).poi(3) = n_i_poi * j + i
-
-                index = 2*(nx * (j-1) + i)
-                geom.face(index).poi(1) = n_i_poi * (j-1) + i + 1
-                geom.face(index).poi(2) = n_i_poi * j + i + 1
-                geom.face(index).poi(3) = n_i_poi * j + i
-            else if(p_mesh == "b" .or. (p_mesh == "e" .and. emesh == 0)) then
-
-                ! Mesh pattern, /
-                index = 2*(nx * (j-1) + i) - 1
-                geom.face(index).poi(1) = n_i_poi * (j - 1) + i
-                geom.face(index).poi(2) = n_i_poi * j + i + 1
-                geom.face(index).poi(3) = n_i_poi * j + i
-
-                index = 2*(nx * (j-1) + i)
+    if(p_mesh == "r") then
+        do j = 1, ny
+            do i = 1, nx
+                index = nx * (j - 1) + i
                 geom.face(index).poi(1) = n_i_poi * (j - 1) + i
                 geom.face(index).poi(2) = n_i_poi * (j - 1) + i + 1
                 geom.face(index).poi(3) = n_i_poi * j + i + 1
-            end if
+                geom.face(index).poi(4) = n_i_poi * j + i
+            end do
         end do
-    end do
+    else
+        do j = 1, ny
+            do i = 1, nx
+
+                emesh = mod(i+j, 2)
+                if(p_mesh == "a" .or. (p_mesh == "e" .and. emesh == 1)) then
+
+                    ! Mesh pattern, \
+                    index = 2*(nx * (j-1) + i) - 1
+                    geom.face(index).poi(1) = n_i_poi * (j-1) + i
+                    geom.face(index).poi(2) = n_i_poi * (j-1) + i + 1
+                    geom.face(index).poi(3) = n_i_poi * j + i
+
+                    index = 2*(nx * (j-1) + i)
+                    geom.face(index).poi(1) = n_i_poi * (j-1) + i + 1
+                    geom.face(index).poi(2) = n_i_poi * j + i + 1
+                    geom.face(index).poi(3) = n_i_poi * j + i
+                else if(p_mesh == "b" .or. (p_mesh == "e" .and. emesh == 0)) then
+
+                    ! Mesh pattern, /
+                    index = 2*(nx * (j-1) + i) - 1
+                    geom.face(index).poi(1) = n_i_poi * (j - 1) + i
+                    geom.face(index).poi(2) = n_i_poi * j + i + 1
+                    geom.face(index).poi(3) = n_i_poi * j + i
+
+                    index = 2*(nx * (j-1) + i)
+                    geom.face(index).poi(1) = n_i_poi * (j - 1) + i
+                    geom.face(index).poi(2) = n_i_poi * (j - 1) + i + 1
+                    geom.face(index).poi(3) = n_i_poi * j + i + 1
+                end if
+            end do
+        end do
+    end if
 end subroutine Exam_Open2D_Plate_Cross
 
 ! ---------------------------------------------------------------------------------------
@@ -1646,246 +1664,243 @@ end subroutine Exam_Open2D_6_Sided_Polygon
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of plate with quad mesh
-subroutine Exam_Open2D_Plate_Quad(prob, geom)
+! Example of S-shape with quad mesh
+subroutine Exam_Open2D_S_Shape_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: x_width, y_width, del_x, del_y
-    integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
+    double precision :: R_matrix(2,2), theta
+    integer :: i
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Plate_Quad"
-    prob.name_file = "19_Plate_Quad"//&
+    prob.name_prob = "S_shape_Quad"
+    prob.name_file = "19_S_shape_Qaud"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-
-    ! Set options
-    !n  = 2
-    nx = 2
-    ny = 2
-
-    n_i_poi = nx + 1
-    n_j_poi = ny + 1
-    x_width = dble(nx)
-    y_width = dble(ny)
-    del_x   = x_width / dble(n_i_poi - 1)
-    del_y   = y_width / dble(n_j_poi - 1)
+    !para_const_edge_mesh = "on"
 
     ! The number of points and faces
-    geom.n_iniP = n_i_poi * n_j_poi
-    geom.n_face = nx * ny
+    geom.n_iniP = 24
+    geom.n_face = 11
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
-    do i = 1, geom.n_face
-        geom.face(i).n_poi = 4
-        allocate(geom.face(i).poi(4))
-    end do
+    ! Set point position vectors
+    geom.iniP( 1).pos(1:3) = [ -30.0000d0, -50.0000d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [ -30.0000d0, -30.0000d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [ -10.0000d0, -30.0000d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [ -10.0000d0, -50.0000d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [  10.0000d0, -30.0000d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [  10.0000d0, -50.0000d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [  10.0000d0, -10.0000d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [  30.0000d0, -10.0000d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [  30.0000d0, -30.0000d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [ -10.0000d0, -10.0000d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [ -10.0000d0,  10.0000d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [  10.0000d0,  10.0000d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [ -30.0000d0, -10.0000d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [ -30.0000d0,  10.0000d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [ -30.0000d0,  30.0000d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [ -10.0000d0,  30.0000d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [ -30.0000d0,  50.0000d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [ -10.0000d0,  50.0000d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [  10.0000d0,  50.0000d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [  10.0000d0,  30.0000d0, 0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [  30.0000d0,  50.0000d0, 0.0000d0 ]
+    geom.iniP(22).pos(1:3) = [  30.0000d0,  30.0000d0, 0.0000d0 ]
+    geom.iniP(23).pos(1:3) = [  30.0000d0,  10.0000d0, 0.0000d0 ]
+    geom.iniP(24).pos(1:3) = [  30.0000d0, -50.0000d0, 0.0000d0 ]
 
-    ! Set position vector
-    do j = 1, n_j_poi
-        do i = 1, n_i_poi
-            index = n_i_poi * (j - 1) + i
-            geom.iniP(index).pos(1) = del_x * dble(i - 1)
-            geom.iniP(index).pos(2) = del_y * dble(j - 1)
-            geom.iniP(index).pos(3) = 0.0d0
-        end do
-    end do
-
-    ! Set connectivity
-    do j = 1, ny
-        do i = 1, nx
-            index = nx * (j - 1) + i
-            geom.face(index).poi(1) = n_i_poi * (j - 1) + i
-            geom.face(index).poi(2) = n_i_poi * (j - 1) + i + 1
-            geom.face(index).poi(3) = n_i_poi * j + i + 1
-            geom.face(index).poi(4) = n_i_poi * j + i
-        end do
-    end do
-end subroutine Exam_Open2D_Plate_Quad
+    ! Set point position vectors
+    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  4,  3,  2,  1 ]
+    geom.face( 2).n_poi = 4; allocate(geom.face( 2).poi(4)); geom.face( 2).poi(1:4) = [  4,  6,  5,  3 ]
+    geom.face( 3).n_poi = 4; allocate(geom.face( 3).poi(4)); geom.face( 3).poi(1:4) = [  9,  8,  7,  5 ]
+    geom.face( 4).n_poi = 4; allocate(geom.face( 4).poi(4)); geom.face( 4).poi(1:4) = [ 12, 11, 10,  7 ]
+    geom.face( 5).n_poi = 4; allocate(geom.face( 5).poi(4)); geom.face( 5).poi(1:4) = [ 11, 14, 13, 10 ]
+    geom.face( 6).n_poi = 4; allocate(geom.face( 6).poi(4)); geom.face( 6).poi(1:4) = [ 11, 16, 15, 14 ]
+    geom.face( 7).n_poi = 4; allocate(geom.face( 7).poi(4)); geom.face( 7).poi(1:4) = [ 16, 18, 17, 15 ]
+    geom.face( 8).n_poi = 4; allocate(geom.face( 8).poi(4)); geom.face( 8).poi(1:4) = [ 16, 20, 19, 18 ]
+    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [ 20, 22, 21, 19 ]
+    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [  7,  8, 23, 12 ]
+    geom.face(11).n_poi = 4; allocate(geom.face(11).poi(4)); geom.face(11).poi(1:4) = [  5,  6, 24,  9 ]
+end subroutine Exam_Open2D_S_Shape_Quad
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of plate with tri mesh
-subroutine Exam_Open2D_Plate_Tri(prob, geom)
+! Example of S-shape with tri mesh
+subroutine Exam_Open2D_S_Shape_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: x_width, y_width, del_x, del_y
-    integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
-    character :: pn
+    double precision :: R_matrix(2,2), theta
+    integer :: i
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Plate_Tri"
-    prob.name_file = "20_Plate_Tri"//&
+    prob.name_prob = "S_shape_Tri"
+    prob.name_file = "20_S_shape_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-
-    ! Set options
-    !n  = 2
-    nx = 2
-    ny = 2
-    pn = "\"
-
-    n_i_poi = nx + 1
-    n_j_poi = ny + 1
-    x_width = dble(nx)
-    y_width = dble(ny)
-    del_x   = x_width / dble(n_i_poi - 1)
-    del_y   = y_width / dble(n_j_poi - 1)
+    !para_const_edge_mesh = "on"
 
     ! The number of points and faces
-    geom.n_iniP = n_i_poi * n_j_poi
-    geom.n_face = nx  * ny * 2
-    
+    geom.n_iniP = 24
+    geom.n_face = 22
+
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
-    do i = 1, geom.n_face
-        geom.face(i).n_poi = 3
-        allocate(geom.face(i).poi(3))
-    end do
+    ! Set point position vectors
+    geom.iniP( 1).pos(1:3) = [ -30.0000d0, -10.0000d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [ -30.0000d0,  10.0000d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [ -10.0000d0, -10.0000d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [ -30.0000d0,  30.0000d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [ -10.0000d0,  10.0000d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [ -30.0000d0,  50.0000d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [ -10.0000d0,  30.0000d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [ -10.0000d0,  50.0000d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [  10.0000d0,  50.0000d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [  10.0000d0,  30.0000d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [  30.0000d0,  50.0000d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [  30.0000d0,  30.0000d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [  10.0000d0,  10.0000d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  10.0000d0, -10.0000d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [  30.0000d0,  10.0000d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [  30.0000d0, -10.0000d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [  30.0000d0, -30.0000d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [  30.0000d0, -50.0000d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [  10.0000d0, -30.0000d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [  10.0000d0, -50.0000d0, 0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [ -10.0000d0, -50.0000d0, 0.0000d0 ]
+    geom.iniP(22).pos(1:3) = [ -10.0000d0, -30.0000d0, 0.0000d0 ]
+    geom.iniP(23).pos(1:3) = [ -30.0000d0, -50.0000d0, 0.0000d0 ]
+    geom.iniP(24).pos(1:3) = [ -30.0000d0, -30.0000d0, 0.0000d0 ]
 
-    ! Set position vector
-    do j = 1, n_j_poi
-        do i = 1, n_i_poi
-            index = n_i_poi * (j - 1) + i
-            geom.iniP(index).pos(1) = del_x * dble(i - 1)
-            geom.iniP(index).pos(2) = del_y * dble(j - 1)
-            geom.iniP(index).pos(3) = 0.0d0
-        end do
-    end do
+    ! Set point position vectors
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  3,  2,  1 ]
+    geom.face( 2).n_poi = 3; allocate(geom.face( 2).poi(3)); geom.face( 2).poi(1:3) = [  5,  4,  2 ]
+    geom.face( 3).n_poi = 3; allocate(geom.face( 3).poi(3)); geom.face( 3).poi(1:3) = [  7,  6,  4 ]
+    geom.face( 4).n_poi = 3; allocate(geom.face( 4).poi(3)); geom.face( 4).poi(1:3) = [  7,  8,  6 ]
+    geom.face( 5).n_poi = 3; allocate(geom.face( 5).poi(3)); geom.face( 5).poi(1:3) = [ 10,  9,  8 ]
+    geom.face( 6).n_poi = 3; allocate(geom.face( 6).poi(3)); geom.face( 6).poi(1:3) = [ 12, 11,  9 ]
+    geom.face( 7).n_poi = 3; allocate(geom.face( 7).poi(3)); geom.face( 7).poi(1:3) = [  9, 10, 12 ]
+    geom.face( 8).n_poi = 3; allocate(geom.face( 8).poi(3)); geom.face( 8).poi(1:3) = [  8,  7, 10 ]
+    geom.face( 9).n_poi = 3; allocate(geom.face( 9).poi(3)); geom.face( 9).poi(1:3) = [  4,  5,  7 ]
+    geom.face(10).n_poi = 3; allocate(geom.face(10).poi(3)); geom.face(10).poi(1:3) = [ 14, 13,  5 ]
+    geom.face(11).n_poi = 3; allocate(geom.face(11).poi(3)); geom.face(11).poi(1:3) = [ 16, 15, 13 ]
+    geom.face(12).n_poi = 3; allocate(geom.face(12).poi(3)); geom.face(12).poi(1:3) = [ 14, 17, 16 ]
+    geom.face(13).n_poi = 3; allocate(geom.face(13).poi(3)); geom.face(13).poi(1:3) = [ 19, 18, 17 ]
+    geom.face(14).n_poi = 3; allocate(geom.face(14).poi(3)); geom.face(14).poi(1:3) = [ 19, 20, 18 ]
+    geom.face(15).n_poi = 3; allocate(geom.face(15).poi(3)); geom.face(15).poi(1:3) = [ 22, 21, 20 ]
+    geom.face(16).n_poi = 3; allocate(geom.face(16).poi(3)); geom.face(16).poi(1:3) = [ 24, 23, 21 ]
+    geom.face(17).n_poi = 3; allocate(geom.face(17).poi(3)); geom.face(17).poi(1:3) = [ 21, 22, 24 ]
+    geom.face(18).n_poi = 3; allocate(geom.face(18).poi(3)); geom.face(18).poi(1:3) = [ 20, 19, 22 ]
+    geom.face(19).n_poi = 3; allocate(geom.face(19).poi(3)); geom.face(19).poi(1:3) = [ 17, 14, 19 ]
+    geom.face(20).n_poi = 3; allocate(geom.face(20).poi(3)); geom.face(20).poi(1:3) = [  5,  3, 14 ]
+    geom.face(21).n_poi = 3; allocate(geom.face(21).poi(3)); geom.face(21).poi(1:3) = [  3,  5,  2 ]
+    geom.face(22).n_poi = 3; allocate(geom.face(22).poi(3)); geom.face(22).poi(1:3) = [ 13, 14, 16 ]
 
-    ! Set connectivity
-    do j = 1, ny
-        do i = 1, nx
-            if(pn == "\") then          ! Mesh pattern, \
-                index = 2*(nx * (j-1) + i) - 1
-                geom.face(index).poi(1) = n_i_poi * (j-1) + i
-                geom.face(index).poi(2) = n_i_poi * (j-1) + i + 1
-                geom.face(index).poi(3) = n_i_poi * j + i
-
-                index = 2*(nx * (j-1) + i)
-                geom.face(index).poi(1) = n_i_poi * (j-1) + i + 1
-                geom.face(index).poi(2) = n_i_poi * j + i + 1
-                geom.face(index).poi(3) = n_i_poi * j + i
-            else if(pn == "/") then     ! Mesh pattern, /
-                index = 2*(nx * (j-1) + i) - 1
-                geom.face(index).poi(1) = n_i_poi * (j - 1) + i
-                geom.face(index).poi(2) = n_i_poi * j + i + 1
-                geom.face(index).poi(3) = n_i_poi * j + i
-
-                index = 2*(nx * (j-1) + i)
-                geom.face(index).poi(1) = n_i_poi * (j - 1) + i
-                geom.face(index).poi(2) = n_i_poi * (j - 1) + i + 1
-                geom.face(index).poi(3) = n_i_poi * j + i + 1
-            end if
-        end do
-    end do
-end subroutine Exam_Open2D_Plate_Tri
+end subroutine Exam_Open2D_S_Shape_Tri
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of plate with eng mesh
-subroutine Exam_Open2D_Plate_Eng(prob, geom)
+! Example of S-shape with eng mesh
+subroutine Exam_Open2D_S_Shape_Eng(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: x_width, y_width, del_x, del_y
-    integer :: i, j, index, n_i_poi, n_j_poi, nx, ny
+    double precision :: R_matrix(2,2), theta
+    integer :: i
     character(10) :: char_sec, char_bp, char_start_bp
 
     write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Plate_Eng"
-    prob.name_file = "21_Plate_Eng"//&
+    prob.name_prob = "S_shape_Eng"
+    prob.name_file = "21_S_shape_Eng"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-
-    ! Set options
-    nx = 2
-    ny = 2
-
-    n_i_poi = nx + 1
-    n_j_poi = ny + 1
-    x_width = dble(nx)
-    y_width = dble(ny)
-    del_x   = x_width / dble(n_i_poi - 1)
-    del_y   = y_width / dble(n_j_poi - 1)
+    !para_const_edge_mesh = "on"
 
     ! The number of points and faces
-    geom.n_iniP = n_i_poi * n_j_poi
-    geom.n_face = nx  * ny * 2
-    
+    geom.n_iniP = 24
+    geom.n_face = 22
+
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
-    do i = 1, geom.n_face
-        geom.face(i).n_poi = 3
-        allocate(geom.face(i).poi(3))
-    end do
+    ! Set point position vectors
+    geom.iniP( 1).pos(1:3) = [ -30.0000d0, -10.0000d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [ -30.0000d0,  10.0000d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [ -10.0000d0,  10.0000d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [ -30.0000d0,  30.0000d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [ -30.0000d0,  50.0000d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [ -10.0000d0,  50.0000d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [  10.0000d0,  50.0000d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [  10.0000d0,  30.0000d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [  30.0000d0,  50.0000d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [  30.0000d0,  30.0000d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [ -10.0000d0,  30.0000d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [  10.0000d0,  10.0000d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [  10.0000d0, -10.0000d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  30.0000d0,  10.0000d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [  30.0000d0, -10.0000d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [  30.0000d0, -30.0000d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [  30.0000d0, -50.0000d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [  10.0000d0, -50.0000d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [ -10.0000d0, -50.0000d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [ -10.0000d0, -30.0000d0, 0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [ -30.0000d0, -50.0000d0, 0.0000d0 ]
+    geom.iniP(22).pos(1:3) = [ -30.0000d0, -30.0000d0, 0.0000d0 ]
+    geom.iniP(23).pos(1:3) = [  10.0000d0, -30.0000d0, 0.0000d0 ]
+    geom.iniP(24).pos(1:3) = [ -10.0000d0, -10.0000d0, 0.0000d0 ]
 
-    ! Set position vector
-    do j = 1, n_j_poi
-        do i = 1, n_i_poi
-            index = n_i_poi * (j - 1) + i
-            geom.iniP(index).pos(1) = del_x * dble(i - 1)
-            geom.iniP(index).pos(2) = del_y * dble(j - 1)
-            geom.iniP(index).pos(3) = 0.0d0
-        end do
-    end do
+    ! Set point position vectors
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  3,  2,  1 ]
+    geom.face( 2).n_poi = 3; allocate(geom.face( 2).poi(3)); geom.face( 2).poi(1:3) = [  3,  4,  2 ]
+    geom.face( 3).n_poi = 3; allocate(geom.face( 3).poi(3)); geom.face( 3).poi(1:3) = [  6,  5,  4 ]
+    geom.face( 4).n_poi = 3; allocate(geom.face( 4).poi(3)); geom.face( 4).poi(1:3) = [  8,  7,  6 ]
+    geom.face( 5).n_poi = 3; allocate(geom.face( 5).poi(3)); geom.face( 5).poi(1:3) = [  8,  9,  7 ]
+    geom.face( 6).n_poi = 3; allocate(geom.face( 6).poi(3)); geom.face( 6).poi(1:3) = [  8, 10,  9 ]
+    geom.face( 7).n_poi = 3; allocate(geom.face( 7).poi(3)); geom.face( 7).poi(1:3) = [  6, 11,  8 ]
+    geom.face( 8).n_poi = 3; allocate(geom.face( 8).poi(3)); geom.face( 8).poi(1:3) = [  4,  3, 11 ]
+    geom.face( 9).n_poi = 3; allocate(geom.face( 9).poi(3)); geom.face( 9).poi(1:3) = [ 13, 12,  3 ]
+    geom.face(10).n_poi = 3; allocate(geom.face(10).poi(3)); geom.face(10).poi(1:3) = [ 13, 14, 12 ]
+    geom.face(11).n_poi = 3; allocate(geom.face(11).poi(3)); geom.face(11).poi(1:3) = [ 13, 15, 14 ]
+    geom.face(12).n_poi = 3; allocate(geom.face(12).poi(3)); geom.face(12).poi(1:3) = [ 13, 16, 15 ]
+    geom.face(13).n_poi = 3; allocate(geom.face(13).poi(3)); geom.face(13).poi(1:3) = [ 18, 17, 16 ]
+    geom.face(14).n_poi = 3; allocate(geom.face(14).poi(3)); geom.face(14).poi(1:3) = [ 20, 19, 18 ]
+    geom.face(15).n_poi = 3; allocate(geom.face(15).poi(3)); geom.face(15).poi(1:3) = [ 20, 21, 19 ]
+    geom.face(16).n_poi = 3; allocate(geom.face(16).poi(3)); geom.face(16).poi(1:3) = [ 20, 22, 21 ]
+    geom.face(17).n_poi = 3; allocate(geom.face(17).poi(3)); geom.face(17).poi(1:3) = [ 18, 23, 20 ]
+    geom.face(18).n_poi = 3; allocate(geom.face(18).poi(3)); geom.face(18).poi(1:3) = [ 16, 13, 23 ]
+    geom.face(19).n_poi = 3; allocate(geom.face(19).poi(3)); geom.face(19).poi(1:3) = [  3, 24, 13 ]
+    geom.face(20).n_poi = 3; allocate(geom.face(20).poi(3)); geom.face(20).poi(1:3) = [  3,  1, 24 ]
+    geom.face(21).n_poi = 3; allocate(geom.face(21).poi(3)); geom.face(21).poi(1:3) = [ 11,  6,  4 ]
+    geom.face(22).n_poi = 3; allocate(geom.face(22).poi(3)); geom.face(22).poi(1:3) = [ 23, 18, 16 ]
 
-    ! Set connectivity
-    do j = 1, ny
-        do i = 1, nx
-            if(mod(i+j, 2) == 1) then
-                index = 2*(nx * (j-1) + i) - 1
-                geom.face(index).poi(1) = n_i_poi * (j-1) + i
-                geom.face(index).poi(2) = n_i_poi * (j-1) + i + 1
-                geom.face(index).poi(3) = n_i_poi * j + i
-
-                index = 2*(nx * (j-1) + i)
-                geom.face(index).poi(1) = n_i_poi * (j-1) + i + 1
-                geom.face(index).poi(2) = n_i_poi * j + i + 1
-                geom.face(index).poi(3) = n_i_poi * j + i
-            else
-                index = 2*(nx * (j-1) + i) - 1
-                geom.face(index).poi(1) = n_i_poi * (j - 1) + i
-                geom.face(index).poi(2) = n_i_poi * j + i + 1
-                geom.face(index).poi(3) = n_i_poi * j + i
-
-                index = 2*(nx * (j-1) + i)
-                geom.face(index).poi(1) = n_i_poi * (j - 1) + i
-                geom.face(index).poi(2) = n_i_poi * (j - 1) + i + 1
-                geom.face(index).poi(3) = n_i_poi * j + i + 1
-            end if
-        end do
-    end do
-end subroutine Exam_Open2D_Plate_Eng
+end subroutine Exam_Open2D_S_Shape_Eng
 
 ! ---------------------------------------------------------------------------------------
 

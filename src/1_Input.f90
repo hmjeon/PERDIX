@@ -1019,17 +1019,17 @@ subroutine Input_Select_Problem(prob, geom)
         case (18); call Exam_Open2D_6_Sided_Polygon (prob, geom)
 
         ! Different mesh patterns with the square
-        case (19); call Exam_Open2D_Plate_Quad      (prob, geom)
-        case (20); call Exam_Open2D_Plate_Tri       (prob, geom)
-        case (21); call Exam_Open2D_Plate_Eng       (prob, geom)
+        case (19); call Exam_Open2D_S_Shape_Quad (prob, geom)
+        case (20); call Exam_Open2D_S_Shape_Tri  (prob, geom)
+        case (21); call Exam_Open2D_S_Shape_Eng  (prob, geom)
 
         ! Different edge lengths
-        case (22); call Exam_Open2D_L_Shape_42bp    (prob, geom)
-        case (23); call Exam_Open2D_L_Shape_63bp    (prob, geom)
-        case (24); call Exam_Open2D_L_Shape_84bp    (prob, geom)
+        case (22); call Exam_Open2D_L_Shape_42bp (prob, geom)
+        case (23); call Exam_Open2D_L_Shape_63bp (prob, geom)
+        case (24); call Exam_Open2D_L_Shape_84bp (prob, geom)
 
-        case (98); call Exam_Open3D_Cubeoctahedron  (prob, geom)
-        case (99); call Exam_Chiral_Asym_Object     (prob, geom)
+        case (98); call Exam_Open3D_Cubeoctahedron (prob, geom)
+        case (99); call Exam_Chiral_Asym_Object    (prob, geom)
 
         ! 3D open geometry
         case (101); call Exam_Open3D_End_Cube_Quad             (prob, geom)
