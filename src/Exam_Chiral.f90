@@ -551,7 +551,7 @@ subroutine Exam_Chiral_Asym_Object(prob, geom)
         end if
     end if
 
-    ! Allocate point and face structure
+    ! The number of points and faces
     geom.n_iniP = 9
     geom.n_face = 14
 
