@@ -762,79 +762,25 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "   ========================================================"
     write(0, "(a)")
     write(0, "(a)"), "    [Triangular mesh]"
-    write(0, "(a)"), "       1. Plate (4 x 4),       2. Honeycomb"
-    write(0, "(a)"), "       3. Circle,              4. Wheel,                   5. Ellipse"
+    write(0, "(a)"), "       1. Plate (4 x 4),        2. Honeycomb"
+    write(0, "(a)"), "       3. Circle,               4. Wheel,                    5. Ellipse"
     write(0, "(a)")
     write(0, "(a)"), "    [Quadrilateral mesh]"
-    write(0, "(a)"), "       6. Rhombic Tiles,       7. Quarter Circle"
-    write(0, "(a)"), "       8. Cross,               9. House,                  10. Disk"
+    write(0, "(a)"), "       6. Rhombic Tiling,       7. Quarter Circle"
+    write(0, "(a)"), "       8. Cross,                9. House,                   10. Disk"
     write(0, "(a)")
     write(0, "(a)"), "    [N-polygon mesh]"
-    write(0, "(a)"), "      11. Cairo Penta Tiles,  12. Lotus"
-    write(0, "(a)"), "      13. Hexagonal Mesh,     14. Prismatic Penta Tiles,  15. Hepta Penta Tiles"
+    write(0, "(a)"), "      11. Cairo Penta Tiling,  12. Lotus"
+    write(0, "(a)"), "      13. Hexagonal Tiling,    14. Prismatic Penta Tiling,  15. Hepta Penta Tiling"
     write(0, "(a)")
     write(0, "(a)"), "    [Different angles and mesh patterns]"
-    write(0, "(a)"), "      16. 4-Sided Polygon,    17. 5-Sided Polygon,        18. 6-Sided Polygon"
-    write(0, "(a)"), "      19. Pump Quad,          20. Pump Tri,               21. Pump Eng"
-    write(0, "(a)"), "      22. L-shape 42bp,       23. L-shape 63bp,           24. L-shape 84bp"
-    write(0, "(a)"), "      25. S-shape Quad,       26. S-shape Tri,            27. S-shape Eng"
+    write(0, "(a)"), "      16. 4-Sided Polygon,     17. 5-Sided Polygon,         18. 6-Sided Polygon"
+    write(0, "(a)"), "      19. Pump [QUAD],         20. Pump [TRI],              21. Pump [ENG]"
+    write(0, "(a)"), "      22. L-shape [42-bp],     23. L-shape [63-bp],         24. L-shape [84-bp]"
+    write(0, "(a)"), "      25. S-shape [QUAD],      26. S-shape [TRI],           27. S-shape [ENG]"
     write(0, "(a)")
     write(0, "(a)"), " Select the number or type geometry file (*.ply, *.geo, *.igs) [Enter] : "
 end subroutine Input_Print_Problem
-
-! ---------------------------------------------------------------------------------------
-
-! Print pre-defined problems
-subroutine Input_Print_Problem_Old
-    write(0, "(a)")
-    write(0, "(a)"), "       +=====================================================================================+"
-    write(0, "(a)"), "       |                                                                                     |"
-    write(0, "(a)"), "       |     PERDIX-OPEN by Hyungmin Jun (hyungminjun@outlook.com), MIT, Bathe Lab, 2017     |"
-    write(0, "(a)"), "       |                                                                                     |"
-    write(0, "(a)"), "       +=====================================================================================+"
-    write(0, "(a)")
-    write(0, "(a)"), "   A. First input - Geometry discretized by surface mesh"
-    write(0, "(a)"), "   ====================================================="
-    write(0, "(a)")
-    write(0, "(a)"), "      I - 2D Open Geometries"
-    write(0, "(a)"), "      ----------------------"
-    write(0, "(a)")
-    write(0, "(a)"), "         1. Plate with 4 by 3 Mesh [QUAD],          2. Plate with 3 by 4 Mesh [TRI]"
-    write(0, "(a)"), "         3. Quarter Circle [QUAD],                  4. Disk [QUAD]"
-    write(0, "(a)"), "         5. Circle with Coarse Mesh [TRI],          6. Ellipse with Coarse Mesh [TRI]"
-    write(0, "(a)"), "         7. L-Shape with Regular mesh [TRI],        8. Hexagonal Mesh"
-    write(0, "(a)"), "         9. Honeycomb,                             10. 2D Stickman"
-    write(0, "(a)")
-    write(0, "(a)"), "     II - 3D Open Geometries"
-    write(0, "(a)"), "     -----------------------"
-    write(0, "(a)"), "        11. Open End Cube [QUAD],                  12. Open End Pentagonal Prism [QUAD]"
-    write(0, "(a)"), "        13. Open End Cylinder [QUAD],              14. Cooling Tower [TRI]"
-    write(0, "(a)"), "        15. Hemisphere [QUAD]"
-    write(0, "(a)")
-    write(0, "(a)"), "    III - Closed Geometries - Prism and Antiprism"
-    write(0, "(a)"), "    ---------------------------------------------"
-    write(0, "(a)"), "        16. Octagonal Prism,                       17. Enneagonal Prism"
-    write(0, "(a)"), "        18. Pentagonal Antiprism,                  19. Hexagonal Antiprism"
-    write(0, "(a)"), "        20. Heptagonal Antiprism"
-    write(0, "(a)")
-    write(0, "(a)"), "     VI - Closed Geometries - Johnson Solids"
-    write(0, "(a)"), "     ---------------------------------------"
-    write(0, "(a)"), "        21. Square Pyramid - J1,                   22. Pentagonal Pyramid - J2"
-    write(0, "(a)"), "        23. Pentagonal Cupola - J5,                24. Gyroelongated Square Cupola - J23"
-    write(0, "(a)"), "        25. Gyroelongated Pentagonal Cupola - J24"
-    write(0, "(a)")
-    write(0, "(a)"), "    VII - Closed Geometries - Biscribed Chiral solids"
-    write(0, "(a)"), "     ------------------------------------------"
-    write(0, "(a)"), "        26. Biscribed Propello Tetrahedron,        27. Biscribed Propello Cube"
-    write(0, "(a)"), "        28. Biscribed Propello Octahedron,         29. Biscribed Snub Cube"
-    write(0, "(a)"), "        30. Biscribed Pentagonal Icositetrahedron"
-    write(0, "(a)")
-    write(0, "(a)"), "        99. N-polygon"
-    write(0, "(a)")
-    write(0, "(a)"), "      0. Input from file (*.PLY, *.IGES, *.GEO)"
-    write(0, "(a)")
-    write(0, "(a)"), "   Select the number [Enter] : "
-end subroutine Input_Print_Problem_Old
 
 ! ---------------------------------------------------------------------------------------
 
@@ -1001,18 +947,18 @@ subroutine Input_Select_Problem(prob, geom)
         case ( 5); call Exam_Open2D_Ellipse         (prob, geom)
 
         ! 2D open geometry - quadrilateral mesh
-        case ( 6); call Exam_Open2D_Rhombic_Tiles   (prob, geom)
+        case ( 6); call Exam_Open2D_Rhombic_Tiling  (prob, geom)
         case ( 7); call Exam_Open2D_Quarter_Circle  (prob, geom)
         case ( 8); call Exam_Open2D_Cross           (prob, geom)
         case ( 9); call Exam_Open2D_House           (prob, geom)
         case (10); call Exam_Open2D_Disk            (prob, geom)
 
         ! 2D open geometry - n-polygon mesh
-        case (11); call Exam_Open2D_Cairo_Penta_Tiles     (prob, geom)
-        case (12); call Exam_Open2D_Lotus                 (prob, geom)
-        case (13); call Exam_Open2D_Hexagonal_Mesh        (prob, geom)
-        case (14); call Exam_Open2D_Prismatic_Penta_Tiles (prob, geom)
-        case (15); call Exam_Open2D_Hepta_Penta_Tiles     (prob, geom)
+        case (11); call Exam_Open2D_Cairo_Penta_Tiling     (prob, geom)
+        case (12); call Exam_Open2D_Lotus                  (prob, geom)
+        case (13); call Exam_Open2D_Hexagonal_Tiling       (prob, geom)
+        case (14); call Exam_Open2D_Prismatic_Penta_Tiling (prob, geom)
+        case (15); call Exam_Open2D_Hepta_Penta_Tiling     (prob, geom)
 
         ! Different angles
         case (16); call Exam_Open2D_4_Sided_Polygon (prob, geom)
