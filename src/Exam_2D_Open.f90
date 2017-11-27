@@ -62,9 +62,9 @@ module Exam_2D_Open
     public Exam_Open2D_L_Shape_84bp             ! 24. L-shape with 84-bp edge length
 
     ! Different mesh patterns with pump geometry
-    public Exam_Open2D_Pump_Quad                ! 25. S-shape with quad mesh
-    public Exam_Open2D_Pump_Tri                 ! 26. S-shape with tri mesh
-    public Exam_Open2D_Pump_Eng                 ! 27. S-shape with eng mesh
+    public Exam_Open2D_Pump_Quad                ! 25. Pump with quad mesh
+    public Exam_Open2D_Pump_Tri                 ! 26. Pump with tri mesh
+    public Exam_Open2D_Pump_Eng                 ! 27. Pump with eng mesh
 
     ! Others
     public Exam_Open2D_Plate_3x4                ! Plate (3x4)

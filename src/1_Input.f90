@@ -775,7 +775,7 @@ subroutine Input_Print_Problem
     write(0, "(a)")
     write(0, "(a)"), "    [Different angles and mesh patterns]"
     write(0, "(a)"), "      16. 4-Sided Polygon,      17. 5-Sided Polygon,     18. 6-Sided Polygon"
-    write(0, "(a)"), "      19. Plate Quad,           20. Plate Tri,           21. Plate Eng"
+    write(0, "(a)"), "      19. S-shape Quad,         20. S-shape Tri,         21. S-shape Eng"
     write(0, "(a)"), "      22. L-shape 42bp,         23. L-shape 63bp,        24. L-shape 84bp"
     write(0, "(a)"), "      25. Pump Quad,            26. Pump Tri,            27. Pump Eng"
     write(0, "(a)")
