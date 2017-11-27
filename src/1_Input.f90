@@ -762,22 +762,22 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "   ========================================================"
     write(0, "(a)")
     write(0, "(a)"), "    [Triangular mesh]"
-    write(0, "(a)"), "       1. Plate (4 x 4),         2. Honeycomb"
-    write(0, "(a)"), "       3. Wheel,                 4. Circle,               5. Ellipse"
+    write(0, "(a)"), "       1. Plate (4 x 4),       2. Honeycomb"
+    write(0, "(a)"), "       3. Circle,              4. Wheel,                   5. Ellipse"
     write(0, "(a)")
     write(0, "(a)"), "    [Quadrilateral mesh]"
-    write(0, "(a)"), "       6. Rhombic Tiles,         7. L-Shape"
-    write(0, "(a)"), "       8. Cross,                 9. Quarter Circle,      10. Disk"
+    write(0, "(a)"), "       6. Rhombic Tiles,       7. Quarter Circle"
+    write(0, "(a)"), "       8. Cross,               9. House,                  10. Disk"
     write(0, "(a)")
     write(0, "(a)"), "    [N-polygon mesh]"
-    write(0, "(a)"), "      11. Cairo Penta Tiles,    12. Prismatic Penta Tiles"
-    write(0, "(a)"), "      13. Hexagonal Mesh,       14. Hepta Penta Tiles,   15. Lotus"
+    write(0, "(a)"), "      11. Cairo Penta Tiles,  12. Lotus"
+    write(0, "(a)"), "      13. Hexagonal Mesh,     14. Prismatic Penta Tiles,  15. Hepta Penta Tiles"
     write(0, "(a)")
     write(0, "(a)"), "    [Different angles and mesh patterns]"
-    write(0, "(a)"), "      16. 4-Sided Polygon,      17. 5-Sided Polygon,     18. 6-Sided Polygon"
-    write(0, "(a)"), "      19. Pump Quad,            20. Pump Tri,            21. Pump Eng"
-    write(0, "(a)"), "      22. L-shape 42bp,         23. L-shape 63bp,        24. L-shape 84bp"
-    write(0, "(a)"), "      25. S-shape Quad,         26. S-shape Tri,         27. S-shape Eng"
+    write(0, "(a)"), "      16. 4-Sided Polygon,    17. 5-Sided Polygon,        18. 6-Sided Polygon"
+    write(0, "(a)"), "      19. Pump Quad,          20. Pump Tri,               21. Pump Eng"
+    write(0, "(a)"), "      22. L-shape 42bp,       23. L-shape 63bp,           24. L-shape 84bp"
+    write(0, "(a)"), "      25. S-shape Quad,       26. S-shape Tri,            27. S-shape Eng"
     write(0, "(a)")
     write(0, "(a)"), " Select the number or type geometry file (*.ply, *.geo, *.igs) [Enter] : "
 end subroutine Input_Print_Problem

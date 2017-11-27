@@ -113,7 +113,7 @@ subroutine Report()
     char_cut  = "max"       ! Staple-break rule
 
     ! Open file
-    open(unit = 90, file = "Report_2D_Flat_"//trim(char_cut)//".txt", form="formatted")
+    open(unit = 90, file = "Report_2D_Lattice_"//trim(char_cut)//".txt", form="formatted")
 
     ! Remove the directory and files
     results = SYSTEMQQ("rd "//trim("output")//' /s /q')
@@ -142,16 +142,11 @@ subroutine Report()
     do i = 1, 24
 
         ! Edge length
-        if(i == 15) then
+        if(i == 12) then
             edge = 36       ! Minimum 36bp - one edge has one crossover
-        else if(i == 5) then
-            edge = 27       ! Minimum 38bp
-        else if(i == 10) then
-            edge = 35       ! Minimum 38bp
         else if(i == 23) then
             edge = 63
-        else if(i ==  6 .or. i == 16 .or. i == 17 .or. i == 18 .or. &
-                i == 19 .or. i == 20 .or. i == 21 .or. i == 24) then
+        else if(i ==  6 .or. i == 16 .or. i == 17 .or. i == 18 .or. i == 24) then
             edge = 84
         else
             edge = edge_in
