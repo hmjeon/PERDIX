@@ -775,9 +775,9 @@ subroutine Input_Print_Problem
     write(0, "(a)")
     write(0, "(a)"), "    [Different angles and mesh patterns]"
     write(0, "(a)"), "      16. 4-Sided Polygon,      17. 5-Sided Polygon,     18. 6-Sided Polygon"
-    write(0, "(a)"), "      19. S-shape Quad,         20. S-shape Tri,         21. S-shape Eng"
+    write(0, "(a)"), "      19. Pump Quad,            20. Pump Tri,            21. Pump Eng"
     write(0, "(a)"), "      22. L-shape 42bp,         23. L-shape 63bp,        24. L-shape 84bp"
-    write(0, "(a)"), "      25. Pump Quad,            26. Pump Tri,            27. Pump Eng"
+    write(0, "(a)"), "      25. S-shape Quad,         26. S-shape Tri,         27. S-shape Eng"
     write(0, "(a)")
     write(0, "(a)"), " Select the number or type geometry file (*.ply, *.geo, *.igs) [Enter] : "
 end subroutine Input_Print_Problem
@@ -1019,20 +1019,20 @@ subroutine Input_Select_Problem(prob, geom)
         case (17); call Exam_Open2D_5_Sided_Polygon (prob, geom)
         case (18); call Exam_Open2D_6_Sided_Polygon (prob, geom)
 
-        ! Different mesh patterns with s-shape geometry
-        case (19); call Exam_Open2D_S_Shape_Quad (prob, geom)
-        case (20); call Exam_Open2D_S_Shape_Tri  (prob, geom)
-        case (21); call Exam_Open2D_S_Shape_Eng  (prob, geom)
+        ! Different mesh patterns with pump geometry
+        case (19); call Exam_Open2D_Pump_Quad (prob, geom)
+        case (20); call Exam_Open2D_Pump_Tri  (prob, geom)
+        case (21); call Exam_Open2D_Pump_Eng  (prob, geom)
 
         ! Different edge lengths
         case (22); call Exam_Open2D_L_Shape_42bp (prob, geom)
         case (23); call Exam_Open2D_L_Shape_63bp (prob, geom)
         case (24); call Exam_Open2D_L_Shape_84bp (prob, geom)
 
-        ! Different mesh patterns with pump geometry
-        case (25); call Exam_Open2D_Pump_Quad (prob, geom)
-        case (26); call Exam_Open2D_Pump_Tri  (prob, geom)
-        case (27); call Exam_Open2D_Pump_Eng  (prob, geom)
+        ! Different mesh patterns with s-shape geometry
+        case (25); call Exam_Open2D_S_Shape_Quad (prob, geom)
+        case (26); call Exam_Open2D_S_Shape_Tri  (prob, geom)
+        case (27); call Exam_Open2D_S_Shape_Eng  (prob, geom)
 
         case (98); call Exam_Open3D_Cubeoctahedron (prob, geom)
         case (99); call Exam_Chiral_Asym_Object    (prob, geom)
