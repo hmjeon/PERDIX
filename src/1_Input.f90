@@ -996,23 +996,23 @@ subroutine Input_Select_Problem(prob, geom)
         ! 2D open geometry - tri mesh
         case ( 1); call Exam_Open2D_Plate_Cross     (prob, geom)
         case ( 2); call Exam_Open2D_Honeycomb       (prob, geom)
-        case ( 3); call Exam_Open2D_Wheel           (prob, geom)
-        case ( 4); call Exam_Open2D_Circle          (prob, geom)
+        case ( 3); call Exam_Open2D_Circle          (prob, geom)
+        case ( 4); call Exam_Open2D_Wheel           (prob, geom)
         case ( 5); call Exam_Open2D_Ellipse         (prob, geom)
 
         ! 2D open geometry - quadrilateral mesh
         case ( 6); call Exam_Open2D_Rhombic_Tiles   (prob, geom)
-        case ( 7); call Exam_Open2D_L_Shape         (prob, geom)
+        case ( 7); call Exam_Open2D_Quarter_Circle  (prob, geom)
         case ( 8); call Exam_Open2D_Cross           (prob, geom)
-        case ( 9); call Exam_Open2D_Quarter_Circle  (prob, geom)
+        case ( 9); call Exam_Open2D_House           (prob, geom)
         case (10); call Exam_Open2D_Disk            (prob, geom)
 
         ! 2D open geometry - n-polygon mesh
         case (11); call Exam_Open2D_Cairo_Penta_Tiles     (prob, geom)
-        case (12); call Exam_Open2D_Prismatic_Penta_Tiles (prob, geom)
+        case (12); call Exam_Open2D_Lotus                 (prob, geom)
         case (13); call Exam_Open2D_Hexagonal_Mesh        (prob, geom)
-        case (14); call Exam_Open2D_Hepta_Penta_Tiles     (prob, geom)
-        case (15); call Exam_Open2D_Lotus                 (prob, geom)
+        case (14); call Exam_Open2D_Prismatic_Penta_Tiles (prob, geom)
+        case (15); call Exam_Open2D_Hepta_Penta_Tiles     (prob, geom)
 
         ! Different angles
         case (16); call Exam_Open2D_4_Sided_Polygon (prob, geom)
@@ -1033,6 +1033,10 @@ subroutine Input_Select_Problem(prob, geom)
         case (25); call Exam_Open2D_S_Shape_Quad (prob, geom)
         case (26); call Exam_Open2D_S_Shape_Tri  (prob, geom)
         case (27); call Exam_Open2D_S_Shape_Eng  (prob, geom)
+
+        ! Different mesh patterns with small house geometry
+        case (28); call Exam_Open2D_Small_House_Quad (prob, geom)
+        case (29); call Exam_Open2D_Small_House_Tri  (prob, geom)
 
         case (98); call Exam_Open3D_Cubeoctahedron (prob, geom)
         case (99); call Exam_Chiral_Asym_Object    (prob, geom)
@@ -1716,7 +1720,7 @@ subroutine Input_Write_GEO_File(prob, geom)
 
     ! For faces
     call Space(101, 4)
-    write(101, "(a)") "! Set point position vectors"
+    write(101, "(a)") "! Set face connectivity"
     do i = 1, geom.n_face
         call Space(101, 4)
         write(101, "(a, i7$)"), "geom.face(",            i

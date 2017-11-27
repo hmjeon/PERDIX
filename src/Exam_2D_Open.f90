@@ -34,7 +34,7 @@ module Exam_2D_Open
 
     ! Quadrilateral mesh
     public Exam_Open2D_Rhombic_Tiles            !  6. Rhombic tiles
-    public Exam_Open2D_L_Shape                  !  7. L-shape
+    public Exam_Open2D_House                    !  7. House
     public Exam_Open2D_Cross                    !  8. Cross
     public Exam_Open2D_Quarter_Circle           !  9. Quarter circle
     public Exam_Open2D_Disk                     ! 10. Disk
@@ -65,6 +65,10 @@ module Exam_2D_Open
     public Exam_Open2D_S_Shape_Quad             ! 25. S-shape with quad mesh
     public Exam_Open2D_S_Shape_Tri              ! 26. S-shape with tri mesh
     public Exam_Open2D_S_Shape_Eng              ! 27. S-shape with eng mesh
+
+    ! Different mesh patterns with small house geometry
+    public Exam_Open2D_Small_House_Quad         ! 28. S-shape with quad mesh
+    public Exam_Open2D_Small_House_Tri          ! 29. S-shape with tri mesh
 
     ! Others
     public Exam_Open2D_Plate_3x4                ! Plate (3x4)
@@ -585,8 +589,8 @@ end subroutine Exam_Open2D_Rhombic_Tiles
 
 ! ---------------------------------------------------------------------------------------
 
-! Example of L-shape
-subroutine Exam_Open2D_L_Shape(prob, geom)
+! Example of House
+subroutine Exam_Open2D_House(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
@@ -596,8 +600,8 @@ subroutine Exam_Open2D_L_Shape(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "L_Shape"
-    prob.name_file = "07_L_Shape"//&
+    prob.name_prob = "House"
+    prob.name_file = "07_House"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -606,39 +610,54 @@ subroutine Exam_Open2D_L_Shape(prob, geom)
     call Mani_Set_View_Color(prob, [231, 76, 60], "xy")
 
     ! The number of points and faces
-    geom.n_iniP = 21
-    geom.n_face = 12
+    geom.n_iniP = 24
+    geom.n_face = 14
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
 
     ! Set point position vectors
-    geom.iniP( 1).pos(1:3) = [ -34.2857d0, -34.2857d0, 0.0000d0 ]; geom.iniP(11).pos(1:3) = [ -34.2857d0,   5.7143d0, 0.0000d0 ]
-    geom.iniP( 2).pos(1:3) = [ -14.2857d0, -34.2857d0, 0.0000d0 ]; geom.iniP(12).pos(1:3) = [ -14.2857d0,   5.7143d0, 0.0000d0 ]
-    geom.iniP( 3).pos(1:3) = [   5.7143d0, -34.2857d0, 0.0000d0 ]; geom.iniP(13).pos(1:3) = [   5.7143d0,   5.7143d0, 0.0000d0 ]
-    geom.iniP( 4).pos(1:3) = [  25.7143d0, -34.2857d0, 0.0000d0 ]; geom.iniP(14).pos(1:3) = [  25.7143d0,   5.7143d0, 0.0000d0 ]
-    geom.iniP( 5).pos(1:3) = [  45.7143d0, -34.2857d0, 0.0000d0 ]; geom.iniP(15).pos(1:3) = [  45.7143d0,   5.7143d0, 0.0000d0 ]
-    geom.iniP( 6).pos(1:3) = [ -34.2857d0, -14.2857d0, 0.0000d0 ]; geom.iniP(16).pos(1:3) = [ -34.2857d0,  25.7143d0, 0.0000d0 ]
-    geom.iniP( 7).pos(1:3) = [ -14.2857d0, -14.2857d0, 0.0000d0 ]; geom.iniP(17).pos(1:3) = [ -14.2857d0,  25.7143d0, 0.0000d0 ]
-    geom.iniP( 8).pos(1:3) = [   5.7143d0, -14.2857d0, 0.0000d0 ]; geom.iniP(18).pos(1:3) = [   5.7143d0,  25.7143d0, 0.0000d0 ]
-    geom.iniP( 9).pos(1:3) = [  25.7143d0, -14.2857d0, 0.0000d0 ]; geom.iniP(19).pos(1:3) = [ -34.2857d0,  45.7143d0, 0.0000d0 ]
-    geom.iniP(10).pos(1:3) = [  45.7143d0, -14.2857d0, 0.0000d0 ]; geom.iniP(20).pos(1:3) = [ -14.2857d0,  45.7143d0, 0.0000d0 ]
-    geom.iniP(21).pos(1:3) = [   5.7143d0,  45.7143d0, 0.0000d0 ]
+    geom.iniP( 1).pos(1:3) = [ -20.0000d0, -48.3333d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [ -40.0000d0, -48.3333d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [ -40.0000d0, -21.6667d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [ -20.0000d0, -15.0000d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [ -40.0000d0,   5.0000d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [ -20.0000d0,  18.3333d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [ -60.0000d0,  -8.3333d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [ -60.0000d0,  11.6667d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [ -40.0000d0,  31.6667d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [ -20.0000d0,  51.6667d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [   0.0000d0,  71.6667d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [   0.0000d0,  31.6667d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [  20.0000d0,  51.6667d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  20.0000d0,  18.3333d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [  40.0000d0,  31.6667d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [  40.0000d0,   5.0000d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [  60.0000d0,  11.6667d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [  60.0000d0,  -8.3333d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [  40.0000d0, -21.6667d0, 0.0000d0 ]
+    geom.iniP(20).pos(1:3) = [  20.0000d0, -15.0000d0, 0.0000d0 ]
+    geom.iniP(21).pos(1:3) = [  40.0000d0, -48.3333d0, 0.0000d0 ]
+    geom.iniP(22).pos(1:3) = [  20.0000d0, -48.3333d0, 0.0000d0 ]
+    geom.iniP(23).pos(1:3) = [   0.0000d0, -48.3333d0, 0.0000d0 ]
+    geom.iniP(24).pos(1:3) = [   0.0000d0,  -8.3333d0, 0.0000d0 ]
 
-    ! Set point position vectors
-    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  1,  2,  7,  6 ]
-    geom.face( 2).n_poi = 4; allocate(geom.face( 2).poi(4)); geom.face( 2).poi(1:4) = [  2,  3,  8,  7 ]
-    geom.face( 3).n_poi = 4; allocate(geom.face( 3).poi(4)); geom.face( 3).poi(1:4) = [  3,  4,  9,  8 ]
-    geom.face( 4).n_poi = 4; allocate(geom.face( 4).poi(4)); geom.face( 4).poi(1:4) = [  4,  5, 10,  9 ]
-    geom.face( 5).n_poi = 4; allocate(geom.face( 5).poi(4)); geom.face( 5).poi(1:4) = [  6,  7, 12, 11 ]
-    geom.face( 6).n_poi = 4; allocate(geom.face( 6).poi(4)); geom.face( 6).poi(1:4) = [  7,  8, 13, 12 ]
-    geom.face( 7).n_poi = 4; allocate(geom.face( 7).poi(4)); geom.face( 7).poi(1:4) = [  8,  9, 14, 13 ]
-    geom.face( 8).n_poi = 4; allocate(geom.face( 8).poi(4)); geom.face( 8).poi(1:4) = [  9, 10, 15, 14 ]
-    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [ 11, 12, 17, 16 ]
-    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [ 12, 13, 18, 17 ]
-    geom.face(11).n_poi = 4; allocate(geom.face(11).poi(4)); geom.face(11).poi(1:4) = [ 16, 17, 20, 19 ]
-    geom.face(12).n_poi = 4; allocate(geom.face(12).poi(4)); geom.face(12).poi(1:4) = [ 17, 18, 21, 20 ]
-end subroutine Exam_Open2D_L_Shape
+    ! Set face connectivity
+    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  4,  3,  2,  1 ]
+    geom.face( 2).n_poi = 4; allocate(geom.face( 2).poi(4)); geom.face( 2).poi(1:4) = [  4,  6,  5,  3 ]
+    geom.face( 3).n_poi = 4; allocate(geom.face( 3).poi(4)); geom.face( 3).poi(1:4) = [  9,  8,  7,  5 ]
+    geom.face( 4).n_poi = 4; allocate(geom.face( 4).poi(4)); geom.face( 4).poi(1:4) = [  5,  6, 10,  9 ]
+    geom.face( 5).n_poi = 4; allocate(geom.face( 5).poi(4)); geom.face( 5).poi(1:4) = [  6, 12, 11, 10 ]
+    geom.face( 6).n_poi = 4; allocate(geom.face( 6).poi(4)); geom.face( 6).poi(1:4) = [ 12, 14, 13, 11 ]
+    geom.face( 7).n_poi = 4; allocate(geom.face( 7).poi(4)); geom.face( 7).poi(1:4) = [ 14, 16, 15, 13 ]
+    geom.face( 8).n_poi = 4; allocate(geom.face( 8).poi(4)); geom.face( 8).poi(1:4) = [ 16, 18, 17, 15 ]
+    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [ 14, 20, 19, 16 ]
+    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [ 20, 22, 21, 19 ]
+    geom.face(11).n_poi = 4; allocate(geom.face(11).poi(4)); geom.face(11).poi(1:4) = [ 20, 24, 23, 22 ]
+    geom.face(12).n_poi = 4; allocate(geom.face(12).poi(4)); geom.face(12).poi(1:4) = [ 24,  4,  1, 23 ]
+    geom.face(13).n_poi = 4; allocate(geom.face(13).poi(4)); geom.face(13).poi(1:4) = [  4, 24, 12,  6 ]
+    geom.face(14).n_poi = 4; allocate(geom.face(14).poi(4)); geom.face(14).poi(1:4) = [ 20, 14, 12, 24 ]
+end subroutine Exam_Open2D_House
 
 ! ---------------------------------------------------------------------------------------
 
@@ -1958,8 +1977,8 @@ subroutine Exam_Open2D_S_Shape_Quad(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "S_shape_Quad"
-    prob.name_file = "25_S_shape_Qaud"//&
+    prob.name_prob = "S_Shape_Quad"
+    prob.name_file = "25_S_Shape_Qaud"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -2030,8 +2049,8 @@ subroutine Exam_Open2D_S_Shape_Tri(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "S_shape_Tri"
-    prob.name_file = "26_S_shape_Tri"//&
+    prob.name_prob = "S_Shape_Tri"
+    prob.name_file = "26_S_Shape_Tri"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -2113,8 +2132,8 @@ subroutine Exam_Open2D_S_Shape_Eng(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "S_shape_Eng"
-    prob.name_file = "27_S_shape_Eng"//&
+    prob.name_prob = "S_Shape_Eng"
+    prob.name_file = "27_S_Shape_Eng"//&
         "_"//trim(adjustl(trim(char_sec)))//"cs"//&
         "_"//trim(adjustl(trim(char_bp)))//"bp"//&
         "_"//trim(para_cut_stap_method)
@@ -2168,6 +2187,168 @@ subroutine Exam_Open2D_S_Shape_Eng(prob, geom)
     geom.face(21).n_poi = 3; allocate(geom.face(21).poi(3)); geom.face(21).poi(1:3) = [ 11,  6,  4 ]
     geom.face(22).n_poi = 3; allocate(geom.face(22).poi(3)); geom.face(22).poi(1:3) = [ 23, 18, 16 ]
 end subroutine Exam_Open2D_S_Shape_Eng
+
+! ---------------------------------------------------------------------------------------
+
+! Example of small house with quad mesh
+subroutine Exam_Open2D_Small_House_Quad(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: R_matrix(2,2), theta
+    integer :: i
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Small_House_Quad"
+    prob.name_file = "28_Small_House_Quad"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
+
+    ! The number of points and faces
+    geom.n_iniP = 19
+    geom.n_face = 10
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set point position vectors
+    geom.iniP( 1).pos(1:3) = [ -20.0000d0, -31.5789d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [ -40.0000d0, -31.5789d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [ -40.0000d0,  -4.9123d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [ -20.0000d0,   1.7544d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [ -60.0000d0, -11.5789d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [ -60.0000d0,   8.4211d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [ -40.0000d0,  21.7544d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [ -20.0000d0,  35.0877d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [   0.0000d0,  48.4211d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [   0.0000d0,   8.4211d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [  20.0000d0,  35.0877d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [  20.0000d0,   1.7544d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [  40.0000d0,  21.7544d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  40.0000d0,  -4.9123d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [  60.0000d0,   8.4211d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [  60.0000d0, -11.5789d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [  40.0000d0, -31.5789d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [  20.0000d0, -31.5789d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [   0.0000d0, -31.5789d0, 0.0000d0 ]
+
+    ! Set point position vectors
+    geom.face( 1).n_poi = 4; allocate(geom.face( 1).poi(4)); geom.face( 1).poi(1:4) = [  4,  3,  2,  1 ]
+    geom.face( 2).n_poi = 4; allocate(geom.face( 2).poi(4)); geom.face( 2).poi(1:4) = [  7,  6,  5,  3 ]
+    geom.face( 3).n_poi = 4; allocate(geom.face( 3).poi(4)); geom.face( 3).poi(1:4) = [  3,  4,  8,  7 ]
+    geom.face( 4).n_poi = 4; allocate(geom.face( 4).poi(4)); geom.face( 4).poi(1:4) = [  4, 10,  9,  8 ]
+    geom.face( 5).n_poi = 4; allocate(geom.face( 5).poi(4)); geom.face( 5).poi(1:4) = [ 10, 12, 11,  9 ]
+    geom.face( 6).n_poi = 4; allocate(geom.face( 6).poi(4)); geom.face( 6).poi(1:4) = [ 12, 14, 13, 11 ]
+    geom.face( 7).n_poi = 4; allocate(geom.face( 7).poi(4)); geom.face( 7).poi(1:4) = [ 14, 16, 15, 13 ]
+    geom.face( 8).n_poi = 4; allocate(geom.face( 8).poi(4)); geom.face( 8).poi(1:4) = [ 12, 18, 17, 14 ]
+    geom.face( 9).n_poi = 4; allocate(geom.face( 9).poi(4)); geom.face( 9).poi(1:4) = [ 12, 10, 19, 18 ]
+    geom.face(10).n_poi = 4; allocate(geom.face(10).poi(4)); geom.face(10).poi(1:4) = [ 10,  4,  1, 19 ]
+end subroutine Exam_Open2D_Small_House_Quad
+
+! ---------------------------------------------------------------------------------------
+
+! Example of small house with tri mesh
+subroutine Exam_Open2D_Small_House_Tri(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: R_matrix(2,2), theta
+    integer :: i
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Small_House_Tri"
+    prob.name_file = "29_Small_House_Tri"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
+
+    ! The number of points and faces
+    geom.n_iniP = 19
+    geom.n_face = 20
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set point position vectors
+    geom.iniP( 1).pos(1:3) = [ -20.0000d0, -31.5789d0, 0.0000d0 ]
+    geom.iniP( 2).pos(1:3) = [ -40.0000d0, -31.5789d0, 0.0000d0 ]
+    geom.iniP( 3).pos(1:3) = [ -40.0000d0,  -4.9123d0, 0.0000d0 ]
+    geom.iniP( 4).pos(1:3) = [ -20.0000d0,   1.7544d0, 0.0000d0 ]
+    geom.iniP( 5).pos(1:3) = [ -60.0000d0, -11.5789d0, 0.0000d0 ]
+    geom.iniP( 6).pos(1:3) = [ -60.0000d0,   8.4211d0, 0.0000d0 ]
+    geom.iniP( 7).pos(1:3) = [ -40.0000d0,  21.7544d0, 0.0000d0 ]
+    geom.iniP( 8).pos(1:3) = [ -20.0000d0,  35.0877d0, 0.0000d0 ]
+    geom.iniP( 9).pos(1:3) = [   0.0000d0,  48.4211d0, 0.0000d0 ]
+    geom.iniP(10).pos(1:3) = [   0.0000d0,   8.4211d0, 0.0000d0 ]
+    geom.iniP(11).pos(1:3) = [  20.0000d0,  35.0877d0, 0.0000d0 ]
+    geom.iniP(12).pos(1:3) = [  20.0000d0,   1.7544d0, 0.0000d0 ]
+    geom.iniP(13).pos(1:3) = [  40.0000d0,  21.7544d0, 0.0000d0 ]
+    geom.iniP(14).pos(1:3) = [  40.0000d0,  -4.9123d0, 0.0000d0 ]
+    geom.iniP(15).pos(1:3) = [  60.0000d0,   8.4211d0, 0.0000d0 ]
+    geom.iniP(16).pos(1:3) = [  60.0000d0, -11.5789d0, 0.0000d0 ]
+    geom.iniP(17).pos(1:3) = [  40.0000d0, -31.5789d0, 0.0000d0 ]
+    geom.iniP(18).pos(1:3) = [  20.0000d0, -31.5789d0, 0.0000d0 ]
+    geom.iniP(19).pos(1:3) = [   0.0000d0, -31.5789d0, 0.0000d0 ]
+
+    ! Mesh pattern, \
+    geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  4,  3,  1 ]
+    geom.face( 2).n_poi = 3; allocate(geom.face( 2).poi(3)); geom.face( 2).poi(1:3) = [  7,  6,  3 ]
+    geom.face( 3).n_poi = 3; allocate(geom.face( 3).poi(3)); geom.face( 3).poi(1:3) = [  3,  4,  7 ]
+    geom.face( 4).n_poi = 3; allocate(geom.face( 4).poi(3)); geom.face( 4).poi(1:3) = [  4, 10,  8 ]
+    geom.face( 5).n_poi = 3; allocate(geom.face( 5).poi(3)); geom.face( 5).poi(1:3) = [ 10, 12,  9 ]
+    geom.face( 6).n_poi = 3; allocate(geom.face( 6).poi(3)); geom.face( 6).poi(1:3) = [ 12, 14, 11 ]
+    geom.face( 7).n_poi = 3; allocate(geom.face( 7).poi(3)); geom.face( 7).poi(1:3) = [ 14, 16, 13 ]
+    geom.face( 8).n_poi = 3; allocate(geom.face( 8).poi(3)); geom.face( 8).poi(1:3) = [ 12, 18, 14 ]
+    geom.face( 9).n_poi = 3; allocate(geom.face( 9).poi(3)); geom.face( 9).poi(1:3) = [ 12, 10, 18 ]
+    geom.face(10).n_poi = 3; allocate(geom.face(10).poi(3)); geom.face(10).poi(1:3) = [ 10,  4, 19 ]
+    geom.face(11).n_poi = 3; allocate(geom.face(11).poi(3)); geom.face(11).poi(1:3) = [  3,  2,  1 ]
+    geom.face(12).n_poi = 3; allocate(geom.face(12).poi(3)); geom.face(12).poi(1:3) = [  6,  5,  3 ]
+    geom.face(13).n_poi = 3; allocate(geom.face(13).poi(3)); geom.face(13).poi(1:3) = [  4,  8,  7 ]
+    geom.face(14).n_poi = 3; allocate(geom.face(14).poi(3)); geom.face(14).poi(1:3) = [ 10,  9,  8 ]
+    geom.face(15).n_poi = 3; allocate(geom.face(15).poi(3)); geom.face(15).poi(1:3) = [ 12, 11,  9 ]
+    geom.face(16).n_poi = 3; allocate(geom.face(16).poi(3)); geom.face(16).poi(1:3) = [ 14, 13, 11 ]
+    geom.face(17).n_poi = 3; allocate(geom.face(17).poi(3)); geom.face(17).poi(1:3) = [ 16, 15, 13 ]
+    geom.face(18).n_poi = 3; allocate(geom.face(18).poi(3)); geom.face(18).poi(1:3) = [ 18, 17, 14 ]
+    geom.face(19).n_poi = 3; allocate(geom.face(19).poi(3)); geom.face(19).poi(1:3) = [ 10, 19, 18 ]
+    geom.face(20).n_poi = 3; allocate(geom.face(20).poi(3)); geom.face(20).poi(1:3) = [  4,  1, 19 ]
+
+    ! Mesh pattern, /
+    !geom.face( 1).n_poi = 3; allocate(geom.face( 1).poi(3)); geom.face( 1).poi(1:3) = [  4,  3,  2 ]
+    !geom.face( 2).n_poi = 3; allocate(geom.face( 2).poi(3)); geom.face( 2).poi(1:3) = [  7,  6,  5 ]
+    !geom.face( 3).n_poi = 3; allocate(geom.face( 3).poi(3)); geom.face( 3).poi(1:3) = [  3,  4,  8 ]
+    !geom.face( 4).n_poi = 3; allocate(geom.face( 4).poi(3)); geom.face( 4).poi(1:3) = [  4, 10,  9 ]
+    !geom.face( 5).n_poi = 3; allocate(geom.face( 5).poi(3)); geom.face( 5).poi(1:3) = [ 10, 12, 11 ]
+    !geom.face( 6).n_poi = 3; allocate(geom.face( 6).poi(3)); geom.face( 6).poi(1:3) = [ 12, 14, 13 ]
+    !geom.face( 7).n_poi = 3; allocate(geom.face( 7).poi(3)); geom.face( 7).poi(1:3) = [ 14, 16, 15 ]
+    !geom.face( 8).n_poi = 3; allocate(geom.face( 8).poi(3)); geom.face( 8).poi(1:3) = [ 12, 18, 17 ]
+    !geom.face( 9).n_poi = 3; allocate(geom.face( 9).poi(3)); geom.face( 9).poi(1:3) = [ 12, 10, 19 ]
+    !geom.face(10).n_poi = 3; allocate(geom.face(10).poi(3)); geom.face(10).poi(1:3) = [ 10,  4,  1 ]
+    !geom.face(11).n_poi = 3; allocate(geom.face(11).poi(3)); geom.face(11).poi(1:3) = [  4,  2,  1 ]
+    !geom.face(12).n_poi = 3; allocate(geom.face(12).poi(3)); geom.face(12).poi(1:3) = [  7,  5,  3 ]
+    !geom.face(13).n_poi = 3; allocate(geom.face(13).poi(3)); geom.face(13).poi(1:3) = [  3,  8,  7 ]
+    !geom.face(14).n_poi = 3; allocate(geom.face(14).poi(3)); geom.face(14).poi(1:3) = [  4,  9,  8 ]
+    !geom.face(15).n_poi = 3; allocate(geom.face(15).poi(3)); geom.face(15).poi(1:3) = [ 10, 11,  9 ]
+    !geom.face(16).n_poi = 3; allocate(geom.face(16).poi(3)); geom.face(16).poi(1:3) = [ 12, 13, 11 ]
+    !geom.face(17).n_poi = 3; allocate(geom.face(17).poi(3)); geom.face(17).poi(1:3) = [ 14, 15, 13 ]
+    !geom.face(18).n_poi = 3; allocate(geom.face(18).poi(3)); geom.face(18).poi(1:3) = [ 12, 17, 14 ]
+    !geom.face(19).n_poi = 3; allocate(geom.face(19).poi(3)); geom.face(19).poi(1:3) = [ 12, 19, 18 ]
+    !geom.face(20).n_poi = 3; allocate(geom.face(20).poi(3)); geom.face(20).poi(1:3) = [ 10,  1, 19 ]
+end subroutine Exam_Open2D_Small_House_Tri
 
 ! ---------------------------------------------------------------------------------------
 
