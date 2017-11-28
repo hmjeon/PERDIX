@@ -38,3 +38,4 @@ make/Output
 *.101
 fort.*
 /make/Report_2D_Flat_max.txt
+/make/Report_2D_Lattice_max.txt

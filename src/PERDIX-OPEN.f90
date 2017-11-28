@@ -34,8 +34,8 @@ program PERDIX_OPEN
 
     implicit none
 
-    call Main           ! Main module
-    !call Report         ! Main module for auto run
+    !call Main           ! Main module
+    call Report         ! Main module for auto run
 
 contains
 
@@ -131,7 +131,7 @@ subroutine Report()
     call space (90, 30)
     write(90, "(a)"), "|=========|==================== TOTAL LENGTH ==================|======== STAPLE =======|===== SEED ====|== STRAND RATIO =|= NU RATIO=|= PARA=|=== CROSSOVER ===|=UNPAIRED=|"
     call space (90, 30)
-    write(90, "(a)"), " Sec| Edge| L_Scaf| L_Stap|   L_BP|L_Beveled(ratio)| MaxE| MinE| nStap| Min| Max|   ave| 14nt| S14| 4nt| 14nt|  S14|  4nt| 14nt|  4nt| p1| p2| scaf|  stap| one| scaf| stap"
+    write(90, "(a)"), " Sec| Edge| L_Scaf| L_Stap|   L_BP|L_Beveled(ratio)| MinE| MaxE| nStap| Min| Max|   ave| 14nt| S14| 4nt| 14nt|  S14|  4nt| 14nt|  4nt| p1| p2| scaf|  stap| one| scaf| stap"
     write(90, "(a$)"), "----------------------------  "
     write(90, "(a )"), "----|-----|-------|-------|-------|----------------|-----|-----|------|----|----|------|-----|----|----|-----|-----|-----|-----|-----|---|---|-----|------|----|-----|----|"
 
@@ -190,8 +190,8 @@ subroutine Report()
         write(90, "(a8$)"), trim(adjustl(Int2Str(mesh.n_node)))//"|"
         write(90, "(a8$)"), trim(adjustl(Int2Str(mesh.n_beveled)))//"("
         write(90, "(a9$)"), trim(adjustl(Dble2Str(dble(mesh.n_beveled)/dble(mesh.n_node)*100.0d0)))//"%)|"
-        write(90, "(a6$)"), trim(adjustl(Int2Str(geom.max_edge_length)))//"|"
         write(90, "(a6$)"), trim(adjustl(Int2Str(geom.min_edge_length)))//"|"
+        write(90, "(a6$)"), trim(adjustl(Int2Str(geom.max_edge_length)))//"|"
         write(90, "(a7$)"), trim(adjustl(Int2Str(dna.n_stap)))//"|"
         write(90, "(a5$)"), trim(adjustl(Int2Str(dna.len_min_stap)))//"|"
         write(90, "(a5$)"), trim(adjustl(Int2Str(dna.len_max_stap)))//"|"
