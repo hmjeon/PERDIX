@@ -34,8 +34,8 @@ program PERDIX_OPEN
 
     implicit none
 
-    !call Main           ! Main module
-    call Report         ! Main module for auto run
+    call Main           ! Main module
+    !call Report         ! Main module for auto run
 
 contains
 
@@ -142,14 +142,14 @@ subroutine Report()
     do i = 1, 24
 
         ! Edge length
-        if(i == 12) then
-            edge = 36       ! Minimum 36bp - one edge has one crossover
-        else if(i == 23) then
-            edge = 63
-        else if(i ==  6 .or. i == 16 .or. i == 17 .or. i == 18 .or. i == 24) then
+        edge = edge_in
+        if(i ==  5) edge = 31
+        if(i == 10) edge = 39
+        if(i == 12) edge = 36
+        if(i == 20) edge = 34
+        if(i == 23) edge = 63
+        if(i ==  6 .or. i == 16 .or. i == 17 .or. i == 18 .or. i == 24) then
             edge = 84
-        else
-            edge = edge_in
         end if
 
         ! Initialize input
