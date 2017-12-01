@@ -146,7 +146,11 @@ subroutine Report()
         if(i ==  5) edge = 31
         if(i == 10) edge = 39
         if(i == 12) edge = 36
-        if(i == 20) edge = 34
+
+        if(i == 19) edge = 63
+        if(i == 20) edge = 45
+        if(i == 21) edge = 54
+
         if(i == 23) edge = 63
         if(i ==  6 .or. i == 16 .or. i == 17 .or. i == 18 .or. i == 24) then
             edge = 84
