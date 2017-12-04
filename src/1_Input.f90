@@ -775,9 +775,10 @@ subroutine Input_Print_Problem
     write(0, "(a)")
     write(0, "(a)"), "    [Different angles and mesh patterns]"
     write(0, "(a)"), "      16. 4-Sided Polygon,     17. 5-Sided Polygon,         18. 6-Sided Polygon"
-    write(0, "(a)"), "      19. Pump [QUAD],         20. Pump [TRI],              21. Pump [ENG]"
+    write(0, "(a)"), "      19. Curved beam [QUAD],  20. Curved beam [TRI],       21. Curved beam [ENG]"
     write(0, "(a)"), "      22. L-shape [42-bp],     23. L-shape [63-bp],         24. L-shape [84-bp]"
-    write(0, "(a)"), "      25. S-shape [QUAD],      26. S-shape [TRI],           27. S-shape [ENG]"
+    write(0, "(a)"), "      25. Pump [QUAD],         26. Pump [TRI],              27. Pump [ENG]"
+    write(0, "(a)"), "      28. S-shape [QUAD],      29. S-shape [TRI],           30. S-shape [ENG]"
     write(0, "(a)")
     write(0, "(a)"), " Select the number or type geometry file (*.ply, *.geo, *.igs) [Enter] : "
 end subroutine Input_Print_Problem
@@ -966,23 +967,28 @@ subroutine Input_Select_Problem(prob, geom)
         case (18); call Exam_Open2D_6_Sided_Polygon (prob, geom)
 
         ! Different mesh patterns with pump geometry
-        case (19); call Exam_Open2D_Pump_Quad (prob, geom)
-        case (20); call Exam_Open2D_Pump_Tri  (prob, geom)
-        case (21); call Exam_Open2D_Pump_Eng  (prob, geom)
+        case (19); call Exam_Open2D_Curved_Beam_Quad (prob, geom)
+        case (20); call Exam_Open2D_Curved_Beam_Tri  (prob, geom)
+        case (21); call Exam_Open2D_Curved_Beam_Eng  (prob, geom)
 
         ! Different edge lengths
         case (22); call Exam_Open2D_L_Shape_42bp (prob, geom)
         case (23); call Exam_Open2D_L_Shape_63bp (prob, geom)
         case (24); call Exam_Open2D_L_Shape_84bp (prob, geom)
 
+        ! Different mesh patterns with pump geometry
+        case (25); call Exam_Open2D_Pump_Quad (prob, geom)
+        case (26); call Exam_Open2D_Pump_Tri  (prob, geom)
+        case (27); call Exam_Open2D_Pump_Eng  (prob, geom)
+
         ! Different mesh patterns with s-shape geometry
-        case (25); call Exam_Open2D_S_Shape_Quad (prob, geom)
-        case (26); call Exam_Open2D_S_Shape_Tri  (prob, geom)
-        case (27); call Exam_Open2D_S_Shape_Eng  (prob, geom)
+        case (28); call Exam_Open2D_S_Shape_Quad (prob, geom)
+        case (29); call Exam_Open2D_S_Shape_Tri  (prob, geom)
+        case (30); call Exam_Open2D_S_Shape_Eng  (prob, geom)
 
         ! Different mesh patterns with small house geometry
-        case (28); call Exam_Open2D_Small_House_Quad (prob, geom)
-        case (29); call Exam_Open2D_Small_House_Tri  (prob, geom)
+        case (31); call Exam_Open2D_Small_House_Quad (prob, geom)
+        case (32); call Exam_Open2D_Small_House_Tri  (prob, geom)
 
         case (98); call Exam_Open3D_Cubeoctahedron (prob, geom)
         case (99); call Exam_Chiral_Asym_Object    (prob, geom)
