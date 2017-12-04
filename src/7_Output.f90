@@ -457,8 +457,29 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
     type(DNAType),  intent(inout) :: dna
     integer, intent(in) :: unit
 
+    integer :: s_nt, e_nt, count
     integer :: i, j, base, n_scaf, n_stap, dozen, add
     character(200) :: path
+
+Representing seed in sequences
+    ! Update status
+    count = 1
+    do i = 1, dna.n_strand
+        base = Mani_Go_Start_Base(dna, i)
+
+        do j = 1, dna.strand(i).n_base
+
+            if(dna.top(base).across == -1) then
+                dna.top(base).status = "U"
+            end if
+
+            if(dna.top(base).b_14nt == .true.) then
+                dna.top(base).status = "S"
+            end if
+
+            base = dna.Top(base).up
+        end do
+    end do
 
     n_scaf = 0
     n_stap = 0
@@ -499,6 +520,11 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
 
         base = Mani_Go_Start_Base(dna, i)
         do j = 1, dna.strand(i).n_base
+
+            if(dna.top(base).status == "U") write(unit, "(a$)"), "*"
+            if(dna.top(base).status == "S") write(unit, "(a$)"), "#"
+            if(dna.top(base).status == "4") write(unit, "(a$)"), "$"
+
             write(unit, "(a$)"), dna.top(base).seq
             base = dna.Top(base).up
         end do

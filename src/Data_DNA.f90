@@ -33,16 +33,17 @@ module Data_DNA
 
     ! TopType structure (base information)
     type :: TopType
-        integer   :: id         ! ID
-        integer   :: node       ! Node ID
-        integer   :: up         ! Upward strand ID
-        integer   :: dn         ! Downward strand ID
-        integer   :: xover      ! Crossover ID
-        integer   :: across     ! Base pair ID
-        integer   :: strand     ! Strand ID
-        integer   :: address    ! Address number
-        logical   :: b_14nt     ! nt of the 14nt seed
-        character :: seq        ! Sequence
+        integer   :: id             ! ID
+        integer   :: node           ! Node ID
+        integer   :: up             ! Upward strand ID
+        integer   :: dn             ! Downward strand ID
+        integer   :: xover          ! Crossover ID
+        integer   :: across         ! Base pair ID
+        integer   :: strand         ! Strand ID
+        integer   :: address        ! Address number
+        logical   :: b_14nt         ! nt of the 14nt seed
+        character :: seq            ! Sequence
+        character :: status = "N"   ! N-normal, U-unpaired nt, S-seed domain, 4-4nt
 
         double precision :: pos(3)  ! Position vector
     end type TopType
