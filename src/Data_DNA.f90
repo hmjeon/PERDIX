@@ -43,7 +43,7 @@ module Data_DNA
         integer   :: address        ! Address number
         logical   :: b_14nt         ! nt of the 14nt seed
         character :: seq            ! Sequence
-        character :: status = "N"   ! N-normal, U-unpaired nt, S-seed domain, 4-4nt
+        character :: status = "N"   ! N-normal, X-Xover, U-unpaired nt, S-seed, F-4nt
 
         double precision :: pos(3)  ! Position vector
     end type TopType

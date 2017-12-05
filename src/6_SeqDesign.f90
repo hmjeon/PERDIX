@@ -48,6 +48,7 @@ module SeqDesign
     private SeqDesign_Count_Remainder
     private SeqDesign_Rebuild_Strand
     private SeqDesign_Build_Region_Staple
+    private SeqDesign_Build_Region_Staple_1
     private SeqDesign_Order_Staple
     private SeqDesign_Print_14nt_Region_Simple
     private SeqDesign_Print_14nt_Region
@@ -2110,26 +2111,168 @@ subroutine SeqDesign_Build_Region_Staple(dna, i, region, n_region)
 
         ! Set end position
         region(j).end_pos = region(j).sta_pos + (region(j).length - 1)
-
-        ! Set nucleotide of 14nt seeds
-        if( (region(j).types == 1 .and. region(j).length + 1 >= 14) .or. & 
-            (region(j).types == 2 .and. region(j).length + 2 >= 14) ) then
-
-            sta_base = region(j).sta_base
-            dna.top(dna.top(sta_base).dn).b_14nt = .true.
-            dna.top(sta_base).b_14nt             = .true.
-
-            do k = 1, region(j).length - 1
-                sta_base = dna.top(sta_base).up
-                dna.top(sta_base).b_14nt = .true.
-            end do
-
-            if(dna.top(dna.top(sta_base).up).across /= -1) then
-                dna.top(dna.top(sta_base).up).b_14nt = .true.
-            end if
-        end if
     end do
 end subroutine SeqDesign_Build_Region_Staple
+
+! ---------------------------------------------------------------------------------------
+
+! Build staple region without crossovers and unpaired nucleotides
+subroutine SeqDesign_Build_Region_Staple_1(dna, i, region, n_region)
+    type(DNAType),    intent(inout) :: dna
+    type(RegionType), intent(inout) :: region(:)
+    integer,          intent(in)    :: i
+    integer,          intent(inout) :: n_region
+
+    integer :: j, k, base, across, sta_base, cen_base, end_base, cen_pos, len_cen
+    logical :: b_region, b_vertex
+
+    ! Find the starting point (down == -1)
+    base = Mani_Go_Start_Base(dna, i)
+
+    n_region = 0
+    b_region = .false.
+    b_vertex = .false.
+
+    do j = 1, dna.strand(i).n_base
+
+        ! Find across ID
+        across = dna.top(base).across
+
+        if(across == -1) then
+
+            ! For Tn loop
+            b_region = .true.
+            b_vertex = .true.
+
+            ! Update base to go up
+            base = dna.top(base).up
+            cycle
+        else
+            ! Check dn, up, xover and across's over
+            ! Starting base always has -1 (down = -1)
+            if( dna.top(base).dn      == -1 .or. &
+                dna.top(base).up      == -1 .or. &
+                dna.top(base).xover   /= -1 .or. &
+                dna.top(across).xover /= -1 ) then
+
+            b_region = .true.
+
+            ! Update base to go up
+            base = dna.top(base).up
+            cycle
+            end if
+        end if
+
+        if(b_region == .true.) then
+
+            ! Make new region
+            b_region = .false.
+            n_region = n_region + 1
+
+            ! Set region data
+            region(n_region).sta_base = base
+            region(n_region).length   = 1
+            region(n_region).sta_pos  = j
+            region(n_region).end_pos  = j
+
+            ! Set vertex region
+            if(b_vertex == .true.) then
+                region(n_region).types   = 1
+                region(n_region-1).types = 1
+                b_vertex = .false.
+            else
+                region(n_region).types = 2
+            end if
+        else
+
+            ! Increase length
+            region(n_region).length  = region(n_region).length + 1
+            region(n_region).end_pos = j
+        end if
+
+        ! Update base to go up
+        base = dna.top(base).up
+    end do
+
+    ! Set center/end base and position
+    do j = 1, n_region
+
+        len_cen = (region(j).length+1)/2 - 1
+
+        ! If the vetrex region
+        if(region(j).types == 1) then
+            if(dna.top(dna.top(region(j).sta_base).dn).across /= -1) then
+                len_cen = len_cen - 1
+            else
+                len_cen = len_cen + 1
+            end if
+        end if
+
+        ! Find center base
+        cen_base = region(j).sta_base
+        do k = 1, len_cen
+            cen_base = dna.top(cen_base).up
+        end do
+        region(j).cen_base = cen_base
+
+        ! Set center position
+        region(j).cen_pos = region(j).sta_pos + len_cen
+
+        ! Find end base
+        end_base = region(j).sta_base
+        do k = 1, region(j).length - 1
+            end_base = dna.top(end_base).up
+        end do
+        region(j).end_base = end_base
+
+        ! Set end position
+        region(j).end_pos = region(j).sta_pos + (region(j).length - 1)
+
+        ! ==================================================
+        ! Set nucleotide of 14nt seeds
+        ! ==================================================
+        if( (region(j).types == 1 .and. region(j).length + 1 >= 14) .or. &
+            (region(j).types == 2 .and. region(j).length + 2 >= 14)) then
+
+        sta_base = region(j).sta_base
+        dna.top(dna.top(sta_base).dn).b_14nt = .true.
+        dna.top(sta_base).b_14nt             = .true.
+        dna.top(dna.top(sta_base).dn).status = "S"
+        dna.top(sta_base).status             = "S"
+
+        do k = 1, region(j).length - 1
+            sta_base = dna.top(sta_base).up
+            dna.top(sta_base).b_14nt = .true.
+            dna.top(sta_base).status = "S"
+        end do
+
+        if(dna.top(dna.top(sta_base).up).across /= -1) then
+            dna.top(dna.top(sta_base).up).b_14nt = .true.
+            dna.top(dna.top(sta_base).up).status = "S"
+        end if
+            end if
+
+        ! ==================================================
+        ! Set nucleotide of 4nt dsDNA domain
+        ! ==================================================
+        if( (region(j).types == 1 .and. region(j).length + 1 <= 4) .or. &
+            (region(j).types == 2 .and. region(j).length + 2 <= 4)) then
+
+        sta_base = region(j).sta_base
+        dna.top(dna.top(sta_base).dn).status = "F"
+        dna.top(sta_base).status             = "F"
+
+        do k = 1, region(j).length - 1
+            sta_base = dna.top(sta_base).up
+            dna.top(sta_base).status = "F"
+        end do
+
+        if(dna.top(dna.top(sta_base).up).across /= -1) then
+            dna.top(dna.top(sta_base).up).status = "F"
+        end if
+        end if
+    end do
+end subroutine SeqDesign_Build_Region_Staple_1
 
 ! ---------------------------------------------------------------------------------------
 
@@ -3454,7 +3597,7 @@ subroutine SeqDesign_Print_14nt_Region_Simple(prob, geom, mesh, dna)
 
         ! Build region of staple strands
         allocate(region(dna.strand(i).n_base))
-        call SeqDesign_Build_Region_Staple(dna, i, region, n_region)
+        call SeqDesign_Build_Region_Staple_1(dna, i, region, n_region)
 
         ! ==================================================
         ! Count 14nt regions - Graph #2
@@ -3809,7 +3952,7 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
 
         ! Build region of staple strands
         allocate(region(dna.strand(i).n_base))
-        call SeqDesign_Build_Region_Staple(dna, i, region, n_region)
+        call SeqDesign_Build_Region_Staple_1(dna, i, region, n_region)
 
         ! ==================================================
         ! Count strand length - Graph #1

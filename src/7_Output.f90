@@ -457,26 +457,26 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
     type(DNAType),  intent(inout) :: dna
     integer, intent(in) :: unit
 
-    integer :: s_nt, e_nt, count
     integer :: i, j, base, n_scaf, n_stap, dozen, add
+    logical :: seq_info, on_U, on_S, on_F, on_X
     character(200) :: path
 
-Representing seed in sequences
-    ! Update status
-    count = 1
+    seq_info = .true.
+
+    if(seq_info == .true.) then
+        write(unit, "(a)"), "   * - unpaired nucleotide"
+        write(unit, "(a)"), "   $ - nucleotide in the crossover"
+        write(unit, "(a)"), "   # - nucleotide in the 14nt dsDNA domain"
+        write(unit, "(a)"), "   @ - nucleotide in the 4nt dsDNA domain"
+        write(unit, "(a)")
+    end if
+
+    ! Update status for poly Tn loop and xovers
     do i = 1, dna.n_strand
         base = Mani_Go_Start_Base(dna, i)
-
         do j = 1, dna.strand(i).n_base
-
-            if(dna.top(base).across == -1) then
-                dna.top(base).status = "U"
-            end if
-
-            if(dna.top(base).b_14nt == .true.) then
-                dna.top(base).status = "S"
-            end if
-
+            if(dna.top(base).across == -1) dna.top(base).status = "U"
+            if(dna.top(base).xover /= -1)  dna.top(base).status = "X"
             base = dna.Top(base).up
         end do
     end do
@@ -488,6 +488,11 @@ Representing seed in sequences
 
     ! Write sequence data
     do i = 1, dna.n_strand
+        on_U = .false.
+        on_S = .false.
+        on_F = .false.
+        on_X = .false.
+
         if(dna.strand(i).type1 == "scaf") then
             n_scaf = n_scaf + 1
             write(unit, "(i8, a$)"), n_scaf, " - [scaf]"
@@ -520,13 +525,59 @@ Representing seed in sequences
 
         base = Mani_Go_Start_Base(dna, i)
         do j = 1, dna.strand(i).n_base
+            if(seq_info == .true.) then
+                if(dna.top(base).status == "U" .and. on_U == .false.) then
+                    write(unit, "(a$)"), "*"
+                    on_U = .true.
+                else if(dna.top(base).status /= "U" .and. on_U == .true.) then
+                    write(unit, "(a$)"), "*"
+                    on_U = .false.
+                end if
 
-            if(dna.top(base).status == "U") write(unit, "(a$)"), "*"
-            if(dna.top(base).status == "S") write(unit, "(a$)"), "#"
-            if(dna.top(base).status == "4") write(unit, "(a$)"), "$"
+                if(dna.top(base).status == "S" .and. on_S == .false.) then
+                    write(unit, "(a$)"), "#"
+                    on_S = .true.
+                else if(dna.top(base).status /= "S" .and. on_S == .true.) then
+                    write(unit, "(a$)"), "#"
+                    on_S = .false.
+                end if
+
+                if(dna.top(base).status == "F" .and. on_F == .false.) then
+                    write(unit, "(a$)"), "@"
+                    on_F = .true.
+                else if(dna.top(base).status /= "F" .and. on_F == .true.) then
+                    write(unit, "(a$)"), "@"
+                    on_F = .false.
+                end if
+
+                if(dna.top(base).status == "X" .and. on_X == .false.) then
+                    write(unit, "(a$)"), "$"
+                    on_X = .true.
+                else if(dna.top(base).status /= "X" .and. on_X == .true.) then
+                    write(unit, "(a$)"), "$"
+                    on_X = .false.
+                end if
+            end if
 
             write(unit, "(a$)"), dna.top(base).seq
             base = dna.Top(base).up
+
+            if(seq_info == .true.) then
+                if(j == dna.strand(i).n_base) then
+                    if(on_U == .true.) then
+                        write(unit, "(a$)"), "*"; on_U = .false.
+                    end if
+                    if(on_S == .true.) then
+                        write(unit, "(a$)"), "#"; on_S = .false.
+                    end if
+                    if(on_F == .true.) then
+                        write(unit, "(a$)"), "@"; on_F = .false.
+                    end if
+                    if(on_X == .true.) then
+                        write(unit, "(a$)"), "$"; on_X = .false.
+                    end if
+                end if
+            end if
         end do
         write(unit, "(a)")
         if(dna.strand(i).type1 == "scaf") write(unit, "(a)")
