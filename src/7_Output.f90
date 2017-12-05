@@ -457,11 +457,12 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
     type(DNAType),  intent(inout) :: dna
     integer, intent(in) :: unit
 
-    integer :: i, j, base, n_scaf, n_stap, dozen, add
-    logical :: seq_info, on_U, on_S, on_F, on_X
+    integer :: i, ii, j, base, n_scaf, n_stap, dozen, add
+    logical :: seq_info, seq_ordering, on_U, on_S, on_F, on_X
     character(200) :: path
 
-    seq_info = .true.
+    seq_info     = .true.
+    seq_ordering = .true.
 
     if(seq_info == .true.) then
         write(unit, "(a)"), "   * - unpaired nucleotide"
@@ -495,21 +496,23 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
 
         if(dna.strand(i).type1 == "scaf") then
             n_scaf = n_scaf + 1
+            ii     = i
             write(unit, "(i8, a$)"), n_scaf, " - [scaf]"
         else if(dna.strand(i).type1 == "stap") then
             n_stap = n_stap + 1
+            if(seq_ordering == .true. ) ii = dna.order_stap(dna.n_stap - n_stap + 1, 1)
+            if(seq_ordering == .false.) ii = i
             write(unit, "(i8, a$)"), n_stap, " - (stap)"
-
-            if(dna.strand(i).n_base < dna.len_min_stap) dna.len_min_stap = dna.strand(i).n_base
-            if(dna.strand(i).n_base > dna.len_max_stap) dna.len_max_stap = dna.strand(i).n_base
+            if(dna.strand(ii).n_base < dna.len_min_stap) dna.len_min_stap = dna.strand(ii).n_base
+            if(dna.strand(ii).n_base > dna.len_max_stap) dna.len_max_stap = dna.strand(ii).n_base
         end if
 
-        if(0 .and. dna.strand(i).n_base > 80) then
+        if(0 .and. dna.strand(ii).n_base > 80) then
             do j = 0, unit, unit
                 call space(j,5); write(j, "(a     )"), "=================================================="
                 call space(j,5); write(j, "(a     )"), "There are long staple strand"
-                call space(j,5); write(j, "(a, i4$)"), "Strand #", i
-                call space(j,5); write(j, "(a, i4 )"), ", # of nucleotides : ", dna.strand(i).n_base
+                call space(j,5); write(j, "(a, i4$)"), "Strand #", ii
+                call space(j,5); write(j, "(a, i4 )"), ", # of nucleotides : ", dna.strand(ii).n_base
                 call space(j,5); write(j, "(a, i4 )"), "The current parameter, para-gap_xover_nick : ", para_gap_xover_nick
                 call space(j,5); write(j, "(a, i4 )"), "The recommended parameter value is ", para_gap_xover_nick - 1
                 call space(j,5); write(j, "(a     )"), "=================================================="
@@ -517,14 +520,14 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
             end do
         end if
 
-        if(dna.strand(i).type1 == "stap") then
-            write(unit, "(a$)"), "-"//dna.strand(i).type2
-            write(unit, "(a$)"), ", # of 14nt seeds: "//trim(adjustl(Int2Str(dna.strand(i).n_14nt)))
+        if(dna.strand(ii).type1 == "stap") then
+            write(unit, "(a$)"), "-"//dna.strand(ii).type2
+            write(unit, "(a$)"), ", # of 14nt seeds: "//trim(adjustl(Int2Str(dna.strand(ii).n_14nt)))
         end if
-        write(unit, "(a$)"), ", # of nts: "//trim(adjustl(Int2Str(dna.strand(i).n_base)))//" -> "
+        write(unit, "(a$)"), ", # of nts: "//trim(adjustl(Int2Str(dna.strand(ii).n_base)))//" -> "
 
-        base = Mani_Go_Start_Base(dna, i)
-        do j = 1, dna.strand(i).n_base
+        base = Mani_Go_Start_Base(dna, ii)
+        do j = 1, dna.strand(ii).n_base
             if(seq_info == .true.) then
                 if(dna.top(base).status == "U" .and. on_U == .false.) then
                     write(unit, "(a$)"), "*"
@@ -563,7 +566,7 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
             base = dna.Top(base).up
 
             if(seq_info == .true.) then
-                if(j == dna.strand(i).n_base) then
+                if(j == dna.strand(ii).n_base) then
                     if(on_U == .true.) then
                         write(unit, "(a$)"), "*"; on_U = .false.
                     end if
@@ -580,7 +583,7 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
             end if
         end do
         write(unit, "(a)")
-        if(dna.strand(i).type1 == "scaf") write(unit, "(a)")
+        if(dna.strand(ii).type1 == "scaf") write(unit, "(a)")
     end do
     write(unit, "(a)")
 

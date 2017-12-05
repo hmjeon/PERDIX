@@ -3453,8 +3453,8 @@ subroutine SeqDesign_Order_Staple(dna)
     allocate(dna.order_stap(dna.n_stap, 2))
 
     do i = 1, dna.n_stap
-        dna.order_stap(i, 1) = i + 1
-        dna.order_stap(i, 2) = dna.strand(i+1).n_base
+        dna.order_stap(i, 1) = i + dna.n_scaf
+        dna.order_stap(i, 2) = dna.strand(i+dna.n_scaf).n_base
     end do
 
     ! Sort
