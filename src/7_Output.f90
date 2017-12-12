@@ -2117,16 +2117,16 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     end if
     close(unit=998)
 
-    ! ---------------------------------------------
+    ! =============================================
     ! Write the file for Tecplot
-    ! ---------------------------------------------
+    ! =============================================
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
     open(unit=998, file=trim(path)//"_14_json_guide.dat", form="formatted")
 
     write(998, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
-    write(998, "(a )"), 'VARIABLES = "X", "Y", "Z", "weight"'
+    write(998, "(a )"), 'VARIABLES = "X", "Y", "Z", "t1", "t2", "t3"'
     write(998, "(a$)"), 'ZONE F = FEPOINT'
     write(998, "(a$)"), ', N='//trim(adjustl(Int2Str(geom.n_croP)))
     write(998, "(a$)"), ', E='//trim(adjustl(Int2Str(geom.n_croL)))
@@ -2135,13 +2135,33 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     ! Write points
     do i = 1, geom.n_croP
         write(998, "(3f9.3$)"), geom.croP(i).pos(1:3)
-        write(998, "(1f9.3 )"), 1.0d0
+        write(998, "(3f9.3 )"), 1.0d0, 1.0d0, 1.0d0
     end do
 
     ! Write edges
     do i = 1, geom.n_croL
-        write(998, "(1i7$)"), geom.croL(i).poi(1)
-        write(998, "(1i7 )"), geom.croL(i).poi(2)
+        write(998, "(2i7)"), geom.croL(i).poi(1), geom.croL(i).poi(2)
+    end do
+
+    write(998, "(a )"), 'VARIABLES = "X", "Y", "Z", "t1", "t2", "t3"'
+    write(998, "(a$)"), 'ZONE F = FEPOINT'
+    write(998, "(a$)"), ', N='//trim(adjustl(Int2Str(geom.n_croL)))
+    write(998, "(a$)"), ', E='//trim(adjustl(Int2Str(geom.n_croL)))
+    write(998, "(a )"), ', ET=LINESEG'
+
+    ! Write points
+    do i = 1, geom.n_croL
+        pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
+        pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
+        pos_c(1:3) = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
+
+        write(998, "(3f9.3$)"), pos_c(1:3)
+        write(998, "(3f9.3 )"), geom.croL(i).t(1, 1:3)
+    end do
+
+    ! Write edges
+    do i = 1, geom.n_croL
+        write(998, "(2i7)"), i, i
     end do
 
     close(unit=998)
