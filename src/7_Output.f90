@@ -2087,14 +2087,14 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     end do
 
     ! Write edge number
-    add = 0
+    add = -1
     write(998, "(a)"), ".color dark green"
     do i = 1, geom.n_croL
         pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
         pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
         pos_c(1:3) = (pos_1(1:3) + pos_2(1:3)) / 2.0d0
 
-        add = i / (geom.n_croL / geom.n_sec)
+        if(mod(i, geom.n_croL / geom.n_sec) == 1) add = add + 1
 
         write(998, "(a$   )"), ".cmov "
         write(998, "(3f9.3)"), pos_c(1:2) + 0.6d0, pos_c(3) - 0.6d0
