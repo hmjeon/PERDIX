@@ -2028,7 +2028,7 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     type(MeshType),  intent(in) :: mesh
 
     double precision :: length, pos_1(3), pos_2(3), pos_c(3), t1(3)
-    integer :: i, j, iter, nbp, add
+    integer :: i, j, iter, nbp, add, n_conn
     logical :: f_axis, f_info
     character(200) :: path
 
@@ -2059,12 +2059,15 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     end do
 
     ! Write junctional connection
+    n_conn = 0
     write(998, "(a, 3f6.2)"), ".color ", 213.0d0/255.0d0, 94.0d0/255.0d0, 0.0d0/255.0d0
     do i = 1, bound.n_junc
         do j = 1, geom.n_sec*bound.junc(i).n_arm
 
             pos_1(1:3) = mesh.node(bound.junc(i).conn(j,1)).pos(1:3)
             pos_2(1:3) = mesh.node(bound.junc(i).conn(j,2)).pos(1:3)
+
+            n_conn = n_conn + 1
 
             if(Is_Same_Vector(pos_1, pos_2) == .false.) then
                 write(998, "(a$   )"), ".cylinder "
@@ -2164,6 +2167,29 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     ! Write edges
     do i = 1, geom.n_croL
         write(998, "(2i7)"), i, i
+    end do
+
+    write(998, "(a )"), 'VARIABLES = "X", "Y", "Z", "t1", "t2", "t3"'
+    write(998, "(a$)"), 'ZONE F = FEPOINT'
+    write(998, "(a$)"), ', N='//trim(adjustl(Int2Str(n_conn*2)))
+    write(998, "(a$)"), ', E='//trim(adjustl(Int2Str(n_conn)))
+    write(998, "(a )"), ', ET=LINESEG'
+
+    ! Write junctional connection
+    do i = 1, bound.n_junc
+        do j = 1, geom.n_sec*bound.junc(i).n_arm
+
+            pos_1(1:3) = mesh.node(bound.junc(i).conn(j,1)).pos(1:3)
+            pos_2(1:3) = mesh.node(bound.junc(i).conn(j,2)).pos(1:3)
+
+            write(998, "(6f9.3)"), pos_1(1:3), 0.0d0, 0.0d0, 0.0d0
+            write(998, "(6f9.3)"), pos_2(1:3), 0.0d0, 0.0d0, 0.0d0
+        end do
+    end do
+
+    ! Write edges
+    do i = 1, n_conn
+        write(998, "(2i7)"), 2*i-1, 2*i
     end do
 
     close(unit=998)
