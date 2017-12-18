@@ -398,7 +398,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
     type(GeomType), intent(in) :: geom
 
     double precision :: pos_1(3), pos_2(3), pos_c(3), pos_c1(3), pos_c2(3)
-    double precision :: vec_a(3), vec_b(3), vec(3)
+    double precision :: vec_a(3), vec_b(3), vec_c(3), vec(3)
     integer :: i, j, point_1, point_2
     logical :: f_axis, f_info
     character(200) :: path
@@ -449,7 +449,18 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
         ! Find orientation
         vec_a(1:3) = geom.iniP(geom.face(i).poi(1)).pos - pos_c
         vec_b(1:3) = geom.iniP(geom.face(i).poi(2)).pos - pos_c
-        vec(1:3)   = Normalize(Cross(vec_a, vec_b))
+        vec_c(1:3) = Cross(vec_a, vec_b)
+
+        if(abs(vec_c(1)) < eps .and. abs(vec_c(2)) < eps .and. abs(vec_c(3)) < eps) then
+            vec_a(1:3) = geom.iniP(geom.face(i).poi(2)).pos - pos_c
+            vec_b(1:3) = geom.iniP(geom.face(i).poi(3)).pos - pos_c
+            vec_c(1:3) = Cross(vec_a, vec_b)
+            if(abs(vec_c(1)) < eps .and. abs(vec_c(2)) < eps .and. abs(vec_c(3)) < eps) then
+                vec_a(1:3) = geom.iniP(geom.face(i).poi(3)).pos - pos_c
+                vec_b(1:3) = geom.iniP(geom.face(i).poi(4)).pos - pos_c
+            end if
+        end if
+        vec(1:3) = Normalize(Cross(vec_a, vec_b))
 
         ! Draw the orientation of the outward vector of the face
         write(301, "(a     )"), ".color salmon"
@@ -720,7 +731,7 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
     integer,        intent(in) :: line
 
     double precision :: local(3, 3), pos_1(3), pos_2(3), vec_face1(3), vec_face2(3)
-    double precision :: vec_a(3), vec_b(3), pos_c(3)
+    double precision :: vec_a(3), vec_b(3), pos_c(3), vec_c(3)
     integer :: i, poi_1, poi_2, face1, face2
 
     ! ==================================================
@@ -752,7 +763,20 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
         ! Find outward vector of the face 1
         vec_a(1:3) = geom.iniP(geom.face(face1).poi(1)).pos - pos_c
         vec_b(1:3) = geom.iniP(geom.face(face1).poi(2)).pos - pos_c
+        vec_c(1:3) = Cross(vec_a, vec_b)
+
+        if(abs(vec_c(1)) < eps .and. abs(vec_c(2)) < eps .and. abs(vec_c(3)) < eps) then
+            vec_a(1:3) = geom.iniP(geom.face(face1).poi(2)).pos - pos_c
+            vec_b(1:3) = geom.iniP(geom.face(face1).poi(3)).pos - pos_c
+            vec_c(1:3) = Cross(vec_a, vec_b)
+            if(abs(vec_c(1)) < eps .and. abs(vec_c(2)) < eps .and. abs(vec_c(3)) < eps) then
+                vec_a(1:3) = geom.iniP(geom.face(face1).poi(3)).pos - pos_c
+                vec_b(1:3) = geom.iniP(geom.face(face1).poi(4)).pos - pos_c
+            end if
+        end if
+
         vec_face1(1:3) = Normalize(Cross(vec_a, vec_b))
+        !write(*, "(i, 6f)"), face1, vec_face1(1:3), Cross(vec_a, vec_b)
     else
 
         ! If the neighbor face 1 is boundary
@@ -772,7 +796,20 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
         ! Find outward vector of the face 2
         vec_a(1:3) = geom.iniP(geom.face(face2).poi(1)).pos - pos_c
         vec_b(1:3) = geom.iniP(geom.face(face2).poi(2)).pos - pos_c
+        vec_c(1:3) = Cross(vec_a, vec_b)
+
+        if(abs(vec_c(1)) < eps .and. abs(vec_c(2)) < eps .and. abs(vec_c(3)) < eps) then
+            vec_a(1:3) = geom.iniP(geom.face(face2).poi(2)).pos - pos_c
+            vec_b(1:3) = geom.iniP(geom.face(face2).poi(3)).pos - pos_c
+            vec_c(1:3) = Cross(vec_a, vec_b)
+            if(abs(vec_c(1)) < eps .and. abs(vec_c(2)) < eps .and. abs(vec_c(3)) < eps) then
+                vec_a(1:3) = geom.iniP(geom.face(face2).poi(3)).pos - pos_c
+                vec_b(1:3) = geom.iniP(geom.face(face2).poi(4)).pos - pos_c
+            end if
+        end if
+
         vec_face2(1:3) = Normalize(Cross(vec_a, vec_b))
+        !write(*, "(i, 6f)"), face2, vec_face2(1:3), Cross(vec_a, vec_b)
     else
 
         ! If the neighbor face 2 is boundary
@@ -786,6 +823,7 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
         local(2,:) = 0.5d0*(vec_face1 + vec_face2)
     end if
     local(2,:) = Normalize(local(2,:))
+    !write(*, "(2i, 9f)"), face1, face2, local(2,:), vec_face1, vec_face2
 
     ! ==================================================
     !

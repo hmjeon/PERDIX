@@ -2066,8 +2066,10 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
             pos_1(1:3) = mesh.node(bound.junc(i).conn(j,1)).pos(1:3)
             pos_2(1:3) = mesh.node(bound.junc(i).conn(j,2)).pos(1:3)
 
-            write(998, "(a$   )"), ".cylinder "
-            write(998, "(7f9.3)"), pos_1(1:3), pos_2(1:3), 0.04d0
+            if(Is_Same_Vector(pos_1, pos_2) == .false.) then
+                write(998, "(a$   )"), ".cylinder "
+                write(998, "(7f9.3)"), pos_1(1:3), pos_2(1:3), 0.04d0
+            end if
         end do
     end do
 

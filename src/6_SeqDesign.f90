@@ -5293,10 +5293,12 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
             end if
 
             ! Draw route path
-            write(703, "(a$    )"), ".cylinder "
-            write(703, "(3f9.3$)"), mesh.node(cur_node).pos(1:3)
-            write(703, "(3f9.3$)"), mesh.node(up_node ).pos(1:3)
-            write(703, "(1f9.3 )"), 0.1d0
+            if(Is_Same_Vector(mesh.node(cur_node).pos, mesh.node(up_node).pos) == .false.) then
+                write(703, "(a$    )"), ".cylinder "
+                write(703, "(3f9.3$)"), mesh.node(cur_node).pos(1:3)
+                write(703, "(3f9.3$)"), mesh.node(up_node ).pos(1:3)
+                write(703, "(1f9.3 )"), 0.1d0
+            end if
 
             if(para_output_Tecplot == "on") then
                 base_scaf(n_base_scaf + 1, 1:3) = mesh.node(cur_node).pos(1:3)
@@ -5382,10 +5384,12 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
             end if
 
             ! Draw route path
-            write(704, "(a$    )"), ".cylinder "
-            write(704, "(3f9.3$)"), mesh.node(cur_node).pos(1:3)
-            write(704, "(3f9.3$)"), mesh.node(up_node).pos(1:3)
-            write(704, "(1f9.3 )"), 0.1d0
+            if(Is_Same_Vector(mesh.node(cur_node).pos, mesh.node(up_node).pos) == .false.) then
+                write(704, "(a$    )"), ".cylinder "
+                write(704, "(3f9.3$)"), mesh.node(cur_node).pos(1:3)
+                write(704, "(3f9.3$)"), mesh.node(up_node).pos(1:3)
+                write(704, "(1f9.3 )"), 0.1d0
+            end if
 
             if(para_output_Tecplot == "on") then
                 base_stap(n_base_stap + 1, 1:3) = mesh.node(cur_node).pos(1:3)
@@ -5613,10 +5617,13 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
             ! Draw route path
             if(f_unpaired == .true. ) write(705, "(a)"), ".color red"
             if(f_unpaired == .false.) write(705, "(a)"), ".color steel blue"
-            write(705, "(a$    )"), ".cylinder "
-            write(705, "(3f9.3$)"), mesh.node(node).pos    !+ vec_jt1*0.5d0
-            write(705, "(3f9.3$)"), mesh.node(up_node).pos !+ vec_jt2*0.5d0
-            write(705, "(1f9.3 )"), 0.1d0
+
+            if(Is_Same_Vector(mesh.node(node).pos, mesh.node(up_node).pos) == .false.) then
+                write(705, "(a$    )"), ".cylinder "
+                write(705, "(3f9.3$)"), mesh.node(node).pos    !+ vec_jt1*0.5d0
+                write(705, "(3f9.3$)"), mesh.node(up_node).pos !+ vec_jt2*0.5d0
+                write(705, "(1f9.3 )"), 0.1d0
+            end if
 
             ! Draw starting point
             if(dna.top(base).dn == -1) then
@@ -5737,10 +5744,12 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
             vec_jt2(1:3) = Normalize(vec - vec_jn)
 
             ! Draw route path
-            write(705, "(a$    )"), ".cylinder "
-            write(705, "(3f9.3$)"), mesh.node(node).pos(1:3)    - vec_jt1*0.5d0
-            write(705, "(3f9.3$)"), mesh.node(up_node).pos(1:3) - vec_jt2*0.5d0
-            write(705, "(1f9.3 )"), 0.1d0
+            if(Is_Same_Vector(mesh.node(node).pos, mesh.node(up_node).pos) == .false.) then
+                write(705, "(a$    )"), ".cylinder "
+                write(705, "(3f9.3$)"), mesh.node(node).pos(1:3)    - vec_jt1*0.5d0
+                write(705, "(3f9.3$)"), mesh.node(up_node).pos(1:3) - vec_jt2*0.5d0
+                write(705, "(1f9.3 )"), 0.1d0
+            end if
 
             if(para_output_Tecplot == "on") then
                 base_stap(count_stap + 1, 1:3) = mesh.node(node).pos(1:3)    - vec_jt1*0.5d0

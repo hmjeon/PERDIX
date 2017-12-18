@@ -3441,10 +3441,12 @@ subroutine Route_Chimera_Crossovers(prob, geom, bound, mesh, dna)
             pos_1(:) = mesh.node(bound.junc(i).conn(j, 1)).pos
             pos_2(:) = mesh.node(bound.junc(i).conn(j, 2)).pos
 
-            write(607, "(a$    )"), ".cylinder "
-            write(607, "(3f9.3$)"), pos_1(1:3)
-            write(607, "(3f9.3$)"), pos_2(1:3)
-            write(607, "(1f9.3 )"), 0.06d0
+            if(Is_Same_Vector(pos_1, pos_2) == .false.) then
+                write(607, "(a$    )"), ".cylinder "
+                write(607, "(3f9.3$)"), pos_1(1:3)
+                write(607, "(3f9.3$)"), pos_2(1:3)
+                write(607, "(1f9.3 )"), 0.06d0
+            end if
         end do
     end do
 
