@@ -966,7 +966,7 @@ subroutine Input_Select_Problem(prob, geom)
         case (17); call Exam_Open2D_5_Sided_Polygon (prob, geom)
         case (18); call Exam_Open2D_6_Sided_Polygon (prob, geom)
 
-        ! Different mesh patterns with pump geometry
+        ! Different mesh patterns with the curved geometry
         case (19); call Exam_Open2D_Curved_Beam_Quad (prob, geom)
         case (20); call Exam_Open2D_Curved_Beam_Tri  (prob, geom)
         case (21); call Exam_Open2D_Curved_Beam_Eng  (prob, geom)
