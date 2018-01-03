@@ -2264,7 +2264,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
 
     min_bp = min_bp + para_start_bp_ID - 1
     max_bp = max_bp + para_start_bp_ID - 1
-    shift  = para_start_bp_ID + 21 + 21
+    shift  = para_start_bp_ID + 21 + 21 ! + 21
 
     ! Possible maximum edge length = max_bp - min_bp + 1 + max_unpaired
     width = (max_bp - min_bp + 1 + max_unpaired) + 2 * para_start_bp_ID + 21

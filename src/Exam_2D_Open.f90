@@ -4285,7 +4285,7 @@ subroutine Exam_Open2D_Triangle(prob, geom)
     call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
 
     length = float(prob.n_bp_edge)
-    angle  = Deg2Rad(45.0d0)
+    angle  = 45.0d0
 
     ! The number of points and faces
     geom.n_iniP = 3
@@ -4295,6 +4295,8 @@ subroutine Exam_Open2D_Triangle(prob, geom)
     allocate(geom.face(geom.n_face))
 
     ! Set position vector
+    angle = Deg2Rad(90.0d0 - angle)
+
     geom.iniP(1).pos(1) = 0.0d0
     geom.iniP(1).pos(2) = 0.0d0
     geom.iniP(1).pos(3) = 0.0d0
