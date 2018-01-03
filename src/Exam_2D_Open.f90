@@ -87,6 +87,7 @@ module Exam_2D_Open
     public Exam_Open2D_Ellipse_Tri_Fine         ! Ellipse with tri fine mesh
     public Exam_Open2D_L_Shape_Irregular        ! L-shape with irregular mesh
     public Exam_Open2D_N_Polygon                ! N-sided polygon
+    public Exam_Open2D_Triangle                 ! Triangle with arbitrary angle
 
     private Exam_Open2D_Cross_Point
     private Exam_Open2D_Merge_Point_Face_Quad
@@ -4258,6 +4259,61 @@ subroutine Exam_Open2D_N_Polygon(prob, geom)
         end if
     end do
 end subroutine Exam_Open2D_N_Polygon
+
+
+! ---------------------------------------------------------------------------------------
+
+! Example of triangle with arbitrary angle
+subroutine Exam_Open2D_Triangle(prob, geom)
+    type(ProbType), intent(inout) :: prob
+    type(GeomType), intent(inout) :: geom
+
+    double precision :: angle, length
+    character(10) :: char_sec, char_bp, char_start_bp
+
+    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
+    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
+    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
+
+    prob.name_prob = "Exam_Open2D_Triangle"
+    prob.name_file = "Exam_Open2D_Triangle"//&
+        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
+        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
+        "_"//trim(para_cut_stap_method)
+
+    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
+    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+
+    length = float(prob.n_bp_edge)
+    angle  = Deg2Rad(45.0d0)
+
+    ! The number of points and faces
+    geom.n_iniP = 3
+    geom.n_face = 1
+
+    allocate(geom.iniP(geom.n_iniP))
+    allocate(geom.face(geom.n_face))
+
+    ! Set position vector
+    geom.iniP(1).pos(1) = 0.0d0
+    geom.iniP(1).pos(2) = 0.0d0
+    geom.iniP(1).pos(3) = 0.0d0
+
+    geom.iniP(2).pos(1) = sqrt((length / cos(angle))**2.0d0 - (length)**2.0d0)
+    geom.iniP(2).pos(2) = 0.0d0
+    geom.iniP(2).pos(3) = 0.0d0
+
+    geom.iniP(3).pos(1) = 0.0d0
+    geom.iniP(3).pos(2) = length
+    geom.iniP(3).pos(3) = 0.0d0
+
+    ! Set connectivity
+    geom.face(1).n_poi = 3
+    allocate(geom.face(1).poi(3))
+    geom.face(1).poi(1) = 1
+    geom.face(1).poi(2) = 2
+    geom.face(1).poi(3) = 3
+end subroutine Exam_Open2D_Triangle
 
 ! ---------------------------------------------------------------------------------------
 

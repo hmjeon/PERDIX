@@ -737,8 +737,8 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
     end do
 
     ! Allocate conn data
-    allocate(conn_scaf(dna.n_xover_scaf, 3))
-    allocate(conn_stap(dna.n_xover_stap, 3))
+    allocate(conn_scaf(dna.n_xover_scaf*2, 3))
+    allocate(conn_stap(dna.n_xover_stap*2, 3))
 
     ! Build node information based on initial edges with cross-section
     do i = 1, mesh.n_node

@@ -990,6 +990,8 @@ subroutine Input_Select_Problem(prob, geom)
         case (31); call Exam_Open2D_Small_House_Quad (prob, geom)
         case (32); call Exam_Open2D_Small_House_Tri  (prob, geom)
 
+        case (50); call Exam_Open2D_Triangle (prob, geom)
+
         case (98); call Exam_Open3D_Cubeoctahedron (prob, geom)
         case (99); call Exam_Chiral_Asym_Object    (prob, geom)
 
