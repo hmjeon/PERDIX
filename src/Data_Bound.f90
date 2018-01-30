@@ -21,6 +21,9 @@ module Data_Bound
         integer :: n_arm                ! The number of arms
         integer :: poi_c                ! Center position
 
+        integer :: n_un_scaf = 0        ! # of unpaired nucleotide in scaf
+        integer :: n_un_stap = 0        ! # of unpaired nucleotide in stap
+
         double precision :: ref_ang     ! Reference angle between two neighboring edges
         double precision :: tot_ang     ! Total angle at the junction
         double precision :: gap         ! Gap distance between junction and end of edges

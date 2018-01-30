@@ -37,7 +37,7 @@ module Route
     private Route_Init_Base_Connectivity
     private Route_Set_Base_Position
     private Route_Chimera_Route
-    private Route_Connect_Strand_Junc
+    private Route_Reconnect_Junction
     private Route_Connect_Scaf
     private Route_Connect_Stap
     private Route_Add_Nucleotide
@@ -78,7 +78,7 @@ contains
 subroutine Route_Generation(prob, geom, bound, mesh, dna)
     type(ProbType),  intent(inout) :: prob
     type(GeomType),  intent(in)    :: geom
-    type(BoundType), intent(in)    :: bound
+    type(BoundType), intent(inout) :: bound
     type(MeshType),  intent(inout) :: mesh
     type(DNAType),   intent(inout) :: dna
 
@@ -104,8 +104,8 @@ subroutine Route_Generation(prob, geom, bound, mesh, dna)
     ! Write scaffold route, step 1 - no connection at the junction
     call Route_Chimera_Route(prob, geom, mesh, dna, "route1")
 
-    ! Connect strands at the junction by unpaired nucleotides
-    call Route_Connect_Strand_Junc(geom, bound, mesh, dna)
+    ! Connect strands at the vertex by poly Tn loop or unpaired nucleotides
+    call Route_Reconnect_Junction(geom, bound, mesh, dna)
 
     ! Set the strand ID in scaffold
     call Route_Set_Strand_ID_Scaf(dna)
@@ -760,10 +760,10 @@ end subroutine Route_Chimera_Route
 
 ! ---------------------------------------------------------------------------------------
 
-! Connect strands at the junction by unpaired nucleotides
-subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
+! Connect strands at the vertex by poly Tn loop or unpaired nucleotides
+subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
     type(GeomType),  intent(in)    :: geom
-    type(BoundType), intent(in)    :: bound
+    type(BoundType), intent(inout) :: bound
     type(MeshType),  intent(in)    :: mesh
     type(DNAType),   intent(inout) :: dna
 
@@ -773,7 +773,7 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
     integer :: node_cur, iniL_cur, croL_cur, sec_cur
     integer :: node_com, iniL_com, croL_com, sec_com
     integer :: n_col, start, count, n_scaf, n_stap, n_face, n_conn
-    integer :: i, j, k, m, n, n_add_nt_scaf, n_add_nt_stap
+    integer :: i, j, k, m, n, n_add_nt_scaf, n_add_nt_stap, n_un_scaf, n_un_stap
     logical :: b_conn
     character(10) :: dir_cur, dir_com
 
@@ -869,12 +869,15 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
 
                 ! When conn == -1, neighbor connection
                 ! Connect two scaffolds with/without unpaired nucleotides
-                n_add_nt_scaf = n_add_nt_scaf + &
-                    Route_Connect_Scaf(mesh, dna, node_cur, node_com)
+                n_un_scaf = Route_Connect_Scaf(mesh, dna, node_cur, node_com)
+                n_add_nt_scaf = n_add_nt_scaf + n_un_scaf
 
                 ! Connect two staples with poly Tn loop
-                n_add_nt_stap = n_add_nt_stap + &
-                    Route_Connect_Stap(mesh, dna, node_cur, node_com)
+                n_un_stap = Route_Connect_Stap(mesh, dna, node_cur, node_com)
+                n_add_nt_stap = n_add_nt_stap + n_un_stap
+
+                bound.junc(i).n_un_scaf = bound.junc(i).n_un_scaf + n_un_scaf
+                bound.junc(i).n_un_stap = bound.junc(i).n_un_stap + n_un_stap
             end if
         end do
 
@@ -904,8 +907,10 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
                     if(geom.sec.conn(sec_cur+1) /= sec_com) cycle
 
                     ! Connect scaffold strand in the same section without unpaired nucleotides
-                    n_add_nt_scaf = n_add_nt_scaf + &
-                        Route_Connect_Scaf(mesh, dna, node_cur, node_com)
+                    n_un_scaf = Route_Connect_Scaf(mesh, dna, node_cur, node_com)
+                    n_add_nt_scaf = n_add_nt_scaf + n_un_scaf
+
+                    bound.junc(i).n_un_scaf = bound.junc(i).n_un_scaf + n_un_scaf
                 end do
             end do
         end do
@@ -921,6 +926,23 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
             //trim(adjustl(Int2Str(n_add_nt_scaf)))
         call Space(i, 11); write(i, "(a)"), "* The number of unpaired nts in staples  : "&
             //trim(adjustl(Int2Str(n_add_nt_stap)))
+    end do
+
+    ! Print information
+    do i = 0, 11, 11
+        write(i, "(a)")
+        call Space(i, 11)
+        write(i, "(a)"), "* The number of unparied nts in scaf and stap : "
+        call Space(i, 15)
+        write(i, "(a)"), "th Junc    scaf      stap   scaf + stap"
+        call Space(i, 15)
+        write(i, "(a)"), "-------    ----      ----   -----------"
+
+        do j = 1, bound.n_junc
+            call Space(i, 9)
+            write(i, "(4i10)"), j, bound.junc(j).n_un_scaf, bound.junc(j).n_un_stap, &
+                bound.junc(j).n_un_scaf + bound.junc(j).n_un_stap
+        end do
     end do
 
     ! Scaffold
@@ -954,7 +976,7 @@ subroutine Route_Connect_Strand_Junc(geom, bound, mesh, dna)
         write(11, "(a, i5 )"), ", ac: ", dna.base_stap(j).across
     end do
     write(0, "(a)"); write(11, "(a)")
-end subroutine Route_Connect_Strand_Junc
+end subroutine Route_Reconnect_Junction
 
 ! ---------------------------------------------------------------------------------------
 
