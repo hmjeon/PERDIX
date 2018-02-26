@@ -346,7 +346,7 @@ subroutine Input_Print_Parameters(prob, geom)
     integer :: i
 
     ! Open output progress file (unit 11 is used for global output file)
-    open(unit=11, file=trim(prob.path_work1)//"TXT_PERDIX_OPEN.txt", form="formatted")
+    open(unit=11, file=trim(prob.path_work1)//"TXT_PERDIX_2L.txt", form="formatted")
 
     do i = 0, 11, 11
         write(i, "(a )"), "   +--------------------------------------------------------------------+"
@@ -739,7 +739,7 @@ subroutine Input_Set_Command
     logical :: results
 
     ! Set command environments
-    results = SYSTEMQQ('title PERDIX-OPEN')                 ! cmd title
+    results = SYSTEMQQ('title PERDIX-2L')                 ! cmd title
     results = SYSTEMQQ('mode con: cols=135 lines=6000')     ! cmd size
     results = SYSTEMQQ('color')                             ! convert color, 02, f0, f1, f2
     results = SYSTEMQQ('date /t')                           ! display time
@@ -754,7 +754,7 @@ subroutine Input_Print_Problem
     write(0, "(a)")
     write(0, "(a)"), "     +=============================================================+"
     write(0, "(a)"), "     |                                                             |"
-    write(0, "(a)"), "     |  PERDIX-OPEN by Hyungmin Jun (hyungminjun@outlook.com) 2017 |"
+    write(0, "(a)"), "     |   PERDIX-2L by Hyungmin Jun (hyungminjun@outlook.com) 2017  |"
     write(0, "(a)"), "     |                                                             |"
     write(0, "(a)"), "     +=============================================================+"
     write(0, "(a)")

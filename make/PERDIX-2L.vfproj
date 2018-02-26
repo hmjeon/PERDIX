@@ -70,7 +70,7 @@
 		<File RelativePath="..\src\Chimera.f90"/>
 		<File RelativePath="..\src\Importer.f90"/>
 		<File RelativePath="..\src\TecPlot.f90"/></Filter>
-		<Filter Name="PERDIX-OPEN">
+		<Filter Name="PERDIX-2L">
 		<File RelativePath="..\src\1_Input.f90"/>
 		<File RelativePath="..\src\2_ModGeo.f90"/>
 		<File RelativePath="..\src\3_Section.f90"/>
