@@ -68,7 +68,7 @@ subroutine Input_Initialize(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    integer :: arg, i, j, n_section, n_vertex, n_edge_len, len_char
+    integer :: arg, i, j, n_section, n_edge_len, len_char
     character(10) :: c_sec, c_edge_len, c_stap_break
     character(100) :: c_prob
     logical :: results
