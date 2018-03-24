@@ -4,13 +4,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>0102ee48-39e1-43b3-a75f-08d9064b33dc</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
-    <StartupFile>..\src\GeoConvertor.py</StartupFile>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>..\src\PyConvertGeo.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>GeoConvertor</Name>
+    <Name>PyConvertGeo</Name>
     <RootNamespace>GeoConvertor</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -22,7 +23,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\src\GeoConvertor.py" />
+    <Compile Include="..\src\PyConvertGeo.py" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
