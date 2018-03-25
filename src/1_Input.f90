@@ -902,7 +902,7 @@ subroutine Input_Select_File(prob, geom)
     !    stop
     !end if
 
-    ! Select file type
+    ! Select file format
     if(prob.type_file == "ply") then
         call Importer_PLY(prob, geom)
     else if(prob.type_file == "geo" .or. prob.type_file == "igs") then

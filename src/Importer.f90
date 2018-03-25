@@ -134,8 +134,9 @@ subroutine Importer_GEO(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
+    double precision :: p_mesh
     integer :: i, j, n_poi, n_line, temp
-    logical :: results, b_face
+    logical :: results
     character(200) :: path, file
 
     ! Mesh data structure
@@ -146,8 +147,6 @@ subroutine Importer_GEO(prob, geom)
     ! 1st: # of meshes, 2nd: points
     type(MeshType), allocatable :: face_con(:)
 
-    b_face = .true.
-
     file = trim(prob.name_file)//"."//trim(prob.type_file)
     path = "input\"//file
     open(unit=1002, file=path, form="formatted")
@@ -155,10 +154,8 @@ subroutine Importer_GEO(prob, geom)
     ! Read number of points and faces
     if(prob.type_file == 'geo') read(1002, *), geom.n_iniP, n_line, geom.n_face
 
-    if(prob.type_file == 'iges' .or. prob.type_file == 'igs' .or. n_line /= 0) then
-
-        b_face = .false.
-
+    ! Boundary & internal mesh design
+    if(geom.n_face == 0) then
         close(unit=1002)
         write(0, "(a)"), "Converting geometry with faced mesh"
 
@@ -172,6 +169,21 @@ subroutine Importer_GEO(prob, geom)
 
         ! Read number of points and faces
         read(1002, *), geom.n_iniP, n_line, geom.n_face
+    end if
+
+    ! Boundary design
+    if(geom.n_face == 1) then
+        write(0, "(a)")
+        write(0, "(a)"), "   Select the mesh spacing parameter (0.0-1.0) [Enter] : "
+        read(*, *), p_mesh
+
+        if(p_mesh > 0.0d0) then
+            !close(unit=1002)
+            results = SYSTEMQQ("matlab -wait -nodisplay -nosplash -nodesktop -r "//'"run('//"'../tools/DistMesh/meshing.m('test.geo', 0.2)"//"');exit;"//'"')
+
+            ! Read number of points and faces
+            !read(1002, *), geom.n_iniP, n_line, geom.n_face
+        end if
     end if
 
     ! Read point data
