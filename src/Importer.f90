@@ -178,9 +178,13 @@ subroutine Importer_GEO(prob, geom)
         read(*, *), p_mesh
 
         if(p_mesh > 0.0d0) then
-            !close(unit=1002)
-            results = SYSTEMQQ("matlab -wait -nodisplay -nosplash -nodesktop -r "//'"run('//"'../tools/DistMesh/meshing.m('test.geo', 0.2)"//"');exit;"//'"')
-
+            results = SYSTEMQQ("copy input\"//trim(file)//" ..\tools\DistMesh")
+            !results = SYSTEMQQ(&
+            !    "matlab -wait -nodisplay -nosplash -nodesktop -r "//&
+            !    '"addpath ..\tools\DistMesh\src; addpath ..\tools\DistMesh; meshing('//&
+            !    "'1.geo', 0.2)"//"; exit")
+            results = SYSTEMQQ("del..\tools\DistMesh\"//trim(file))
+            stop
             ! Read number of points and faces
             !read(1002, *), geom.n_iniP, n_line, geom.n_face
         end if

@@ -67,7 +67,6 @@ fclose(fid);
 
 [p,t]=distmesh2d(@dpoly, @huniform, n_mesh, [0,0; 1,1], line, line);
 
-
 % writing file list
 %fprintf(fid,'<FileList>\n');
 %fprintf(fid,'	<Video>\n');
