@@ -28,3 +28,21 @@ addpath src
 
 pv=[1.0 0.0; 3.0 0.0; 3.0 1.0; 4.0 1.0; 4.0 3.0; 3.0 3.0; 3.0 4.0; 1.0 4.0; 1.0 3.0; 0.0 3.0; 0.0 1.0; 1.0 1.0; 1.0 0.0];
 [p,t]=distmesh2d(@dpoly, @huniform, 0.5*3, [0,0; 3,3], pv, pv);
+
+filename = 'output.geo'
+
+% writing file list
+fid = fopen(filename, 'w');
+
+
+fprintf(fid,'%d %d %d\n', size(p,1), 0, size(t,1));
+for i=1:size(p,1)
+    fprintf(fid,'%d %f %f\n', i, p(i,1), p(i,2));
+end
+
+for i=1:size(t,1)
+    fprintf(fid,'%d %d %d %d %d\n', i, 3, t(i,1), t(i,2), t(i,3));
+end
+
+% Clean up
+fclose(fid);

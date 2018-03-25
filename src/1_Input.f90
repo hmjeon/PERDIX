@@ -8,7 +8,7 @@
 ! Comments: This module is for the inputs of the geometry and cross-section.
 !
 ! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2017. All rights reserved.
+! Copyright Hyungmin Jun, 2018. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !

@@ -8,7 +8,7 @@
 ! Comments: The data structure of the geometry and cross-section
 !
 ! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2017. All rights reserved.
+! Copyright Hyungmin Jun, 2018. All rights reserved.
 !
 module Data_Geom
 

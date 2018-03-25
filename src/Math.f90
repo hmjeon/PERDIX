@@ -8,7 +8,7 @@
 ! Comments: This module is to define mathematical function for vectors and matrix.
 !
 ! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2017. All rights reserved.
+! Copyright Hyungmin Jun, 2018. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !

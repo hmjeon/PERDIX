@@ -9,7 +9,7 @@
 ! to build and solve the sequence design of complex DNA nanostructures.
 !
 ! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2017. All rights reserved.
+! Copyright Hyungmin Jun, 2018. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !

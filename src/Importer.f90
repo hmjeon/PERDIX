@@ -3,12 +3,12 @@
 !
 !                                   Module - Importer
 !
-!                                                                    Updated : 2017/03/27
+!                                                                    Updated : 2018/03/25
 !
 ! Comments: This module is for the import specific file type.
 !
 ! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2017. All rights reserved.
+! Copyright Hyungmin Jun, 2018. All rights reserved.
 !
 ! ---------------------------------------------------------------------------------------
 !
@@ -178,15 +178,20 @@ subroutine Importer_GEO(prob, geom)
         read(*, *), p_mesh
 
         if(p_mesh > 0.0d0) then
+            close(unit=1002)
+
             results = SYSTEMQQ("copy input\"//trim(file)//" ..\tools\DistMesh")
-            !results = SYSTEMQQ(&
-            !    "matlab -wait -nodisplay -nosplash -nodesktop -r "//&
-            !    '"addpath ..\tools\DistMesh\src; addpath ..\tools\DistMesh; meshing('//&
-            !    "'1.geo', 0.2)"//"; exit")
-            results = SYSTEMQQ("del..\tools\DistMesh\"//trim(file))
-            stop
+            results = SYSTEMQQ(&
+                "matlab -wait -nodisplay -nosplash -nodesktop -r "//&
+                '"addpath ..\tools\DistMesh\src; addpath ..\tools\DistMesh; meshing('//&
+                "'"//trim(file)//"',"//trim(Dble2Str(p_mesh))//"); exit")
+
+            results = SYSTEMQQ("copy temp.tmp input\")
+            results = SYSTEMQQ("del temp.tmp")
             ! Read number of points and faces
-            !read(1002, *), geom.n_iniP, n_line, geom.n_face
+
+            open(unit=1002, file="input\temp.tmp", form="formatted")
+            read(1002, *), geom.n_iniP, n_line, geom.n_face
         end if
     end if
 
