@@ -163,8 +163,8 @@ subroutine Importer_GEO(prob, geom)
         write(0, "(a)"), "Converting geometry with faced mesh"
 
         ! Convert to face meshes from lines
-        results = SYSTEMQQ(trim("..\tools\PyConvertGeo\pyConvertGeo")//" input\"//trim(fullname))
-        !results = SYSTEMQQ(trim("python ..\tools\PyConvertGeo\src\pyConvertGeo.py")//" input\"//trim(fullname))
+        results = SYSTEMQQ(trim("tools\PyConvertGeo\pyConvertGeo")//" input\"//trim(fullname))
+        !results = SYSTEMQQ(trim("python tools\PyConvertGeo\src\pyConvertGeo.py")//" input\"//trim(fullname))
 
         fullname = trim(prob.name_file)//trim("_shapely.geo")
         open(unit=1002, file="input\"//trim(fullname), form="formatted")
@@ -184,7 +184,7 @@ subroutine Importer_GEO(prob, geom)
 
             results = SYSTEMQQ(&
                 "matlab -wait -nodisplay -nosplash -nodesktop -r "//&
-                '"addpath ..\tools\DistMesh\src; addpath ..\tools\DistMesh; meshing('//&
+                '"addpath tools\DistMesh\src; addpath tools\DistMesh; meshing('//&
                 "'input\"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//"); exit")
 
             fullname = trim(prob.name_file)//trim("_shapely_distmesh.geo")
