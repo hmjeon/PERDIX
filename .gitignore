@@ -12,6 +12,7 @@
 *.so
 *.dylib
 *.dll
+!tools/PyConvertGeo/pyinstaller/geos_c.dll
 
 # Fortran module files
 *.mod
@@ -21,6 +22,7 @@
 *.la
 *.a
 *.lib
+!tools/PyConvertGeo/pyinstaller/libgeos.lib
 
 # Executables
 *.exe
