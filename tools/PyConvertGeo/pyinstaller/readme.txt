@@ -1,0 +1,1 @@
+pyinstaller.exe -F spec.spec PyConvertGeo.py

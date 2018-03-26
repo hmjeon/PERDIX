@@ -1,3 +1,7 @@
+Anaconda 2(64bit)
+Add path
+Integrate python 2.7
+
 Requirements:
 •	shapely
 •	numpy
