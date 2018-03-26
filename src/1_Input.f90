@@ -68,7 +68,7 @@ subroutine Input_Initialize(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    integer :: arg, i, j, n_section, n_edge_len, len_char
+    integer :: arg, i, j, n_section, n_edge_len, len_char, ppos
     character(10) :: c_sec, c_edge_len, c_stap_break
     character(100) :: c_prob
     logical :: results
@@ -88,19 +88,16 @@ subroutine Input_Initialize(prob, geom)
         call Input_Print_Problem
         read(*, *), c_prob
 
-        if(len_trim(c_prob) <= 3) then
-
+        ppos = scan(trim(c_prob), ".", BACK = .true.)
+        if(ppos > 0) then
+            len_char       = len_trim(c_prob)
+            prob.name_file = trim(adjustl(c_prob(1:ppos-1)))
+            prob.type_file = trim(adjustl(c_prob(ppos+1:len_char)))
+        else
             read(c_prob, *), prob.sel_prob
 
             ! The negative value terminate the program
             if(prob.sel_prob <= 0) stop
-        else
-
-            prob.sel_prob  = 0
-            prob.name_file = c_prob
-            len_char       = len_trim(prob.name_file)
-            prob.type_file = prob.name_file(len_char-2:len_char)
-            prob.name_file = prob.name_file(1:len_char-4)
         end if
 
         ! Clean the screen
@@ -137,16 +134,16 @@ subroutine Input_Initialize(prob, geom)
         arg = 2; call getarg(arg, c_edge_len)   ! 2nd argument, edge length
         arg = 3; call getarg(arg, c_stap_break) ! 3rd argument, staple-break rule
 
-        if(len_trim(c_prob) <= 3) then
-
-            read(c_prob, *), prob.sel_prob
+        ppos = scan(trim(c_prob), ".", BACK = .true.)
+        if(ppos > 0) then
+            len_char       = len_trim(c_prob)
+            prob.name_file = trim(adjustl(c_prob(1:ppos-1)))
+            prob.type_file = trim(adjustl(c_prob(ppos+1:len_char)))
         else
+            read(c_prob, *), prob.sel_prob
 
-            prob.sel_prob  = 0
-            prob.name_file = c_prob
-            len_char       = len_trim(prob.name_file)
-            prob.type_file = prob.name_file(len_char-2:len_char)
-            prob.name_file = prob.name_file(1:len_char-4)
+            ! The negative value terminate the program
+            if(prob.sel_prob <= 0) stop
         end if
 
         read(c_edge_len, *), n_edge_len
@@ -905,7 +902,7 @@ subroutine Input_Select_File(prob, geom)
     ! Select file format
     if(prob.type_file == "ply") then
         call Importer_PLY(prob, geom)
-    else if(prob.type_file == "geo" .or. prob.type_file == "igs") then
+    else if(prob.type_file == "geo" .or. prob.type_file == "igs" .or. prob.type_file == "iges") then
         call Importer_GEO(prob, geom)
     else
         print *, "Not defined geometry file"

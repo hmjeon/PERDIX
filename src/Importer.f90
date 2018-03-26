@@ -129,7 +129,7 @@ end subroutine Importer_WRL
 
 ! ---------------------------------------------------------------------------------------
 
-! Import .geo format and convert face meshes
+! Import .geo, iges and igs format to convert polygon meshes
 subroutine Importer_GEO(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
@@ -137,9 +137,9 @@ subroutine Importer_GEO(prob, geom)
     double precision :: p_mesh
     integer :: i, j, n_poi, n_line, temp
     logical :: results
-    character(200) :: path, file
+    character(200) :: path, fullname
 
-    ! Mesh data structure
+    ! Data structure for meshing
     type :: MeshType
         integer :: cn(100)   ! Maximum connectivity
     end type MeshType
@@ -147,25 +147,27 @@ subroutine Importer_GEO(prob, geom)
     ! 1st: # of meshes, 2nd: points
     type(MeshType), allocatable :: face_con(:)
 
-    file = trim(prob.name_file)//"."//trim(prob.type_file)
-    path = "input\"//file
-    open(unit=1002, file=path, form="formatted")
+    fullname = trim(prob.name_file)//"."//trim(prob.type_file)
+    path     = "input\"//fullname
 
     ! Read number of points and faces
-    if(prob.type_file == 'geo') read(1002, *), geom.n_iniP, n_line, geom.n_face
+    if(prob.type_file == 'geo') then
+        open(unit=1002, file=path, form="formatted")
+        read(1002, *), geom.n_iniP, n_line, geom.n_face
+    end if
 
     ! Boundary & internal mesh design
     if(geom.n_face == 0) then
-        close(unit=1002)
+        if(prob.type_file == 'geo') close(unit=1002)
+
         write(0, "(a)"), "Converting geometry with faced mesh"
 
-        ! Run convertorv to generate the geometry with face meshes
-        results = SYSTEMQQ(trim("Convertor")//" input\"//trim(file))
-        !results = SYSTEMQQ(trim("copy ")//trim(prob.name_file)//".tmp input\")
-        !results = SYSTEMQQ(trim("del geometry.tmp"))
+        ! Convert to face meshes from lines
+        results = SYSTEMQQ(trim("..\tools\PyConvertGeo\pyConvertGeo")//" input\"//trim(fullname))
+        !results = SYSTEMQQ(trim("python ..\tools\PyConvertGeo\src\pyConvertGeo.py")//" input\"//trim(fullname))
 
-        path = trim(prob.name_file)//".tmp"
-        open(unit=1002, file="input\"//path, form="formatted")
+        fullname = trim(prob.name_file)//trim("_shapely.geo")
+        open(unit=1002, file="input\"//trim(fullname), form="formatted")
 
         ! Read number of points and faces
         read(1002, *), geom.n_iniP, n_line, geom.n_face
@@ -180,17 +182,13 @@ subroutine Importer_GEO(prob, geom)
         if(p_mesh > 0.0d0) then
             close(unit=1002)
 
-            results = SYSTEMQQ("copy input\"//trim(file)//" ..\tools\DistMesh")
             results = SYSTEMQQ(&
                 "matlab -wait -nodisplay -nosplash -nodesktop -r "//&
                 '"addpath ..\tools\DistMesh\src; addpath ..\tools\DistMesh; meshing('//&
-                "'"//trim(file)//"',"//trim(Dble2Str(p_mesh))//"); exit")
+                "'input\"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//"); exit")
 
-            results = SYSTEMQQ("copy temp.tmp input\")
-            results = SYSTEMQQ("del temp.tmp")
-            ! Read number of points and faces
-
-            open(unit=1002, file="input\temp.tmp", form="formatted")
+            fullname = trim(prob.name_file)//trim("_shapely_distmesh.geo")
+            open(unit=1002, file="input\"//trim(fullname), form="formatted")
             read(1002, *), geom.n_iniP, n_line, geom.n_face
         end if
     end if
@@ -201,7 +199,7 @@ subroutine Importer_GEO(prob, geom)
         read(1002, *), temp, geom.iniP(i).pos(1:2)
         geom.iniP(i).pos(3) = 0.0d0
 
-        geom.iniP(i).pos(2) = -geom.iniP(i).pos(2)
+        geom.iniP(i).pos(2) = geom.iniP(i).pos(2)
     end do
 
     ! Read face
@@ -226,7 +224,8 @@ subroutine Importer_GEO(prob, geom)
     close(unit=1002)
 
     ! Delete temp file
-    results = SYSTEMQQ(trim("del input\")//trim(prob.name_file)//".tmp")
+    results = SYSTEMQQ(trim("del input\")//trim(prob.name_file)//trim("_shapely.geo"))
+    results = SYSTEMQQ(trim("del input\")//trim(prob.name_file)//trim("_shapely_distmesh.geo"))
 end subroutine Importer_GEO
 
 ! ---------------------------------------------------------------------------------------

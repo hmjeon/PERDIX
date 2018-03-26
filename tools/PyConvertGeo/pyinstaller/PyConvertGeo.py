@@ -21,10 +21,6 @@ from shapely.ops import cascaded_union
 
 # Open file stream
 if len(sys.argv) is 1:
-    #fin = open('geometry.geo', 'r')
-    #filename = 'geometry'
-    #filetype = 'geo'
-
     fin = open('test.igs', 'r')
     filename = 'test'
     filetype = 'igs'
@@ -226,14 +222,7 @@ print '\n'
 # Write file
 # ==================================================
 # Open file stream
-if len(sys.argv) is 1:
-    str = 'geometry.tmp'
-    
-if len(sys.argv) is 2:
-    str = sys.argv[1]
-
-filename, filetype = str.split('.')
-fout = open(filename+'.tmp', 'w')
+fout = open(filename+'_shapely.geo', 'w')
 
 fout.write('%d\t' % len(points))
 fout.write('0\t')

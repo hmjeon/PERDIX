@@ -1,5 +1,3 @@
-function [] = meshing(filename, n_mesh)
-
 %
 % ---------------------------------------------------------------------------------------
 %
@@ -15,9 +13,13 @@ function [] = meshing(filename, n_mesh)
 % ---------------------------------------------------------------------------------------
 %
 
+function [] = meshing(filename, n_mesh)
+
 % clear all;
 close all;
 addpath src
+
+[filepath,name,ext] = fileparts(filename);
 
 fid    = fopen(filename, 'r');
 tline  = fgetl(fid);
@@ -51,6 +53,11 @@ end
 line(n_point+1,1) = point(face(3)).x(1);
 line(n_point+1,2) = point(face(3)).x(2);
 
+% Scale
+A    = [abs(max(line(1,:))); abs(max(line(2,:))); abs(min(line(1,:))); abs(min(line(1,:)))];
+A    = max(A);
+line = line / A;
+
 % Clean up
 fclose(fid);
 
@@ -65,10 +72,10 @@ fclose(fid);
 % p(output): a list of node coordinates;
 % t(output): a list of node indices forming triangles;
 
-[p,t]=distmesh2d(@dpoly, @huniform, n_mesh, [0,0; 1,1], line, line);
+[p,t]=distmesh2d(@dpoly, @huniform, n_mesh, [min(line(:,1)),min(line(:,2)); max(line(:,1)),max(line(:,2))], line, line);
 
 % writing file list
-fid = fopen('temp.tmp', 'w');
+fid = fopen(strcat('input\',name,'_distmesh.geo'), 'w');
 
 fprintf(fid,'%d %d %d\n', size(p,1), 0, size(t,1));
 for i=1:size(p,1)
