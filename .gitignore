@@ -12,7 +12,7 @@
 *.so
 *.dylib
 *.dll
-!tools/PyConvertGeo/pyinstaller/geos_c.dll
+!make/tools/PyConvertGeo/pyinstaller/geos_c.dll
 
 # Fortran module files
 *.mod
@@ -22,13 +22,13 @@
 *.la
 *.a
 *.lib
-!tools/PyConvertGeo/pyinstaller/libgeos.lib
+!make/tools/PyConvertGeo/pyinstaller/libgeos.lib
 
 # Executables
 *.exe
-!command/PERDIX-2L.exe
-!tools/sleep.exe
-!tools/meshconv.exe
+!release/PERDIX-2L.exe
+!make/tools/sleep.exe
+!make/tools/meshconv.exe
 *.out
 *.app
 make/Debug
