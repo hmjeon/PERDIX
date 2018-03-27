@@ -4260,7 +4260,6 @@ subroutine Exam_Open2D_N_Polygon(prob, geom)
     end do
 end subroutine Exam_Open2D_N_Polygon
 
-
 ! ---------------------------------------------------------------------------------------
 
 ! Example of triangle with arbitrary angle

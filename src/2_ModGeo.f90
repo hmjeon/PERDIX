@@ -1223,22 +1223,35 @@ function ModGeo_Find_Scale_Factor(prob, geom, bound) result(scale)
     end do
 
     ! Find edge with minimum length
-    do i = 1, geom.n_iniL
+    if(prob.sel_edge == 0) then
+        do i = 1, geom.n_iniL
 
+            ! Find modified point from the seperated line
+            poi_1 = geom.iniL(i).poi(1)
+            poi_2 = geom.iniL(i).poi(2)
+
+            ! Length of the modified edge
+            length = Norm(pos_modP(poi_1,:) - pos_modP(poi_2,:))
+
+            ! Find modified edge with minimum length
+            if(i == 1 .or. min_length > length) then
+                min_length = length
+                cur_length = Norm(geom.modP(poi_1).pos - geom.modP(poi_2).pos)
+                diff       = cur_length - min_length
+            end if
+        end do
+    else
         ! Find modified point from the seperated line
-        poi_1 = geom.iniL(i).poi(1)
-        poi_2 = geom.iniL(i).poi(2)
+        poi_1 = geom.iniL(prob.sel_edge).poi(1)
+        poi_2 = geom.iniL(prob.sel_edge).poi(2)
 
         ! Length of the modified edge
-        length = Norm(pos_modP(poi_1,:) - pos_modP(poi_2,:))
+        min_length = Norm(pos_modP(poi_1,:) - pos_modP(poi_2,:))
 
         ! Find modified edge with minimum length
-        if(i == 1 .or. min_length > length) then
-            min_length = length
-            cur_length = Norm(geom.modP(poi_1).pos - geom.modP(poi_2).pos)
-            diff       = cur_length - min_length
-        end if
-    end do
+        cur_length = Norm(geom.modP(poi_1).pos - geom.modP(poi_2).pos)
+        diff       = cur_length - min_length
+    end if
 
     ! Desired length
     if(geom.sec.types == "square") then

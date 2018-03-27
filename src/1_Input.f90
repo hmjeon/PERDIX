@@ -3,7 +3,7 @@
 !
 !                                   Module - Input
 !
-!                                                                    Updated : 2017/03/27
+!                                                                    Updated : 2018/03/27
 !
 ! Comments: This module is for the inputs of the geometry and cross-section.
 !
@@ -17,10 +17,6 @@ module Input
     use Importer
 
     use Exam_2D_Open
-    use Exam_3D_Open
-    use Exam_Johnson
-    use Exam_Prism
-    use Exam_Chiral
 
     use Section
 
@@ -39,9 +35,7 @@ module Input
     private Input_Set_Parameter_Dependence
     private Input_Set_Command
     private Input_Print_Problem
-    private Input_Print_Section
     private Input_Print_Num_BP_Edge
-    private Input_Print_Vertex_Design
     private Input_Set_Problem
     private Input_Set_Vertex_Design
     private Input_Select_Problem
@@ -68,8 +62,8 @@ subroutine Input_Initialize(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    integer :: arg, i, j, n_section, n_edge_len, len_char, ppos
-    character(10) :: c_sec, c_edge_len, c_stap_break
+    integer :: arg, i, j, n_section, len_char, ppos
+    character(10) :: c_sec, c_edge_len, c_edge
     character(100) :: c_prob
     logical :: results
 
@@ -100,39 +94,33 @@ subroutine Input_Initialize(prob, geom)
             if(prob.sel_prob <= 0) stop
         end if
 
-        ! Clean the screen
-        !results = SYSTEMQQ("cls")
-
-        ! Print vertex design options
-        !call Input_Print_Vertex_Design()
-        !read(*, *), prob.sel_vertex
-        prob.sel_vertex = 2
-
-        ! The negative value terminate the program
-        if(prob.sel_vertex < 1 .or. prob.sel_vertex > 2) stop
-
-        ! Print pre-defined cross-sections
-        !call Input_Print_Section
-        !read(*, *) prob.sel_sec
-        prob.sel_sec = 1
-
-        ! The negative value terminate the program
-        if(prob.sel_sec < 1 .or. prob.sel_sec > 3) stop
-
         ! Print pre-defined edge length(bps)
         call Input_Print_Num_BP_Edge(prob)
         read(*, *) prob.sel_bp_edge
 
+        ! Reference edge - shortest edge
+        prob.sel_edge = 0
+
+        ! Choose specific edge number and take edge-length as an input
+        if(prob.sel_bp_edge == 0) then
+            write(0, "(a)"), "   Type the specific edge ID [Enter] : "
+            write(0, "(a)")
+            read(*, *) prob.sel_edge
+            write(0, "(a)"), "   Type the minimum edge length [Enter] : "
+            write(0, "(a)")
+            read(*, *) prob.sel_bp_edge
+        end if
+
         ! The negative value terminate the program
-        if(prob.sel_bp_edge < 1) stop
+        if(prob.sel_bp_edge < 0) stop
     else
 
         ! ==================================================
         ! Running from a command shell with options
         ! ==================================================
         arg = 1; call getarg(arg, c_prob)       ! 1st argument, problem
-        arg = 2; call getarg(arg, c_edge_len)   ! 2nd argument, edge length
-        arg = 3; call getarg(arg, c_stap_break) ! 3rd argument, staple-break rule
+        arg = 2; call getarg(arg, c_edge)       ! 2nd argument, edge
+        arg = 3; call getarg(arg, c_edge_len)   ! 3rd argument, edge length
 
         ppos = scan(trim(c_prob), ".", BACK = .true.)
         if(ppos > 0) then
@@ -146,17 +134,19 @@ subroutine Input_Initialize(prob, geom)
             if(prob.sel_prob <= 0) stop
         end if
 
-        read(c_edge_len, *), n_edge_len
+        ! Reference edge
+        read(c_edge, *), prob.sel_edge
 
-        ! Set inputs for geometry, section, edge length, stap-break rule
-        prob.sel_sec         = 1
-        prob.sel_bp_edge     = n_edge_len
-        prob.sel_vertex      = 2
-        para_cut_stap_method = trim(c_stap_break)
+        ! Edge length
+        read(c_edge_len, *), prob.sel_bp_edge
     end if
 
+    ! Set section - DX tile, vertex - mitered
+    prob.sel_sec    = 1
+    prob.sel_vertex = 2
+
     ! ==================================================
-    ! Set problem, cross-section, edge length and vertex design
+    ! Set problem, section, edge length and vertex design
     ! ==================================================
     ! Set vertex design
     call Input_Set_Vertex_Design(prob)
@@ -737,7 +727,7 @@ subroutine Input_Set_Command
 
     ! Set command environments
     results = SYSTEMQQ('title PERDIX-2L')                   ! cmd title
-    results = SYSTEMQQ('mode con: cols=120 lines=6000')     ! cmd size
+    results = SYSTEMQQ('mode con: cols=135 lines=6000')     ! cmd size
     results = SYSTEMQQ('color')                             ! convert color, 02, f0, f1, f2
     results = SYSTEMQQ('date /t')                           ! display time
     !results = SYSTEMQQ('hostname')                          ! display hostname of the computer
@@ -775,27 +765,9 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "      19. L-Shape [42-bp],     20. L-Shape [63-bp],         21. L-Shape [84-bp]"
     write(0, "(a)"), "      22. Curved Arm [Quad],   23. Curved Arm [Tri],        24. Curved Arm [Mixed]"
     write(0, "(a)")
-    write(0, "(a)"), " Select the number or type geometry file (*.geo, *.igs, *.iges, *.ply) [Enter] : "
+    write(0, "(a)"), "   Select the number or type geometry file (*.geo, *.igs, *.iges, *.ply) [Enter] : "
+    write(0, "(a)")
 end subroutine Input_Print_Problem
-
-! ---------------------------------------------------------------------------------------
-
-! Print pre-defined cross-sections
-subroutine Input_Print_Section
-    write(0, "(a)")
-    write(0, "(a)"), "   B. Second input - Pre-defined cross-sections"
-    write(0, "(a)"), "   ============================================"
-    write(0, "(a)")
-    write(0, "(a)"), "              [sec ID]                [sec ID]                 [sec ID]"
-    write(0, "(a)"), "      1.                   2.  @ @      4 3         3.  @-@      5-4   "
-    write(0, "(a)"), "        =@ @=  =0 1=          @   @    5   2          =@   @=  =0   3= "
-    write(0, "(a)"), "                              =@ @=    =0 1=            @-@      1-2   "
-    write(0, "(a)"), "                                                                       "
-    write(0, "(a)"), "                              [bottom origin]         [middle origin]  "
-    write(0, "(a)"), "         [DX tile]             [1 honeycomb]           [1 honeycomb]   "
-    write(0, "(a)")
-    write(0, "(a)"), "   Select the number [Enter] : "
-end subroutine Input_Print_Section
 
 ! ---------------------------------------------------------------------------------------
 
@@ -820,20 +792,8 @@ subroutine Input_Print_Num_BP_Edge(prob)
     write(0, "(a)"), "   * 10. 126 bp = 12 turn * 10.5 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
     write(0, "(a)")
     write(0, "(a)"), "   Select the number or type the minimum edge length [Enter] : "
+    write(0, "(a)")
 end subroutine Input_Print_Num_BP_Edge
-
-! ---------------------------------------------------------------------------------------
-
-! Print vertex design options
-subroutine Input_Print_Vertex_Design
-    write(0, "(a)")
-    write(0, "(a)"), "   D. Fourth input - Vertex design"
-    write(0, "(a)")
-    write(0, "(a)"), "   1. Flat vertex"
-    write(0, "(a)"), "   2. Beveled vertex"
-    write(0, "(a)")
-    write(0, "(a)"), "   Select the number [Enter] : "
-end subroutine Input_Print_Vertex_Design
 
 ! ---------------------------------------------------------------------------------------
 
@@ -858,7 +818,7 @@ subroutine Input_Set_Vertex_Design(prob)
     else
         para_vertex_design = "beveled"
     end if
-    
+
     print *, para_vertex_design
 end subroutine Input_Set_Vertex_Design
 
@@ -969,22 +929,6 @@ subroutine Input_Select_Problem(prob, geom)
         case (23); call Exam_Open2D_Curved_Arm_Tri  (prob, geom)
         case (24); call Exam_Open2D_Curved_Arm_Mix  (prob, geom)
 
-        ! Different mesh patterns with pump geometry
-        !case (25); call Exam_Open2D_Pump_Quad (prob, geom)
-        !case (26); call Exam_Open2D_Pump_Tri  (prob, geom)
-        !case (27); call Exam_Open2D_Pump_Eng  (prob, geom)
-
-        ! Different mesh patterns with s-shape geometry
-        !case (28); call Exam_Open2D_S_Shape_Quad (prob, geom)
-        !case (29); call Exam_Open2D_S_Shape_Tri  (prob, geom)
-        !case (30); call Exam_Open2D_S_Shape_Eng  (prob, geom)
-
-        ! Different mesh patterns with small house geometry
-        !case (31); call Exam_Open2D_Small_House_Quad (prob, geom)
-        !case (32); call Exam_Open2D_Small_House_Tri  (prob, geom)
-
-        !case (50); call Exam_Open2D_Triangle (prob, geom)
-
         case default
             write(0, "(a$)"), "Error - Not defined problem : "
             write(0, "(a )"), "Input_Select_Problem"
@@ -1026,116 +970,6 @@ subroutine Input_Set_Section(prob, geom)
 
         geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 1
         geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
-
-    else if(prob.sel_sec == 2) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 13 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        ! Starting BP - 3, 4 / 13, 14       | caDNAno   02    (CW)
-        !      ¡Ü¡Ü        04 03              |         03  01
-        !     ¡Ü  ¡Ü      05   02             |         04  00
-        !      ¡Ü¡Ü       .00 01.   <--- ref  |           05
-        geom.sec.dir      = 90
-        geom.n_sec        = 6
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 2; geom.sec.posC(3) = 2
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 3; geom.sec.posC(4) = 2
-        geom.sec.id(5) = 4; geom.sec.posR(5) = 3; geom.sec.posC(5) = 1
-        geom.sec.id(6) = 5; geom.sec.posR(6) = 2; geom.sec.posC(6) = 1
-
-        ! Increase or decrease edge length except for reference row and column section
-        para_vertex_modify = "mod2"
-
-    else if(prob.sel_sec == 3) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 11 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        ! Starting BP - 1 / 11              | caDNAno   02    (CW)
-        !      ¡Ü¡Ü        05=04              |         03  01
-        !     ¡Ü  ¡Ü     .00   03.  <--- ref  |         04  00
-        !      ¡Ü¡Ü        01=02              |           05
-        geom.sec.dir      = 150
-        geom.n_sec        = 6
-        geom.sec.ref_row  = 2
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 2; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 1
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 1; geom.sec.posC(3) = 2
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 2; geom.sec.posC(4) = 2
-        geom.sec.id(5) = 4; geom.sec.posR(5) = 3; geom.sec.posC(5) = 2
-        geom.sec.id(6) = 5; geom.sec.posR(6) = 3; geom.sec.posC(6) = 1
-
-        ! Decrease edge length at the bottom
-        if(para_vertex_modify == "mod") para_vertex_modify = "mod1"
-    else if(prob.sel_sec == 4) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 18 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        ! Starting BP - 8, 9 / 18, 19       | caDNAno   00    (CCW)
-        !      ¡Ü¡Ü        05=04              |         01  05
-        !     ¡Ü  ¡Ü     .00   03.  <--- ref  |         02  04
-        !      ¡Ü¡Ü        01=02              |           03
-        geom.sec.dir      = -90
-        geom.n_sec        = 6
-        geom.sec.ref_row  = 2
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 2; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 1
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 1; geom.sec.posC(3) = 2
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 2; geom.sec.posC(4) = 2
-        geom.sec.id(5) = 4; geom.sec.posR(5) = 3; geom.sec.posC(5) = 2
-        geom.sec.id(6) = 5; geom.sec.posR(6) = 3; geom.sec.posC(6) = 1
-
-        ! Decrease edge length at the bottom
-        if(para_vertex_modify == "mod") para_vertex_modify = "mod1"
-    else if(prob.sel_sec == 5) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 18 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        ! Starting BP - 8, 9 / 18, 19       | caDNAno   02    (CW)
-        !      ¡Ü¡Ü        04 03              |         03  01
-        !     ¡Ü  ¡Ü     .05   02.  <--- ref  |         04  00
-        !      ¡Ü¡Ü        00 01              |           05
-        geom.sec.dir      = 90
-        geom.n_sec        = 6
-        geom.sec.ref_row  = 2
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 2; geom.sec.posC(3) = 2
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 3; geom.sec.posC(4) = 2
-        geom.sec.id(5) = 4; geom.sec.posR(5) = 3; geom.sec.posC(5) = 1
-        geom.sec.id(6) = 5; geom.sec.posR(6) = 2; geom.sec.posC(6) = 1
-
-        ! Decrease edge length at the bottom
-        if(para_vertex_modify == "mod") para_vertex_modify = "mod1"
     else
 
         write(0, "(a$)"), "Error - Not defined cross-section : "
@@ -1221,16 +1055,6 @@ subroutine Input_Set_Section_Connectivity(prob, geom)
         end do
     end do
 
-    ! For alternative 6-helice bundle
-    if(prob.sel_sec == 2 .and. para_vertex_design == "flat" .and. para_vertex_modify == "mod2") then
-        geom.sec.conn(1) = -1       ! Sec 0 -> neighbor
-        geom.sec.conn(2) = -1       ! Sec 1 -> neighbor
-        geom.sec.conn(3) = 3        ! Sec 2 -> 3
-        geom.sec.conn(4) = 2        ! Sec 3 -> 2
-        geom.sec.conn(5) = 5        ! Sec 4 -> 5
-        geom.sec.conn(6) = 4        ! Sec 5 -> 4
-    end if
-
     ! Print information for self connection route
     count = 0
     write(0, "(a)"), "   --------------------------------------------------"
@@ -1288,46 +1112,6 @@ subroutine Input_Set_Num_BP_Edge(prob, geom)
         prob.n_bp_edge = prob.sel_bp_edge
     end if
 end subroutine Input_Set_Num_BP_Edge
-
-! ---------------------------------------------------------------------------------------
-
-! Set the minimum edge length
-subroutine Input_Set_Num_BP_Edge_Old(prob, geom)
-    type(ProbType), intent(inout) :: prob
-    type(GeomType), intent(in)    :: geom
-
-    ! The edge length depends on the types of the lattice
-    if(geom.sec.types == "square") then
-
-        if(prob.sel_bp_edge == 1)  prob.n_bp_edge = 32      ! 10.67bp * 3
-        if(prob.sel_bp_edge == 2)  prob.n_bp_edge = 43      ! 10.67bp * 4
-        if(prob.sel_bp_edge == 3)  prob.n_bp_edge = 53      ! 10.67bp * 5
-        if(prob.sel_bp_edge == 4)  prob.n_bp_edge = 64      ! 10.67bp * 6
-        if(prob.sel_bp_edge == 5)  prob.n_bp_edge = 75      ! 10.67bp * 7
-        if(prob.sel_bp_edge == 6)  prob.n_bp_edge = 85      ! 10.67bp * 8
-        if(prob.sel_bp_edge == 7)  prob.n_bp_edge = 96      ! 10.67bp * 9
-        if(prob.sel_bp_edge == 8)  prob.n_bp_edge = 107     ! 10.67bp * 10
-        if(prob.sel_bp_edge == 9)  prob.n_bp_edge = 117     ! 10.67bp * 11
-        if(prob.sel_bp_edge == 10) prob.n_bp_edge = 128     ! 10.67bp * 12
-    else if(geom.sec.types == "honeycomb") then
-
-        if(prob.sel_bp_edge ==  1) prob.n_bp_edge =  31     ! 10.5bp *  3
-        if(prob.sel_bp_edge ==  2) prob.n_bp_edge =  42     ! 10.5bp *  4
-        if(prob.sel_bp_edge ==  3) prob.n_bp_edge =  52     ! 10.5bp *  5
-        if(prob.sel_bp_edge ==  4) prob.n_bp_edge =  63     ! 10.5bp *  6
-        if(prob.sel_bp_edge ==  5) prob.n_bp_edge =  73     ! 10.5bp *  7
-        if(prob.sel_bp_edge ==  6) prob.n_bp_edge =  84     ! 10.5bp *  8
-        if(prob.sel_bp_edge ==  7) prob.n_bp_edge =  94     ! 10.5bp *  9
-        if(prob.sel_bp_edge ==  8) prob.n_bp_edge = 105     ! 10.5bp * 10
-        if(prob.sel_bp_edge ==  9) prob.n_bp_edge = 115     ! 10.5bp * 11
-        if(prob.sel_bp_edge == 10) prob.n_bp_edge = 126     ! 10.5bp * 12
-    end if
-
-    ! Increase the number of basepair for self-connection
-    !if(para_vertex_design == 1) then
-    !    prob.n_bp_edge = prob.n_bp_edge + 1
-    !end if
-end subroutine Input_Set_Num_BP_Edge_Old
 
 ! ---------------------------------------------------------------------------------------
 

@@ -20,6 +20,7 @@ module Data_Prob
         integer :: sel_vertex           ! Beveled or non-beveled
         integer :: sel_sec              ! Number for pre-defined cross-section
         integer :: sel_bp_edge          ! Number for pre-defined # of base pairs on edges
+        integer :: sel_edge             ! Specific edge number to set as reference
         integer :: n_bp_edge            ! The number of bps each edge
 
         integer :: color(3)             ! Problem color, [52, 152, 219]

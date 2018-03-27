@@ -61,11 +61,7 @@
 		<File RelativePath="..\src\Para.f90"/>
 		<File RelativePath="..\src\SpanTree.f90"/></Filter>
 		<Filter Name="Input">
-		<File RelativePath="..\src\Exam_2D_Open.f90"/>
-		<File RelativePath="..\src\Exam_3D_Open.f90"/>
-		<File RelativePath="..\src\Exam_Chiral.f90"/>
-		<File RelativePath="..\src\Exam_Johnson.f90"/>
-		<File RelativePath="..\src\Exam_Prism.f90"/></Filter>
+		<File RelativePath="..\src\Exam_2D_Open.f90"/></Filter>
 		<Filter Name="Output">
 		<File RelativePath="..\src\Chimera.f90"/>
 		<File RelativePath="..\src\Importer.f90"/>
