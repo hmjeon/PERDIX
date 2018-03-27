@@ -176,7 +176,7 @@ subroutine Importer_GEO(prob, geom)
     ! Boundary design
     if(geom.n_face == 1) then
         write(0, "(a)")
-        write(0, "(a)"), "   Select the mesh spacing parameter (0.0-1.0) [Enter] : "
+        write(0, "(a)"), "   Type the mesh spacing parameter (0.0 ~ 1.0) [Enter] : "
         read(*, *), p_mesh
 
         if(p_mesh > 0.0d0) then

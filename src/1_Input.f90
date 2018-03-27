@@ -736,8 +736,8 @@ subroutine Input_Set_Command
     logical :: results
 
     ! Set command environments
-    results = SYSTEMQQ('title PERDIX-2L')                 ! cmd title
-    results = SYSTEMQQ('mode con: cols=135 lines=6000')     ! cmd size
+    results = SYSTEMQQ('title PERDIX-2L')                   ! cmd title
+    results = SYSTEMQQ('mode con: cols=120 lines=6000')     ! cmd size
     results = SYSTEMQQ('color')                             ! convert color, 02, f0, f1, f2
     results = SYSTEMQQ('date /t')                           ! display time
     !results = SYSTEMQQ('hostname')                          ! display hostname of the computer
@@ -751,33 +751,31 @@ subroutine Input_Print_Problem
     write(0, "(a)")
     write(0, "(a)"), "     +=============================================================+"
     write(0, "(a)"), "     |                                                             |"
-    write(0, "(a)"), "     |   PERDIX-2L by Hyungmin Jun (hyungminjun@outlook.com) 2017  |"
+    write(0, "(a)"), "     |  PERDIX-2L by Hyungmin Jun (hyungminjun@outlook.com), 2018  |"
     write(0, "(a)"), "     |                                                             |"
     write(0, "(a)"), "     +=============================================================+"
     write(0, "(a)")
-    write(0, "(a)"), "   A. First input - 2D Geometry discretized by surface mesh"
-    write(0, "(a)"), "   ========================================================"
+    write(0, "(a)"), "   A. First input - Predefined 2D target geometry"
+    write(0, "(a)"), "   =============================================="
     write(0, "(a)")
-    write(0, "(a)"), "    [Triangular mesh]"
-    write(0, "(a)"), "       1. Plate (4 x 4),        2. Honeycomb"
+    write(0, "(a)"), "    [Triangular-mesh objects]"
+    write(0, "(a)"), "       1. Square,               2. Honeycomb"
     write(0, "(a)"), "       3. Circle,               4. Wheel,                    5. Ellipse"
     write(0, "(a)")
-    write(0, "(a)"), "    [Quadrilateral mesh]"
+    write(0, "(a)"), "    [Quadrilateral-mesh objects]"
     write(0, "(a)"), "       6. Rhombic Tiling,       7. Quarter Circle"
-    write(0, "(a)"), "       8. Cross,                9. House,                   10. Disk"
+    write(0, "(a)"), "       8. Cross,                9. Arrowhead,               10. Annulus"
     write(0, "(a)")
-    write(0, "(a)"), "    [N-polygon mesh]"
+    write(0, "(a)"), "    [N-polygon-mesh objects]"
     write(0, "(a)"), "      11. Cairo Penta Tiling,  12. Lotus"
     write(0, "(a)"), "      13. Hexagonal Tiling,    14. Prismatic Penta Tiling,  15. Hepta Penta Tiling"
     write(0, "(a)")
-    write(0, "(a)"), "    [Different angles and mesh patterns]"
+    write(0, "(a)"), "    [Variable vertex-number, edge-length, and internal mesh]"
     write(0, "(a)"), "      16. 4-Sided Polygon,     17. 5-Sided Polygon,         18. 6-Sided Polygon"
-    write(0, "(a)"), "      19. Curved beam [QUAD],  20. Curved beam [TRI],       21. Curved beam [ENG]"
-    write(0, "(a)"), "      22. L-shape [42-bp],     23. L-shape [63-bp],         24. L-shape [84-bp]"
-    write(0, "(a)"), "      25. Pump [QUAD],         26. Pump [TRI],              27. Pump [ENG]"
-    write(0, "(a)"), "      28. S-shape [QUAD],      29. S-shape [TRI],           30. S-shape [ENG]"
+    write(0, "(a)"), "      19. L-Shape [42-bp],     20. L-Shape [63-bp],         21. L-Shape [84-bp]"
+    write(0, "(a)"), "      22. Curved Arm [Quad],   23. Curved Arm [Tri],        24. Curved Arm [Mixed]"
     write(0, "(a)")
-    write(0, "(a)"), " Select the number or type geometry file (*.ply, *.geo, *.igs) [Enter] : "
+    write(0, "(a)"), " Select the number or type geometry file (*.geo, *.igs, *.iges, *.ply) [Enter] : "
 end subroutine Input_Print_Problem
 
 ! ---------------------------------------------------------------------------------------
@@ -807,10 +805,8 @@ subroutine Input_Print_Num_BP_Edge(prob)
 
     ! The minimum edge lengths pre-defined
     write(0, "(a)")
-    write(0, "(a)"), "   B. Section input - Pre-defined minimum edge length"
-    write(0, "(a)"), "   ================================================"
-    write(0, "(a)")
-    write(0, "(a)"), "   [Honeycomb lattice]"
+    write(0, "(a)"), "   B. Second input - Pre-defined minimum edge length"
+    write(0, "(a)"), "   ================================================="
     write(0, "(a)")
     write(0, "(a)"), "      1.  31 bp =  3 turn * 10.5 bp/turn ->  31 bp * 0.34nm/bp = 10.54nm"
     write(0, "(a)"), "   *  2.  42 bp =  4 turn * 10.5 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
@@ -823,7 +819,7 @@ subroutine Input_Print_Num_BP_Edge(prob)
     write(0, "(a)"), "      9. 115 bp = 11 turn * 10.5 bp/turn -> 115 bp * 0.34nm/bp = 39.27nm"
     write(0, "(a)"), "   * 10. 126 bp = 12 turn * 10.5 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
     write(0, "(a)")
-    write(0, "(a)"), "   Select the number [Enter] : "
+    write(0, "(a)"), "   Select the number or type the minimum edge length [Enter] : "
 end subroutine Input_Print_Num_BP_Edge
 
 ! ---------------------------------------------------------------------------------------
@@ -937,94 +933,57 @@ subroutine Input_Select_Problem(prob, geom)
     ! Select problem
     select case (prob.sel_prob)
 
-        ! 2D open geometry - tri mesh
-        case ( 1); call Exam_Open2D_Plate_Cross     (prob, geom)
+        ! Triangular-mesh objects
+        case ( 1); call Exam_Open2D_Square          (prob, geom)
         case ( 2); call Exam_Open2D_Honeycomb       (prob, geom)
         case ( 3); call Exam_Open2D_Circle          (prob, geom)
         case ( 4); call Exam_Open2D_Wheel           (prob, geom)
         case ( 5); call Exam_Open2D_Ellipse         (prob, geom)
 
-        ! 2D open geometry - quadrilateral mesh
+        ! Quadrilateral-mesh objects
         case ( 6); call Exam_Open2D_Rhombic_Tiling  (prob, geom)
         case ( 7); call Exam_Open2D_Quarter_Circle  (prob, geom)
         case ( 8); call Exam_Open2D_Cross           (prob, geom)
-        case ( 9); call Exam_Open2D_House           (prob, geom)
-        case (10); call Exam_Open2D_Disk            (prob, geom)
+        case ( 9); call Exam_Open2D_Arrowhead       (prob, geom)
+        case (10); call Exam_Open2D_Annulus         (prob, geom)
 
-        ! 2D open geometry - n-polygon mesh
+        ! 5-, 6-, 7-, 8-polygon-mesh object
         case (11); call Exam_Open2D_Cairo_Penta_Tiling     (prob, geom)
         case (12); call Exam_Open2D_Lotus                  (prob, geom)
         case (13); call Exam_Open2D_Hexagonal_Tiling       (prob, geom)
         case (14); call Exam_Open2D_Prismatic_Penta_Tiling (prob, geom)
         case (15); call Exam_Open2D_Hepta_Penta_Tiling     (prob, geom)
 
-        ! Different angles
+        ! Variable vertex-number
         case (16); call Exam_Open2D_4_Sided_Polygon (prob, geom)
         case (17); call Exam_Open2D_5_Sided_Polygon (prob, geom)
         case (18); call Exam_Open2D_6_Sided_Polygon (prob, geom)
 
-        ! Different mesh patterns with the curved geometry
-        case (19); call Exam_Open2D_Curved_Beam_Quad (prob, geom)
-        case (20); call Exam_Open2D_Curved_Beam_Tri  (prob, geom)
-        case (21); call Exam_Open2D_Curved_Beam_Eng  (prob, geom)
+        ! Variable edge-length
+        case (19); call Exam_Open2D_L_Shape_42bp (prob, geom)
+        case (20); call Exam_Open2D_L_Shape_63bp (prob, geom)
+        case (21); call Exam_Open2D_L_Shape_84bp (prob, geom)
 
-        ! Different edge lengths
-        case (22); call Exam_Open2D_L_Shape_42bp (prob, geom)
-        case (23); call Exam_Open2D_L_Shape_63bp (prob, geom)
-        case (24); call Exam_Open2D_L_Shape_84bp (prob, geom)
+        ! Variable internal mesh
+        case (22); call Exam_Open2D_Curved_Arm_Quad (prob, geom)
+        case (23); call Exam_Open2D_Curved_Arm_Tri  (prob, geom)
+        case (24); call Exam_Open2D_Curved_Arm_Mix  (prob, geom)
 
         ! Different mesh patterns with pump geometry
-        case (25); call Exam_Open2D_Pump_Quad (prob, geom)
-        case (26); call Exam_Open2D_Pump_Tri  (prob, geom)
-        case (27); call Exam_Open2D_Pump_Eng  (prob, geom)
+        !case (25); call Exam_Open2D_Pump_Quad (prob, geom)
+        !case (26); call Exam_Open2D_Pump_Tri  (prob, geom)
+        !case (27); call Exam_Open2D_Pump_Eng  (prob, geom)
 
         ! Different mesh patterns with s-shape geometry
-        case (28); call Exam_Open2D_S_Shape_Quad (prob, geom)
-        case (29); call Exam_Open2D_S_Shape_Tri  (prob, geom)
-        case (30); call Exam_Open2D_S_Shape_Eng  (prob, geom)
+        !case (28); call Exam_Open2D_S_Shape_Quad (prob, geom)
+        !case (29); call Exam_Open2D_S_Shape_Tri  (prob, geom)
+        !case (30); call Exam_Open2D_S_Shape_Eng  (prob, geom)
 
         ! Different mesh patterns with small house geometry
-        case (31); call Exam_Open2D_Small_House_Quad (prob, geom)
-        case (32); call Exam_Open2D_Small_House_Tri  (prob, geom)
+        !case (31); call Exam_Open2D_Small_House_Quad (prob, geom)
+        !case (32); call Exam_Open2D_Small_House_Tri  (prob, geom)
 
-        case (50); call Exam_Open2D_Triangle (prob, geom)
-
-        case (98); call Exam_Open3D_Cubeoctahedron (prob, geom)
-        case (99); call Exam_Chiral_Asym_Object    (prob, geom)
-
-        ! 3D open geometry
-        case (101); call Exam_Open3D_End_Cube_Quad             (prob, geom)
-        case (102); call Exam_Open3D_End_Pentagonal_Prism_Quad (prob, geom)
-        case (103); call Exam_Open3D_End_Cylinder_Quad         (prob, geom)
-        case (104); call Exam_Open3D_Cooling_Tower_Tri         (prob, geom)
-        case (105); call Exam_Open3D_Hemisphere_Quad           (prob, geom)
-
-        ! Prism and antiprism
-        case (106); call Exam_Prism_Octagonal      (prob, geom)
-        case (107); call Exam_Prism_Enneagonal     (prob, geom)
-        case (108); call Exam_Antiprism_Pentagonal (prob, geom)
-        case (109); call Exam_Antiprism_Hexagonal  (prob, geom)
-        case (110); call Exam_Antiprism_Heptagonal (prob, geom)
-
-        ! Johnson solids
-        case (111); call Exam_Johnson_Square_Pyramid_J1                   (prob, geom)
-        case (112); call Exam_Johnson_Pentagonal_Pyramid_J2               (prob, geom)
-        case (113); call Exam_Johnson_Pentagonal_Cupola_J5                (prob, geom)
-        case (114); call Exam_Johnson_Gyroelongated_Square_Cupola_J23     (prob, geom)
-        case (115); call Exam_Johnson_Gyroelongated_Pentagonal_Cupola_J24 (prob, geom)
-
-        ! Chiral solids
-        case (116); call Exam_Chiral_Biscribed_Propello_Tetrahedron        (prob, geom)
-        case (117); call Exam_Chiral_Biscribed_Propello_Cube               (prob, geom)
-        case (118); call Exam_Chiral_Biscribed_Propello_Octahedron         (prob, geom)
-        case (119); call Exam_Chiral_Biscribed_Snub_Cube                   (prob, geom)
-        case (120); call Exam_Chiral_Biscribed_Pentagonal_Icositetrahedron (prob, geom)
-
-        case (121); call Exam_Chiral_Asym_Tetrahedron  (prob, geom)
-        case (122); call Exam_Chiral_Asym_Cube         (prob, geom)
-        case (123); call Exam_Chiral_Asym_Octahedron   (prob, geom)
-        case (124); call Exam_Chiral_Asym_Dodecahedron (prob, geom)
-        case (125); call Exam_Chiral_Asym_Icosahedron  (prob, geom)
+        !case (50); call Exam_Open2D_Triangle (prob, geom)
 
         case default
             write(0, "(a$)"), "Error - Not defined problem : "
