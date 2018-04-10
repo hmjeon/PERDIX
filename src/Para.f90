@@ -34,13 +34,8 @@ module Para
     character(10)  :: para_external                     ! [off, on], External parameter loading flag
     character(10)  :: para_preset          = "on"       ! [on, off], Preset parameter defined in pre-defined examples
     character(10)  :: para_output_Tecplot  = "off"      ! [off, on], Output files for Tecplot(http://www.tecplot.com/) to draw vector image
-    character(10)  :: para_fig_route_step  = "off"      ! [off, on], Automatic figure generation from route steps
-    character(10)  :: para_fig_bgcolor     = "black"    ! [black, white, all], Background color for figures from UCSF Chimera
     character(10)  :: para_fig_view        = "xy"       ! [xy, xz, xyz1, xyz2, xyz, all], Viewpoint for figures from UCSF Chimera
-    integer        :: para_n_route_step    = 5          ! [5], The number of steps in routing progress
     integer        :: para_type_cndo       = 2          ! [1, 2], CanDo file option, 1 : original format, 2 : updated format
-    character(200) :: para_path_Chimera    = &          ! UCSF Chimera program path
-        "C:\Program Files\Chimera 1.10.2\bin\chimera.exe"
 
     ! Parameters for junction modification
     character(10)  :: para_junc_ang        = "opt"      ! [opt, max, ave, min], Junction gap modification for different arm angle

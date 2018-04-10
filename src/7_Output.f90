@@ -34,8 +34,6 @@ module Output
     use Para
     use Math
 
-    use Chimera
-
     implicit none
 
     public  Output_Generation
@@ -59,9 +57,6 @@ module Output
     private Output_Write_DNA_Info
     private Output_Write_TecPlot
     private Output_Write_ADINA
-    private Output_Make_Route_Step
-    private Output_Chimera_Route_Step
-    private Output_Figure_Route_Step
     private Output_Write_Sequence_CroL
 
 contains
@@ -120,9 +115,6 @@ subroutine Output_Generation(prob, geom, bound, mesh, dna)
 
     ! Write ADINA input file
     call Output_Write_ADINA(prob, mesh)
-
-    ! Command for Tecplot and Chimera, and figures for output and route step
-    if(para_fig_route_step == "on") call Output_Make_Route_Step(prob, mesh, dna)
 
     ! Write sequence based on cross-sectional line
     call Output_Write_Sequence_CroL(prob, mesh, dna)
@@ -3094,224 +3086,6 @@ subroutine Output_Write_ADINA(prob, mesh)
 
     close(unit = 805)
 end subroutine Output_Write_ADINA
-
-! -----------------------------------------------------------------------------
-
-! Make route step using Chimera
-subroutine Output_Make_Route_Step(prob, mesh, dna)
-    type(ProbType), intent(in) :: prob
-    type(MeshType), intent(in) :: mesh
-    type(DNAType),  intent(in) :: dna
-
-    integer :: i, j, id, step
-    logical :: results
-    character(10) :: str
-
-    ! Make folder to save route step Chimera files
-    results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_bild\")
-
-    ! Go to the first base of the strand
-    id = dna.strand(1).base(1)
-    do
-        if(dna.top(id).dn == -1) exit
-        id = dna.top(id).dn
-    end do
-
-    step = dna.n_base_scaf / para_n_route_step
-    do i = 1, para_n_route_step - 1
-
-        ! Go to upper base
-        do j = 1, step
-            id = dna.base_scaf(id).up
-        end do
-
-        write(str, "(i0)"), i
-        call Output_Chimera_Route_Step(prob, mesh, dna, id, str)
-    end do
-
-    ! go to the end of the strand
-    do
-        if(dna.top(id).up == -1) exit
-        id = dna.top(id).up
-    end do
-
-    ! The last route step
-    write(str, "(i0)"), para_n_route_step
-    call Output_Chimera_Route_Step(prob, mesh, dna, id, str)
-
-    ! Make figures from route step
-    call Output_Figure_Route_Step(prob, para_n_route_step)
-end subroutine Output_Make_Route_Step
-
-! -----------------------------------------------------------------------------
-
-! Write Chimera for route progress
-subroutine Output_Chimera_Route_Step(prob, mesh, dna, stop_base, str)
-    type(ProbType),  intent(in) :: prob
-    type(MeshType),  intent(in) :: mesh
-    type(DNAType),   intent(in) :: dna
-    integer,         intent(in) :: stop_base
-    character(10),   intent(in) :: str
-
-    double precision :: pos_1(3), pos_2(3)
-    integer :: i, id, up, base_1, base_2, node_1, node_2
-    logical :: f_axis
-    character(200) :: path
-
-    ! Set option
-    f_axis = para_chimera_axis
-
-    ! Open file
-    path = trim(prob.path_work1)//"step_bild\"//trim(prob.name_file)
-    open(unit=806, file=trim(path)//"_rstep_"//trim(str)//".bild", form="formatted")
-
-    ! Go to the first base of the strand
-    id = dna.strand(1).base(1)
-    do
-        if(dna.top(id).dn == -1) exit
-        id = dna.top(id).dn
-    end do
-
-    write(806, "(a)"), ".color steel blue"
-    do
-        ! If the ID meets the stop base number, terminate the current subroutine
-        if(id == stop_base) then
-            !exit
-            write(806, "(a)"), ".color grey"
-        end if
-
-        ! If the upper ID is negative, terminate loop
-        if(dna.top(id).up == -1) then
-            exit
-        end if
-
-        ! Set base ID
-        base_1 = dna.top(id).id
-        base_2 = dna.top(id).up
-
-        ! Set node number
-        node_1 = dna.top(base_1).node
-        node_2 = dna.top(base_2).node
-
-        ! Set position vector
-        pos_1(1:3) = mesh.node(node_1).pos(1:3)
-        pos_2(1:3) = mesh.node(node_2).pos(1:3)
-
-        write(806, "(a$    )"), ".cylinder "
-        write(806, "(3f9.3$)"), pos_1(1:3)
-        write(806, "(3f9.3$)"), pos_2(1:3)
-        write(806, "(1f9.3 )"), 0.15d0
-
-        ! Update ID number to upward base
-        id = dna.top(id).up
-    end do
-
-    ! Write global axis
-    if(f_axis == .true.) then
-        write(806, "(a)"), ".translate 0.0 0.0 0.0"
-        write(806, "(a)"), ".scale 0.5"
-        write(806, "(a)"), ".color grey"
-        write(806, "(a)"), ".sphere 0 0 0 0.5"      ! center
-        write(806, "(a)"), ".color red"             ! x-axis
-        write(806, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(806, "(a)"), ".color blue"            ! y-axis
-        write(806, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(806, "(a)"), ".color yellow"          ! z-axis
-        write(806, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
-
-    close(unit=806)
-end subroutine Output_Chimera_Route_Step
-
-! -----------------------------------------------------------------------------
-
-! Make figures from route step
-subroutine Output_Figure_Route_Step(prob, n_progress)
-    type(ProbType), intent(in) :: prob
-    integer,  intent(in) :: n_progress
-
-    character(200) :: path, str
-    logical :: results
-    integer :: i
-
-    ! Make step directories for PNG files
-    if(para_fig_bgcolor == "white") then
-        ! --------------------------------------------------
-        ! White background
-        ! --------------------------------------------------
-        if(para_fig_view == "xy") then
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_XY\")
-        else if(para_fig_view == "xz") then
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_XZ\")
-        else if(para_fig_view == "yz") then
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_YZ\")
-        else if(para_fig_view == "xyz" .or. para_fig_view == "all" ) then
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_XYZ\")
-        end if
-    else if(para_fig_bgcolor == "black") then
-        ! --------------------------------------------------
-        ! Black background
-        ! --------------------------------------------------
-        if(para_fig_view == "xy") then
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_XY\")
-        else if(para_fig_view == "xz") then
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_XZ\")
-        else if(para_fig_view == "yz") then
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_YZ\")
-        else if(para_fig_view == "xyz" .or. para_fig_view == "all" ) then
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_XYZ\")
-        end if
-    else if(para_fig_bgcolor == "all") then
-        ! --------------------------------------------------
-        ! White and black background
-        ! --------------------------------------------------
-        if(para_fig_view == "xy") then
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_XY\")
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_XY\")
-        else if(para_fig_view == "xz") then
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_XZ\")
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_XZ\")
-        else if(para_fig_view == "yz") then
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_YZ\")
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_YZ\")
-        else if(para_fig_view == "xyz" .or. para_fig_view == "all" ) then
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_white_XYZ\")
-            results = SYSTEMQQ("md "//trim(prob.path_work1)//"step_fig_black_XYZ\")
-        end if
-    end if
-
-    ! Make batch file to make figures
-    path = trim(prob.path_work1)//trim(prob.name_file)
-    open(unit=807, file=trim(path)//"_rstep.bat", form="formatted")
-
-    write(807, "(a)"), "@echo off"
-    do i = 1, n_progress
-
-        write(str, "(i0)"), i
-        str = trim(prob.name_file)//trim("_rstep_"//trim(str))
-
-        ! Make Python script to save imanges
-        if(i == 1) then
-            ! First Python script
-            call Chimera_Figure_Route_Step(prob, str, 1)
-        else if(i == n_progress) then
-            ! Last Python script
-            call Chimera_Figure_Route_Step(prob, str, 2)
-        else
-            call Chimera_Figure_Route_Step(prob, str, 0)
-        end if
-    end do
-
-    ! Write python file into batch script
-    path = " "//trim(prob.path_work1)//trim(prob.name_file)//"_rstep.py"
-    write(807, "(a)"), '"'//trim(prob.path_chimera)//'" --script'//path
-
-    ! Run batch file
-    path = trim(prob.path_work1)//trim(prob.name_file)
-    results = SYSTEMQQ("start cmd /C call "//trim(path)//"_rstep.bat")
-
-    close (unit=807)
-end subroutine Output_Figure_Route_Step
 
 ! -----------------------------------------------------------------------------
 

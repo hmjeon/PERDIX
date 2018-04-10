@@ -481,13 +481,8 @@ subroutine Input_Read_Parameter
         ! Program parameters
         read(1, *), ctemp, para_preset
         read(1, *), ctemp, para_output_Tecplot
-        read(1, *), ctemp, para_fig_route_step
-        read(1, *), ctemp, para_fig_bgcolor
         read(1, *), ctemp, para_fig_view
-        read(1, *), ctemp, para_n_route_step
         read(1, *), ctemp, para_type_cndo
-        read(1, *), ctemp
-        read(1, "(a100)"), para_path_Chimera
 
         ! Parameters for junction modification
         read(1, *), ctemp, para_junc_ang
@@ -595,13 +590,8 @@ subroutine Input_Reset_Para_Report
     ! Program parameters
     para_preset          = "on"       ! [on, off], Preset parameter defined in pre-defined examples
     para_output_Tecplot  = "on"       ! [on, off], Output files for Tecplot(http://www.tecplot.com/) to draw vector image
-    para_fig_route_step  = "off"      ! [off, on], Automatic figure generation from route steps
-    para_fig_bgcolor     = "black"    ! [black, white, all], Background color for figures from UCSF Chimera
     para_fig_view        = "xy"       ! [xy, xz, xyz, all], Viewpoint for figures from UCSF Chimera
-    para_n_route_step    = 5          ! [5], The number of steps in routing progress
     para_type_cndo       = 2          ! [1, 2], CanDo file option, 1 : original format, 2 : updated format
-    para_path_Chimera    = &          ! UCSF Chimera program path
-        "C:\Program Files\Chimera 1.10.2\bin\chimera.exe"
 
     ! Parameters for junction modification
     para_junc_ang        = "opt"      ! [opt, max, ave, min], Junction gap modification for different arm angle
@@ -1244,9 +1234,6 @@ subroutine Input_Set_Path(prob)
         prob.path_work1 = "output\"
         prob.path_work2 = "output/"
     end if
-
-    ! Set Chimera path
-    prob.path_chimera = trim(para_path_chimera)
 end subroutine Input_Set_Path
 
 ! -----------------------------------------------------------------------------
