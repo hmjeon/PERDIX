@@ -50,7 +50,6 @@ module Data_Prob
         character(10)  :: type_geo = "closed"   ! Geometric type, open or closed
         character(200) :: path_work1            ! Working directory path
         character(200) :: path_work2            ! Working directory path
-        character(200) :: path_chimera          ! Chimera path
     end type ProbType
 
 ! -----------------------------------------------------------------------------

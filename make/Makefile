@@ -1,12 +1,12 @@
 # Makefiles for PERDIX-2L
 Objects = Data_Bound.obj Data_DNA.obj Data_Geom.obj Data_Mesh.obj Data_Prob.obj \
-          Para.obj List.obj Mani.obj Math.obj SpanTree.obj Importer.obj TecPlot.obj Chimera.obj \
+          Para.obj List.obj Mani.obj Math.obj SpanTree.obj Importer.obj \
           Exam_2D_Open.obj
           3_Section.obj 1_Input.obj 2_ModGeo.obj 4_Basepair.obj 5_Route.obj 6_SeqDesign.obj 7_Output.obj \
           PERDIX-2L.obj
 
 #SRCS   = Data_Bound.f90 Data_DNA.f90 Data_Geom.f90 Data_Mesh.f90 Data_Prob.f90 \
-#         Para.f90 List.f90 Mani.f90 Math.f90 SpanTree.f90 Importer.f90 TecPlot.f90 Chimera.f90 \
+#         Para.f90 List.f90 Mani.f90 Math.f90 SpanTree.f90 Importer.f90 \
 #         Exam_2D_Open.f90
 #         3_Section.f90 1_Input.f90 2_ModGeo.f90 4_Basepair.f90 5_Route.f90 6_SeqDesign.f90 7_Output.f90 \
 #         PERDIX-2L.f90
@@ -39,10 +39,6 @@ SpanTree.obj : SpanTree.f90
     ifort -c SpanTree.obj SpanTree.f90
 Importer.obj : Importer.f90
     ifort -c Importer.obj Importer.f90
-TecPlot.obj : TecPlot.f90
-    ifort -c TecPlot.obj TecPlot.f90
-Chimera.obj : Chimera.f90
-    ifort -c Chimera.obj Chimera.f90
 Exam_2D_Open.obj : Exam_2D_Open.f90
     ifort -c Exam_2D_Open.obj Exam_2D_Open.f90
 3_Section.obj : 3_Section.f90
