@@ -6,7 +6,7 @@
 !
 ! =============================================================================
 !
-! PERDIX-2L is an open-source softeare, which allows scientists to build and
+! PERDIX-2L is an open-source software, which allows scientists to build and
 ! solve the sequence design of complex 2D DNA wireframe lattice.
 ! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
