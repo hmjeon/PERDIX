@@ -1,17 +1,27 @@
 !
-! ---------------------------------------------------------------------------------------
+! =============================================================================
 !
-!                                   PERDIX-2L
+! PERDIX-2L v1.0
+! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
-!                                                                    Updated : 2018/03/27
+! =============================================================================
 !
-! Comments: PERDIX is an open-source Fortran library, which allows scientists
-! to build and solve the sequence design of complex DNA nanostructures.
+! PERDIX-2L is an open-source softeare, which allows scientists to build and
+! solve the sequence design of complex 2D DNA wireframe lattice.
+! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
-! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2018. All rights reserved.
+! License - GPL version 3
+! This program is free software: you can redistribute it and/or modify it under
+! the terms of the GNU General Public License as published by the Free Software
+! Foundation, either version 3 of the License, or any later version.
+! This program is distributed in the hope that it will be useful, but WITHOUT
+! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+! FOR A PARTICULAR PURPOSE. See the GNU General Public License
+! for more details.
+! You should have received a copy of the GNU General Public License along with
+! this program. If not, see <http://www.gnu.org/licenses/>.
 !
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 !
 program PERDIX_2L
 
@@ -39,7 +49,7 @@ program PERDIX_2L
 
 contains
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Main subroutine
 subroutine Main()
@@ -91,7 +101,7 @@ subroutine Main()
     !if(para_external == .true.) pause
 end subroutine Main
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Autorun to calculate design parameters
 subroutine Report()
@@ -228,7 +238,7 @@ subroutine Report()
     close(unit = 90)
 end subroutine Report
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Print information of the PERDIX
 subroutine Print_Information(prob, geom, bound, mesh, dna)
@@ -435,7 +445,7 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
     close(unit=11)
 end subroutine Print_Information
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Deallocate global dynamic array
 subroutine Deallocate_Variables(geom, bound, mesh, dna)
@@ -490,7 +500,7 @@ subroutine Deallocate_Variables(geom, bound, mesh, dna)
     if(allocated(dna.order_stap)) deallocate(dna.order_stap)
 end subroutine Deallocate_Variables
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Print time consuming
 subroutine Print_TimeConsuming(time_start)
@@ -513,7 +523,7 @@ subroutine Print_TimeConsuming(time_start)
     write(0, "(a)")
 end subroutine Print_TimeConsuming
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Verify solution
 subroutine Verify_Solution(mesh, dna)
@@ -559,6 +569,6 @@ subroutine Verify_Solution(mesh, dna)
     write(0, "(es25.14)"), verify
 end subroutine Verify_Solution
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 end program PERDIX_2L

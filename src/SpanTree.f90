@@ -1,16 +1,27 @@
 !
-! ---------------------------------------------------------------------------------------
+! =============================================================================
 !
-!                                   Module - SpanTree
+! Module - SpanTree
+! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
-!                                                                    Updated : 2017/03/27
+! =============================================================================
 !
-! Comments: This module is for computing the spanning tree.
+! This is part of PERDIX-2L, which allows scientists to build and solve
+! the sequence design of complex DNAnanostructures.
+! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
-! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2018. All rights reserved.
+! License - GPL version 3
+! PERDIX-2L is free software: you can redistribute it and/or modify it under
+! the terms of the GNU General Public License as published by the Free Software
+! Foundation, either version 3 of the License, or any later version.
+! PERDIX-2L is distributed in the hope that it will be useful, but WITHOUT
+! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+! FOR A PARTICULAR PURPOSE. See the GNU General Public License
+! for more details.
+! You should have received a copy of the GNU General Public License along with
+! this program. If not, see <http://www.gnu.org/licenses/>.
 !
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 !
 module SpanTree
 
@@ -60,7 +71,7 @@ module SpanTree
 
 contains
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! The number of spanning trees using Kirchhoff's matrix tree theorem
 function SpanTree_Count_Spanning_Trees(adj) result(count)
@@ -111,7 +122,7 @@ function SpanTree_Count_Spanning_Trees(adj) result(count)
     deallocate(deg, lap)
 end function SpanTree_Count_Spanning_Trees
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Count the number of the spanning trees of a graph
 function SpanTree_Count_Spanning_Trees2(adj) result(count)
@@ -163,7 +174,7 @@ function SpanTree_Count_Spanning_Trees2(adj) result(count)
     deallocate(piv)
 end function SpanTree_Count_Spanning_Trees2
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Generate all spanning trees for an undirected graph
 subroutine SpanTree_Generate_Spanning_Trees(adj, idx, src, dst)
@@ -383,7 +394,7 @@ subroutine SpanTree_Generate_Spanning_Trees(adj, idx, src, dst)
     deallocate(mate, idx_map)
 end subroutine SpanTree_Generate_Spanning_Trees
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Kruskal's Algorithm to find minimal spanning tree
 subroutine SpanTree_Kruskal_Algorithm(tail, head, cost, tree, n_node, n_edge, length, mode)
@@ -496,7 +507,7 @@ subroutine SpanTree_Kruskal_Algorithm(tail, head, cost, tree, n_node, n_edge, le
     deallocate(fim)
 end subroutine SpanTree_Kruskal_Algorithm
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Prim's Algorithm, version 1 with quick or shell sort, or without sort
 subroutine SpanTree_Prim_Algorithm_1(tail, head, cost, tree, n_node, n_edge, length, mode)
@@ -595,7 +606,7 @@ subroutine SpanTree_Prim_Algorithm_1(tail, head, cost, tree, n_node, n_edge, len
     deallocate(posi)
 end subroutine SpanTree_Prim_Algorithm_1
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Prim's Algorithm Version 2 with quick or shell sort, or without sort
 subroutine SpanTree_Prim_Algorithm_2(tail, head, cost, tree, n_node, n_edge, length, mode)
@@ -705,7 +716,7 @@ subroutine SpanTree_Prim_Algorithm_2(tail, head, cost, tree, n_node, n_edge, len
     deallocate(list)
 end subroutine SpanTree_Prim_Algorithm_2
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Convert from list to adjacent matrix
 subroutine SpanTree_List2Adj(adj, tail, head, cost, n_node, n_edge)
@@ -734,7 +745,7 @@ subroutine SpanTree_List2Adj(adj, tail, head, cost, n_node, n_edge)
     end do
 end subroutine SpanTree_List2Adj
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Convert from adjacent matrix to list
 subroutine SpanTree_Adj2List(adj, tail, head, cost, n_node, n_edge)
@@ -779,7 +790,7 @@ subroutine SpanTree_Adj2List(adj, tail, head, cost, n_node, n_edge)
     end do
 end subroutine SpanTree_Adj2List
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Print all spanning tree
 subroutine SpanTree_Print_All_Trees(idx, src, dst)
@@ -815,7 +826,7 @@ subroutine SpanTree_Print_All_Trees(idx, src, dst)
     end do
 end subroutine SpanTree_Print_All_Trees
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Print matrix
 subroutine SpanTree_Print_Matrix(adj, str)
@@ -837,7 +848,7 @@ subroutine SpanTree_Print_Matrix(adj, str)
     write(0, "(a)")
 end subroutine SpanTree_Print_Matrix
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Print vector
 subroutine SpanTree_Print_Vector(adj, str)
@@ -856,7 +867,7 @@ subroutine SpanTree_Print_Vector(adj, str)
     write(0, "(a)")
 end subroutine SpanTree_Print_Vector
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Check if the adjacency matrix
 subroutine SpanTree_Check_Undirected_Graph(adj)
@@ -903,7 +914,7 @@ subroutine SpanTree_Check_Undirected_Graph(adj)
     end if
 end subroutine SpanTree_Check_Undirected_Graph
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! This function generates the data for the undirected simple graph
 subroutine SpanTree_Generate_Graph_Data(adj, n_vert, n_edge, d, t, n, p, mate, src, dst, idx_map)
@@ -1043,7 +1054,7 @@ subroutine SpanTree_Generate_Graph_Data(adj, n_vert, n_edge, d, t, n, p, mate, s
     deallocate(d2)
 end subroutine SpanTree_Generate_Graph_Data
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Find index if there is entity
 subroutine SpanTree_Find_Index(adj, dst, src)
@@ -1082,7 +1093,7 @@ subroutine SpanTree_Find_Index(adj, dst, src)
     !call SpanTree_Print_Vector(src, "src")
 end subroutine SpanTree_Find_Index
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Delete
 subroutine SpanTree_Delete(a, p, n)
@@ -1093,7 +1104,7 @@ subroutine SpanTree_Delete(a, p, n)
     p(n(a)) = p(a)
 end subroutine SpanTree_Delete
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Undelete
 subroutine SpanTree_Undelete(a, p, n)
@@ -1104,7 +1115,7 @@ subroutine SpanTree_Undelete(a, p, n)
     n(p(a)) = a
 end subroutine SpanTree_Undelete
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Generates a spanning tree
 subroutine SpanTree_Get_Spanning_Tree(n_vert, t, n, a)
@@ -1176,7 +1187,7 @@ subroutine SpanTree_Get_Spanning_Tree(n_vert, t, n, a)
     deallocate(b)
 end subroutine SpanTree_Get_Spanning_Tree
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! The bridge test for edge 'e' (v -> u), for which 'e_mate' is its mate
 function SpanTree_Is_Bridge(e_mate, u, vv, n_vert, t, n) result(flag)
@@ -1230,7 +1241,7 @@ function SpanTree_Is_Bridge(e_mate, u, vv, n_vert, t, n) result(flag)
     deallocate(b)
 end function SpanTree_Is_Bridge
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Count the degree of each node
 subroutine SpanTree_Count_Degree_Node(adj, deg)
@@ -1253,7 +1264,7 @@ subroutine SpanTree_Count_Degree_Node(adj, deg)
     end do
 end subroutine SpanTree_Count_Degree_Node
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Factor a general matrix
 ! n : the order of the matrix, piv : a vector of pivot indices
@@ -1310,7 +1321,7 @@ function SpanTree_Factor_Matrix(mat, piv, n) result(info)
     end if
 end function SpanTree_Factor_Matrix
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Swaps two double precision values
 subroutine SpanTree_Swap(x, y)
@@ -1323,7 +1334,7 @@ subroutine SpanTree_Swap(x, y)
     y    = temp
 end subroutine SpanTree_Swap
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Get the determinant of a matrix factored
 function SpanTree_Get_Determinant(mat, piv, lda, n) result(det)
@@ -1348,7 +1359,7 @@ function SpanTree_Get_Determinant(mat, piv, lda, n) result(det)
     end do
 end function SpanTree_Get_Determinant
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Sorting's interface 1
 subroutine SpanTree_Interface_1_Sort(tail, head, cost, up, down, listup, listdn, mode)
@@ -1400,7 +1411,7 @@ subroutine SpanTree_Interface_1_Sort(tail, head, cost, up, down, listup, listdn,
     end do
 end subroutine SpanTree_Interface_1_Sort
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Sorting's interface 2
 ! The data structure used in the code is dynamic; however, arcs that forms a circuit 
@@ -1437,7 +1448,7 @@ subroutine SpanTree_Interface_2_Sort(tail, head, cost, up, list, mode)
 40  continue
 end subroutine SpanTree_Interface_2_Sort
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Iterative quick sort algorithm
 subroutine SpanTree_Quick_Sort(tail, head, cost, n_edge)
@@ -1507,7 +1518,7 @@ subroutine SpanTree_Quick_Sort(tail, head, cost, n_edge)
     deallocate(sr)
 end subroutine SpanTree_Quick_Sort
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Shell sort algorithm
 subroutine SpanTree_Shell_Sort(tail, head, cost, n_edge)
@@ -1544,7 +1555,7 @@ subroutine SpanTree_Shell_Sort(tail, head, cost, n_edge)
     end do
 end subroutine SpanTree_Shell_Sort
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 subroutine SpanTree_Remove(ant, arc, up, down, listup, listd, node, posicao, fim)
     integer, intent(in) :: ant, arc
@@ -1584,6 +1595,6 @@ subroutine SpanTree_Remove(ant, arc, up, down, listup, listd, node, posicao, fim
     end if
 end subroutine SpanTree_Remove
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 end module SpanTree

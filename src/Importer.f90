@@ -1,16 +1,27 @@
 !
-! ---------------------------------------------------------------------------------------
+! =============================================================================
 !
-!                                   Module - Importer
+! Module - Importer
+! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
-!                                                                    Updated : 2018/03/25
+! =============================================================================
 !
-! Comments: This module is for the import specific file type.
+! This is part of PERDIX-2L, which allows scientists to build and solve
+! the sequence design of complex DNAnanostructures.
+! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
-! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2018. All rights reserved.
+! License - GPL version 3
+! PERDIX-2L is free software: you can redistribute it and/or modify it under
+! the terms of the GNU General Public License as published by the Free Software
+! Foundation, either version 3 of the License, or any later version.
+! PERDIX-2L is distributed in the hope that it will be useful, but WITHOUT
+! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+! FOR A PARTICULAR PURPOSE. See the GNU General Public License
+! for more details.
+! You should have received a copy of the GNU General Public License along with
+! this program. If not, see <http://www.gnu.org/licenses/>.
 !
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 !
 module Importer
 
@@ -30,7 +41,7 @@ module Importer
 
 contains
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! import PLY format that has surface mesh information
 subroutine Importer_PLY(prob, geom)
@@ -95,7 +106,7 @@ subroutine Importer_PLY(prob, geom)
     close(unit=1001)
 end subroutine Importer_PLY
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! import STL format using meshconv
 subroutine Importer_STL(prob)
@@ -111,7 +122,7 @@ subroutine Importer_STL(prob)
     prob.type_file = "ply"
 end subroutine Importer_STL
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! import WRL format using meshconv
 subroutine Importer_WRL(prob)
@@ -127,7 +138,7 @@ subroutine Importer_WRL(prob)
     prob.type_file = "ply"
 end subroutine Importer_WRL
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Import .geo, iges and igs format to convert polygon meshes
 subroutine Importer_GEO(prob, geom)
@@ -228,6 +239,6 @@ subroutine Importer_GEO(prob, geom)
     results = SYSTEMQQ(trim("del input\")//trim(prob.name_file)//trim("_shapely_distmesh.geo"))
 end subroutine Importer_GEO
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 end module Importer

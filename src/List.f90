@@ -1,16 +1,27 @@
 !
-! ---------------------------------------------------------------------------------------
+! =============================================================================
 !
-!                                       Module - List
+! Module - List
+! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
-!                                                                    Updated : 2017/03/27
+! =============================================================================
 !
-! Comments: The linked list used
+! This is part of PERDIX-2L, which allows scientists to build and solve
+! the sequence design of complex DNAnanostructures.
+! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
-! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2018. All rights reserved.
+! License - GPL version 3
+! PERDIX-2L is free software: you can redistribute it and/or modify it under
+! the terms of the GNU General Public License as published by the Free Software
+! Foundation, either version 3 of the License, or any later version.
+! PERDIX-2L is distributed in the hope that it will be useful, but WITHOUT
+! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+! FOR A PARTICULAR PURPOSE. See the GNU General Public License
+! for more details.
+! You should have received a copy of the GNU General Public License along with
+! this program. If not, see <http://www.gnu.org/licenses/>.
 !
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 !
 module List
 
@@ -52,7 +63,7 @@ module List
 
 contains
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Insert list for connection
 function List_Insert_Conn(head, elem) result(list)
@@ -68,7 +79,7 @@ function List_Insert_Conn(head, elem) result(list)
     list => elem
 end function List_Insert_Conn
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Insert list for junction
 function List_Insert_Junc(head, elem) result(list)
@@ -84,7 +95,7 @@ function List_Insert_Junc(head, elem) result(list)
     list => elem
 end function List_Insert_Junc
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Insert list for base
 function List_Insert_Base(head, elem) result(list)
@@ -100,7 +111,7 @@ function List_Insert_Base(head, elem) result(list)
     list => elem
 end function List_Insert_Base
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Insert list for scaffold strand
 function List_Insert_Scaf(head, elem) result(list)
@@ -116,7 +127,7 @@ function List_Insert_Scaf(head, elem) result(list)
     list => elem
 end function List_Insert_Scaf
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Delete list for connection
 subroutine List_Delete_Conn(self)
@@ -138,7 +149,7 @@ subroutine List_Delete_Conn(self)
     end do
 end subroutine List_Delete_Conn
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Delete list for junction
 subroutine List_Delete_Junc(self)
@@ -160,7 +171,7 @@ subroutine List_Delete_Junc(self)
     end do
 end subroutine List_Delete_Junc
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Delete list for base
 subroutine List_Delete_Base(self)
@@ -181,7 +192,7 @@ subroutine List_Delete_Base(self)
     end do
 end subroutine List_Delete_Base
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Delete list for scaffold
 subroutine List_Delete_Scaf(self)
@@ -203,7 +214,7 @@ subroutine List_Delete_Scaf(self)
     end do
 end subroutine List_Delete_Scaf
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Count junction list
 function List_Count_Junc(head) result(count)
@@ -222,7 +233,7 @@ function List_Count_Junc(head) result(count)
     end do
 end function List_Count_Junc
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Count base list
 function List_Count_Base(head) result(count)
@@ -241,7 +252,7 @@ function List_Count_Base(head) result(count)
     end do
 end function List_Count_Base
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Count scaffold list
 function List_Count_Scaf(head) result(count)
@@ -260,6 +271,6 @@ function List_Count_Scaf(head) result(count)
     end do
 end function List_Count_Scaf
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 end module List

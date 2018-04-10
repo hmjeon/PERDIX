@@ -61,11 +61,10 @@
 		<File RelativePath="..\src\Para.f90"/>
 		<File RelativePath="..\src\SpanTree.f90"/></Filter>
 		<Filter Name="Input">
-		<File RelativePath="..\src\Exam_2D_Open.f90"/></Filter>
+		<File RelativePath="..\src\Exam_2D_Open.f90"/>
+		<File RelativePath="..\src\Importer.f90"/></Filter>
 		<Filter Name="Output">
-		<File RelativePath="..\src\Chimera.f90"/>
-		<File RelativePath="..\src\Importer.f90"/>
-		<File RelativePath="..\src\TecPlot.f90"/></Filter>
+		<File RelativePath="..\src\Chimera.f90"/></Filter>
 		<Filter Name="PERDIX-2L">
 		<File RelativePath="..\src\1_Input.f90"/>
 		<File RelativePath="..\src\2_ModGeo.f90"/>

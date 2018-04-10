@@ -1,16 +1,27 @@
 !
-! ---------------------------------------------------------------------------------------
+! =============================================================================
 !
-!                                   Module - SeqDesign
+! Module - SeqDesign
+! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
-!                                                                    Updated : 2017/03/27
+! =============================================================================
 !
-! Comments: This module is to break staples ranging from 20-bp to 60-bp.
+! This is part of PERDIX-2L, which allows scientists to build and solve
+! the sequence design of complex DNAnanostructures.
+! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
-! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2018. All rights reserved.
+! License - GPL version 3
+! PERDIX-2L is free software: you can redistribute it and/or modify it under
+! the terms of the GNU General Public License as published by the Free Software
+! Foundation, either version 3 of the License, or any later version.
+! PERDIX-2L is distributed in the hope that it will be useful, but WITHOUT
+! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+! FOR A PARTICULAR PURPOSE. See the GNU General Public License
+! for more details.
+! You should have received a copy of the GNU General Public License along with
+! this program. If not, see <http://www.gnu.org/licenses/>.
 !
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 !
 module SeqDesign
 
@@ -88,7 +99,7 @@ module SeqDesign
     end type GraphType
 contains
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Design topology
 subroutine SeqDesign_Design(prob, geom, mesh, dna)
@@ -154,7 +165,7 @@ subroutine SeqDesign_Design(prob, geom, mesh, dna)
     call SeqDesign_Chimera_Strand(prob, dna)
 end subroutine SeqDesign_Design
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Reset possible staple crossovers
 subroutine SeqDesign_Reset_Possible_Stap_Xover(geom, mesh, dna)
@@ -341,7 +352,7 @@ subroutine SeqDesign_Reset_Possible_Stap_Xover(geom, mesh, dna)
     deallocate(croL)
 end subroutine SeqDesign_Reset_Possible_Stap_Xover
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Build dnaTop data from dna base data
 subroutine SeqDesign_Build_dnaTop(dna)
@@ -450,7 +461,7 @@ subroutine SeqDesign_Build_dnaTop(dna)
     write(0, "(a)"); write(11, "(a)")
 end subroutine SeqDesign_Build_dnaTop
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Get random sequence
 function SeqDesign_Get_Rand_Sequence result(seq)
@@ -471,7 +482,7 @@ function SeqDesign_Get_Rand_Sequence result(seq)
     end if
 end function SeqDesign_Get_Rand_Sequence
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Get complementary sequence
 function SeqDesign_Get_Comp_Sequence(seq) result(com_seq)
@@ -494,7 +505,7 @@ function SeqDesign_Get_Comp_Sequence(seq) result(com_seq)
     end if
 end function SeqDesign_Get_Comp_Sequence
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Build strand data from dnaTop
 subroutine SeqDesign_Build_Strand(dna)
@@ -704,7 +715,7 @@ subroutine SeqDesign_Build_Strand(dna)
     write(0, "(a)"); write(11, "(a)")
 end subroutine SeqDesign_Build_Strand
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Make non-circular staple strand by single crossover
 subroutine SeqDesign_Make_Noncir_Stap_Single_Xover(mesh, dna)
@@ -763,7 +774,7 @@ subroutine SeqDesign_Make_Noncir_Stap_Single_Xover(mesh, dna)
     end do
 end subroutine SeqDesign_Make_Noncir_Stap_Single_Xover
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Make non-circular staples by placing the nick
 subroutine SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
@@ -879,7 +890,7 @@ subroutine SeqDesign_Make_Noncir_Stap_Nick(mesh, dna)
     end do
 end subroutine SeqDesign_Make_Noncir_Stap_Nick
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Build sequence design combined maximum and optimal cutting
 subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
@@ -1261,7 +1272,7 @@ subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
     end do
 end subroutine SeqDesign_Build_Sequence_Design_Mix
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Build sequence design with non-circular staple strands with 14nt seeds
 subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
@@ -1672,7 +1683,7 @@ subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
     end do
 end subroutine SeqDesign_Break_Staples_Seeds
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Maximized staple length - staple-break rule
 subroutine SeqDesign_Break_Staples_Length(prob, mesh, dna)
@@ -1998,7 +2009,7 @@ subroutine SeqDesign_Break_Staples_Length(prob, mesh, dna)
     !stop
 end subroutine SeqDesign_Break_Staples_Length
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Build staple region without crossovers and unpaired nucleotides
 subroutine SeqDesign_Build_Region_Staple(dna, i, region, n_region)
@@ -2114,7 +2125,7 @@ subroutine SeqDesign_Build_Region_Staple(dna, i, region, n_region)
     end do
 end subroutine SeqDesign_Build_Region_Staple
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Build staple region without crossovers and unpaired nucleotides
 subroutine SeqDesign_Build_Region_Staple_1(dna, i, region, n_region)
@@ -2274,7 +2285,7 @@ subroutine SeqDesign_Build_Region_Staple_1(dna, i, region, n_region)
     end do
 end subroutine SeqDesign_Build_Region_Staple_1
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Build sequence design with non-circular staple strands
 subroutine SeqDesign_Build_Sequence_Design(prob, mesh, dna)
@@ -2641,7 +2652,7 @@ subroutine SeqDesign_Build_Sequence_Design(prob, mesh, dna)
     end do
 end subroutine SeqDesign_Build_Sequence_Design
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Make nick in scaffold
 subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
@@ -2803,7 +2814,7 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
     deallocate(croL)
 end subroutine SeqDesign_Make_Nick_Scaf
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Make short scaffold strand
 subroutine SeqDesign_Make_Short_Scaf(mesh, dna)
@@ -3003,7 +3014,7 @@ subroutine SeqDesign_Make_Short_Scaf(mesh, dna)
     end do
 end subroutine SeqDesign_Make_Short_Scaf
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Move cur_base to avoid node without ID and crossovers
 function SeqDesign_Avoid_Barrier(mesh, dna, base, gap) result(cur_base)
@@ -3119,7 +3130,7 @@ function SeqDesign_Avoid_Barrier(mesh, dna, base, gap) result(cur_base)
     end do
 end function SeqDesign_Avoid_Barrier
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Make short strand
 subroutine SeqDesign_Make_Short_Strand(mesh, dna)
@@ -3214,7 +3225,7 @@ subroutine SeqDesign_Make_Short_Strand(mesh, dna)
     end do
 end subroutine SeqDesign_Make_Short_Strand
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Count the number of remainder bases, strand should be non-circular
 function SeqDesign_Count_Remainder(dna, cur_base) result(count)
@@ -3237,7 +3248,7 @@ function SeqDesign_Count_Remainder(dna, cur_base) result(count)
     end do
 end function SeqDesign_Count_Remainder
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Rebuild strand data from dnaTop data
 subroutine SeqDesign_Rebuild_Strand(dna)
@@ -3440,7 +3451,7 @@ subroutine SeqDesign_Rebuild_Strand(dna)
     write(0, "(a)"); write(11, "(a)")
 end subroutine SeqDesign_Rebuild_Strand
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! List in long length order of the staple
 subroutine SeqDesign_Order_Staple(dna)
@@ -3477,7 +3488,7 @@ subroutine SeqDesign_Order_Staple(dna)
     end do
 end subroutine SeqDesign_Order_Staple
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Print 14nt region with various representations
 subroutine SeqDesign_Print_14nt_Region_Simple(prob, geom, mesh, dna)
@@ -3821,7 +3832,7 @@ subroutine SeqDesign_Print_14nt_Region_Simple(prob, geom, mesh, dna)
     deallocate(graph.edge)
 end subroutine SeqDesign_Print_14nt_Region_Simple
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Print 14nt region with various representations
 subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
@@ -4376,7 +4387,7 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
     deallocate(graph.edge)
 end subroutine SeqDesign_Print_14nt_Region
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Count the total number of regions for all staples
 function SeqDesign_CirGraph_Count_Edge(dna) result(n_edge)
@@ -4402,7 +4413,7 @@ function SeqDesign_CirGraph_Count_Edge(dna) result(n_edge)
     end do
 end function SeqDesign_CirGraph_Count_Edge
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Allocate and initialize variables for the circular graph
 subroutine SeqDesign_CirGraph_Init_Variable(dna, graph, n_edge)
@@ -4423,7 +4434,7 @@ subroutine SeqDesign_CirGraph_Init_Variable(dna, graph, n_edge)
     graph.edge(1:n_edge, 3) = 0
 end subroutine SeqDesign_CirGraph_Init_Variable
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Assign DNA sequence according to para_set_seq_scaf
 subroutine SeqDesign_Assign_Sequence(dna)
@@ -4491,7 +4502,7 @@ subroutine SeqDesign_Assign_Sequence(dna)
     write(0, "(a)"); write(11, "(a)")
 end subroutine SeqDesign_Assign_Sequence
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Set M13mp18 DNA sequence
 subroutine SeqDesign_Set_M13mp18(dna)
@@ -4551,7 +4562,7 @@ subroutine SeqDesign_Set_M13mp18(dna)
     end do
 end subroutine SeqDesign_Set_M13mp18
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Get M13mp18 DNA sequence
 function SeqDesign_Get_M13mp18(len_M13) result(M13_seq)
@@ -4757,7 +4768,7 @@ function SeqDesign_Get_M13mp18(len_M13) result(M13_seq)
     end do
 end function SeqDesign_Get_M13mp18
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Import sequence from txt file
 subroutine SeqDesign_Import_Sequence(dna)
@@ -4841,7 +4852,7 @@ subroutine SeqDesign_Import_Sequence(dna)
     end do
 end subroutine SeqDesign_Import_Sequence
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Set random sequence
 subroutine SeqDesign_Set_Rand_Sequence(dna)
@@ -4894,7 +4905,7 @@ subroutine SeqDesign_Set_Rand_Sequence(dna)
     end do
 end subroutine SeqDesign_Set_Rand_Sequence
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write atom model by dnaTop and strand data
 subroutine SeqDesign_Chimera_Atom(prob, dna)
@@ -5040,7 +5051,7 @@ subroutine SeqDesign_Chimera_Atom(prob, dna)
     close(unit=702)
 end subroutine SeqDesign_Chimera_Atom
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write the curved cylinderical model
 subroutine SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
@@ -5181,7 +5192,7 @@ subroutine SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
     end if
 end subroutine SeqDesign_Chimera_Curved_Cylinder
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write scaffold or staple route for Chimera
 subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
@@ -5472,7 +5483,7 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
     close(unit=704)
 end subroutine SeqDesign_Chimera_Route
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Chimera sequence design
 subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
@@ -5858,7 +5869,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     close(unit=706)
 end subroutine SeqDesign_Chimera_Sequence_Design
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write Chimera file for strand and sequence
 subroutine SeqDesign_Chimera_Strand(prob, dna)
@@ -6007,6 +6018,6 @@ subroutine SeqDesign_Chimera_Strand(prob, dna)
     close(unit=707)
 end subroutine SeqDesign_Chimera_Strand
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 end module SeqDesign

@@ -1,16 +1,27 @@
 !
-! ---------------------------------------------------------------------------------------
+! =============================================================================
 !
-!                                   Module - Section
+! Module - Section
+! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
-!                                                                    Updated : 2017/03/27
+! =============================================================================
 !
-! Comments: This module is to generate multiple lines.
+! This is part of PERDIX-2L, which allows scientists to build and solve
+! the sequence design of complex DNAnanostructures.
+! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
-! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2018. All rights reserved.
+! License - GPL version 3
+! PERDIX-2L is free software: you can redistribute it and/or modify it under
+! the terms of the GNU General Public License as published by the Free Software
+! Foundation, either version 3 of the License, or any later version.
+! PERDIX-2L is distributed in the hope that it will be useful, but WITHOUT
+! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+! FOR A PARTICULAR PURPOSE. See the GNU General Public License
+! for more details.
+! You should have received a copy of the GNU General Public License along with
+! this program. If not, see <http://www.gnu.org/licenses/>.
 !
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 !
 module Section
 
@@ -41,7 +52,7 @@ module Section
 
 contains
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Cross-section generation
 subroutine Section_Generation(prob, geom, bound)
@@ -665,7 +676,7 @@ function Section_Connection_Stap(geom, sec_cur, sec_com, bp_id) result(b_connect
     end if
 end function Section_Connection_Stap
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Set crosssectional data, croP and croL and update junction data
 subroutine Section_Set_Sectional_Data(geom, bound)
@@ -774,7 +785,7 @@ subroutine Section_Set_Sectional_Data(geom, bound)
     write(0, "(a)"); write(11, "(a)")
 end subroutine Section_Set_Sectional_Data
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Generate cross-sectional geometry
 subroutine Section_Generate_Section_Geometry(geom)
@@ -807,7 +818,7 @@ subroutine Section_Generate_Section_Geometry(geom)
     end do
 end subroutine Section_Generate_Section_Geometry
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Generate cross-sectional geometry defined by square lattice
 subroutine Section_Generate_Square(geom)
@@ -862,7 +873,7 @@ subroutine Section_Generate_Square(geom)
     end do
 end subroutine Section_Generate_Square
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Generate cross-sectional geometry defined by honeycomb lattice
 subroutine Section_Generate_Honeycomb(geom)
@@ -933,7 +944,7 @@ subroutine Section_Generate_Honeycomb(geom)
     end do
 end subroutine Section_Generate_Honeycomb
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Get position vector using natural coordinate system
 function Section_Get_Position(geom, r, s, t, num, n_row, n_col) result(pos)
@@ -970,7 +981,7 @@ function Section_Get_Position(geom, r, s, t, num, n_row, n_col) result(pos)
              hr(1) * yz_bar(2) * Vs(3) + hr(2) * yz_bar(2) * Vs(3)
 end function Section_Get_Position
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Get 1D and 2D finite element shape function
 subroutine Section_Get_Shape_Function(r, s, t, hr, hst)
@@ -988,7 +999,7 @@ subroutine Section_Get_Shape_Function(r, s, t, hr, hst)
     hst(4) = 0.25d0 * (1.0d0 + s) * (1.0d0 - t)
 end subroutine Section_Get_Shape_Function
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Get director vectors, local coordinate system
 subroutine Section_Get_Director(geom, line, Vs, Vt)
@@ -1000,7 +1011,7 @@ subroutine Section_Get_Director(geom, line, Vs, Vt)
     Vt(1:3) = geom.croL(line).t(3, 1:3)
 end subroutine Section_Get_Director
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Get parameter y and z bar
 subroutine Section_Get_Parameter(type_sec, hst, n_row, n_col, yz_bar)
@@ -1065,7 +1076,7 @@ subroutine Section_Get_Parameter(type_sec, hst, n_row, n_col, yz_bar)
     yz_bar(2) = hst(1)*z(1) + hst(2)*z(2) + hst(3)*z(3) + hst(4)*z(4)
 end subroutine Section_Get_Parameter
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Reset local coordinates according to section ID
 subroutine Section_Reset_Local_Coordinate(geom)
@@ -1102,7 +1113,7 @@ subroutine Section_Reset_Local_Coordinate(geom)
     end do
 end subroutine Section_Reset_Local_Coordinate
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write cross-sectional geometry
 subroutine Section_Chimera_Cro_Geometry(prob, geom)
@@ -1268,6 +1279,6 @@ subroutine Section_Chimera_Cro_Geometry(prob, geom)
     close(unit=401)
 end subroutine Section_Chimera_Cro_Geometry
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 end module Section

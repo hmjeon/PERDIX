@@ -1,16 +1,27 @@
 !
-! ---------------------------------------------------------------------------------------
+! =============================================================================
 !
-!                                   Module - Basepair
+! Module - Basepair
+! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
-!                                                                    Updated : 2017/03/27
+! =============================================================================
 !
-! Comments: This module is to build the basepair model.
+! This is part of PERDIX-2L, which allows scientists to build and solve
+! the sequence design of complex DNAnanostructures.
+! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
-! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2018. All rights reserved.
+! License - GPL version 3
+! PERDIX-2L is free software: you can redistribute it and/or modify it under
+! the terms of the GNU General Public License as published by the Free Software
+! Foundation, either version 3 of the License, or any later version.
+! PERDIX-2L is distributed in the hope that it will be useful, but WITHOUT
+! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+! FOR A PARTICULAR PURPOSE. See the GNU General Public License
+! for more details.
+! You should have received a copy of the GNU General Public License along with
+! this program. If not, see <http://www.gnu.org/licenses/>.
 !
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 !
 module Basepair
 
@@ -50,7 +61,7 @@ module Basepair
 
 contains
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Discretize multiple lines to basepairs
 subroutine Basepair_Discretize(prob, geom, bound, mesh)
@@ -112,7 +123,7 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
     call Basepair_Write_Edge_Length(prob, geom)
 end subroutine Basepair_Discretize
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Count the number of basepairs
 subroutine Basepair_Count_Basepair(prob, geom, mesh)
@@ -159,7 +170,7 @@ subroutine Basepair_Count_Basepair(prob, geom, mesh)
     end do
 end subroutine Basepair_Count_Basepair
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Generate the basepair model
 subroutine Basepair_Generate_Basepair(geom, bound, mesh)
@@ -292,7 +303,7 @@ subroutine Basepair_Generate_Basepair(geom, bound, mesh)
     write(0, "(a)"); write(11, "(a)")
 end subroutine Basepair_Generate_Basepair
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Set sectional connection at the junction
 subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
@@ -467,7 +478,7 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
     !call Basepair_Print_Bound_Data(geom, bound)
 end subroutine Basepair_Set_Conn_Junction
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Print bound data
 subroutine Basepair_Print_Bound_Data(geom, bound)
@@ -538,7 +549,7 @@ subroutine Basepair_Print_Bound_Data(geom, bound)
     end do
 end subroutine Basepair_Print_Bound_Data
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Get direction, inward or outward to the junction
 function Basepair_Get_Direction_IniL(geom, mesh, node) result (direction)
@@ -569,7 +580,7 @@ function Basepair_Get_Direction_IniL(geom, mesh, node) result (direction)
     end if
 end function Basepair_Get_Direction_IniL
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write cylindrial model with orientation
 subroutine Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, mode)
@@ -719,7 +730,7 @@ subroutine Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, mode)
     close(unit=501)
 end subroutine Basepair_Chimera_Cylinder_Ori
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write cylindrial model
 subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
@@ -919,7 +930,7 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     close(unit=502)
 end subroutine Basepair_Chimera_Cylinder
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Modify the length of the duplex at the junction
 subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
@@ -1109,7 +1120,7 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
     write(0, "(a)"); write(11, "(a)")
 end subroutine Basepair_Modify_Junction
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Find crossovers nearby from current and comparing nodes
 function Basepair_Find_Xover_Nearby(geom, bound, mesh, node_cur, node_com) result(n_move)
@@ -1214,7 +1225,7 @@ function Basepair_Find_Xover_Nearby(geom, bound, mesh, node_cur, node_com) resul
     end if
 end function Basepair_Find_Xover_Nearby
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Increase basepair with certain size, n_move
 subroutine Basepair_Increase_Basepair(geom, bound, mesh, node_cur, node_com, n_move)
@@ -1258,7 +1269,7 @@ subroutine Basepair_Increase_Basepair(geom, bound, mesh, node_cur, node_com, n_m
     mesh.node(node_up).conn = 4
 end subroutine Basepair_Increase_Basepair
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Decrease basepair with certain size making ghost nodes
 subroutine Basepair_Decrease_Basepair(geom, bound, mesh, node_cur, node_com, n_move)
@@ -1298,7 +1309,7 @@ subroutine Basepair_Decrease_Basepair(geom, bound, mesh, node_cur, node_com, n_m
     mesh.node(node_up).conn = 4
 end subroutine Basepair_Decrease_Basepair
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Check ghost node to be deleted
 subroutine Basepair_Make_Ghost_Node(geom, bound, mesh, node_cur, node_com)
@@ -1348,7 +1359,7 @@ subroutine Basepair_Make_Ghost_Node(geom, bound, mesh, node_cur, node_com)
     end do
 end subroutine Basepair_Make_Ghost_Node
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Increase edge length for neighbor connection
 subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
@@ -1552,7 +1563,7 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
     end if
 end subroutine Basepair_Increase_Edge
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Add one bp at the end indicating vector, vec_in and return newly node ID
 subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
@@ -1719,7 +1730,7 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     mesh.n_beveled = mesh.n_beveled + 1
 end subroutine Basepair_Add_Basepair
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Delete ghost node from node data
 subroutine Basepair_Delete_Ghost_Node(geom, bound, mesh)
@@ -1909,7 +1920,7 @@ subroutine Basepair_Delete_Ghost_Node(geom, bound, mesh)
     write(0, "(a)"); write(11, "(a)")
 end subroutine Basepair_Delete_Ghost_Node
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Delete node from min to max ID
 subroutine Basepair_Delete_Nodes(mesh, min, max)
@@ -2028,7 +2039,7 @@ subroutine Basepair_Delete_Nodes(mesh, min, max)
     deallocate(t_ele)
 end subroutine Basepair_Delete_Nodes
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Add one base to 5'-end
 subroutine Basepair_Make_Sticky_End(geom, bound, mesh)
@@ -2250,7 +2261,7 @@ subroutine Basepair_Make_Sticky_End(geom, bound, mesh)
     write(0, "(a)"); write(11, "(a)")
 end subroutine Basepair_Make_Sticky_End
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write Chimera FE mesh
 subroutine Basepair_Chimera_Mesh(prob, geom, mesh)
@@ -2348,7 +2359,7 @@ subroutine Basepair_Chimera_Mesh(prob, geom, mesh)
     close(unit=503)
 end subroutine Basepair_Chimera_Mesh
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write cross-sectional geometry
 subroutine Basepair_Chimera_Cross_Geometry(prob, geom)
@@ -2514,7 +2525,7 @@ subroutine Basepair_Chimera_Cross_Geometry(prob, geom)
     close(unit=504)
 end subroutine Basepair_Chimera_Cross_Geometry
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write edge length
 subroutine Basepair_Write_Edge_Length(prob, geom)
@@ -2627,6 +2638,6 @@ subroutine Basepair_Write_Edge_Length(prob, geom)
     close(unit=505)
 end subroutine Basepair_Write_Edge_Length
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 end module Basepair

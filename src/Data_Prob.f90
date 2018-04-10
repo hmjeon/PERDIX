@@ -1,18 +1,31 @@
 !
-! ---------------------------------------------------------------------------------------
+! =============================================================================
 !
-!                                   Module - Data_Prob
+! Module - Data_Prob
+! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
-!                                                                    Updated : 2017/03/27
+! =============================================================================
 !
-! Comments: The data structure of the problem definition
+! This is part of PERDIX-2L, which allows scientists to build and solve
+! the sequence design of complex DNAnanostructures.
+! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
-! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2018. All rights reserved.
+! License - GPL version 3
+! PERDIX-2L is free software: you can redistribute it and/or modify it under
+! the terms of the GNU General Public License as published by the Free Software
+! Foundation, either version 3 of the License, or any later version.
+! PERDIX-2L is distributed in the hope that it will be useful, but WITHOUT
+! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+! FOR A PARTICULAR PURPOSE. See the GNU General Public License
+! for more details.
+! You should have received a copy of the GNU General Public License along with
+! this program. If not, see <http://www.gnu.org/licenses/>.
+!
+! -----------------------------------------------------------------------------
 !
 module Data_Prob
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
     ! Problem type data structure
     type :: ProbType
@@ -40,6 +53,6 @@ module Data_Prob
         character(200) :: path_chimera          ! Chimera path
     end type ProbType
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 end module Data_Prob

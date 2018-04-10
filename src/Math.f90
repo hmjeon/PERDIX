@@ -1,16 +1,27 @@
 !
-! ---------------------------------------------------------------------------------------
+! =============================================================================
 !
-!                                       Math
+! Module - Math
+! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
-!                                                                    Updated : 2017/04/29
+! =============================================================================
 !
-! Comments: This module is to define mathematical function for vectors and matrix.
+! This is part of PERDIX-2L, which allows scientists to build and solve
+! the sequence design of complex DNAnanostructures.
+! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
-! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2018. All rights reserved.
+! License - GPL version 3
+! PERDIX-2L is free software: you can redistribute it and/or modify it under
+! the terms of the GNU General Public License as published by the Free Software
+! Foundation, either version 3 of the License, or any later version.
+! PERDIX-2L is distributed in the hope that it will be useful, but WITHOUT
+! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+! FOR A PARTICULAR PURPOSE. See the GNU General Public License
+! for more details.
+! You should have received a copy of the GNU General Public License along with
+! this program. If not, see <http://www.gnu.org/licenses/>.
 !
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 !
 module Math
 
@@ -53,7 +64,7 @@ module Math
 
 contains
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Find intersection point in two 3D vectors
 ! http://mathforum.org/library/drmath/view/63719.html
@@ -82,7 +93,7 @@ function Find_Intersection(a1, a2, b1, b2) result(pos)
     pos(3) = a1(3) + (a2(3) - a1(3)) * t1
 end function Find_Intersection
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Check intersection between two 3D vectors
 ! http://stackoverflow.com/questions/2316490/the-algorithm-to-find-the-point-of-intersection-of-two-3d-line-segment
@@ -106,7 +117,7 @@ function Check_Intersection(a1, a2, b1, b2) result(ok)
     end if
 end function Check_Intersection
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Closet point between lines
 ! http://geomalgorithms.com/a07-_distance.html#dist3D_Segment_to_Segment()
@@ -165,7 +176,7 @@ function Find_Cloest_Point(a1, a2, b1, b2, check) result(pos)
     pos   = 0.5d0 * (pos_u + pos_v)
 end function Find_Cloest_Point
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Compare two vectors
 function Is_Same_Vector(pos_1, pos_2) result(flag)
@@ -184,7 +195,7 @@ function Is_Same_Vector(pos_1, pos_2) result(flag)
     end if
 end function Is_Same_Vector
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Rotate V2 orientation vector using 3D finite rotation
 subroutine Rotate_Vector(vec, pseudo, angle)
@@ -226,7 +237,7 @@ subroutine Rotate_Vector(vec, pseudo, angle)
     vec(1:3) = vec_new(1:3)
 end subroutine Rotate_Vector
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Size vector
 function Norm(vec) result(size)
@@ -237,7 +248,7 @@ function Norm(vec) result(size)
     size = dsqrt(vec(1)**2.0d0 + vec(2)**2.0d0 + vec(3)**2.0d0)
 end function Norm
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Normalize vector
 function Normalize(vec) result(vector)
@@ -249,7 +260,7 @@ function Normalize(vec) result(vector)
     vector = vec(1:3) / length
 end function Normalize
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Cross product
 function Cross(vec1, vec2) result(vec_cross)
@@ -262,7 +273,7 @@ function Cross(vec1, vec2) result(vec_cross)
     vec_cross(3) = vec1(1)*vec2(2) - vec1(2)*vec2(1)
 end function Cross
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Inverse matrix
 function Inverse_22(mat) result (inv_mat)
@@ -280,7 +291,7 @@ function Inverse_22(mat) result (inv_mat)
     inv_mat = transpose(cofactor) / det
 end function Inverse_22
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Return the location of the minimum in the section between start and end
 function Find_Minimum(array, start, end) result(value)
@@ -309,7 +320,7 @@ function Find_Minimum(array, start, end) result(value)
     value = loc
 end function Find_Minimum
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Swap the values of its two formal arguments
 subroutine Swap(entity_a, entity_b)
@@ -323,7 +334,7 @@ subroutine Swap(entity_a, entity_b)
     entity_b = entity_t
 end subroutine Swap
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Receives an array() and sorts it into ascending order
 subroutine Sort(array, size)
@@ -343,7 +354,7 @@ subroutine Sort(array, size)
     end do
 end subroutine Sort
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Receives an array() and sorts it into ascending order
 subroutine Sort2(array1, array2, size)
@@ -365,7 +376,7 @@ subroutine Sort2(array1, array2, size)
     end do
 end subroutine Sort2
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Radian to degree
 function Rad2Deg(rad) result(deg)
@@ -375,7 +386,7 @@ function Rad2Deg(rad) result(deg)
     deg = rad * 180.0d0 / pi
 end function Rad2Deg
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Degree to radian
 function Deg2Rad(deg) result(rad)
@@ -385,7 +396,7 @@ function Deg2Rad(deg) result(rad)
     rad = deg * pi / 180.0d0
 end function Deg2Rad
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Integer to string
 function Int2Str(int) result(str)
@@ -396,7 +407,7 @@ function Int2Str(int) result(str)
     write(str, "(i)"), int
 end function Int2Str
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Double precision to string
 function Dble2Str(dbl) result(str)
@@ -407,7 +418,7 @@ function Dble2Str(dbl) result(str)
     write(str, "(f0.3)"), dbl
 end function Dble2Str
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Double precision to string
 function Dble2Str1(dbl) result(str)
@@ -418,7 +429,7 @@ function Dble2Str1(dbl) result(str)
     write(str, "(f0.1)"), dbl
 end function Dble2Str1
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Double precision to string
 function Dble2Str2(dbl) result(str)
@@ -429,7 +440,7 @@ function Dble2Str2(dbl) result(str)
     write(str, "(f0.2)"), dbl
 end function Dble2Str2
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Reallocate integer 1D array
 subroutine Reallocate_Int_1D(array, num_new)
@@ -448,7 +459,7 @@ subroutine Reallocate_Int_1D(array, num_new)
     call move_alloc(temp, array)
 end subroutine Reallocate_Int_1D
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Reallocate integer 2D array
 subroutine Reallocate_Int_2D(array, num_i_new, num_j_new)
@@ -469,7 +480,7 @@ subroutine Reallocate_Int_2D(array, num_i_new, num_j_new)
     call move_alloc(temp, array)
 end subroutine Reallocate_Int_2D
     
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! The determinant of a real square matrix mat by Gauss method with full pivoting
 function Math_Determinant(mat, eps) result(det)
@@ -518,7 +529,7 @@ function Math_Determinant(mat, eps) result(det)
     deallocate(Lp)
 end function Math_Determinant
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! The upper triangularization algorithm of Gauss method with full pivoting
 function Math_Triangularization(mat, eps, diag, kp, lp) result(flag)
@@ -584,7 +595,7 @@ function Math_Triangularization(mat, eps, diag, kp, lp) result(flag)
     if(flag == 1 .and. dabs(diag(n,n)) < eps) flag = 0
 end function Math_Triangularization
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Get lower triangular matrix
 subroutine Math_Get_Low_Tri(mat)
@@ -602,7 +613,7 @@ subroutine Math_Get_Low_Tri(mat)
     end do
 end subroutine Math_Get_Low_Tri
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Set matrix entity one
 subroutine Math_Set_Entity_One(adj)
@@ -622,6 +633,6 @@ subroutine Math_Set_Entity_One(adj)
     end do
 end subroutine Math_Set_Entity_One
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 end module Math

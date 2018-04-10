@@ -1,16 +1,27 @@
 !
-! ---------------------------------------------------------------------------------------
+! =============================================================================
 !
-!                                   Module - Output
+! Module - Output
+! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
-!                                                                    Updated : 2017/09/06
+! =============================================================================
 !
-! Comments: This module is for outputs.
+! This is part of PERDIX-2L, which allows scientists to build and solve
+! the sequence design of complex DNAnanostructures.
+! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
-! Script written by Hyungmin Jun (hyungminjun@outlook.com)
-! Copyright Hyungmin Jun, 2018. All rights reserved.
+! License - GPL version 3
+! PERDIX-2L is free software: you can redistribute it and/or modify it under
+! the terms of the GNU General Public License as published by the Free Software
+! Foundation, either version 3 of the License, or any later version.
+! PERDIX-2L is distributed in the hope that it will be useful, but WITHOUT
+! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+! FOR A PARTICULAR PURPOSE. See the GNU General Public License
+! for more details.
+! You should have received a copy of the GNU General Public License along with
+! this program. If not, see <http://www.gnu.org/licenses/>.
 !
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 !
 module Output
 
@@ -24,7 +35,6 @@ module Output
     use Math
 
     use Chimera
-    use Tecplot
 
     implicit none
 
@@ -56,7 +66,7 @@ module Output
 
 contains
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Generate output files and run postprocessing tools
 subroutine Output_Generation(prob, geom, bound, mesh, dna)
@@ -112,16 +122,13 @@ subroutine Output_Generation(prob, geom, bound, mesh, dna)
     call Output_Write_ADINA(prob, mesh)
 
     ! Command for Tecplot and Chimera, and figures for output and route step
-    if(para_cmd_Tecplot    == "on") call TecPlot_Command_Orientation(prob)
-    if(para_cmd_Chimera    == "on") call Chimera_Command_Output(prob)
-    if(para_fig_output     == "on") call Chimera_Figure_Output(prob)
     if(para_fig_route_step == "on") call Output_Make_Route_Step(prob, mesh, dna)
 
     ! Write sequence based on cross-sectional line
     call Output_Write_Sequence_CroL(prob, mesh, dna)
 end subroutine Output_Generation
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Check connectivity in dna data
 subroutine Output_Check_Output(dna)
@@ -240,7 +247,7 @@ subroutine Output_Check_Output(dna)
     end do
 end subroutine Output_Check_Output
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write cylinderical model with crossovers
 subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
@@ -360,7 +367,7 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
     close(unit=701)
 end subroutine Output_Write_Cylinder_Xover
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write output file for sequence and json
 subroutine Output_Write_Out_All(prob, geom, bound, mesh, dna)
@@ -448,7 +455,7 @@ subroutine Output_Write_Out_All(prob, geom, bound, mesh, dna)
     close(unit=701)
 end subroutine Output_Write_Out_All
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write output of sequence data
 subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
@@ -635,7 +642,7 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
     close(unit=702)
 end subroutine Output_Write_Out_Sequences
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write graphical routing
 subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
@@ -1835,7 +1842,7 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
     end if
 end subroutine Output_Write_Out_Graphics
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write output of unpaired nucleotides
 function Output_Write_Out_Unpaired(mesh, dna, unit) result(max_base)
@@ -1916,7 +1923,7 @@ function Output_Write_Out_Unpaired(mesh, dna, unit) result(max_base)
     write(unit, "(a)")
 end function Output_Write_Out_Unpaired
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Outputs based on strands and nucleotides
 subroutine Output_Write_Out_Strand_Base(mesh, dna, unit)
@@ -1984,7 +1991,7 @@ subroutine Output_Write_Out_Strand_Base(mesh, dna, unit)
     write(unit, "(a)")
 end subroutine Output_Write_Out_Strand_Base
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Output about staple length
 subroutine Output_Write_Out_Staple_Length(dna, unit)
@@ -2018,7 +2025,7 @@ subroutine Output_Write_Out_Staple_Length(dna, unit)
     deallocate(length_stap)
 end subroutine Output_Write_Out_Staple_Length
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write JSON guide model
 subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
@@ -2195,7 +2202,7 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     close(unit=998)
 end subroutine Output_Write_Out_Guide_JSON
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write JSON output
 subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
@@ -2524,7 +2531,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     deallocate(edge)
 end subroutine Output_Write_Out_JSON
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write information related with basepair
 subroutine Output_Write_Basepair(prob, mesh, dna)
@@ -2573,7 +2580,7 @@ subroutine Output_Write_Basepair(prob, mesh, dna)
     close(unit=801)
 end subroutine Output_Write_Basepair
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write information related with base
 subroutine Output_Write_Base(prob, dna)
@@ -2612,7 +2619,7 @@ subroutine Output_Write_Base(prob, dna)
     close(unit=802)
 end subroutine Output_Write_Base
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write cndo file for PDB atom generation and CanDo simulation
 subroutine Output_Write_CanDo(prob, mesh, dna)
@@ -2785,7 +2792,7 @@ subroutine Output_Write_CanDo(prob, mesh, dna)
     close(unit=803)
 end subroutine Output_Write_CanDo
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write cndo file for PDB atom generation and CanDo simulation
 subroutine Output_Write_CanDo_New(prob, mesh, dna)
@@ -2874,7 +2881,7 @@ subroutine Output_Write_CanDo_New(prob, mesh, dna)
     close(unit=803)
 end subroutine Output_Write_CanDo_New
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write PLY
 subroutine Output_Write_PLY(prob, geom)
@@ -2913,7 +2920,7 @@ subroutine Output_Write_PLY(prob, geom)
     close(unit=704)
 end subroutine Output_Write_PLY
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write basepair and nucleotide information
 subroutine Output_Write_DNA_Info(prob, dna)
@@ -2945,7 +2952,7 @@ subroutine Output_Write_DNA_Info(prob, dna)
     close(unit=100)
 end subroutine Output_Write_DNA_Info
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write TecPlot input file
 subroutine Output_Write_TecPlot(prob, mesh)
@@ -2991,7 +2998,7 @@ subroutine Output_Write_TecPlot(prob, mesh)
     close(unit=804)
 end subroutine Output_Write_TecPlot
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write ADINA input file
 subroutine Output_Write_ADINA(prob, mesh)
@@ -3088,7 +3095,7 @@ subroutine Output_Write_ADINA(prob, mesh)
     close(unit = 805)
 end subroutine Output_Write_ADINA
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Make route step using Chimera
 subroutine Output_Make_Route_Step(prob, mesh, dna)
@@ -3136,7 +3143,7 @@ subroutine Output_Make_Route_Step(prob, mesh, dna)
     call Output_Figure_Route_Step(prob, para_n_route_step)
 end subroutine Output_Make_Route_Step
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write Chimera for route progress
 subroutine Output_Chimera_Route_Step(prob, mesh, dna, stop_base, str)
@@ -3216,7 +3223,7 @@ subroutine Output_Chimera_Route_Step(prob, mesh, dna, stop_base, str)
     close(unit=806)
 end subroutine Output_Chimera_Route_Step
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Make figures from route step
 subroutine Output_Figure_Route_Step(prob, n_progress)
@@ -3306,7 +3313,7 @@ subroutine Output_Figure_Route_Step(prob, n_progress)
     close (unit=807)
 end subroutine Output_Figure_Route_Step
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 ! Write sequence based on cross-sectional line
 subroutine Output_Write_Sequence_CroL(prob, mesh, dna)
@@ -3359,6 +3366,6 @@ subroutine Output_Write_Sequence_CroL(prob, mesh, dna)
     close(unit=808)
 end subroutine Output_Write_Sequence_CroL
 
-! ---------------------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
 
 end module Output
