@@ -25,7 +25,6 @@
 !
 module Output
 
-    use Ifport
     use Data_Mesh
     use Data_DNA
     use Data_Bound

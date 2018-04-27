@@ -25,8 +25,6 @@
 !
 module SeqDesign
 
-    use Ifport
-
     use Data_Prob
     use Data_Mesh
     use Data_DNA
@@ -467,11 +465,14 @@ end subroutine SeqDesign_Build_dnaTop
 function SeqDesign_Get_Rand_Sequence result(seq)
     character :: seq
     integer :: random
+    real :: drandom
 
     ! Random number generation (range from 1 to 4)
-    random = int(4*rand()) + 1
+    call random_number(drandom)
 
-    if(random == 1) then
+    random = int(4.0*drandom) + 1
+
+    if(random == 1 .or. random == 5) then
         seq = "A"
     else if(random == 2) then
         seq = "T"
@@ -499,7 +500,7 @@ function SeqDesign_Get_Comp_Sequence(seq) result(com_seq)
     else if(seq == "G") then
         com_seq = "C"
     else
-        write(0, "(a$)"), "Error - Not defined sequnce : "
+        write(0, "(a$)"), "Error - Not defined sequence : "
         write(0, "(a )"), "SeqDesign_Get_Comp_Sequence"
         stop
     end if
@@ -4863,7 +4864,7 @@ subroutine SeqDesign_Set_Rand_Sequence(dna)
     ! Print progress
     do i = 0, 11, 11
         call Space(i, 6)
-        write(i, "(a )"), "6.6. Set random sequence"
+        write(i, "(a )"), "6.8. Set random sequence"
         call Space(i, 11)
         write(i, "(a$)"), "* The number of scaffold strands           : "
         write(i, "(i7)"), dna.n_scaf
@@ -4900,7 +4901,9 @@ subroutine SeqDesign_Set_Rand_Sequence(dna)
             dna.top(base).seq = SeqDesign_Get_Rand_Sequence()
 
             ! Set complementary sequence
-            dna.top(across).seq = SeqDesign_Get_Comp_Sequence(dna.top(base).seq)
+            if(across /= -1) then
+                dna.top(across).seq = SeqDesign_Get_Comp_Sequence(dna.top(base).seq)
+            end if
         end do
     end do
 end subroutine SeqDesign_Set_Rand_Sequence

@@ -25,8 +25,6 @@
 !
 module Route
 
-    use Ifport
-
     use Data_Prob
     use Data_Geom
     use Data_Bound
@@ -2551,8 +2549,8 @@ subroutine Route_Graph_Chimera_All_Spanning_Tree(prob, pos_node, tail, head, idx
     integer,          intent(in) :: dst(:)
 
     double precision :: pos_1(3), pos_2(3), radius
-    logical :: f_axis, b_branch, results
-    integer :: i, j, k, n_tree, n_node, n_edge
+    logical :: f_axis, b_branch
+    integer :: i, j, k, results, n_tree, n_node, n_edge
     character(200) :: path
 
     f_axis = para_chimera_axis
@@ -2560,7 +2558,7 @@ subroutine Route_Graph_Chimera_All_Spanning_Tree(prob, pos_node, tail, head, idx
     n_tree  = ubound(idx, 2)
     n_node  = size(pos_node, 1)
     n_edge  = size(tail)
-    results = SYSTEMQQ("md "//trim(prob.path_work1)//"Spantree\")
+    call execute_command_line("md "//trim(prob.path_work1)//"Spantree\", exitstat=results)
 
     do k = 1, n_tree
 

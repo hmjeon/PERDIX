@@ -25,8 +25,6 @@
 !
 program PERDIX_2L
 
-    use Ifport
-
     use Data_Prob       ! Data structure for problem definition
     use Data_Geom       ! Data strucutre for face, edge, point and section
     use Data_Mesh       ! Data structure for basepair
@@ -114,8 +112,7 @@ subroutine Report()
     type(DNAType)   :: dna      ! B-form DNA data
 
     character(10) :: char_sec, char_edge, char_cut, char_vert
-    integer :: i, sec, edge_in, edge, max_stap, min_stap
-    logical :: results
+    integer :: i, results, sec, edge_in, edge, max_stap, min_stap
 
     sec       = 1           ! Section number
     edge_in   = 42          ! Edge length
@@ -126,7 +123,7 @@ subroutine Report()
     open(unit = 90, file = "Report_2D_Lattice_"//trim(char_cut)//".txt", form="formatted")
 
     ! Remove the directory and files
-    results = SYSTEMQQ("rd "//trim("output")//' /s /q')
+    call execute_command_line("rd "//trim("output")//' /s /q', exitstat=results)
 
     ! Infomation
     write(90, "(a)"), "==========================================="

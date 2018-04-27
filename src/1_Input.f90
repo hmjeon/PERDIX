@@ -643,15 +643,15 @@ end subroutine Input_Reset_Para_Report
 
 ! Set command environment
 subroutine Input_Set_Command
-    logical :: results
+    integer :: i
 
     ! Set command environments
-    results = SYSTEMQQ('title PERDIX-2L')                   ! cmd title
-    results = SYSTEMQQ('mode con: cols=135 lines=6000')     ! cmd size
-    results = SYSTEMQQ('color')                             ! convert color, 02, f0, f1, f2
-    results = SYSTEMQQ('date /t')                           ! display time
-    !results = SYSTEMQQ('hostname')                          ! display hostname of the computer
-    !results = SYSTEMQQ('ver')                               ! display version information
+    call execute_command_line('title PERDIX-2L', exitstat=i)                   ! cmd title
+    call execute_command_line('mode con: cols=135 lines=6000', exitstat=i)     ! cmd size
+    call execute_command_line('color', exitstat=i)                             ! convert color, 02, f0, f1, f2
+    call execute_command_line('date /t', exitstat=i)                           ! display time
+    !call execute_command_line('hostname', exitstat=i)                          ! display hostname of the computer
+    !call execute_command_line('ver', exitstat=i)                               ! display version information
 end subroutine Input_Set_Command
 
 ! -----------------------------------------------------------------------------
@@ -1242,17 +1242,17 @@ end subroutine Input_Set_Path
 subroutine Input_Set_Workplace(prob)
     type(ProbType), intent(in) :: prob
 
-    logical :: results
+    integer :: i
 
     ! Remove the directory and files
-    results = SYSTEMQQ("rd "//trim(prob.path_work1)//' /s /q')
+    call execute_command_line("rd "//trim(prob.path_work1)//' /s /q', exitstat=i)
 
     ! Make new working directory
-    results = SYSTEMQQ("md "//trim(prob.path_work1))
+    call execute_command_line("md "//trim(prob.path_work1), exitstat=i)
 
     ! Directory for Tecplot output
     if(para_output_Tecplot == "on") then
-        results = SYSTEMQQ("md "//trim(prob.path_work1)//"\Tecplot")
+        call execute_command_line("md "//trim(prob.path_work1)//"\Tecplot", exitstat=i)
     end if
 
     write(0, "(a)"), "  ...Removed the existing working directory"
