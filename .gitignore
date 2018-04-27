@@ -26,7 +26,7 @@
 
 # Executables
 *.exe
-!release/PERDIX-2L.exe
+!release/Win/PERDIX-2L.exe
 !make/tools/sleep.exe
 !make/tools/meshconv.exe
 *.out
