@@ -110,3 +110,9 @@ PERDIX-2L.mod : PERDIX-2L.o PERDIX-2L.f90
 	$(f90comp) -c PERDIX-2L.f90
 PERDIX-2L.o : PERDIX-2L.f90
 	$(f90comp) -c PERDIX-2L.f90
+
+# Cleaning everything
+clean :
+	-rm *.o $(objects)
+	-rm *.mod $(objects)
+# End of the makefile
