@@ -18,3 +18,11 @@ Etc:
 Unofficial Windows Binaries for Python Extension Packages – whl files
 https://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely
 conda config --add channels conda-forge
+
+
+############################################
+
+Linux
+Install pip for python
+wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py --user
+pip install shapely
