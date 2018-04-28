@@ -27,6 +27,7 @@ module Importer
 
     use Ifport
 
+    use Para
     use Data_Prob
     use Data_Geom
 
@@ -174,8 +175,8 @@ subroutine Importer_GEO(prob, geom)
         write(0, "(a)"), "Converting geometry with faced mesh"
 
         ! Convert to face meshes from lines
-        results = systemqq(trim("tools/PyConvertGeo/pyConvertGeo")//" input/"//trim(fullname))
-        !results = systemqq(trim("python tools/PyConvertGeo/src/pyConvertGeo.py")//" input/"//trim(fullname))
+        !results = systemqq(trim("tools/PyConvertGeo/pyConvertGeo")//" input/"//trim(fullname))
+        results = systemqq(trim("python tools/PyConvertGeo/src/pyConvertGeo.py")//" input/"//trim(fullname))
 
         fullname = trim(prob.name_file)//trim("_shapely.geo")
         open(unit=1002, file="input/"//trim(fullname), form="formatted")
@@ -235,8 +236,13 @@ subroutine Importer_GEO(prob, geom)
     close(unit=1002)
 
     ! Delete temp file
-    results = systemqq(trim("del input/")//trim(prob.name_file)//trim("_shapely.geo"))
-    results = systemqq(trim("del input/")//trim(prob.name_file)//trim("_shapely_distmesh.geo"))
+    if(para_platform == "win" .or. para_platform == "dev") then
+        results = systemqq(trim("del input\")//trim(prob.name_file)//trim("_shapely.geo"))
+    end if
+
+    if(para_platform == "win" .or. para_platform == "dev") then
+        results = systemqq(trim("del input\")//trim(prob.name_file)//trim("_shapely_distmesh.geo"))
+    end if
 end subroutine Importer_GEO
 
 ! -----------------------------------------------------------------------------

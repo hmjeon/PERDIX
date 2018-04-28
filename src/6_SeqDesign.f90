@@ -4783,7 +4783,7 @@ subroutine SeqDesign_Import_Sequence(dna)
     open(unit=701, file="seq.txt")
 
     ! Read sequence and set the sequence lenghth
-    read(701, "(a)"), seq
+    !read(701, "(a)"), seq
     read(701, "(a)"), seq
     len_seq = len(trim(seq))
 
