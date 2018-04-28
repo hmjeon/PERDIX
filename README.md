@@ -1,6 +1,9 @@
 # PERDIX-2L
 Welcome to the PERDIX project! PERDIX is an open-source software, which allows scientists to build and solve the sequence design of complex 2D DNA DX-based wireframe lattices.
 
+<img src = "https://www.dropbox.com/s/y39tvkyyque7e6t/git.jpg?dl=0">
+
+
 **PERDIX:**
 * **P**urine (Adenine & Guanine) / Pyrimidine (Cytosine & Thymine)
 * **E**ngineered
@@ -14,6 +17,10 @@ Welcome to the PERDIX project! PERDIX is an open-source software, which allows s
 * **[PERDIX-2P](https://github.com/hmjeon/PERDIX-2P)**: Design for 3D DNA DX-based wireframe nanoparticles 
 * **[PERDIX-6L](https://github.com/hmjeon/PERDIX-6L)**: Design for 2D DNA 6HB-based wireframe lattices
 * **[PERDIX-2L](https://github.com/hmjeon/PERDIX-2L)**: Design for 2D DNA DX-based wireframe lattices
+
+**Requirements:**
+* Python 2.7 - [Shapely](https://pypi.org/project/Shapely/)
+* MATLAB - [DistMesh](http://persson.berkeley.edu/distmesh/)
 
 # Setup
 ```git clone https://github.com/hmjeon/PERDIX-2P.git```
