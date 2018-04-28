@@ -214,7 +214,7 @@ subroutine Basepair_Generate_Basepair(geom, bound, mesh)
         mesh.node(n_node).sec      = geom.croL(i).sec
         mesh.node(n_node).iniL     = geom.croL(i).iniL
         mesh.node(n_node).croL     = i
-        mesh.node(n_node).beveled  =-1
+        mesh.node(n_node).mitered  =-1
         mesh.node(n_node).pos(1:3) = pos_1(1:3)
 
         ! Set connectivity of base pairs
@@ -742,7 +742,7 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
 
     double precision :: pos_1(3), pos_2(3), radius
     integer :: i, j, node, node_1, node_2
-    logical :: f_axis, f_ori, f_beveled
+    logical :: f_axis, f_ori, f_mitered
     character(200) :: path
 
     if(para_write_502 == .false.) return
@@ -750,7 +750,7 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     ! Set flag for drawing option
     f_axis    = para_chimera_axis
     f_ori     = para_chimera_502_ori
-    f_beveled = .true.
+    f_mitered = .true.
 
     if(mode == "cylinder_1") path = trim(prob.path_work)//"/"//trim(prob.name_file)//"_04_"
     if(mode == "cylinder_2") path = trim(prob.path_work)//"/"//trim(prob.name_file)//"_05_"
@@ -760,7 +760,7 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     radius = para_rad_helix + para_gap_helix / 2.0d0
 
     ! Write cylinder model base on edges
-    if(mode == "cylinder_1" .or. (mode == "cylinder_2" .and. f_beveled == .false.)) then
+    if(mode == "cylinder_1" .or. (mode == "cylinder_2" .and. f_mitered == .false.)) then
 
         write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
 
@@ -774,11 +774,11 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
             write(502, "(3f9.3$)"), pos_2(1:3)
             write(502, "(1f9.3 )"), radius
         end do
-    else if(mode == "cylinder_2" .and. f_beveled == .true.) then
+    else if(mode == "cylinder_2" .and. f_mitered == .true.) then
 
         do i = 1, geom.n_croL
 
-            ! Draw cylinder before the beveled design
+            ! Draw cylinder before the mitered design
             pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).ori_pos(1:3)
             pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).ori_pos(1:3)
 
@@ -788,7 +788,7 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
             write(502, "(3f9.3$)"), pos_2(1:3)
             write(502, "(1f9.3 )"), radius
 
-            ! Draw cylinder for the beveled parts
+            ! Draw cylinder for the mitered parts
             pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
             pos_2(1:3) = geom.croP(geom.croL(i).poi(1)).ori_pos(1:3)
 
@@ -962,7 +962,7 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
     do i = 1, geom.n_croP
         geom.croP(i).ori_pos(:) = geom.croP(i).pos(:)
     end do
-    mesh.n_beveled = 0
+    mesh.n_mitered = 0
 
     ! Loop for junction
     do i = 1, bound.n_junc
@@ -1104,7 +1104,7 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
                 node_cur = conn(j, 1)
                 node_com = conn(j, 2)
 
-                if(para_vertex_design == "beveled") then
+                if(para_vertex_design == "mitered") then
 
                     ! Increase edge length of the duplex to fill junctional gap
                     call Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
@@ -1647,8 +1647,8 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     mesh.node(mesh.n_node).iniL = t_node(node).iniL
     mesh.node(mesh.n_node).croL = t_node(node).croL
 
-    ! Set beveled node
-    mesh.node(mesh.n_node).beveled = 1
+    ! Set mitered node
+    mesh.node(mesh.n_node).mitered = 1
 
     ! Node connectivity for newly added node is derived from previous node
     mesh.node(mesh.n_node).conn = -1
@@ -1727,7 +1727,7 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
 
     ! Return value, newly added node ID
     node = mesh.n_node
-    mesh.n_beveled = mesh.n_beveled + 1
+    mesh.n_mitered = mesh.n_mitered + 1
 end subroutine Basepair_Add_Basepair
 
 ! -----------------------------------------------------------------------------
@@ -1983,7 +1983,7 @@ subroutine Basepair_Delete_Nodes(mesh, min, max)
         mesh.node(i).sec     = t_node(i+count).sec          ! Section ID
         mesh.node(i).iniL    = t_node(i+count).iniL         ! Initial edge
         mesh.node(i).croL    = t_node(i+count).croL         ! Sectional edge
-        mesh.node(i).beveled = t_node(i+count).beveled      ! Sectional edge
+        mesh.node(i).mitered = t_node(i+count).mitered      ! Sectional edge
         mesh.node(i).conn    = t_node(i+count).conn         ! Connection type
         mesh.node(i).ghost   = t_node(i+count).ghost        ! Ghost node type
 

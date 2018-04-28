@@ -265,7 +265,7 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
     ! Write cylinder model base on edges
     do i = 1, geom.n_croL
 
-        ! Draw cylinder before the beveled design
+        ! Draw cylinder before the mitered design
         pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).ori_pos(1:3)
         pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).ori_pos(1:3)
 
@@ -275,7 +275,7 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
         write(701, "(3f9.3$)"), pos_2(1:3)
         write(701, "(1f9.3 )"), radius
 
-        ! Draw cylinder for the beveled parts
+        ! Draw cylinder for the mitered parts
         pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
         pos_2(1:3) = geom.croP(geom.croL(i).poi(1)).ori_pos(1:3)
 
@@ -615,7 +615,7 @@ subroutine Output_Write_Out_Sequences(prob, mesh, dna, unit)
 
             write(702, "(a$)"), trim(adjustl(prob.name_prob))//"_"
             if(para_vertex_design == "flat")    write(702, "(a$)"), "F_"
-            if(para_vertex_design == "beveled") write(702, "(a$)"), "M_"
+            if(para_vertex_design == "mitered") write(702, "(a$)"), "M_"
             write(702, "(a$)"), trim(adjustl(Int2Str(prob.n_bp_edge)))//"bp_"
             write(702, "(a$)"), trim(adjustl(Int2Str(n_stap)))//", "
         end if

@@ -1,3 +1,4 @@
-Pun PERDIX on command line with input paramters
+Pun PERDIX on command line with input parameters
 1. Geometry
-2. Edge length
+2. Target edge
+3. Edge length of the target edge

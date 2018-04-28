@@ -43,7 +43,7 @@ module Para
     character(10)  :: para_sticky_self     = "off"      ! [off, on], Sticky-end for self connection on henycomb cross-section
     character(10)  :: para_unpaired_scaf   = "on"       ! [on, off], Unpaired scaffold nucleotides
     character(10)  :: para_vertex_modify   = "const"    ! [const, mod], Vertex modification to avoid clash
-    character(10)  :: para_vertex_design   = "beveled"  ! [beveled, flat] Vertex design
+    character(10)  :: para_vertex_design   = "mitered"  ! [mitered, flat] Vertex design
 
     ! Paramters for B-from DNA generation
     double precision :: para_dist_pp       = 0.42d0     ! [0.42, 0.6], distance between adjacent phosphate groups, nm

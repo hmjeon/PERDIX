@@ -2,7 +2,7 @@
 ! =============================================================================
 !
 ! PERDIX-2L v1.0
-! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
+! Last Updated : 04/27/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
 ! =============================================================================
 !
@@ -116,7 +116,7 @@ subroutine Report()
 
     sec       = 1           ! Section number
     edge_in   = 42          ! Edge length
-    char_vert = "beveled"   ! Flat or beveled vertex
+    char_vert = "mitered"   ! Flat or mitered vertex
     char_cut  = "max"       ! Staple-break rule
 
     ! Open file
@@ -138,7 +138,7 @@ subroutine Report()
     call space (90, 30)
     write(90, "(a)"), "|=========|==================== TOTAL LENGTH ==================|======== STAPLE =======|===== SEED ====|== STRAND RATIO =|= NU RATIO=|= PARA=|=== CROSSOVER ===|=UNPAIRED=|"
     call space (90, 30)
-    write(90, "(a)"), " Sec| Edge| L_Scaf| L_Stap|   L_BP|L_Beveled(ratio)| MinE| MaxE| nStap| Min| Max|   ave| 14nt| S14| 4nt| 14nt|  S14|  4nt| 14nt|  4nt| p1| p2| scaf|  stap| one| scaf| stap"
+    write(90, "(a)"), " Sec| Edge| L_Scaf| L_Stap|   L_BP|L_Mitered(ratio)| MinE| MaxE| nStap| Min| Max|   ave| 14nt| S14| 4nt| 14nt|  S14|  4nt| 14nt|  4nt| p1| p2| scaf|  stap| one| scaf| stap"
     write(90, "(a$)"), "----------------------------  "
     write(90, "(a )"), "----|-----|-------|-------|-------|----------------|-----|-----|------|----|----|------|-----|----|----|-----|-----|-----|-----|-----|---|---|-----|------|----|-----|----|"
 
@@ -199,8 +199,8 @@ subroutine Report()
         write(90, "(a8$)"), trim(adjustl(Int2Str(dna.n_base_scaf)))//"|"
         write(90, "(a8$)"), trim(adjustl(Int2Str(dna.n_base_stap)))//"|"
         write(90, "(a8$)"), trim(adjustl(Int2Str(mesh.n_node)))//"|"
-        write(90, "(a8$)"), trim(adjustl(Int2Str(mesh.n_beveled)))//"("
-        write(90, "(a9$)"), trim(adjustl(Dble2Str(dble(mesh.n_beveled)/dble(mesh.n_node)*100.0d0)))//"%)|"
+        write(90, "(a8$)"), trim(adjustl(Int2Str(mesh.n_mitered)))//"("
+        write(90, "(a9$)"), trim(adjustl(Dble2Str(dble(mesh.n_mitered)/dble(mesh.n_node)*100.0d0)))//"%)|"
         write(90, "(a6$)"), trim(adjustl(Int2Str(geom.min_edge_length)))//"|"
         write(90, "(a6$)"), trim(adjustl(Int2Str(geom.max_edge_length)))//"|"
         write(90, "(a7$)"), trim(adjustl(Int2Str(dna.n_stap)))//"|"
@@ -353,9 +353,9 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         call Space(i, 16)
         write(i, "(a)"), "* # of basepairs            : "//trim(adjustl(Int2Str(mesh.n_node)))
         call Space(i, 16)
-        write(i, "(a)"), "* # of beveled nucleotides  : "//&
-            trim(adjustl(Int2Str(mesh.n_beveled)))//" ["//&
-            trim(adjustl(Dble2Str(dble(mesh.n_beveled)/dble(mesh.n_node)*100.0d0)))//" %]"
+        write(i, "(a)"), "* # of mitered nucleotides  : "//&
+            trim(adjustl(Int2Str(mesh.n_mitered)))//" ["//&
+            trim(adjustl(Dble2Str(dble(mesh.n_mitered)/dble(mesh.n_node)*100.0d0)))//" %]"
         call Space(i, 16)
         write(i, "(a)"), "* Edge length [ min - max ] : ["//&
             trim(adjustl(Int2Str(geom.min_edge_length)))//" - "// &

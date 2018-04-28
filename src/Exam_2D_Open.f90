@@ -130,15 +130,15 @@ subroutine Exam_Open2D_Square(prob, geom)
     para_unpaired_scaf   = "off"        ! Unpaired scaffold nucleotides
     para_n_base_tn       = 5            ! The number of nucleotides in poly T loop, -1 : depending on distance
 
-    ! Case 2 - Beveled edge length without ssDNA
+    ! Case 2 - Mitered edge length without ssDNA
     para_const_edge_mesh = "off"        ! Constant edge length from polyhedra mesh
-    para_vertex_design   = "beveled"    ! Vertex design
+    para_vertex_design   = "mitered"    ! Vertex design
     para_unpaired_scaf   = "off"        ! Unpaired scaffold nucleotides
     para_n_base_tn       = 5            ! The number of nucleotides in poly T loop, -1 : depending on distance
 
-    ! Case 3 - Beveled edge with ssDNA
+    ! Case 3 - Mitered edge with ssDNA
     para_const_edge_mesh = "off"        ! Constant edge length from polyhedra mesh
-    para_vertex_design   = "beveled"    ! Vertex design
+    para_vertex_design   = "mitered"    ! Vertex design
     para_unpaired_scaf   = "on"         ! Unpaired scaffold nucleotides
     para_n_base_tn       = -1           ! The number of nucleotides in poly T loop, -1 : depending on distance
 
@@ -525,7 +525,7 @@ subroutine Exam_Open2D_Rhombic_Tiling(prob, geom)
 
     ! Preset parameters
     if(para_preset == "on") then
-        if(para_vertex_design == "beveled") then
+        if(para_vertex_design == "mitered") then
             para_junc_ang      = "opt"  ! Junctional gap
             para_unpaired_scaf = "on"   ! Unpaired nucleotides in the scaffold
             para_n_base_tn     = -1     ! The number of nucleotides
@@ -593,15 +593,15 @@ subroutine Exam_Open2D_Quarter_Circle(prob, geom)
     para_unpaired_scaf   = "off"        ! Unpaired scaffold nucleotides
     para_n_base_tn       = 7            ! The number of nucleotides in poly T loop, -1 : depending on distance
 
-    ! Case 2 - Beveled edge length without ssDNA
+    ! Case 2 - Mitered edge length without ssDNA
     para_const_edge_mesh = "off"        ! Constant edge length from polyhedra mesh
-    para_vertex_design   = "beveled"    ! Vertex design
+    para_vertex_design   = "mitered"    ! Vertex design
     para_unpaired_scaf   = "off"        ! Unpaired scaffold nucleotides
     para_n_base_tn       = 7            ! The number of nucleotides in poly T loop, -1 : depending on distance
 
-    ! Case 3 - Beveled edge with ssDNA
+    ! Case 3 - Mitered edge with ssDNA
     para_const_edge_mesh = "off"        ! Constant edge length from polyhedra mesh
-    para_vertex_design   = "beveled"    ! Vertex design
+    para_vertex_design   = "mitered"    ! Vertex design
     para_unpaired_scaf   = "on"         ! Unpaired scaffold nucleotides
     para_n_base_tn       = -1           ! The number of nucleotides in poly T loop, -1 : depending on distance
 
@@ -975,7 +975,7 @@ subroutine Exam_Open2D_Cairo_Penta_Tiling(prob, geom)
 
     ! Preset parameters
     if(para_preset == "on") then
-        if(para_vertex_design == "beveled") then
+        if(para_vertex_design == "mitered") then
             para_junc_ang        = "opt"    ! Junctional gap
             para_unpaired_scaf   = "on"     ! Unpaired scaffold nucleotides
             para_n_base_tn       = -1       ! The number of nucleotides

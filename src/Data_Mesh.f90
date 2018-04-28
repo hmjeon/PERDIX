@@ -36,7 +36,7 @@ module Data_Mesh
         integer :: sec      ! Section ID
         integer :: iniL     ! Initial line ID
         integer :: croL     ! Cross-section line ID
-        integer :: beveled  ! Beveled node, 1: beveled node
+        integer :: mitered  ! Mitered node, 1: mitered node
 
         ! Nodal connectivity at the section
         ! -1 - no-connection, 1 - neighbor, 2 - self, 3 - modified neighbor, 4 - modified self
@@ -60,7 +60,7 @@ module Data_Mesh
     type :: MeshType
         integer :: n_node = 0   ! The number of nodes
         integer :: n_ele  = 0   ! The number of elements
-        integer :: n_beveled    ! The number of beveled nodes
+        integer :: n_mitered    ! The number of mitered nodes
 
         type(NodeType), allocatable :: node(:)   ! Node array
         type(EleType),  allocatable :: ele(:)    ! Element array

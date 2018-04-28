@@ -1519,13 +1519,13 @@ subroutine Route_Find_Centered_Scaf_Xover(prob, geom, mesh, dna)
             ! Find upper and downward crossovers
             croL(croL_cur).b_xover(sec_com+1) = .true.
 
-            ! Exception module by 9/27/2016 to treat error : 51_1_1_beveled
+            ! Exception module by 9/27/2016 to treat error : 51_1_1_mitered
             if(node_cur == -1 .or. node_com == -1) cycle
 
             up_cur = mesh.node(node_cur).up
             up_com = mesh.node(node_com).dn
 
-            ! Exception module by 9/27/2016 to treat error : 51_1_1_beveled
+            ! Exception module by 9/27/2016 to treat error : 51_1_1_mitered
             if(up_cur == -1 .or. up_com == -1) cycle
 
             sec_cur  = mesh.node(up_cur).sec
@@ -1536,7 +1536,7 @@ subroutine Route_Find_Centered_Scaf_Xover(prob, geom, mesh, dna)
             dn_cur = mesh.node(node_cur).dn
             dn_com = mesh.node(node_com).up
 
-            ! Exception module by 9/27/2016 to treat error : 51_1_1_beveled
+            ! Exception module by 9/27/2016 to treat error : 51_1_1_mitered
             if(dn_cur == -1 .or. dn_com == -1) cycle
 
             sec_cur  = mesh.node(dn_cur).sec

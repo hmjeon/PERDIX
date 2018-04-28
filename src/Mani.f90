@@ -239,7 +239,7 @@ subroutine Mani_Init_MeshType(mesh)
         mesh.node(i).sec     = -1   ! Section ID
         mesh.node(i).iniL    = -1   ! Initial line
         mesh.node(i).croL    = -1   ! Cross-section line
-        mesh.node(i).beveled = -1   ! Beveled node
+        mesh.node(i).mitered = -1   ! Mitered node
         mesh.node(i).conn    = -1   ! -1 - no-connection, 1 - neighbor, 2 - self, 3 - modified neighbor, 4- modified self
         mesh.node(i).ghost   = -1   ! Ghost node
 
@@ -273,7 +273,7 @@ subroutine Mani_Init_Node(node, n_node)
         node(i).sec     = -1    ! Section ID
         node(i).iniL    = -1    ! Initial line
         node(i).croL    = -1    ! Cross-section line
-        node(i).beveled = -1    ! Beveled node
+        node(i).mitered = -1    ! Mitered node
         node(i).conn    = -1    ! -1 - no-connection, 1 - neighbor, 2 - self, 3 - modified neighbor, 4 - modified self
         node(i).ghost   = -1    ! Ghost node
 
@@ -319,7 +319,7 @@ subroutine Mani_Copy_NodeType(ori, copy, num)
         copy(i).sec     = ori(i).sec        ! Cross-section ID
         copy(i).iniL    = ori(i).iniL       ! Initial line
         copy(i).croL    = ori(i).croL       ! Crossectional line
-        copy(i).beveled = ori(i).beveled    ! Beveled node
+        copy(i).mitered = ori(i).mitered    ! Mitered node
         copy(i).conn    = ori(i).conn       ! Connection type
         copy(i).ghost   = ori(i).ghost      ! Ghost node
 

@@ -218,7 +218,7 @@ subroutine Input_Initialize_Report(prob, geom, mesh, i, sec, edge, char_vert, ch
     ! Reset parameters
     call Input_Reset_Para_Report
     para_platform        = "win"
-    para_vertex_design   = char_vert    ! Flat or beveled vertex
+    para_vertex_design   = char_vert    ! Flat or mitered vertex
     para_cut_stap_method = char_cut     ! Staple-break
 
     ! Reset data structures
@@ -599,7 +599,7 @@ subroutine Input_Reset_Para_Report
     para_sticky_self     = "off"      ! [off, on], Sticky-end for self connection on henycomb cross-section
     para_unpaired_scaf   = "on"       ! [on, off], Unpaired scaffold nucleotides
     para_vertex_modify   = "const"    ! [const, mod], Vertex modification to avoid clash
-    !para_vertex_design   = "flat"     ! [flat, beveled], Vertex design
+    !para_vertex_design   = "flat"     ! [flat, mitered], Vertex design
 
     ! Paramters for B-from DNA generation
     para_dist_pp       = 0.42d0     ! [0.42, 0.6], distance between adjacent phosphate groups, nm
@@ -665,8 +665,8 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "     |                                                             |"
     write(0, "(a)"), "     +=============================================================+"
     write(0, "(a)")
-    write(0, "(a)"), "   A. First input - Predefined 2D target geometry"
-    write(0, "(a)"), "   =============================================="
+    write(0, "(a)"), "   A. First input - Predefined 2D target geometries"
+    write(0, "(a)"), "   ================================================"
     write(0, "(a)")
     write(0, "(a)"), "    [Triangular-mesh objects]"
     write(0, "(a)"), "       1. Square,               2. Honeycomb"
@@ -685,7 +685,7 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "      19. L-Shape [42-bp],     20. L-Shape [63-bp],         21. L-Shape [84-bp]"
     write(0, "(a)"), "      22. Curved Arm [Quad],   23. Curved Arm [Tri],        24. Curved Arm [Mixed]"
     write(0, "(a)")
-    write(0, "(a)"), "   Select the number or type geometry file (*.geo, *.igs, *.iges, *.ply) [Enter] : "
+    write(0, "(a)"), "   Select the number or type geometry file (*.geo, *.ply, *.igs, *.iges) [Enter] : "
     write(0, "(a)")
 end subroutine Input_Print_Problem
 
@@ -697,8 +697,8 @@ subroutine Input_Print_Num_BP_Edge(prob)
 
     ! The minimum edge lengths pre-defined
     write(0, "(a)")
-    write(0, "(a)"), "   B. Second input - Pre-defined minimum edge length"
-    write(0, "(a)"), "   ================================================="
+    write(0, "(a)"), "   B. Second input - Pre-defined minimum edge lengths"
+    write(0, "(a)"), "   =================================================="
     write(0, "(a)")
     write(0, "(a)"), "      1.  31 bp =  3 turn * 10.5 bp/turn ->  31 bp * 0.34nm/bp = 10.54nm"
     write(0, "(a)"), "   *  2.  42 bp =  4 turn * 10.5 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
@@ -736,7 +736,7 @@ subroutine Input_Set_Vertex_Design(prob)
     if(prob.sel_vertex == 1) then
         para_vertex_design = "flat"
     else
-        para_vertex_design = "beveled"
+        para_vertex_design = "mitered"
     end if
 
     print *, para_vertex_design
@@ -967,7 +967,7 @@ subroutine Input_Set_Section_Connectivity(prob, geom)
 
             ! Set section connectivity
             if( (para_vertex_design == "flat"    .and. b_connect == .true.) .or. &
-                (para_vertex_design == "beveled" .and. para_vertex_modify == "mod1" .and. &
+                (para_vertex_design == "mitered" .and. para_vertex_modify == "mod1" .and. &
                  row_cur < geom.sec.ref_row .and. row_cur == row_com ) ) then
                 geom.sec.conn(i) = sec_com
                 exit

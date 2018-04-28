@@ -2751,7 +2751,7 @@ subroutine SeqDesign_Make_Nick_Scaf(geom, mesh, dna)
                     dna.top(across).dn      == -1 .or. &
                     mesh.node(node).up      == -1 .or. &    ! If single crossover
                     mesh.node(node).dn      == -1 .or. &
-                    mesh.node(node).beveled /= -1 .or. &    ! If beveled strand
+                    mesh.node(node).mitered /= -1 .or. &    ! If mitered strand
 
                     ! To avoid placing inside
                     ( b_inside == .false. .and. geom.iniL(mesh.node(node).iniL).neiF(1) /= -1 .and. &
