@@ -31,7 +31,7 @@ module Para
     double precision, parameter :: para_init_scale = 20.0d0     ! Initial geometric scale
 
     ! Program parameters
-    character(10)  :: para_external                     ! [off, on], External parameter loading flag
+    character(10)  :: para_platform        = "dev"      ! [dev, win, mac, linux], External parameter loading flag
     character(10)  :: para_preset          = "on"       ! [on, off], Preset parameter defined in pre-defined examples
     character(10)  :: para_output_Tecplot  = "off"      ! [off, on], Output files for Tecplot(http://www.tecplot.com/) to draw vector image
     character(10)  :: para_fig_view        = "xy"       ! [xy, xz, xyz1, xyz2, xyz, all], Viewpoint for figures from UCSF Chimera

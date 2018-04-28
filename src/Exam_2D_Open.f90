@@ -121,14 +121,8 @@ subroutine Exam_Open2D_Square(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Square"
-    prob.name_file = "01_Square"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    prob.name_prob = "01_Square"
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! Case 1 - Round edge length without ssDNA
     para_const_edge_mesh = "round"      ! Constant edge length from polyhedra mesh
@@ -248,14 +242,8 @@ subroutine Exam_Open2D_Honeycomb(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Honeycomb"
-    prob.name_file = "02_Honeycomb"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    prob.name_prob = "02_Honeycomb"
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 30
@@ -333,14 +321,8 @@ subroutine Exam_Open2D_Circle(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Circle"
-    prob.name_file = "03_Circle"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    prob.name_prob = "03_Circle"
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 19
@@ -404,14 +386,8 @@ subroutine Exam_Open2D_Wheel(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Wheel"
-    prob.name_file = "04_Wheel"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    prob.name_prob = "04_Wheel"
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! Set options
     n = 10
@@ -466,14 +442,8 @@ subroutine Exam_Open2D_Ellipse(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Ellipse"
-    prob.name_file = "05_Ellipse"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    prob.name_prob = "05_Ellipse"
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 27
@@ -550,11 +520,8 @@ subroutine Exam_Open2D_Rhombic_Tiling(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Rhombic_Tiling"
-    prob.name_file = "06_Rhombic_Tiling"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
+    prob.name_prob = "06_Rhombic_Tiling"
+    call Mani_Set_Problem(prob, [231, 76, 60], "xy")
 
     ! Preset parameters
     if(para_preset == "on") then
@@ -564,9 +531,6 @@ subroutine Exam_Open2D_Rhombic_Tiling(prob, geom)
             para_n_base_tn     = -1     ! The number of nucleotides
         end if
     end if
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 19
@@ -620,14 +584,8 @@ subroutine Exam_Open2D_Quarter_Circle(prob, geom)
     write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
     write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
 
-    prob.name_prob = "Quarter_Circle"
-    prob.name_file = "07_Quarter_Circle"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xy")
+    prob.name_prob = "07_Quarter_Circle"
+    call Mani_Set_Problem(prob, [231, 76, 60], "xy")
 
     ! Case 1 - Round edge length without ssDNA
     para_const_edge_mesh = "round"      ! Constant edge length from polyhedra mesh
@@ -789,21 +747,10 @@ subroutine Exam_Open2D_Cross(prob, geom)
 
     double precision :: R_matrix(2,2), theta
     integer :: i
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Cross"
-    prob.name_file = "08_Cross"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xy")
-    !para_const_edge_mesh = "on"
+    ! Set problem
+    prob.name_prob = "08_Cross"
+    call Mani_Set_Problem(prob, [231, 76, 60], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 33
@@ -893,20 +840,9 @@ subroutine Exam_Open2D_Arrowhead(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Arrowhead"
-    prob.name_file = "09_Arrowhead"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xy")
+    ! Set problem
+    prob.name_prob = "09_Arrowhead"
+    call Mani_Set_Problem(prob, [231, 76, 60], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 24
@@ -967,20 +903,10 @@ subroutine Exam_Open2D_Annulus(prob, geom)
 
     double precision :: i_rad, o_rad, ang, rad
     integer :: i, j, index, n, nx, nr
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Annulus"
-    prob.name_file = "10_Annulus"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xy")
+    ! Set problem
+    prob.name_prob = "10_Annulus"
+    call Mani_Set_Problem(prob, [231, 76, 60], "xy")
 
     n  = 2
     nx = n
@@ -1043,17 +969,9 @@ subroutine Exam_Open2D_Cairo_Penta_Tiling(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Cairo_Penta"
-    prob.name_file = "11_Cairo_Penta_Tiling"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
+    ! Set problem
+    prob.name_prob = "11_Cairo_Penta_Tiling"
+    call Mani_Set_Problem(prob, [247, 147, 30], "xy")
 
     ! Preset parameters
     if(para_preset == "on") then
@@ -1063,9 +981,6 @@ subroutine Exam_Open2D_Cairo_Penta_Tiling(prob, geom)
             para_n_base_tn       = -1       ! The number of nucleotides
         end if
     end if
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 36
@@ -1120,20 +1035,9 @@ subroutine Exam_Open2D_Lotus(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Lotus"
-    prob.name_file = "12_Lotus"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
+    ! Set problem
+    prob.name_prob = "12_Lotus"
+    call Mani_Set_Problem(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 36
@@ -1185,20 +1089,9 @@ subroutine Exam_Open2D_Hexagonal_Tiling(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Hexagonal_Tiling"
-    prob.name_file = "13_Hexagonal_Tiling"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
+    ! Set problem
+    prob.name_prob = "13_Hexagonal_Tiling"
+    call Mani_Set_Problem(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 38
@@ -1250,20 +1143,9 @@ subroutine Exam_Open2D_Prismatic_Penta_Tiling(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Prismatic_Penta"
-    prob.name_file = "14_Prismatic_Penta_Tiling"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
+    ! Set problem
+    prob.name_prob = "14_Prismatic_Penta_Tiling"
+    call Mani_Set_Problem(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP =   31
@@ -1314,24 +1196,13 @@ subroutine Exam_Open2D_Hepta_Penta_Tiling(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Hepta_Penta_Tiling"
-    prob.name_file = "15_Hepta_Penta_Tiling"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
+    ! Set problem
+    prob.name_prob = "15_Hepta_Penta_Tiling"
+    call Mani_Set_Problem(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
-    geom.n_iniP =   30
-    geom.n_face =    8
+    geom.n_iniP = 30
+    geom.n_face = 8
 
     allocate(geom.iniP(geom.n_iniP))
     allocate(geom.face(geom.n_face))
@@ -1374,21 +1245,10 @@ subroutine Exam_Open2D_4_Sided_Polygon(prob, geom)
     double precision :: x_width, y_width, del_x, del_y
     integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
     character :: pn
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "4_Sided_Polygon"
-    prob.name_file = "16_4_Sided_Polygon"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-    !para_const_edge_mesh = "on"
+    ! Set problem
+    prob.name_prob = "16_4_Sided_Polygon"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! Set options
     n = 4
@@ -1440,20 +1300,10 @@ subroutine Exam_Open2D_5_Sided_Polygon(prob, geom)
     double precision :: x_width, y_width, del_x, del_y
     integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
     character :: pn
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "5_Sided_Polygon"
-    prob.name_file = "17_5_Sided_Polygon"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
+    ! Set problem
+    prob.name_prob = "17_5_Sided_Polygon"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! Set options
     n = 5
@@ -1505,20 +1355,10 @@ subroutine Exam_Open2D_6_Sided_Polygon(prob, geom)
     double precision :: x_width, y_width, del_x, del_y
     integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
     character :: pn
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "6_Sided_Polygon"
-    prob.name_file = "18_6_Sided_Polygon"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
+    ! Set problem
+    prob.name_file = "18_6_Sided_Polygon"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! Set options
     n = 6
@@ -1567,21 +1407,9 @@ subroutine Exam_Open2D_L_Shape_42bp(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "L_Shape_42bp"
-    prob.name_file = "19_L_Shape_42bp"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-    !para_const_edge_mesh = "on"
+    ! Set problem
+    prob.name_prob = "19_L_Shape_42bp"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 21
@@ -1635,21 +1463,9 @@ subroutine Exam_Open2D_L_Shape_63bp(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "L_Shape_63bp"
-    prob.name_file = "20_L_Shape_63bp"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-    !para_const_edge_mesh = "on"
+    ! Set problem
+    prob.name_prob = "20_L_Shape_63bp"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 21
@@ -1703,21 +1519,9 @@ subroutine Exam_Open2D_L_Shape_84bp(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "L_Shape_84bp"
-    prob.name_file = "21_L_Shape_84bp"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-    !para_const_edge_mesh = "on"
+    ! Set problem
+    prob.name_prob = "21_L_Shape_84bp"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 21
@@ -1771,23 +1575,13 @@ subroutine Exam_Open2D_Curved_Arm_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
     double precision :: i_radius, o_radius, angle, radius
     integer :: n_i_node, n_j_node, n_i_elem, n_j_elem
     integer :: i, j, n, n_node, n_elem, index
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Curved_Arm_Quad"
-    prob.name_file = "22_Curved_Arm_Qaud"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
+    ! Set problem
+    prob.name_prob = "22_Curved_Arm_Qaud"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     n        = 1
     i_radius = 4.0d0
@@ -1844,24 +1638,14 @@ subroutine Exam_Open2D_Curved_Arm_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
     character :: p_mesh
     double precision :: i_radius, o_radius, angle, radius
     integer :: n_i_node, n_j_node, n_i_elem, n_j_elem
     integer :: i, j, n, n_node, n_elem, index
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Curved_Arm_Tri"
-    prob.name_file = "23_Curved_Arm_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
+    ! Set problem
+    prob.name_prob = "23_Curved_Arm_Tri"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     p_mesh   = "b"
     n        = 1
@@ -1946,23 +1730,13 @@ subroutine Exam_Open2D_Curved_Arm_Mix(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
     double precision :: i_radius, o_radius, angle, radius
     integer :: n_i_node, n_j_node, n_i_elem, n_j_elem
     integer :: i, j, n, n_node, n_elem, index, emesh
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Curved_Arm_Mix"
-    prob.name_file = "24_Curved_Arm_Mix"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
+    ! Set problem
+    prob.name_prob = "24_Curved_Arm_Mix"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     n        = 1
     i_radius = 4.0d0
@@ -2047,21 +1821,9 @@ subroutine Exam_Open2D_Pump_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Pump_Quad"
-    prob.name_file = "25_Pump_Qaud"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-    !para_const_edge_mesh = "on"
+    ! Set problem
+    prob.name_prob = "25_Pump_Qaud"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 24
@@ -2106,21 +1868,9 @@ subroutine Exam_Open2D_Pump_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Pump_Tri"
-    prob.name_file = "26_Pump_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-    !para_const_edge_mesh = "on"
+    ! Set problem
+    prob.name_prob = "26_Pump_Tri"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 24
@@ -2177,21 +1927,9 @@ subroutine Exam_Open2D_Pump_Eng(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Pump_Eng"
-    prob.name_file = "27_Pump_Eng"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-    !para_const_edge_mesh = "on"
+    ! Set problem
+    prob.name_prob = "27_Pump_Eng"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 24
@@ -2248,21 +1986,9 @@ subroutine Exam_Open2D_S_Shape_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "S_Shape_Quad"
-    prob.name_file = "28_S_Shape_Qaud"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-    !para_const_edge_mesh = "on"
+    ! Set problem
+    prob.name_prob = "28_S_Shape_Qaud"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 24
@@ -2318,21 +2044,9 @@ subroutine Exam_Open2D_S_Shape_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "S_Shape_Tri"
-    prob.name_file = "29_S_Shape_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-    !para_const_edge_mesh = "on"
+    ! Set problem
+    prob.name_prob = "29_S_Shape_Tri"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 24
@@ -2399,21 +2113,9 @@ subroutine Exam_Open2D_S_Shape_Eng(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "S_Shape_Eng"
-    prob.name_file = "30_S_Shape_Eng"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
-    !para_const_edge_mesh = "on"
+    ! Set problem
+    prob.name_prob = "30_S_Shape_Eng"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 24
@@ -2468,20 +2170,9 @@ subroutine Exam_Open2D_Small_House_Quad(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Small_House_Quad"
-    prob.name_file = "31_Small_House_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
+    ! Set problem
+    prob.name_prob = "31_Small_House_Quad"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 19
@@ -2531,20 +2222,9 @@ subroutine Exam_Open2D_Small_House_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
-    prob.name_prob = "Small_House_Tri"
-    prob.name_file = "32_Small_House_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [77, 175, 74], "xy")
+    ! Set problem
+    prob.name_prob = "32_Small_House_Tri"
+    call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 19
@@ -2628,20 +2308,10 @@ subroutine Exam_Open2D_Plate_3x4(prob, geom)
 
     double precision :: x_width, y_width, del_x, del_y
     integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Plate_3x4"
-    prob.name_file = "Plate_3x4"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xy")
+    call Mani_Set_Problem(prob, [231, 76, 60], "xy")
 
     ! Set options
     !n  = 2
@@ -2696,20 +2366,9 @@ subroutine Exam_Open2D_Pentagon(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Pentagon"
-    prob.name_file = "Pentagon"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
+    call Mani_Set_Problem(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 10
@@ -2751,20 +2410,9 @@ subroutine Exam_Open2D_Star(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Star"
-    prob.name_file = "Star"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
+    call Mani_Set_Problem(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 12
@@ -2804,20 +2452,9 @@ subroutine Exam_Open2D_Plumeria(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Plumeria"
-    prob.name_file = "Plumeria"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [247, 147, 30], "xy")
+    call Mani_Set_Problem(prob, [247, 147, 30], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 31
@@ -2860,20 +2497,9 @@ subroutine Exam_Open2D_Stickman(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Stickman"
-    prob.name_file = "Stickman"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 48
@@ -2970,20 +2596,9 @@ subroutine Exam_Open2D_L_Shape_Tri(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "L_Shape_Tri"
-    prob.name_file = "L_Shape_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [231, 76, 60], "xy")
+    call Mani_Set_Problem(prob, [231, 76, 60], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 21
@@ -3045,20 +2660,10 @@ subroutine Exam_Open2D_Quarter_Circle_Tri(prob, geom)
     double precision :: dx, dy
     integer :: i, j, n, count_n, count_e, count_n_t, count_e_t
     character :: pn
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Quarter_Circle_Tri"
-    prob.name_file = "Quarter_Circle_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     n  = 2
     pn = "\"
@@ -3251,20 +2856,10 @@ subroutine Exam_Open2D_Disk_Tri(prob, geom)
     double precision :: i_rad, o_rad, ang, rad
     integer :: i, j, index, n, nx, nr
     character :: pn
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Disk_Tri"
-    prob.name_file = "Disk_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     n  = 2
     nx = n
@@ -3365,20 +2960,9 @@ subroutine Exam_Open2D_circle_Tri_Fine(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Circle_Tri_Fine"
-    prob.name_file = "Circle_Tri_Fine"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 41
@@ -3482,20 +3066,9 @@ subroutine Exam_Open2D_Ellipse_Tri_Fine(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Ellipse_Tri_Fine"
-    prob.name_file = "Ellipse_Tri_Fine"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 43
@@ -3603,20 +3176,9 @@ subroutine Exam_Open2D_L_Shape_Irregular(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    character(10) :: char_sec, char_bp, char_start_bp
-
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "L_Shape_Irregular"
-    prob.name_file = "L_Shape_Irregular"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! The number of points and faces
     geom.n_iniP = 100
@@ -3846,20 +3408,10 @@ subroutine Exam_Open2D_Plate_Distorted_Quad(prob, geom)
     double precision, allocatable :: edge(:,:,:)
     double precision :: x_width, y_width, del_x, del_y, ff, dd, xy(2)
     integer :: i, j, dt, index, n_i_poi, n_j_poi, n, nx, ny
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Plate_Dist_Quad"
-    prob.name_file = "Plate_Distorted_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! Set options
     n  = 3
@@ -3950,20 +3502,10 @@ subroutine Exam_Open2D_Plate_Distorted_Tri(prob, geom)
     double precision :: x_width, y_width, del_x, del_y, ff, dd, xy(2)
     integer :: i, j, n, dt, index, n_i_poi, n_j_poi, nx, ny
     character :: pn
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Plate_Dist_Tri"
-    prob.name_file = "Plate_Distorted_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     n  = 3
     pn = "\"
@@ -4068,20 +3610,10 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Quad(prob, geom)
 
     double precision :: x_width, y_width
     integer :: i, j, index, n, nx, ny
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Hyper_Para_Quad"
-    prob.name_file = "Hyperbolic_Paraboloid_Quad"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     n  = 3
     nx = n
@@ -4132,20 +3664,10 @@ subroutine Exam_Open2D_Hyperbolic_Paraboloid_Tri(prob, geom)
 
     integer :: i, j, index, n, nx, ny
     character :: pn
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Hyper_Para_Tri"
-    prob.name_file = "Hyperbolic_Paraboloid_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     n  = 3
     nx = n
@@ -4214,20 +3736,10 @@ subroutine Exam_Open2D_N_Polygon(prob, geom)
     double precision :: x_width, y_width, del_x, del_y
     integer :: i, j, index, n_i_poi, n_j_poi, n, nx, ny
     character :: pn
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "N_Polygon"
-    prob.name_file = "N_Polygon_Tri"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! Set options
     n = 12
@@ -4277,20 +3789,10 @@ subroutine Exam_Open2D_Triangle(prob, geom)
     type(GeomType), intent(inout) :: geom
 
     double precision :: angle, length
-    character(10) :: char_sec, char_bp, char_start_bp
 
-    write(unit=char_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=char_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=char_start_bp, fmt = "(i10)"), para_start_bp_ID
-
+    ! Set problem
     prob.name_prob = "Exam_Open2D_Triangle"
-    prob.name_file = "Exam_Open2D_Triangle"//&
-        "_"//trim(adjustl(trim(char_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(char_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     length = float(prob.n_bp_edge)
     angle  = 45.0d0

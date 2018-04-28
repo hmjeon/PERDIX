@@ -25,6 +25,8 @@
 !
 module Importer
 
+    use Ifport
+
     use Data_Prob
     use Data_Geom
 
@@ -57,7 +59,7 @@ subroutine Importer_PLY(prob, geom)
     ! 1st: # of meshes, 2nd: points
     type(MeshType), allocatable, dimension (:) :: Basepair_con
 
-    path = "..\examples\"//trim(prob.name_file)//"."//trim(prob.type_file)
+    path = "../examples/"//trim(prob.name_file)//"."//trim(prob.type_file)
     open(unit=1001, file=path, form="formatted")
 
     do
@@ -110,11 +112,11 @@ end subroutine Importer_PLY
 subroutine Importer_STL(prob)
     type(ProbType), intent(inout) :: prob
 
-    integer :: results
+    logical :: results
 
     ! run meshconv to generate *.PLY fileformat
-    call execute_command_line(trim("Library\meshconv -c ply Input\")// &
-        trim(prob.name_file)//"."//trim(prob.type_file)//trim(" -ascii"), exitstat=results)
+    results = systemqq(trim("Library/meshconv -c ply Input/")// &
+        trim(prob.name_file)//"."//trim(prob.type_file)//trim(" -ascii"))
 
     ! change file type to PLY
     prob.type_file = "ply"
@@ -126,11 +128,11 @@ end subroutine Importer_STL
 subroutine Importer_WRL(prob)
     type(ProbType), intent(inout) :: prob
 
-    integer :: results
+    logical :: results
 
     ! run meshconv to generate *.PLY fileformat
-    call execute_command_line(trim("Library\meshconv -c ply Input\")// &
-        trim(prob.name_file)//"."//trim(prob.type_file)//trim(" -ascii"), exitstat=results)
+    results = systemqq(trim("Library/meshconv -c ply Input/")// &
+        trim(prob.name_file)//"."//trim(prob.type_file)//trim(" -ascii"))
 
     ! change file type to PLY
     prob.type_file = "ply"
@@ -144,7 +146,8 @@ subroutine Importer_GEO(prob, geom)
     type(GeomType), intent(inout) :: geom
 
     double precision :: p_mesh
-    integer :: i, j, results, n_poi, n_line, temp
+    integer :: i, j, n_poi, n_line, temp
+    logical :: results
     character(200) :: path, fullname
 
     ! Data structure for meshing
@@ -156,7 +159,7 @@ subroutine Importer_GEO(prob, geom)
     type(MeshType), allocatable :: face_con(:)
 
     fullname = trim(prob.name_file)//"."//trim(prob.type_file)
-    path     = "input\"//fullname
+    path     = "input/"//fullname
 
     ! Read number of points and faces
     if(prob.type_file == 'geo') then
@@ -171,11 +174,11 @@ subroutine Importer_GEO(prob, geom)
         write(0, "(a)"), "Converting geometry with faced mesh"
 
         ! Convert to face meshes from lines
-        call execute_command_line(trim("tools\PyConvertGeo\pyConvertGeo")//" input\"//trim(fullname), exitstat=results)
-        !call execute_command_line(trim("python tools\PyConvertGeo\src\pyConvertGeo.py")//" input\"//trim(fullname), exitstat=results)
+        results = systemqq(trim("tools/PyConvertGeo/pyConvertGeo")//" input/"//trim(fullname))
+        !results = systemqq(trim("python tools/PyConvertGeo/src/pyConvertGeo.py")//" input/"//trim(fullname))
 
         fullname = trim(prob.name_file)//trim("_shapely.geo")
-        open(unit=1002, file="input\"//trim(fullname), form="formatted")
+        open(unit=1002, file="input/"//trim(fullname), form="formatted")
 
         ! Read number of points and faces
         read(1002, *), geom.n_iniP, n_line, geom.n_face
@@ -190,13 +193,13 @@ subroutine Importer_GEO(prob, geom)
         if(p_mesh > 0.0d0) then
             close(unit=1002)
 
-            call execute_command_line(&
+            results = systemqq(&
                 "matlab -wait -nodisplay -nosplash -nodesktop -r "//&
-                '"addpath tools\DistMesh\src; addpath tools\DistMesh; meshing('//&
-                "'input\"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//"); exit", exitstat=results)
+                '"addpath tools/DistMesh/src; addpath tools/DistMesh; meshing('//&
+                "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//"); exit")
 
             fullname = trim(prob.name_file)//trim("_shapely_distmesh.geo")
-            open(unit=1002, file="input\"//trim(fullname), form="formatted")
+            open(unit=1002, file="input/"//trim(fullname), form="formatted")
             read(1002, *), geom.n_iniP, n_line, geom.n_face
         end if
     end if
@@ -232,8 +235,8 @@ subroutine Importer_GEO(prob, geom)
     close(unit=1002)
 
     ! Delete temp file
-    call execute_command_line(trim("del input\")//trim(prob.name_file)//trim("_shapely.geo"), exitstat=results)
-    call execute_command_line(trim("del input\")//trim(prob.name_file)//trim("_shapely_distmesh.geo"), exitstat=results)
+    results = systemqq(trim("del input/")//trim(prob.name_file)//trim("_shapely.geo"))
+    results = systemqq(trim("del input/")//trim(prob.name_file)//trim("_shapely_distmesh.geo"))
 end subroutine Importer_GEO
 
 ! -----------------------------------------------------------------------------

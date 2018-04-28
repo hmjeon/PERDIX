@@ -3900,7 +3900,7 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
         base = dna.top(base).up
     end do
 
-    path = trim(prob.path_work1)//trim(prob.name_file)
+    path = trim(prob.path_work)//"/"//trim(prob.name_file)
     open(unit=791, file=trim(path)//"_count_staple.dat",  form="formatted")
     open(unit=792, file=trim(path)//"_count_region.txt",  form="formatted")
     open(unit=793, file=trim(path)//"_graph_bar.txt",     form="formatted")
@@ -4924,7 +4924,7 @@ subroutine SeqDesign_Chimera_Atom(prob, dna)
 
     f_axis = para_chimera_axis
 
-    path = trim(prob.path_work1)//trim(prob.name_file)
+    path = trim(prob.path_work)//"/"//trim(prob.name_file)
     open(unit=702, file=trim(path)//"_09_atomic_model.bild", form="formatted")
 
     ! For all bases
@@ -4999,7 +4999,7 @@ subroutine SeqDesign_Chimera_Atom(prob, dna)
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
     open(unit=702, file=trim(path)//"_09_atomic_model.dat", form="formatted")
 
     write(702, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
@@ -5078,7 +5078,7 @@ subroutine SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
 
     f_axis = para_chimera_axis
 
-    path = trim(prob.path_work1)//trim(prob.name_file)
+    path = trim(prob.path_work)//"/"//trim(prob.name_file)
     open(unit=702, file=trim(path)//"_curved_cylinder.bild", form="formatted")
 
     ! For all strands
@@ -5227,7 +5227,7 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
     f_axis = para_chimera_axis
 
     ! File open for route step
-    path = trim(prob.path_work1)//trim(prob.name_file)
+    path = trim(prob.path_work)//"/"//trim(prob.name_file)
     open(unit=703, file=trim(path)//"_10_route_scaf.bild", form="formatted")
     open(unit=704, file=trim(path)//"_11_route_stap.bild", form="formatted")
 
@@ -5444,7 +5444,7 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
         return
     end if
 
-    path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
     open(unit=703, file=trim(path)//"_10_route_scaf.dat", form="formatted")
     open(unit=704, file=trim(path)//"_11_route_stap.dat", form="formatted")
 
@@ -5517,7 +5517,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     f_axis = para_chimera_axis
 
     ! File open for sequence design
-    path = trim(prob.path_work1)//trim(prob.name_file)
+    path = trim(prob.path_work)//"/"//trim(prob.name_file)
     open(unit=705, file=trim(path)//"_12_route_all.bild", form="formatted")
 
     if(para_output_Tecplot == "on") then
@@ -5804,7 +5804,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
     open(unit=705, file=trim(path)//"_12_route_all.dat", form="formatted")
     open(unit=706, file=trim(path)//"_15_sep_line.dat", form="formatted")
 
@@ -5901,7 +5901,7 @@ subroutine SeqDesign_Chimera_Strand(prob, dna)
     carmine    = [150.0d0, 0.000d0, 24.00d0] / 255.0d0       ! color for C
 
     ! Write the file
-    path = trim(prob.path_work1)//trim(prob.name_file)
+    path = trim(prob.path_work)//"/"//trim(prob.name_file)
     open(unit=706, file=trim(path)//"_strand.bild",   form="formatted")
     open(unit=707, file=trim(path)//"_sequence.bild", form="formatted")
 

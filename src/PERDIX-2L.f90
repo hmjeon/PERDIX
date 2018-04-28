@@ -123,7 +123,7 @@ subroutine Report()
     open(unit = 90, file = "Report_2D_Lattice_"//trim(char_cut)//".txt", form="formatted")
 
     ! Remove the directory and files
-    call execute_command_line("rd "//trim("output")//' /s /q', exitstat=results)
+    results = systemqq("rd "//trim("output")//' /s /q')
 
     ! Infomation
     write(90, "(a)"), "==========================================="

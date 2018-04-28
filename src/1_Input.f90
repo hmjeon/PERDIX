@@ -217,7 +217,7 @@ subroutine Input_Initialize_Report(prob, geom, mesh, i, sec, edge, char_vert, ch
 
     ! Reset parameters
     call Input_Reset_Para_Report
-    para_external        = "on"
+    para_platform        = "win"
     para_vertex_design   = char_vert    ! Flat or beveled vertex
     para_cut_stap_method = char_cut     ! Staple-break
 
@@ -343,7 +343,7 @@ subroutine Input_Print_Parameters(prob, geom)
     integer :: i
 
     ! Open output progress file (unit 11 is used for global output file)
-    open(unit=11, file=trim(prob.path_work1)//"TXT_PERDIX_2L.txt", form="formatted")
+    open(unit=11, file=trim(prob.path_work)//"/TXT_PERDIX_2L.txt", form="formatted")
 
     do i = 0, 11, 11
         write(i, "(a )"), "   +--------------------------------------------------------------------+"
@@ -473,10 +473,10 @@ subroutine Input_Read_Parameter
     open(unit=1, file="env.txt", form="formatted")
 
     ! External parameter loading, this should be always ".true."
-    read(1, *), ctemp, para_external
+    read(1, *), ctemp, para_platform
 
     ! If the external mode is on
-    if(para_external == "on") then
+    if(para_platform /= "dev") then
 
         ! Program parameters
         read(1, *), ctemp, para_preset
@@ -643,15 +643,15 @@ end subroutine Input_Reset_Para_Report
 
 ! Set command environment
 subroutine Input_Set_Command
-    integer :: i
+    integer :: results
 
     ! Set command environments
-    call execute_command_line('title PERDIX-2L', exitstat=i)                   ! cmd title
-    call execute_command_line('mode con: cols=135 lines=6000', exitstat=i)     ! cmd size
-    call execute_command_line('color', exitstat=i)                             ! convert color, 02, f0, f1, f2
-    call execute_command_line('date /t', exitstat=i)                           ! display time
-    !call execute_command_line('hostname', exitstat=i)                          ! display hostname of the computer
-    !call execute_command_line('ver', exitstat=i)                               ! display version information
+    results = systemqq('title PERDIX-2L')                   ! cmd title
+    results = systemqq('mode con: cols=135 lines=6000')     ! cmd size
+    results = systemqq('color')                             ! convert color, 02, f0, f1, f2
+    results = systemqq('date /t')                           ! display time
+    !results = systemqq('hostname')                          ! display hostname of the computer
+    !results = systemqq('ver')                               ! display version information
 end subroutine Input_Set_Command
 
 ! -----------------------------------------------------------------------------
@@ -792,7 +792,7 @@ subroutine Input_Select_File(prob, geom)
         "_"//trim(para_cut_stap_method)
 
     ! Set geometric type and view (atom, cylinder size, move_x, move_y)
-    call Mani_Set_View_Color(prob, [52, 152, 219], "xy")
+    call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! Print filename and type
     call Space(0, 11)
@@ -1227,12 +1227,10 @@ subroutine Input_Set_Path(prob)
     type(ProbType), intent(inout) :: prob
 
     ! Set working directory
-    if(para_external == "on") then
-        prob.path_work1 = "output\"//trim(prob.name_file)//"\"
-        prob.path_work2 = "output/"//trim(prob.name_file)//"/"
+    if(para_platform /= "dev") then
+        prob.path_work = "output/"//trim(prob.name_file)
     else
-        prob.path_work1 = "output\"
-        prob.path_work2 = "output/"
+        prob.path_work = "output"
     end if
 end subroutine Input_Set_Path
 
@@ -1242,17 +1240,29 @@ end subroutine Input_Set_Path
 subroutine Input_Set_Workplace(prob)
     type(ProbType), intent(in) :: prob
 
-    integer :: i
+    logical :: results
 
     ! Remove the directory and files
-    call execute_command_line("rd "//trim(prob.path_work1)//' /s /q', exitstat=i)
+    if(para_platform == "win" .or. para_platform == "dev") then
+        results = systemqq("rmdir "//trim(prob.path_work)//' /s /q')    ! Windows
+    else
+        results = systemqq("rm -r "//trim(prob.path_work))              ! Linux & Mac
+    end if
 
     ! Make new working directory
-    call execute_command_line("md "//trim(prob.path_work1), exitstat=i)
+    if(para_platform == "win" .or. para_platform == "dev") then
+        results = systemqq("mkdir "//trim(prob.path_work))              ! Windows
+    else
+        results = systemqq("mkdir -p "//trim(prob.path_work))           ! Linux & Mac
+    end if
 
     ! Directory for Tecplot output
     if(para_output_Tecplot == "on") then
-        call execute_command_line("md "//trim(prob.path_work1)//"\Tecplot", exitstat=i)
+        if(para_platform == "win" .or. para_platform == "dev") then
+            results = systemqq("mkdir "//trim(prob.path_work)//"/Tecplot")      ! Windows
+        else
+            results = systemqq("mkdir -p "//trim(prob.path_work)//"/Tecplot")   ! Linux & Mac
+        end if
     end if
 
     write(0, "(a)"), "  ...Removed the existing working directory"
@@ -1272,7 +1282,7 @@ subroutine Input_Write_GEO_File(prob, geom)
     ! Exception
     if(para_write_101 == .false.) return
 
-    path = trim(prob.path_work1)//trim(prob.name_file)
+    path = trim(prob.path_work)//"/"//trim(prob.name_file)
     open(unit=101, file=trim(path)//".geo", form="formatted")
 
     ! Write points
@@ -1382,7 +1392,7 @@ subroutine Input_Chimera_Init_Geometry(prob, geom)
     f_axis = para_chimera_axis
     f_info = para_chimera_102_info
 
-    path = trim(prob.path_work1)//trim(prob.name_file)
+    path = trim(prob.path_work)//"/"//trim(prob.name_file)
     open(unit=102, file=trim(path)//"_01_init_geo.bild", form="formatted")
 
     ! Write initial points
@@ -1487,7 +1497,7 @@ subroutine Input_Chimera_Init_Geometry(prob, geom)
     ! ==================================================
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
     open(unit=102, file=trim(path)//"_01_init_geo.dat", form="formatted")
 
     write(102, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
@@ -1527,7 +1537,7 @@ subroutine Input_Tecplot_Init_Geometry(prob, geom)
     if(para_write_103 == .false.) return
 
     ! Open file
-    path = trim(prob.path_work1)//trim(prob.name_file)
+    path = trim(prob.path_work)//"/"//trim(prob.name_file)
     open(unit=102, file=trim(path)//"_init_geo_face.dat", form="formatted")
 
     ! Find the number of lines
@@ -1732,7 +1742,7 @@ subroutine Input_Chimera_Schlegel_Diagram(prob, geom, pos_xy)
     ! Set option
     f_axis = para_chimera_axis
 
-    path = trim(prob.path_work1)//trim(prob.name_file)
+    path = trim(prob.path_work)//"/"//trim(prob.name_file)
     open(unit=104, file=trim(path)//"_schlegel.bild", form="formatted")
 
     ! Write initial points
@@ -1779,7 +1789,7 @@ subroutine Input_Chimera_Schlegel_Diagram(prob, geom, pos_xy)
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work1)//"Tecplot\"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
     open(unit=104, file=trim(path)//"_schlegel.dat", form="formatted")
 
     write(104, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'

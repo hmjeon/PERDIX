@@ -72,7 +72,6 @@
 		<File RelativePath="..\src\7_Output.f90"/>
 		<File RelativePath="..\src\Importer.f90"/></Filter>
 		<File RelativePath=".\env.txt"/>
-		<File RelativePath=".\Makefile"/>
 		<File RelativePath="..\src\PERDIX-2L.f90"/>
 		<File RelativePath=".\seq.txt"/></Filter></Files>
 	<Globals/></VisualStudioProject>
