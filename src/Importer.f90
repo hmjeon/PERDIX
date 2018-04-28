@@ -194,8 +194,7 @@ subroutine Importer_GEO(prob, geom)
         if(p_mesh > 0.0d0) then
             close(unit=1002)
 
-            results = systemqq(&
-                "matlab -wait -nodisplay -nosplash -nodesktop -r "//&
+            results = systemqq("matlab -wait -nodisplay -nosplash -nodesktop -r "//&
                 '"addpath tools/DistMesh/src; addpath tools/DistMesh; meshing('//&
                 "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//"); exit")
 
