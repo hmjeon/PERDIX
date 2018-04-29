@@ -1,6 +1,6 @@
 ## PERDIX-2L</br>
 
-> Welcome to the PERDIX project! PERDIX is an open-source software written by FORTRAN 90/95, which allows scientists to build and solve the sequence design of complex 2D DNA DX-based wireframe lattices.</br>
+> Welcome to the PERDIX project! PERDIX is an open-source software written by FORTRAN 90/95, which allows scientists to build and solve the sequence design of complex DNA DX-based wireframe lattices.</br>
 
 <center><img src ="./release/git_figure.jpg" width = "100%"></center>
 
@@ -8,7 +8,7 @@
 **P**urine / Pyrimidine **E**ngineered **R**ecombinant **D**esign **I**nverse **X** (= as the universal unknown variable for which the software will find the 'solution' as staple sequences)</br>
 
 **Software Variants:**</br>
-* **[PERDIX-6P](https://github.com/hmjeon/PERDIX-6P)**: Designer scaffoled DNA 6HB-based wireframe nanoparticle</br>
+* **[PERDIX-6P](https://github.com/hmjeon/PERDIX-6P)**: Designer scaffoled DNA 6HB-based wireframe nanoparticles</br>
 * **[PERDIX-2L](https://github.com/hmjeon/PERDIX-2L)**: Designer scaffoled DNA DX-based wireframe lattices</br>
 
 ## Features</br>
