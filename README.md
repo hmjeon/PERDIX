@@ -1,5 +1,7 @@
-# PERDIX-2L
-Welcome to the PERDIX project! PERDIX is an open-source software, which allows scientists to build and solve the sequence design of complex 2D DNA DX-based wireframe lattices.
+
+## PERDIX-2L
+
+> Welcome to the PERDIX project! PERDIX is an open-source software, which allows scientists to build and solve the sequence design of complex 2D DNA DX-based wireframe lattices.
 
 <center><img src ="./release/git_figure.jpg" width = "100%"></center>
 
@@ -20,13 +22,15 @@ Welcome to the PERDIX project! PERDIX is an open-source software, which allows s
 **Requirements:**
 * Python 2.7 - [Shapely](https://pypi.org/project/Shapely/)
 * MATLAB - [DistMesh](http://persson.berkeley.edu/distmesh/)
-
-# Setup
+</br>
+</br>
+## Setup
 ```git clone https://github.com/hmjeon/PERDIX-2P.git```
 
-The software document can be downloaded [here.](https://github.com/hmjeon/PERDIX-2L)
-
-# Features
+The software document can be downloaded [here](./release/Doc/Software%20Document.pdf).
+</br>
+</br>
+## Features
 * Fully automatic procedure for the scaffold routing and sequence design
 * Importing GEO, IGES/IGS(for PERDIX-2L/6L), or PLY file formats as an input
 * Arbitrary edge-lengths to design asymmetric and irregular shapes
@@ -35,9 +39,11 @@ The software document can be downloaded [here.](https://github.com/hmjeon/PERDIX
 * Pre-defined target geometries
 * User-friendly TUI (Text-based User Interface)
 * Free and open source ([GNU General Public License, version 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html/))
-
-# Author
+</br>
+</br>
+## Author
 Hyungmin Jun (hyungminjun@outlook.com), Laboratory of Computational Biology and Biophysics, MIT
-
-# License
+</br>
+</br>
+## License
 PERDIX is an open-source software distributed under the [GPL license, version 3](https://www.gnu.org/licenses/gpl-3.0.en.html/)
