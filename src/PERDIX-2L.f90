@@ -319,7 +319,7 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         if(para_set_seq_scaf == 0) then
             write(i, "(a)"), "M13mp18(7249nt) sequence"
         else if(para_set_seq_scaf == 1) then
-            write(i, "(a)"), "user-defined sequence from seq.txt"
+            write(i, "(a)"), "user-defined sequence from env.txt"
         else if(para_set_seq_scaf == 2) then
             write(i, "(a)"), "random sequence"
         end if

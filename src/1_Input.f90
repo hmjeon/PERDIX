@@ -217,7 +217,7 @@ subroutine Input_Initialize_Report(prob, geom, mesh, i, sec, edge, char_vert, ch
 
     ! Reset parameters
     call Input_Reset_Para_Report
-    para_platform        = "win"
+    para_platform        = "dev"
     para_vertex_design   = char_vert    ! Flat or mitered vertex
     para_cut_stap_method = char_cut     ! Staple-break
 
@@ -472,111 +472,11 @@ subroutine Input_Read_Parameter
     ! Open file
     open(unit=1, file="env.txt", form="formatted")
 
-    ! External parameter loading, this should be always ".true."
     read(1, *), ctemp, para_platform
 
-    ! If the external mode is on
+    ! If the mode is not dev
     if(para_platform /= "dev") then
-
-        ! Program parameters
-        read(1, *), ctemp, para_preset
-        read(1, *), ctemp, para_output_Tecplot
-        read(1, *), ctemp, para_fig_view
-        read(1, *), ctemp, para_type_cndo
-
-        ! Parameters for junction modification
-        read(1, *), ctemp, para_junc_ang
-        read(1, *), ctemp, para_const_edge_mesh
-        read(1, *), ctemp, para_sticky_self
-        read(1, *), ctemp, para_unpaired_scaf
-        read(1, *), ctemp, para_vertex_modify
-        read(1, *), ctemp, para_vertex_design
-
-        ! Paramters for B-from DNA generation
-        read(1, *), ctemp, para_dist_pp
-        read(1, *), ctemp, para_dist_bp
-        read(1, *), ctemp, para_rad_helix
-        read(1, *), ctemp, para_gap_helix
-        read(1, *), ctemp, para_ang_minor
-        read(1, *), ctemp, para_ang_correct
-        read(1, *), ctemp, para_n_base_tn
-        read(1, *), ctemp, para_start_bp_ID
-
-        ! Paramters for scaffold route
-        read(1, *), ctemp, para_weight_edge
-        read(1, *), ctemp, para_method_MST
-        read(1, *), ctemp, para_method_sort
-        read(1, *), ctemp, para_adjacent_list
-        read(1, *), ctemp, para_all_spanning
-
-        ! Parameter for sequence design
-        read(1, *), ctemp, para_cut_stap_method
-        read(1, *), ctemp, para_set_stap_sxover
-        read(1, *), ctemp, para_output_design
-        read(1, *), ctemp, para_set_xover_scaf
-        read(1, *), ctemp, para_gap_xover_two_scaf
-        read(1, *), ctemp, para_gap_xover_bound_scaf
-        read(1, *), ctemp, para_gap_xover_bound_stap
-        read(1, *), ctemp, para_gap_xover_two
-        read(1, *), ctemp, para_gap_xover_nick1
-        read(1, *), ctemp, para_gap_xover_nick
-        read(1, *), ctemp, para_max_cut_scaf
-        read(1, *), ctemp, para_min_cut_stap
-        read(1, *), ctemp, para_mid_cut_stap
-        read(1, *), ctemp, para_max_cut_stap
         read(1, *), ctemp, para_set_seq_scaf
-        read(1, *), ctemp, para_set_start_scaf
-
-        ! UCSF Chimera output control
-        read(1, *), ctemp, para_write_101
-        read(1, *), ctemp, para_write_102
-        read(1, *), ctemp, para_write_103
-        read(1, *), ctemp, para_write_104
-        read(1, *), ctemp, para_write_301
-        read(1, *), ctemp, para_write_302
-        read(1, *), ctemp, para_write_303
-        read(1, *), ctemp, para_write_401
-        read(1, *), ctemp, para_write_501
-        read(1, *), ctemp, para_write_502
-        read(1, *), ctemp, para_write_503
-        read(1, *), ctemp, para_write_504
-        read(1, *), ctemp, para_write_505
-        read(1, *), ctemp, para_write_601_1
-        read(1, *), ctemp, para_write_601_2
-        read(1, *), ctemp, para_write_601_3
-        read(1, *), ctemp, para_write_601_4
-        read(1, *), ctemp, para_write_601_5
-        read(1, *), ctemp, para_write_606
-        read(1, *), ctemp, para_write_607
-        read(1, *), ctemp, para_write_608
-        read(1, *), ctemp, para_write_609
-        read(1, *), ctemp, para_write_610
-        read(1, *), ctemp, para_write_701
-        read(1, *), ctemp, para_write_711
-        read(1, *), ctemp, para_write_702
-        read(1, *), ctemp, para_write_703
-        read(1, *), ctemp, para_write_705
-        read(1, *), ctemp, para_write_706
-        read(1, *), ctemp, para_write_710
-        read(1, *), ctemp, para_write_801
-        read(1, *), ctemp, para_write_802
-        read(1, *), ctemp, para_write_803
-        read(1, *), ctemp, para_write_804
-        read(1, *), ctemp, para_write_805
-        read(1, *), ctemp, para_write_808
-
-        read(1, *), ctemp, para_chimera_axis
-        read(1, *), ctemp, para_chimera_102_info
-        read(1, *), ctemp, para_chimera_301_info
-        read(1, *), ctemp, para_chimera_302_info
-        read(1, *), ctemp, para_chimera_303_info
-        read(1, *), ctemp, para_chimera_401_info
-        read(1, *), ctemp, para_chimera_502_ori
-        read(1, *), ctemp, para_chimera_503_mod
-        read(1, *), ctemp, para_chimera_504_info
-        read(1, *), ctemp, para_chimera_601_dir
-        read(1, *), ctemp, para_chimera_609_cyl
-        read(1, *), ctemp, para_chimera_609_dir
     end if
 
     close(unit=1)
@@ -635,7 +535,7 @@ subroutine Input_Reset_Para_Report
     para_min_cut_stap         = 20  ! [20], The minimum number of nucleotides for one staple strand
     para_mid_cut_stap         = 40  ! [40], The optimal number of nucleotides for one staple strand
     para_max_cut_stap         = 60  ! [60], The maximum number of nucleotides for one staple strand
-    para_set_seq_scaf         = 0   ! [0, 1, 2], Scaffold sequence, 0 - M13mp18(7249nt), 1 - import sequence from seq.txt, 2 - random
+    para_set_seq_scaf         = 0   ! [0, 1, 2], Scaffold sequence, 0 - M13mp18(7249nt), 1 - import sequence from env.txt, 2 - random
     para_set_start_scaf       = 1   ! [1], Starting nucleotide position of scaffold strand
 end subroutine Input_Reset_Para_Report
 
@@ -1227,10 +1127,12 @@ subroutine Input_Set_Path(prob)
     type(ProbType), intent(inout) :: prob
 
     ! Set working directory
-    if(para_platform /= "dev") then
-        prob.path_work = "output/"//trim(prob.name_file)
-    else
+    if(para_platform == "dev") then
         prob.path_work = "output"
+    else if(para_platform == "win") then
+        prob.path_work = "output\"//trim(prob.name_file)
+    else
+        prob.path_work = "output/"//trim(prob.name_file)
     end if
 end subroutine Input_Set_Path
 
@@ -1243,23 +1145,27 @@ subroutine Input_Set_Workplace(prob)
     logical :: results
 
     ! Remove the directory and files
-    if(para_platform == "win" .or. para_platform == "dev") then
-        results = systemqq("rmdir "//trim(prob.path_work)//' /s /q')    ! Windows
+    if(para_platform == "dev") then
+        results = systemqq("rd "//trim(prob.path_work)//' /s /q')   ! Windows
+    else if(para_platform == "win") then
+        results = systemqq("rd "//trim(prob.path_work)//' /s /q')   ! Windows
     else
-        results = systemqq("rm -r "//trim(prob.path_work))              ! Linux & Mac
+        results = systemqq("rm -r "//trim(prob.path_work))          ! Linux & Mac
     end if
 
     ! Make new working directory
-    if(para_platform == "win" .or. para_platform == "dev") then
-        results = systemqq("mkdir "//trim(prob.path_work))              ! Windows
+    if(para_platform == "dev") then
+        results = systemqq("md "//trim(prob.path_work))         ! Dev
+    else if(para_platform == "win") then
+        results = systemqq("md "//trim(prob.path_work))         ! Windows
     else
-        results = systemqq("mkdir -p "//trim(prob.path_work))           ! Linux & Mac
+        results = systemqq("mkdir -p "//trim(prob.path_work))   ! Linux & Mac
     end if
 
     ! Directory for Tecplot output
     if(para_output_Tecplot == "on") then
         if(para_platform == "win" .or. para_platform == "dev") then
-            results = systemqq("mkdir "//trim(prob.path_work)//"/Tecplot")      ! Windows
+            results = systemqq("md "//trim(prob.path_work)//"/Tecplot")         ! Windows
         else
             results = systemqq("mkdir -p "//trim(prob.path_work)//"/Tecplot")   ! Linux & Mac
         end if
