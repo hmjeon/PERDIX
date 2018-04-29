@@ -1,7 +1,7 @@
 # PERDIX-2L
 Welcome to the PERDIX project! PERDIX is an open-source software, which allows scientists to build and solve the sequence design of complex 2D DNA DX-based wireframe lattices.
 
-<center><img src ="./release/git_figure.jpg" width = "80%"></center>
+<center><img src ="./release/git_figure.jpg" width = "100%"></center>
 
 **PERDIX:**
 * **P**urine (Adenine & Guanine) / Pyrimidine (Cytosine & Thymine)
@@ -23,6 +23,8 @@ Welcome to the PERDIX project! PERDIX is an open-source software, which allows s
 
 # Setup
 ```git clone https://github.com/hmjeon/PERDIX-2P.git```
+
+The software document can be downloaded [here.](https://github.com/hmjeon/PERDIX-2L)
 
 # Features
 * Fully automatic procedure for the scaffold routing and sequence design
