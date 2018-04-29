@@ -1343,6 +1343,9 @@ subroutine Exam_Open2D_5_Sided_Polygon(prob, geom)
             geom.face(i).poi(3) = i + 1
         end if
     end do
+
+    ! Set the orientation of the geometry
+    !call Mani_Set_Geo_Ori(geom, [0.0d0, 0.0d0, 1.0d0], 18.0d0)
 end subroutine Exam_Open2D_5_Sided_Polygon
 
 ! -----------------------------------------------------------------------------

@@ -30,11 +30,13 @@ module Mani
     use Data_DNA
     use Data_Prob
 
+    use Math
     use Para
 
     implicit none
 
     public Mani_Set_Problem
+    public Mani_Set_Geo_Ori
     public Space
     public Mani_To_Upper
     public Mani_Progress_Bar
@@ -79,6 +81,40 @@ subroutine Mani_Set_Problem(prob, color, view)
     ! Set view points
     para_fig_view = trim(adjustl(view))
 end subroutine Mani_Set_Problem
+
+! -----------------------------------------------------------------------------
+
+! Set the orientation of the geometry
+subroutine Mani_Set_Geo_Ori(geom, pseudo, angle)
+    type(GeomType), intent(inout) :: geom
+    double precision, intent(in)  :: pseudo(3)
+    double precision, intent(in)  :: angle
+
+    double precision :: pos_center(2), rot_mat(2,2), temp(2)
+    integer :: i
+
+    pos_center(1:2) = 0.0d0
+
+    rot_mat(1,1) =  dcos(angle*pi/180.0d0)
+    rot_mat(1,2) = -dsin(angle*pi/180.0d0)
+    rot_mat(2,1) =  dsin(angle*pi/180.0d0)
+    rot_mat(2,2) =  dcos(angle*pi/180.0d0)
+
+    do i = 1, geom.n_iniP
+        temp(1) = rot_mat(1,1) * geom.iniP(i).pos(1) + rot_mat(1,2) * geom.iniP(i).pos(2)
+        temp(2) = rot_mat(2,1) * geom.iniP(i).pos(1) + rot_mat(2,2) * geom.iniP(i).pos(2)
+        geom.iniP(i).pos(1:2) = temp(1:2)
+    end do
+
+    do i = 1, geom.n_iniP
+        pos_center(1:2) = pos_center(1:2) + geom.iniP(i).pos(1:2)
+    end do
+    pos_center(1:2) = pos_center(1:2) / dble(geom.n_iniP)
+
+    do i = 1, geom.n_iniP
+        geom.iniP(i).pos(1:2) = geom.iniP(i).pos(1:2) - pos_center(1:2)
+    end do
+end subroutine Mani_Set_Geo_Ori
 
 ! -----------------------------------------------------------------------------
 
