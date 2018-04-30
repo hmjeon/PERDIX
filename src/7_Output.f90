@@ -1737,7 +1737,7 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
     if(para_write_710 == .true. .and. para_output_Tecplot == "on") then
 
         ! Open file stream
-        path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+        path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
         open(unit=709, file=trim(path)//"_design_edge.dat", form="formatted")
         do i = 1, 6
 
@@ -2125,7 +2125,7 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     ! =============================================
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=998, file=trim(path)//"_14_json_guide.dat", form="formatted")
 
     write(998, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'

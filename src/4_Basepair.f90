@@ -2500,7 +2500,7 @@ subroutine Basepair_Chimera_Cross_Geometry(prob, geom)
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=504, file=trim(path)//"_06_multi_line.dat", form="formatted")
 
     write(504, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'

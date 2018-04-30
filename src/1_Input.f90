@@ -1164,10 +1164,12 @@ subroutine Input_Set_Workplace(prob)
 
     ! Directory for Tecplot output
     if(para_output_Tecplot == "on") then
-        if(para_platform == "win" .or. para_platform == "dev") then
-            results = systemqq("md "//trim(prob.path_work)//"/Tecplot")         ! Windows
+        if(para_platform == "dev" )then
+            results = systemqq("md "//trim(prob.path_work)//"\tecplot")         ! Dev
+        else if(para_platform == "win") then
+            results = systemqq("md "//trim(prob.path_work)//"\tecplot")         ! Windows
         else
-            results = systemqq("mkdir -p "//trim(prob.path_work)//"/Tecplot")   ! Linux & Mac
+            results = systemqq("mkdir -p "//trim(prob.path_work)//"/tecplot")   ! Linux & Mac
         end if
     end if
 
@@ -1403,7 +1405,7 @@ subroutine Input_Chimera_Init_Geometry(prob, geom)
     ! ==================================================
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=102, file=trim(path)//"_01_init_geo.dat", form="formatted")
 
     write(102, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
@@ -1695,7 +1697,7 @@ subroutine Input_Chimera_Schlegel_Diagram(prob, geom, pos_xy)
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=104, file=trim(path)//"_schlegel.dat", form="formatted")
 
     write(104, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'

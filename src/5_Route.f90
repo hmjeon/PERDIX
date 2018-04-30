@@ -693,7 +693,7 @@ subroutine Route_Chimera_Route(prob, geom, mesh, dna, step_route)
     ! ---------------------------------------------
     if(step_route /= "route3" .or. para_output_Tecplot /= "on") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=601, file=trim(path)//"_"//step_route//"_scaf.dat", form="formatted")
     open(unit=602, file=trim(path)//"_"//step_route//"_stap.dat", form="formatted")
 
@@ -2626,7 +2626,7 @@ subroutine Route_Graph_Chimera_All_Spanning_Tree(prob, pos_node, tail, head, idx
         ! ---------------------------------------------
         if(para_output_Tecplot == "on") then
 
-            path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+            path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
             open(unit=604, file=trim(path)//"_graph"//trim(adjustl(Int2Str(k)))//".dat", form="formatted")
 
             write(604, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
@@ -2837,7 +2837,7 @@ subroutine Route_Graph_Chimera_Spanning_Tree(prob, pos_node, tail, head, tree)
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=606, file=trim(path)//"_07_spantree.dat", form="formatted")
 
     write(606, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
@@ -3557,7 +3557,7 @@ subroutine Route_Chimera_Crossovers(prob, geom, bound, mesh, dna)
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=607, file=trim(path)//"_08_xovers.dat", form="formatted")
 
     write(607, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
@@ -3710,7 +3710,7 @@ subroutine Route_Chimera_Orientation(prob, mesh, dna)
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=608, file=trim(path)//"_orientation.dat", form="formatted")
 
     write(608, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'

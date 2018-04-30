@@ -33,7 +33,7 @@ module Para
     ! Program parameters
     character(10)  :: para_platform        = "dev"      ! [dev, win, mac, linux], External parameter loading flag
     character(10)  :: para_preset          = "on"       ! [on, off], Preset parameter defined in pre-defined examples
-    character(10)  :: para_output_Tecplot  = "off"      ! [off, on], Output files for Tecplot(http://www.tecplot.com/) to draw vector image
+    character(10)  :: para_output_Tecplot  = "on"      ! [off, on], Output files for Tecplot(http://www.tecplot.com/) to draw vector image
     character(10)  :: para_fig_view        = "xy"       ! [xy, xz, xyz1, xyz2, xyz, all], Viewpoint for figures from UCSF Chimera
     integer        :: para_type_cndo       = 2          ! [1, 2], CanDo file option, 1 : original format, 2 : updated format
 

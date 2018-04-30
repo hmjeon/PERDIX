@@ -1254,7 +1254,7 @@ subroutine Section_Chimera_Cro_Geometry(prob, geom)
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=401, file=trim(path)//"_cross_geo.dat", form="formatted")
 
     write(401, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'

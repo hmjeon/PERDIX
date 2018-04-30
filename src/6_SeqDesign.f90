@@ -5020,7 +5020,7 @@ subroutine SeqDesign_Chimera_Atom(prob, dna)
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=702, file=trim(path)//"_09_atomic_model.dat", form="formatted")
 
     write(702, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
@@ -5465,7 +5465,7 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
         return
     end if
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=703, file=trim(path)//"_10_route_scaf.dat", form="formatted")
     open(unit=704, file=trim(path)//"_11_route_stap.dat", form="formatted")
 
@@ -5825,7 +5825,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=705, file=trim(path)//"_12_route_all.dat", form="formatted")
     open(unit=706, file=trim(path)//"_15_sep_line.dat", form="formatted")
 

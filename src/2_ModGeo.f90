@@ -973,7 +973,7 @@ subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
     ! ==================================================
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=302, file=trim(path)//"_02_init_geo_local.dat", form="formatted")
 
     write(302, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
@@ -1563,7 +1563,7 @@ subroutine ModGeo_Chimera_Sep_Geometry(prob, geom, mode)
     ! ---------------------------------------------
     if(para_output_Tecplot == "off") return
 
-    path = trim(prob.path_work)//"/Tecplot/"//trim(prob.name_file)
+    path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
     open(unit=303, file=trim(path)//"_03_sep_line.dat", form="formatted")
 
     write(303, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
