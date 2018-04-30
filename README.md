@@ -23,7 +23,7 @@
 * Free and open source ([GNU General Public License, version 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html/))</br>
 
 ## Setup</br>
-```git clone https://github.com/hmjeon/PERDIX-2P.git```
+```git clone https://github.com/hmjeon/PERDIX-2L.git```
 
 **Requirements:**</br>
 1. Intel Fortran compiler (tested version - Interl Parallel Studio XE 2016, 2017 and 2018)</br>
