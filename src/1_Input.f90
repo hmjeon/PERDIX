@@ -559,28 +559,28 @@ end subroutine Input_Set_Command
 ! Print pre-defined problems
 subroutine Input_Print_Problem
     write(0, "(a)")
-    write(0, "(a)"), "     +=============================================================+"
-    write(0, "(a)"), "     |                                                             |"
-    write(0, "(a)"), "     |  PERDIX-2L by Hyungmin Jun (hyungminjun@outlook.com), 2018  |"
-    write(0, "(a)"), "     |                                                             |"
-    write(0, "(a)"), "     +=============================================================+"
+    write(0, "(a)"), "     +============================================================================+"
+    write(0, "(a)"), "     |                                                                            |"
+    write(0, "(a)"), "     |  PERDIX-2L by Hyungmin Jun (hyungminjun@outlook.com), MIT, Bathe Lab 2018  |"
+    write(0, "(a)"), "     |                                                                            |"
+    write(0, "(a)"), "     +============================================================================+"
     write(0, "(a)")
-    write(0, "(a)"), "   A. First input - Predefined 2D target geometries"
+    write(0, "(a)"), "   A. First input - Pre-defined 2D target geometries"
     write(0, "(a)"), "   ================================================"
     write(0, "(a)")
-    write(0, "(a)"), "    [Triangular-mesh objects]"
+    write(0, "(a)"), "    [ Triangular-mesh objects ]"
     write(0, "(a)"), "       1. Square,               2. Honeycomb"
     write(0, "(a)"), "       3. Circle,               4. Wheel,                    5. Ellipse"
     write(0, "(a)")
-    write(0, "(a)"), "    [Quadrilateral-mesh objects]"
+    write(0, "(a)"), "    [ Quadrilateral-mesh objects ]"
     write(0, "(a)"), "       6. Rhombic Tiling,       7. Quarter Circle"
     write(0, "(a)"), "       8. Cross,                9. Arrowhead,               10. Annulus"
     write(0, "(a)")
-    write(0, "(a)"), "    [N-polygon-mesh objects]"
+    write(0, "(a)"), "    [ N-polygon-mesh objects ]"
     write(0, "(a)"), "      11. Cairo Penta Tiling,  12. Lotus"
     write(0, "(a)"), "      13. Hexagonal Tiling,    14. Prismatic Penta Tiling,  15. Hepta Penta Tiling"
     write(0, "(a)")
-    write(0, "(a)"), "    [Variable vertex-number, edge-length, and internal mesh]"
+    write(0, "(a)"), "    [ Variable vertex-number, edge-length, and internal mesh ]"
     write(0, "(a)"), "      16. 4-Sided Polygon,     17. 5-Sided Polygon,         18. 6-Sided Polygon"
     write(0, "(a)"), "      19. L-Shape [42-bp],     20. L-Shape [63-bp],         21. L-Shape [84-bp]"
     write(0, "(a)"), "      22. Curved Arm [Quad],   23. Curved Arm [Tri],        24. Curved Arm [Mixed]"
