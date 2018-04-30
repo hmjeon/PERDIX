@@ -650,11 +650,6 @@ subroutine Input_Select_File(prob, geom)
     type(GeomType), intent(inout) :: geom
 
     integer :: i, len_char
-    character(10) :: c_sec, c_bp, c_start_bp
-
-    write(unit=c_sec,      fmt = "(i10)"), prob.sel_sec
-    write(unit=c_bp,       fmt = "(i10)"), prob.n_bp_edge
-    write(unit=c_start_bp, fmt = "(i10)"), para_start_bp_ID
 
     ! Read geometric file
     !write(0, "(a)")
@@ -686,12 +681,6 @@ subroutine Input_Select_File(prob, geom)
     end if
 
     prob.name_prob = prob.name_file
-    prob.name_file = trim(prob.name_file)//&
-        "_"//trim(adjustl(trim(c_sec)))//"cs"//&
-        "_"//trim(adjustl(trim(c_bp)))//"bp"//&
-        "_"//trim(para_cut_stap_method)
-
-    ! Set geometric type and view (atom, cylinder size, move_x, move_y)
     call Mani_Set_Problem(prob, [52, 152, 219], "xy")
 
     ! Print filename and type
