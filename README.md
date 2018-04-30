@@ -8,8 +8,8 @@
 **P**urine / Pyrimidine **E**ngineered **R**ecombinant **D**esign **I**nverse **X** (= as the universal unknown variable for which the software will find the 'solution' as staple sequences)</br>
 
 **Software Variants:**</br>
-* **[PERDIX-6P](https://github.com/hmjeon/PERDIX-6P)**: Designer scaffoled DNA 6HB-based wireframe nanoparticles</br>
-* **[PERDIX-2L](https://github.com/hmjeon/PERDIX-2L)**: Designer scaffoled DNA DX-based wireframe lattices</br>
+* **[PERDIX-6P](https://github.com/hmjeon/PERDIX-6P)**: Designer scaffolded DNA 6HB-based wireframe nanoparticles</br>
+* **[PERDIX-2L](https://github.com/hmjeon/PERDIX-2L)**: Designer scaffolded DNA DX-based wireframe lattices</br>
 
 ## Features</br>
 * Fully automatic procedure for the scaffold routing and sequence design</br>
@@ -19,7 +19,7 @@
 * 3D visualization powered by [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/)</br>
 * Pre-defined 24 target geometries</br>
 * User-friendly TUI (Text-based User Interface)</br>
-* Execuatable file on Windows and Mac</br>
+* executable file on Windows and Mac</br>
 * Free and open source ([GNU General Public License, version 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html/))</br>
 
 ## Setup</br>
