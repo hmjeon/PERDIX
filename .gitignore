@@ -26,19 +26,17 @@
 
 # Executables
 *.exe
-!release/Win/PERDIX-2L.exe
 !make/tools/sleep.exe
 !make/tools/meshconv.exe
-*.out
-*.app
+!release/Win/PERDIX-2L.exe
 make/Debug
 make/Release
 make/x64
-*.u2d
 make/Output
+*.out
+*.app
+*.u2d
 .vs
 *.11
 *.101
 fort.*
-/make/Report_2D_Flat_max.txt
-/make/Report_2D_Lattice_max.txt
