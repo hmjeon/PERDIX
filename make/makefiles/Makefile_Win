@@ -16,11 +16,11 @@
 #	one on which you compile. You should make sure that you understand the individual optimi-
 #	zation options that are enabled by option fast.
 
-objects = Data_Bound.o Data_DNA.o Data_Geom.o Data_Mesh.o Data_Prob.o \
-	Para.o List.o Mani.o Math.o SpanTree.o Importer.o \
-	Exam_2D_Open.o \
-	3_Section.o 1_Input.o 2_ModGeo.o 4_Basepair.o 5_Route.o \
-	6_SeqDesign.o 7_Output.o PERDIX-2L.o
+objects = Data_Bound.obj Data_DNA.obj Data_Geom.obj Data_Mesh.obj Data_Prob.obj \
+	Para.obj List.obj Mani.obj Math.obj SpanTree.obj Importer.obj \
+	Exam_2D_Open.obj \
+	3_Section.obj 1_Input.obj 2_ModGeo.obj 4_Basepair.obj 5_Route.obj \
+	6_SeqDesign.obj 7_Output.obj PERDIX-2L.obj
 
 f90comp = ifort
 
@@ -28,108 +28,108 @@ f90comp = ifort
 PERDIX-2L: $(objects)
 	$(f90comp) -o PERDIX-2L $(objects)
 
-Data_Bound.mod: Data_Bound.o Data_Bound.f90
+Data_Bound.mod: Data_Bound.obj Data_Bound.f90
 	$(f90comp) -c Data_Bound.f90
-Data_Bound.o: Data_Bound.f90
+Data_Bound.obj: Data_Bound.f90
 	$(f90comp) -c Data_Bound.f90
 
-Data_DNA.mod: Data_DNA.o Data_DNA.f90
+Data_DNA.mod: Data_DNA.obj Data_DNA.f90
 	$(f90comp) -c Data_DNA.f90
-Data_DNA.o: Data_DNA.f90
+Data_DNA.obj: Data_DNA.f90
 	$(f90comp) -c Data_DNA.f90
 
-Data_Geom.mod: Data_Geom.o Data_Geom.f90
+Data_Geom.mod: Data_Geom.obj Data_Geom.f90
 	$(f90comp) -c Data_Geom.f90
-Data_Geom.o: Data_Geom.f90
+Data_Geom.obj: Data_Geom.f90
 	$(f90comp) -c Data_Geom.f90
 
-Data_Mesh.mod: Data_Mesh.o Data_Mesh.f90
+Data_Mesh.mod: Data_Mesh.obj Data_Mesh.f90
 	$(f90comp) -c Data_Mesh.f90
-Data_Mesh.o: Data_Mesh.f90
+Data_Mesh.obj: Data_Mesh.f90
 	$(f90comp) -c Data_Mesh.f90
 
-Data_Prob.mod: Data_Prob.o Data_Prob.f90
+Data_Prob.mod: Data_Prob.obj Data_Prob.f90
 	$(f90comp) -c Data_Prob.f90
-Data_Prob.o: Data_Prob.f90
+Data_Prob.obj: Data_Prob.f90
 	$(f90comp) -c Data_Prob.f90
 
-Para.mod: Para.o Para.f90
+Para.mod: Para.obj Para.f90
 	$(f90comp) -c Para.f90
-Para.o: Para.f90
+Para.obj: Para.f90
 	$(f90comp) -c Para.f90
 
-List.mod: List.o List.f90
+List.mod: List.obj List.f90
 	$(f90comp) -c List.f90
-List.o: List.f90
+List.obj: List.f90
 	$(f90comp) -c List.f90
 
-Math.mod: Math.o Math.f90
+Math.mod: Math.obj Math.f90
 	$(f90comp) -c Math.f90
-Math.o: Math.f90
+Math.obj: Math.f90
 	$(f90comp) -c Math.f90
 
-Mani.mod: Mani.o Mani.f90
+Mani.mod: Mani.obj Mani.f90
 	$(f90comp) -c Mani.f90
-Mani.o: Mani.f90
+Mani.obj: Mani.f90
 	$(f90comp) -c Mani.f90
 
-SpanTree.mod: SpanTree.o SpanTree.f90
+SpanTree.mod: SpanTree.obj SpanTree.f90
 	$(f90comp) -c SpanTree.f90
-SpanTree.o: SpanTree.f90
+SpanTree.obj: SpanTree.f90
 	$(f90comp) -c SpanTree.f90
 
-Importer.mod: Importer.o Importer.f90
+Importer.mod: Importer.obj Importer.f90
 	$(f90comp) -c Importer.f90
-Importer.o: Importer.f90
+Importer.obj: Importer.f90
 	$(f90comp) -c Importer.f90
 
-Exam_2D_Open.mod: Exam_2D_Open.o Exam_2D_Open.f90
+Exam_2D_Open.mod: Exam_2D_Open.obj Exam_2D_Open.f90
 	$(f90comp) -c Exam_2D_Open.f90
-Exam_2D_Open.o: Exam_2D_Open.f90
+Exam_2D_Open.obj: Exam_2D_Open.f90
 	$(f90comp) -c Exam_2D_Open.f90
 
-3_Section.mod : 3_Section.o 3_Section.f90
+3_Section.mod : 3_Section.obj 3_Section.f90
 	$(f90comp) -c 3_Section.f90
-3_Section.o : 3_Section.f90
+3_Section.obj : 3_Section.f90
 	$(f90comp) -c 3_Section.f90
 
-1_Input.mod : 1_Input.o 1_Input.f90
+1_Input.mod : 1_Input.obj 1_Input.f90
 	$(f90comp) -c 1_Input.f90
-1_Input.o : 1_Input.f90
+1_Input.obj : 1_Input.f90
 	$(f90comp) -c 1_Input.f90
 
-2_ModGeo.mod : 2_ModGeo.o 2_ModGeo.f90
+2_ModGeo.mod : 2_ModGeo.obj 2_ModGeo.f90
 	$(f90comp) -c 2_ModGeo.f90
-2_ModGeo.o : 2_ModGeo.f90
+2_ModGeo.obj : 2_ModGeo.f90
 	$(f90comp) -c 2_ModGeo.f90
 
-4_Basepair.mod : 4_Basepair.o 4_Basepair.f90
+4_Basepair.mod : 4_Basepair.obj 4_Basepair.f90
 	$(f90comp) -c 4_Basepair.f90
-4_Basepair.o : 4_Basepair.f90
+4_Basepair.obj : 4_Basepair.f90
 	$(f90comp) -c 4_Basepair.f90
 
-5_Route.mod : 5_Route.o 5_Route.f90
+5_Route.mod : 5_Route.obj 5_Route.f90
 	$(f90comp) -c 5_Route.f90
-5_Route.o : 5_Route.f90
+5_Route.obj : 5_Route.f90
 	$(f90comp) -c 5_Route.f90
 
-6_SeqDesign.mod : 6_SeqDesign.o 6_SeqDesign.f90
+6_SeqDesign.mod : 6_SeqDesign.obj 6_SeqDesign.f90
 	$(f90comp) -c 6_SeqDesign.f90
-6_SeqDesign.o : 6_SeqDesign.f90
+6_SeqDesign.obj : 6_SeqDesign.f90
 	$(f90comp) -c 6_SeqDesign.f90
 
-7_Output.mod : 7_Output.o 7_Output.f90
+7_Output.mod : 7_Output.obj 7_Output.f90
 	$(f90comp) -c 7_Output.f90
-7_Output.o : 7_Output.f90
+7_Output.obj : 7_Output.f90
 	$(f90comp) -c 7_Output.f90
 
-PERDIX-2L.mod : PERDIX-2L.o PERDIX-2L.f90
+PERDIX-2L.mod : PERDIX-2L.obj PERDIX-2L.f90
 	$(f90comp) -c PERDIX-2L.f90
-PERDIX-2L.o : PERDIX-2L.f90
+PERDIX-2L.obj : PERDIX-2L.f90
 	$(f90comp) -c PERDIX-2L.f90
 
 # Cleaning everything
 clean :
-	rm *.o $(objects)
-	rm *.mod $(objects)
+	del *.obj $(objects)
+	del *.mod $(objects)
 # End of the makefile

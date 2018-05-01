@@ -172,6 +172,8 @@ subroutine ModGeo_Set_Neighbor_Point(prob, geom)
         geom.iniL(i).neiP(2, 1:2) = nei_poi(2, 1:2)
     end do
 
+    if(prob.type_geo == "closed") stop
+
     ! Print progress
     do i = 0, 11, 11
         call Space(i, 6)
