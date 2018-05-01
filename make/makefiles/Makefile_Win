@@ -17,7 +17,7 @@
 #	zation options that are enabled by option fast.
 
 objects = Data_Bound.obj Data_DNA.obj Data_Geom.obj Data_Mesh.obj Data_Prob.obj \
-	Para.obj List.obj Mani.obj Math.obj SpanTree.obj Importer.obj \
+	Para.obj List.obj Math.obj Mani.obj SpanTree.obj Importer.obj \
 	Exam_2D_Open.obj \
 	3_Section.obj 1_Input.obj 2_ModGeo.obj 4_Basepair.obj 5_Route.obj \
 	6_SeqDesign.obj 7_Output.obj PERDIX-2L.obj
