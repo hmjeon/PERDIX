@@ -130,6 +130,6 @@ PERDIX-2L.obj : PERDIX-2L.f90
 
 # Cleaning everything
 clean :
-	del *.obj $(objects)
-	del *.mod $(objects)
+	del *.obj
+	del *.mod
 # End of the makefile

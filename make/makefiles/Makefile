@@ -17,7 +17,7 @@
 #	zation options that are enabled by option fast.
 
 objects = Data_Bound.o Data_DNA.o Data_Geom.o Data_Mesh.o Data_Prob.o \
-	Para.o List.o Mani.o Math.o SpanTree.o Importer.o \
+	Para.o List.o Math.o Mani.o SpanTree.o Importer.o \
 	Exam_2D_Open.o \
 	3_Section.o 1_Input.o 2_ModGeo.o 4_Basepair.o 5_Route.o \
 	6_SeqDesign.o 7_Output.o PERDIX-2L.o
@@ -130,6 +130,6 @@ PERDIX-2L.o : PERDIX-2L.f90
 
 # Cleaning everything
 clean :
-	rm *.o $(objects)
-	rm *.mod $(objects)
+	rm *.o
+	rm *.mod
 # End of the makefile
