@@ -15,7 +15,7 @@
 * Fully automatic procedure for the scaffold routing and sequence design</br>
 * Importing GEO, IGES/IGS(for PERDIX-2L/6L), or PLY file formats</br>
 * Exact edge-lengths to design highly asymmetric and irregular shapes</br>
-* JSON output for editing staples from [caDNAno](http://https://cadnano.org/)</br>
+* JSON output for editing staples from [caDNAno](https://cadnano.org/)</br>
 * 3D visualization powered by [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/)</br>
 * Pre-defined 24 target geometries</br>
 * User-friendly TUI (Text-based User Interface)</br>
