@@ -57,3 +57,9 @@ Exam_2D_Open.obj : Exam_2D_Open.f90
 	ifort -c 7_Output.obj 7_Output.f90
 PERDIX-2L.obj : PERDIX-2L.f90
 	ifort -c PERDIX-2L.obj PERDIX-2L.f90
+
+# Cleaning everything
+clean :
+	-mkdir *.obj $(objects)
+	-mkdir *.mod $(objects)
+# End of the makefile
