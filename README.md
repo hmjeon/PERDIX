@@ -13,13 +13,13 @@
 
 ## Features</br>
 * Fully automatic procedure for the scaffold routing and sequence design</br>
-* Importing GEO, IGES/IGS(for PERDIX-2L/6L), or PLY file formats</br>
+* Importing GEO, [IGES/IGS](https://en.wikipedia.org/wiki/IGES), or [PLY](https://en.wikipedia.org/wiki/PLY_(file_format)) file formats</br>
 * Exact edge-lengths to design highly asymmetric and irregular shapes</br>
 * JSON output for editing staples from [caDNAno](https://cadnano.org/)</br>
 * 3D visualization powered by [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/)</br>
 * Pre-defined 24 target geometries</br>
 * User-friendly TUI (Text-based User Interface)</br>
-* executable file on Windows and Mac</br>
+* [Executable files](./release) for Windows and Mac OS X systems</br>
 * Free and open source ([GNU General Public License, version 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html/))</br>
 
 ## Setup</br>
