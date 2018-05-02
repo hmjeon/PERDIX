@@ -1,2 +1,4 @@
 cd "$(dirname "$0")"
+printf '\e[8;50;150t'
 ./PERDIX-2L
+exit
