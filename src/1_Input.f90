@@ -566,7 +566,7 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "     +============================================================================+"
     write(0, "(a)")
     write(0, "(a)"), "   A. First input - Pre-defined 2D target geometries"
-    write(0, "(a)"), "   ================================================"
+    write(0, "(a)"), "   ================================================="
     write(0, "(a)")
     write(0, "(a)"), "    [ Triangular-mesh objects ]"
     write(0, "(a)"), "       1. Square,               2. Honeycomb"
