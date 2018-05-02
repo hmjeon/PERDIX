@@ -559,11 +559,11 @@ end subroutine Input_Set_Command
 ! Print pre-defined problems
 subroutine Input_Print_Problem
     write(0, "(a)")
-    write(0, "(a)"), "     +============================================================================+"
-    write(0, "(a)"), "     |                                                                            |"
-    write(0, "(a)"), "     |  PERDIX-2L by Hyungmin Jun (hyungminjun@outlook.com), MIT, Bathe Lab 2018  |"
-    write(0, "(a)"), "     |                                                                            |"
-    write(0, "(a)"), "     +============================================================================+"
+    write(0, "(a)"), "   +============================================================================+"
+    write(0, "(a)"), "   |                                                                            |"
+    write(0, "(a)"), "   |  PERDIX-2L by Hyungmin Jun (hyungminjun@outlook.com), MIT, Bathe Lab 2018  |"
+    write(0, "(a)"), "   |                                                                            |"
+    write(0, "(a)"), "   +============================================================================+"
     write(0, "(a)")
     write(0, "(a)"), "   A. First input - Pre-defined 2D target geometries"
     write(0, "(a)"), "   ================================================="
@@ -585,7 +585,7 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "      19. L-Shape [42-bp],     20. L-Shape [63-bp],         21. L-Shape [84-bp]"
     write(0, "(a)"), "      22. Curved Arm [Quad],   23. Curved Arm [Tri],        24. Curved Arm [Mixed]"
     write(0, "(a)")
-    write(0, "(a)"), "   Select the number or type geometry file (*.geo, *.ply, *.igs, *.iges) [Enter] : "
+    write(0, "(a)"), "   Select the number or type geometry file (*.geo, *.igs, *.iges, *.ply) [Enter]: "
     write(0, "(a)")
 end subroutine Input_Print_Problem
 
@@ -600,16 +600,15 @@ subroutine Input_Print_Num_BP_Edge(prob)
     write(0, "(a)"), "   B. Second input - Pre-defined minimum edge lengths"
     write(0, "(a)"), "   =================================================="
     write(0, "(a)")
-    write(0, "(a)"), "      1.  31 bp =  3 turn * 10.5 bp/turn ->  31 bp * 0.34nm/bp = 10.54nm"
-    write(0, "(a)"), "   *  2.  42 bp =  4 turn * 10.5 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
-    write(0, "(a)"), "      3.  52 bp =  5 turn * 10.5 bp/turn ->  52 bp * 0.34nm/bp = 17.85nm"
-    write(0, "(a)"), "   *  4.  63 bp =  6 turn * 10.5 bp/turn ->  63 bp * 0.34nm/bp = 21.42nm"
-    write(0, "(a)"), "      5.  73 bp =  7 turn * 10.5 bp/turn ->  73 bp * 0.34nm/bp = 24.99nm"
-    write(0, "(a)"), "   *  6.  84 bp =  8 turn * 10.5 bp/turn ->  84 bp * 0.34nm/bp = 28.56nm"
-    write(0, "(a)"), "      7.  94 bp =  9 turn * 10.5 bp/turn ->  94 bp * 0.34nm/bp = 32.13nm"
-    write(0, "(a)"), "   *  8. 105 bp = 10 turn * 10.5 bp/turn -> 105 bp * 0.34nm/bp = 35.70nm"
-    write(0, "(a)"), "      9. 115 bp = 11 turn * 10.5 bp/turn -> 115 bp * 0.34nm/bp = 39.27nm"
-    write(0, "(a)"), "   * 10. 126 bp = 12 turn * 10.5 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
+    write(0, "(a)"), "   * 1.  42 bp =  4 turn * 10.5 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
+    write(0, "(a)"), "     2.  52 bp =  5 turn * 10.5 bp/turn ->  52 bp * 0.34nm/bp = 17.85nm"
+    write(0, "(a)"), "   * 3.  63 bp =  6 turn * 10.5 bp/turn ->  63 bp * 0.34nm/bp = 21.42nm"
+    write(0, "(a)"), "     4.  73 bp =  7 turn * 10.5 bp/turn ->  73 bp * 0.34nm/bp = 24.99nm"
+    write(0, "(a)"), "   * 5.  84 bp =  8 turn * 10.5 bp/turn ->  84 bp * 0.34nm/bp = 28.56nm"
+    write(0, "(a)"), "     6.  94 bp =  9 turn * 10.5 bp/turn ->  94 bp * 0.34nm/bp = 32.13nm"
+    write(0, "(a)"), "   * 7. 105 bp = 10 turn * 10.5 bp/turn -> 105 bp * 0.34nm/bp = 35.70nm"
+    write(0, "(a)"), "     8. 115 bp = 11 turn * 10.5 bp/turn -> 115 bp * 0.34nm/bp = 39.27nm"
+    write(0, "(a)"), "   * 9. 126 bp = 12 turn * 10.5 bp/turn -> 126 bp * 0.34nm/bp = 42.84nm"
     write(0, "(a)")
     write(0, "(a)"), "   Select the number or type the minimum edge length [Enter] : "
     write(0, "(a)")
@@ -901,19 +900,22 @@ subroutine Input_Set_Num_BP_Edge(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(in)    :: geom
 
-    if(prob.sel_bp_edge ==  1) prob.n_bp_edge =  31     ! 10.5bp/turn *  3 turn
-    if(prob.sel_bp_edge ==  2) prob.n_bp_edge =  42     ! 10.5bp/turn *  4 turn
-    if(prob.sel_bp_edge ==  3) prob.n_bp_edge =  52     ! 10.5bp/turn *  5 turn
-    if(prob.sel_bp_edge ==  4) prob.n_bp_edge =  63     ! 10.5bp/turn *  6 turn
-    if(prob.sel_bp_edge ==  5) prob.n_bp_edge =  73     ! 10.5bp/turn *  7 turn
-    if(prob.sel_bp_edge ==  6) prob.n_bp_edge =  84     ! 10.5bp/turn *  8 turn
-    if(prob.sel_bp_edge ==  7) prob.n_bp_edge =  94     ! 10.5bp/turn *  9 turn
-    if(prob.sel_bp_edge ==  8) prob.n_bp_edge = 105     ! 10.5bp/turn * 10 turn
-    if(prob.sel_bp_edge ==  9) prob.n_bp_edge = 115     ! 10.5bp/turn * 11 turn
-    if(prob.sel_bp_edge == 10) prob.n_bp_edge = 126     ! 10.5bp/turn * 12 turn
+    if(prob.sel_bp_edge == 1) prob.n_bp_edge =  42     ! 10.5bp/turn *  4 turn
+    if(prob.sel_bp_edge == 2) prob.n_bp_edge =  52     ! 10.5bp/turn *  5 turn
+    if(prob.sel_bp_edge == 3) prob.n_bp_edge =  63     ! 10.5bp/turn *  6 turn
+    if(prob.sel_bp_edge == 4) prob.n_bp_edge =  73     ! 10.5bp/turn *  7 turn
+    if(prob.sel_bp_edge == 5) prob.n_bp_edge =  84     ! 10.5bp/turn *  8 turn
+    if(prob.sel_bp_edge == 6) prob.n_bp_edge =  94     ! 10.5bp/turn *  9 turn
+    if(prob.sel_bp_edge == 7) prob.n_bp_edge = 105     ! 10.5bp/turn * 10 turn
+    if(prob.sel_bp_edge == 8) prob.n_bp_edge = 115     ! 10.5bp/turn * 11 turn
+    if(prob.sel_bp_edge == 9) prob.n_bp_edge = 126     ! 10.5bp/turn * 12 turn
 
-    if(prob.sel_bp_edge > 10 .and. prob.sel_bp_edge <= 20) then
-        write(0, "(a)"), "Error: Not defined edge-length"
+    if(prob.sel_bp_edge >= 10 .and. prob.sel_bp_edge <= 36) then
+        write(0, "(a)"), "==================================================="
+        write(0, "(a)"), ""
+        write(0, "(a)"), "Error: The minimum edge length should be over 37-bp"
+        write(0, "(a)"), ""
+        write(0, "(a)"), "==================================================="
         stop
     end if
 
