@@ -7,6 +7,10 @@
 **PERDIX:**</br>
 **P**urine / Pyrimidine **E**ngineered **R**ecombinant **D**esign **I**nverse **X** (= as the universal unknown variable for which the software will find the 'solution' as staple sequences)</br>
 
+**Release Package:**</br>
+* **Windows: [PERDIX-2L](https://github.com/hmjeon/PERDIX-2L/raw/master/release/PERDIX-Win.zip)**</br>
+* **Mac: [PERDIX-2L](https://github.com/hmjeon/PERDIX-2L/raw/master/release/PERDIX-Mac.zip)**</br>
+
 **Software Variants:**</br>
 * **[PERDIX-6P](https://github.com/hmjeon/PERDIX-6P)**: Designer scaffolded DNA 6HB-based wireframe nanoparticles</br>
 * **[PERDIX-2L](https://github.com/hmjeon/PERDIX-2L)**: Designer scaffolded DNA DX-based wireframe lattices</br>
