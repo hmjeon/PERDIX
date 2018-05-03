@@ -150,7 +150,7 @@ subroutine Basepair_Count_Basepair(prob, geom, mesh)
         if( (geom.sec.types == "square"    .and. prob.n_bp_edge - 1 > count ) .or. &
             (geom.sec.types == "honeycomb" .and. prob.n_bp_edge - 2 > count .and. prob.sel_edge == 0) ) then
             write(0, "(a)"), "Error - edge length : Basepair_Count_Node"
-            stop
+            !stop
         end if
     end do
 
