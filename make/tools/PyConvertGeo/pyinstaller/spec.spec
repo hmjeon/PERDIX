@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['pyConvertGeo.py'],
-             pathex=['C:\\Users\\Hyungmin\\Desktop\\Coding\\PERDIX-2L-DEV\\tools\\pyConvertGeo\\pyinstaller'],
+             pathex=['C:\\Users\\Hyungmin\\Desktop\\Coding\\PERDIX-2L\\make\\tools\\PyConvertGeo\\pyinstaller'],
              binaries=[],
              datas=[],
              hiddenimports=['shapely'],

@@ -82,6 +82,9 @@ fclose(fid);
 % p(output): a list of node coordinates;
 % t(output): a list of node indices forming triangles;
 
+% For deploytool
+n_mesh = str2num(n_mesh)
+
 [p,t]=distmesh2d(@dpoly, @huniform, n_mesh, [min(line(:,1)),min(line(:,2)); max(line(:,1)),max(line(:,2))], line, line);
 
 % writing file list
@@ -98,5 +101,5 @@ end
 
 % Clean up
 fclose(fid);
-
+exit;
 end

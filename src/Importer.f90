@@ -176,7 +176,8 @@ subroutine Importer_GEO(prob, geom)
 
         ! Convert to face meshes from lines
         !results = systemqq(trim("tools/PyConvertGeo/pyConvertGeo")//" input/"//trim(fullname))
-        results = systemqq(trim("python tools/PyConvertGeo/src/PyConvertGeo.py")//" input/"//trim(fullname))
+        if(para_platform == "dev") results = systemqq(trim("python tools/PyConvertGeo/src/PyConvertGeo.py")//" input/"//trim(fullname))
+        if(para_platform == "win") results = systemqq(trim("tools\PyConvertGeo.exe")//" input/"//trim(fullname))
 
         fullname = trim(prob.name_file)//trim("_shapely.geo")
         open(unit=1002, file="input/"//trim(fullname), form="formatted")
@@ -194,9 +195,13 @@ subroutine Importer_GEO(prob, geom)
         if(p_mesh > 0.0d0) then
             close(unit=1002)
 
-            results = systemqq("matlab -wait -nodisplay -nosplash -nodesktop -r "//&
-                '"addpath tools/DistMesh/src; addpath tools/DistMesh; meshing('//&
-                "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//'); exit"')
+            if(para_platform == "dev") then
+                results = systemqq("matlab -wait -nodisplay -nosplash -nodesktop -r "//&
+                    '"addpath tools/DistMesh/src; addpath tools/DistMesh; meshing('//&
+                    "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//'); exit"')
+            else if(para_platform == "win") then
+                results = systemqq('tools\meshing.exe '//'"input\'//trim(fullname)//'" '//trim(Dble2Str(p_mesh)))
+            end if
 
             fullname = trim(prob.name_file)//trim("_shapely_distmesh.geo")
             open(unit=1002, file="input/"//trim(fullname), form="formatted")
