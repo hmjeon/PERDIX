@@ -200,6 +200,9 @@ subroutine Importer_GEO(prob, geom)
                     '"addpath tools/DistMesh/src; addpath tools/DistMesh; meshing('//&
                     "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//'); exit"')
             else if(para_platform == "win") then
+                results = systemqq("matlab -wait -nodisplay -nosplash -nodesktop -r "//&
+                    '"addpath tools/DistMesh/src; addpath tools/DistMesh; meshing('//&
+                    "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//'); exit"')
                 results = systemqq('tools\meshing.exe '//'"input\'//trim(fullname)//'" '//trim(Dble2Str(p_mesh)))
             end if
 
