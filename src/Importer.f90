@@ -204,6 +204,10 @@ subroutine Importer_GEO(prob, geom)
                     '"addpath tools/DistMesh/src; addpath tools/DistMesh; meshing('//&
                     "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//'); exit"')
                 results = systemqq('tools\meshing.exe '//'"input\'//trim(fullname)//'" '//trim(Dble2Str(p_mesh)))
+            else if(para_platform == "mac") then
+                results = systemqq(&
+                trim("python tools/PyDistMesh/PyDistMesh.py input/")&
+                //trim(fullname)//'" '//trim(Dble2Str(p_mesh)))
             end if
 
             fullname = trim(prob.name_file)//trim("_shapely_distmesh.geo")
