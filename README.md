@@ -2,7 +2,7 @@
 
 > Welcome to the PERDIX project! PERDIX is an open-source software written by FORTRAN 90/95, which allows scientists to build and solve the sequence design of complex DNA DX-based wireframe lattices.</br>
 
-<center><img src ="./release/git_figure.jpg" width = "100%"></center>
+<center><img src ="./fig_github.jpg" width = "100%"></center>
 
 **PERDIX:**</br>
 **P**urine / Pyrimidine **E**ngineered **R**ecombinant **D**esign **I**nverse **X** (= as the universal unknown variable for which the software will find the 'solution' as staple sequences)</br>
