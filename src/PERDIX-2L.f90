@@ -432,11 +432,14 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         !write(i, "(a)"), "* # of total 14nt dsDNA domains : "//trim(adjustl(Int2Str(dna.n_tot_14nt)))
         !call Space(i, 16)
         !write(i, "(a)"), "* # of total 4nt dsDNA domains  : "//trim(adjustl(Int2Str(dna.n_tot_4nt)))
-
         write(i, "(a)")
-        write(i, "(a)"), "   --------------------------------------------------------------------------------"
         write(i, "(a)")
-        write(i, "(a)"), " Completed"
+        write(i, "(a)"), "   +======================= C O M P L E T E D ==========================+"
+        write(i, "(a)"), "   |                                                                    |"
+        write(i, "(a)"), "   |   PERDIX generated 22 output files in the output folder.           |"
+        write(i, "(a)"), "   |                                                                    |"
+        write(i, "(a)"), "   +====================================================================+"
+        write(i, "(a)")
     end do
 
     close(unit=11)
@@ -529,6 +532,8 @@ subroutine Verify_Solution(mesh, dna)
 
     double precision :: verify
     integer :: i
+
+    if(para_platform /= "dev") return
 
     verify = 0.0d0
     do i = 1, dna.n_top

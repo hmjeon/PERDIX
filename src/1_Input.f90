@@ -75,7 +75,7 @@ subroutine Input_Initialize(prob, geom)
     integer :: arg, i, j, n_section, len_char, ppos
     character(10) :: c_sec, c_edge_len, c_edge
     character(100) :: c_prob
-    logical :: results
+    logical :: results, here
 
     ! Read parameters from env.dat
     call Input_Read_Parameter
@@ -97,6 +97,19 @@ subroutine Input_Initialize(prob, geom)
             len_char       = len_trim(c_prob)
             prob.name_file = trim(adjustl(c_prob(1:ppos-1)))
             prob.type_file = trim(adjustl(c_prob(ppos+1:len_char)))
+
+            ! Check file
+            inquire(file="input/"//trim(prob.name_file)//"."//trim(prob.type_file), EXIST=here)
+            if(here == .false.) then
+                write(0, "(a)")
+                write(0, "(a)"), "   +============================ E R R O R =============================+"
+                write(0, "(a)"), "   |                                                                    |"
+                write(0, "(a)"), "   |   The file does not exist.                                         |"
+                write(0, "(a)"), "   |                                                                    |"
+                write(0, "(a)"), "   +====================================================================+"
+                write(0, "(a)")
+                stop
+            end if
         else
             read(c_prob, *), prob.sel_prob
 
@@ -137,6 +150,19 @@ subroutine Input_Initialize(prob, geom)
             len_char       = len_trim(c_prob)
             prob.name_file = trim(adjustl(c_prob(1:ppos-1)))
             prob.type_file = trim(adjustl(c_prob(ppos+1:len_char)))
+
+            ! Check file
+            inquire(file="input/"//trim(prob.name_file)//"."//trim(prob.type_file), EXIST=here)
+            if(here == .false.) then
+                write(0, "(a)")
+                write(0, "(a)"), "   +============================ E R R O R =============================+"
+                write(0, "(a)"), "   |                                                                    |"
+                write(0, "(a)"), "   |   The file does not exist.                                         |"
+                write(0, "(a)"), "   |                                                                    |"
+                write(0, "(a)"), "   +====================================================================+"
+                write(0, "(a)")
+                stop
+            end if
         else
             read(c_prob, *), prob.sel_prob
 
@@ -563,7 +589,7 @@ subroutine Input_Print_Problem
     write(0, "(a)")
     write(0, "(a)"), "   +============================================================================+"
     write(0, "(a)"), "   |                                                                            |"
-    write(0, "(a)"), "   |  PERDIX-2L by Hyungmin Jun (hyungminjun@outlook.com), MIT, Bathe Lab 2018  |"
+    write(0, "(a)"), "   |    PERDIX-2L by Hyungmin Jun (hyungminjun@outlook.com), Bathe Lab, MIT     |"
     write(0, "(a)"), "   |                                                                            |"
     write(0, "(a)"), "   +============================================================================+"
     write(0, "(a)")
@@ -677,8 +703,13 @@ subroutine Input_Select_File(prob, geom)
     else if(prob.type_file == "geo" .or. prob.type_file == "igs" .or. prob.type_file == "iges") then
         call Importer_GEO(prob, geom)
     else
-        print *, "Not defined geometry file"
-        stop
+        write(0, "(a)")
+        write(0, "(a)"), "   +============================ E R R O R =============================+"
+        write(0, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   |   The file extension is not supported.                             |"
+        write(0, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   +====================================================================+"
+        write(0, "(a)")
     end if
 
     prob.name_prob = prob.name_file
@@ -913,11 +944,13 @@ subroutine Input_Set_Num_BP_Edge(prob, geom)
     if(prob.sel_bp_edge == 9) prob.n_bp_edge = 126     ! 10.5bp/turn * 12 turn
 
     if(prob.sel_bp_edge >= 10 .and. prob.sel_bp_edge <= 36) then
-        write(0, "(a)"), "==================================================="
-        write(0, "(a)"), ""
-        write(0, "(a)"), "Error: The minimum edge length should be over 37-bp"
-        write(0, "(a)"), ""
-        write(0, "(a)"), "==================================================="
+        write(0, "(a)")
+        write(0, "(a)"), "   +============================ E R R O R =============================+"
+        write(0, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   |  The minimum edge length should be over 37-bp.                     |"
+        write(0, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   +====================================================================+"
+        write(0, "(a)")
         stop
     end if
 

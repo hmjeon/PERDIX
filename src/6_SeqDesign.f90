@@ -66,6 +66,7 @@ module SeqDesign
     private SeqDesign_Assign_Sequence
     private SeqDesign_Set_M13mp18
     private SeqDesign_Get_M13mp18
+    private SeqDesign_Get_Lamda
     private SeqDesign_Import_Sequence
     private SeqDesign_Set_Rand_Sequence
 
@@ -944,19 +945,19 @@ subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
         ! Print information on region of staple strands
         do k = 0, 11, 11
             write(k, "(i$    )"), i
-            write(k, "(a, i5$)"), " - strand, # of total bases : ", dna.strand(i).n_base
-            write(k, "(a, i5 )"), ", # of bases in Tn : ", cn_tn
+            write(k, "(a, i5$)"), " - strand, # nts : ", dna.strand(i).n_base
+            write(k, "(a, i5 )"), ", # nts in Tn : ", cn_tn
 
             do j = 1, n_region
-                write(k, "(i20, a$)"), j, "  -  region"
-                write(k, "(a,  i3$)"), ", type : ",          region(j).types
-                write(k, "(a,  i4$)"), ", region length : ", region(j).length
-                write(k, "(a,  i4$)"), ", start pos : ",     region(j).sta_pos
-                write(k, "(a,  i4$)"), ", center pos : ",    region(j).cen_pos
-                write(k, "(a,  i4 )"), ", end pos : ",       region(j).end_pos
+                write(k, "(i20, a$)"), j, "  -  regn"
+                write(k, "(a,  i3$)"), ", type : ",        region(j).types
+                write(k, "(a,  i4$)"), ", regn len : ", region(j).length
+                write(k, "(a,  i4$)"), ", start pos : ",   region(j).sta_pos
+                write(k, "(a,  i4$)"), ", cen pos : ",     region(j).cen_pos
+                write(k, "(a,  i4 )"), ", end pos : ",     region(j).end_pos
             end do
             write(k, "(a)"); call Space(k, 19)
-            write(k, "(a)"), "----- Make nick position -----------------------------------------------------------------------------"
+            write(k, "(a)"), "----- Make nick position --------------------------------------------------------------"
         end do
 
         ! ==================================================
@@ -1016,10 +1017,10 @@ subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
 
                 ! Print progress
                 do k = 0, 11, 11
-                    write(k, "(i20, a$)"), j, " -> cut region"
-                    write(k, "(a,  i4$)"), ", cutted length : ",   cen_pos - bgn_pos
-                    write(k, "(a,  i4$)"), ", cutted pos : ",      cen_pos
-                    write(k, "(a,  i4$)"), ", remained length : ", dna.strand(i).n_base - cen_pos
+                    write(k, "(i20, a$)"), j, " -> cut regn"
+                    write(k, "(a,  i4$)"), ", cut len : ",   cen_pos - bgn_pos
+                    write(k, "(a,  i4$)"), ", cut pos : ",      cen_pos
+                    write(k, "(a,  i4$)"), ", remain len : ", dna.strand(i).n_base - cen_pos
                     write(k, "(a      )"), " --> 14nt cutting"
                 end do
 
@@ -1120,11 +1121,11 @@ subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
 
                     ! Print progress
                     do k = 0, 11, 11
-                        write(k, "(i20, a$)"), jj, " -> cut region"
-                        write(k, "(a, i4$ )"), ", cutted length : ",   region(jj).end_pos + 1 - bgn_pos
-                        write(k, "(a, i4$ )"), ", cutted pos : ",      region(jj).end_pos + 1
-                        write(k, "(a, i4$ )"), ", remained length : ", dna.strand(i).n_base - region(jj).end_pos + 1
-                        write(k, "(a      )"), " --> max cutting with single xover"
+                        write(k, "(i20, a$)"), jj, " -> cut regn"
+                        write(k, "(a, i4$ )"), ", cut len : ",   region(jj).end_pos + 1 - bgn_pos
+                        write(k, "(a, i4$ )"), ", cut pos : ",      region(jj).end_pos + 1
+                        write(k, "(a, i4$ )"), ", remain len : ", dna.strand(i).n_base - region(jj).end_pos + 1
+                        write(k, "(a      )"), " --> max cut - single xover"
                     end do
 
                     ! Increase the number of staples
@@ -1152,11 +1153,11 @@ subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
 
                     ! Print progress
                     do k = 0, 11, 11
-                        write(k, "(i20, a$)"), jj, " -> cut region"
-                        write(k, "(a,  i4$)"), ", cutted length : ",   pre_pos - bgn_pos
-                        write(k, "(a,  i4$)"), ", cutted pos : ",      pre_pos
-                        write(k, "(a,  i4$)"), ", remained length : ", dna.strand(i).n_base - pre_pos
-                        write(k, "(a      )"), " --> max cutting with nick"
+                        write(k, "(i20, a$)"), jj, " -> cut regn"
+                        write(k, "(a,  i4$)"), ", cut len : ",    pre_pos - bgn_pos
+                        write(k, "(a,  i4$)"), ", cut pos : ",    pre_pos
+                        write(k, "(a,  i4$)"), ", remain len : ", dna.strand(i).n_base - pre_pos
+                        write(k, "(a      )"), " --> max cut - nick"
                     end do
 
                     ! Increase the number of staples
@@ -1180,10 +1181,10 @@ subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
             if(dna.strand(i).n_base - bgn_pos < para_max_cut_stap) then
                 do k = 0, 11, 11
                     call space(k, 19)
-                    write(k, "(a$ )"), "|-->last region, cutted length : "
+                    write(k, "(a$ )"), "|-->last regn, cut len : "
                     write(k, "(i4$)"), dna.strand(i).n_base - bgn_pos
-                    write(k, "(a$ )"), ", cutted pos :   ++"
-                    write(k, "(a$ )"), ", remained length :   ++"
+                    write(k, "(a$ )"), ", cut pos :   ++"
+                    write(k, "(a$ )"), ", remain len :   ++"
                     write(k, "(a  )"), " --> 14nt cutting"
                 end do
                 exit
@@ -1240,7 +1241,7 @@ subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
                     if( (final_length - (dna.strand(i).n_base-pre_pos) < para_min_cut_stap) .or. &
                         (dna.strand(i).n_base - pre_pos < para_min_cut_stap) ) then
                         do k = 0, 11, 11
-                            write(k, "(i20, a, i4)"), j, "-final region3, cutted length : ", &
+                            write(k, "(i20, a, i4)"), j, "-final region3, cut len : ", &
                                 dna.strand(i).n_base - bgn_pos
                         end do
                         cycle
@@ -1253,14 +1254,14 @@ subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
                     dna.top(up_base).dn  = -1
 
                     do k = 0, 11, 11
-                        write(k, "(i20, a, i4)"), jj, "-final region4, cutted length : ", &
+                        write(k, "(i20, a, i4)"), jj, "-final region4, cut len : ", &
                             final_length - (dna.strand(i).n_base - pre_pos)
-                        write(k, "(i20, a, i4)"), jj, "-final region5, cutted length : ", &
+                        write(k, "(i20, a, i4)"), jj, "-final region5, cut len : ", &
                             dna.strand(i).n_base - pre_pos
                     end do
                 else
                     do k = 0, 11, 11
-                        write(k, "(i20, a, i4)"), j, "-final region6, cutted length : ", &
+                        write(k, "(i20, a, i4)"), j, "-final region6, cut len : ", &
                             dna.strand(i).n_base - bgn_pos
                     end do
                 end if
@@ -1326,19 +1327,19 @@ subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
         ! Print information on region of staple strands
         do k = 0, 11, 11
             write(k, "(i$    )"), i
-            write(k, "(a, i5$)"), " - strand, # of total bases : ", dna.strand(i).n_base
-            write(k, "(a, i5 )"), ", # of bases in Tn : ", cn_tn
+            write(k, "(a, i5$)"), " - strand, # nts : ", dna.strand(i).n_base
+            write(k, "(a, i5 )"), ", # nts in Tn : ", cn_tn
 
             do j = 1, n_region
-                write(k, "(i20, a$)"), j, "  -  region"
-                write(k, "(a,  i3$)"), ", type : ",          region(j).types
-                write(k, "(a,  i4$)"), ", region length : ", region(j).length
-                write(k, "(a,  i4$)"), ", start pos : ",     region(j).sta_pos
-                write(k, "(a,  i4$)"), ", center pos : ",    region(j).cen_pos
-                write(k, "(a,  i4 )"), ", end pos : ",       region(j).end_pos
+                write(k, "(i20, a$)"), j, "  -  regn"
+                write(k, "(a,  i3$)"), ", type : ",        region(j).types
+                write(k, "(a,  i4$)"), ", regn len : ", region(j).length
+                write(k, "(a,  i4$)"), ", start pos : ",   region(j).sta_pos
+                write(k, "(a,  i4$)"), ", cen pos : ",     region(j).cen_pos
+                write(k, "(a,  i4 )"), ", end pos : ",     region(j).end_pos
             end do
             write(k, "(a)"); call Space(k, 19)
-            write(k, "(a)"), "----- Make nick position -----------------------------------------------------------------------------"
+            write(k, "(a)"), "----- Make nick position ---------------------------------------------------------------"
         end do
 
         ! ==================================================
@@ -1428,10 +1429,10 @@ subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
 
                 ! Print progress
                 do k = 0, 11, 11
-                    write(k, "(i20, a$)"), j, " -> cut region"
-                    write(k, "(a,  i4$)"), ", cutted length : ",   cen_pos - bgn_pos
-                    write(k, "(a,  i4$)"), ", cutted pos : ",      cen_pos
-                    write(k, "(a,  i4$)"), ", remained length : ", dna.strand(i).n_base - cen_pos
+                    write(k, "(i20, a$)"), j, " -> cut regn"
+                    write(k, "(a,  i4$)"), ", cut len : ",   cen_pos - bgn_pos
+                    write(k, "(a,  i4$)"), ", cut pos : ",      cen_pos
+                    write(k, "(a,  i4$)"), ", remain len : ", dna.strand(i).n_base - cen_pos
                     write(k, "(a      )"), " --> 14nt cutting"
                 end do
 
@@ -1531,11 +1532,11 @@ subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
 
                     ! Print progress
                     do k = 0, 11, 11
-                        write(k, "(i20, a$)"), jj, " -> cut region"
-                        write(k, "(a, i4$ )"), ", cutted length : ",   region(jj).end_pos + 1 - bgn_pos
-                        write(k, "(a, i4$ )"), ", cutted pos : ",      region(jj).end_pos + 1
-                        write(k, "(a, i4$ )"), ", remained length : ", dna.strand(i).n_base - region(jj).end_pos + 1
-                        write(k, "(a      )"), " --> max cutting with single xover"
+                        write(k, "(i20, a$)"), jj, " -> cut regn"
+                        write(k, "(a, i4$ )"), ", cut len : ",   region(jj).end_pos + 1 - bgn_pos
+                        write(k, "(a, i4$ )"), ", cut pos : ",      region(jj).end_pos + 1
+                        write(k, "(a, i4$ )"), ", remain len : ", dna.strand(i).n_base - region(jj).end_pos + 1
+                        write(k, "(a      )"), " --> max cut - single xover"
                     end do
 
                     ! Increase the number of staples
@@ -1563,11 +1564,11 @@ subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
 
                     ! Print progress
                     do k = 0, 11, 11
-                        write(k, "(i20, a$)"), jj, " -> cut region"
-                        write(k, "(a,  i4$)"), ", cutted length : ",   pre_pos - bgn_pos
-                        write(k, "(a,  i4$)"), ", cutted pos : ",      pre_pos
-                        write(k, "(a,  i4$)"), ", remained length : ", dna.strand(i).n_base - pre_pos
-                        write(k, "(a      )"), " --> max cutting with nick"
+                        write(k, "(i20, a$)"), jj, " -> cut regn"
+                        write(k, "(a,  i4$)"), ", cut len : ",   pre_pos - bgn_pos
+                        write(k, "(a,  i4$)"), ", cut pos : ",      pre_pos
+                        write(k, "(a,  i4$)"), ", remain len : ", dna.strand(i).n_base - pre_pos
+                        write(k, "(a      )"), " --> max cut - nick"
                     end do
 
                     ! Increase the number of staples
@@ -1591,10 +1592,10 @@ subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
             if(dna.strand(i).n_base - bgn_pos < para_max_cut_stap) then
                 do k = 0, 11, 11
                     call space(k, 19)
-                    write(k, "(a$ )"), "|-->last region, cutted length : "
+                    write(k, "(a$ )"), "|-->last regn, cut len : "
                     write(k, "(i4$)"), dna.strand(i).n_base - bgn_pos
-                    write(k, "(a$ )"), ", cutted pos :   ++"
-                    write(k, "(a$ )"), ", remained length :   ++"
+                    write(k, "(a$ )"), ", cut pos :   ++"
+                    write(k, "(a$ )"), ", remain len :   ++"
                     write(k, "(a  )"), " --> 14nt cutting"
                 end do
                 exit
@@ -1651,7 +1652,7 @@ subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
                     if( (final_length - (dna.strand(i).n_base-pre_pos) < para_min_cut_stap) .or. &
                         (dna.strand(i).n_base - pre_pos < para_min_cut_stap) ) then
                         do k = 0, 11, 11
-                            write(k, "(i20, a, i4)"), j, "-final region3, cutted length : ", &
+                            write(k, "(i20, a, i4)"), j, "-final region3, cut len : ", &
                                 dna.strand(i).n_base - bgn_pos
                         end do
                         cycle
@@ -1664,14 +1665,14 @@ subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
                     dna.top(up_base).dn  = -1
 
                     do k = 0, 11, 11
-                        write(k, "(i20, a, i4)"), jj, "-final region4, cutted length : ", &
+                        write(k, "(i20, a, i4)"), jj, "-final region4, cut len : ", &
                             final_length - (dna.strand(i).n_base - pre_pos)
-                        write(k, "(i20, a, i4)"), jj, "-final region5, cutted length : ", &
+                        write(k, "(i20, a, i4)"), jj, "-final region5, cut len : ", &
                             dna.strand(i).n_base - pre_pos
                     end do
                 else
                     do k = 0, 11, 11
-                        write(k, "(i20, a, i4)"), j, "-final region6, cutted length : ", &
+                        write(k, "(i20, a, i4)"), j, "-final region6, cut len : ", &
                             dna.strand(i).n_base - bgn_pos
                     end do
                 end if
@@ -1734,18 +1735,18 @@ subroutine SeqDesign_Break_Staples_Length(prob, mesh, dna)
         ! Print information on staple region
         do k = 0, 11, 11
             write(k, "(i$    )"), i
-            write(k, "(a, i5$)"), " - strand, # of total bases : ", dna.strand(i).n_base
-            write(k, "(a, i5 )"), ", # of bases in Tn : ", cn_tn
+            write(k, "(a, i5$)"), " - strand, # nts : ", dna.strand(i).n_base
+            write(k, "(a, i5 )"), ", # nts in Tn : ", cn_tn
             do j = 1, n_region
-                write(k, "(i20, a$)"), j, "  -  region"
-                write(k, "(a,  i3$ )"), ", type : ",          region(j).types
-                write(k, "(a,  i4$ )"), ", region length : ", region(j).length
-                write(k, "(a,  i4$ )"), ", start pos : ",     region(j).sta_pos
-                write(k, "(a,  i4$ )"), ", center pos : ",    region(j).cen_pos
-                write(k, "(a,  i4  )"), ", end pos : ",       region(j).end_pos
+                write(k, "(i20, a$)"), j, "  -  regn"
+                write(k, "(a,  i3$ )"), ", type : ",        region(j).types
+                write(k, "(a,  i4$ )"), ", regn len : ", region(j).length
+                write(k, "(a,  i4$ )"), ", start pos : ",   region(j).sta_pos
+                write(k, "(a,  i4$ )"), ", cen pos : ",     region(j).cen_pos
+                write(k, "(a,  i4  )"), ", end pos : ",     region(j).end_pos
             end do
             write(k, "(a)"); call Space(k, 19)
-            write(k, "(a)"), "----- Make nick position -----------------------------------------------------------------------------"
+            write(k, "(a)"), "----- Make nick position --------------------------------------------------------------"
         end do
 
         ! ==================================================
@@ -1832,11 +1833,11 @@ subroutine SeqDesign_Break_Staples_Length(prob, mesh, dna)
 
                 ! Print progress
                 do k = 0, 11, 11
-                    write(k, "(i20, a$)"), jj, " -> cut region"
-                    write(k, "(a,  i4$)"), ", cutted length : ",   pre_pos - bgn_pos
-                    write(k, "(a,  i4$)"), ", cutted pos : ",      pre_pos
-                    write(k, "(a,  i4$)"), ", remained length : ", dna.strand(i).n_base - pre_pos
-                    write(k, "(a      )"), " --> max cutting with nick"
+                    write(k, "(i20, a$)"), jj, " -> cut regn"
+                    write(k, "(a,  i4$)"), ", cut len : ",   pre_pos - bgn_pos
+                    write(k, "(a,  i4$)"), ", cut pos : ",      pre_pos
+                    write(k, "(a,  i4$)"), ", remain len : ", dna.strand(i).n_base - pre_pos
+                    write(k, "(a      )"), " --> max cut - nick"
                 end do
 
                 ! 1 : with single crossover
@@ -1861,9 +1862,9 @@ subroutine SeqDesign_Break_Staples_Length(prob, mesh, dna)
                     do k = 0, 11, 11
                         call space(k, 16)
                         write(k, "(a$)"), "***** Single Xover"
-                        write(k, "(a,  i4$)"), ", cutted length : ",   pre_pos - bgn_pos
-                        write(k, "(a,  i4$)"), ", cutted pos : ",      pre_pos
-                        write(k, "(a,  i4 )"), ", remained length : ", dna.strand(i).n_base - pre_pos
+                        write(k, "(a,  i4$)"), ", cut len : ",   pre_pos - bgn_pos
+                        write(k, "(a,  i4$)"), ", cut pos : ",      pre_pos
+                        write(k, "(a,  i4 )"), ", remain len : ", dna.strand(i).n_base - pre_pos
                     end do
 
                     ! Cut crossover and make new connectivity
@@ -1898,7 +1899,7 @@ subroutine SeqDesign_Break_Staples_Length(prob, mesh, dna)
             ! Check remained length whether it is smaller than para_max_cut_stap
             if(dna.strand(i).n_base - bgn_pos <= para_max_cut_stap) then
                 do k = 0, 11, 11
-                    write(k, "(i20, a, i4)"), j, "-final region2, cutted length : ", &
+                    write(k, "(i20, a, i4)"), j, "-final region2, cut len : ", &
                         dna.strand(i).n_base - bgn_pos
                 end do
                 exit
@@ -1973,7 +1974,7 @@ subroutine SeqDesign_Break_Staples_Length(prob, mesh, dna)
                     if( (final_length - (dna.strand(i).n_base-pre_pos) < para_min_cut_stap) .or. &
                         (dna.strand(i).n_base - pre_pos < para_min_cut_stap) ) then
                         do k = 0, 11, 11
-                            write(k, "(i20, a, i5)"), j, "-final region3, cutted length : ", &
+                            write(k, "(i20, a, i5)"), j, "-final region3, cut len : ", &
                                 dna.strand(i).n_base - bgn_pos
                         end do
                         cycle
@@ -1988,14 +1989,14 @@ subroutine SeqDesign_Break_Staples_Length(prob, mesh, dna)
                     dna.top(up_base).dn  = -1
 
                     do k = 0, 11, 11
-                        write(k, "(i20, a, i5)"), jj, "-final region4, cutted length : ", &
+                        write(k, "(i20, a, i5)"), jj, "-final region4, cut len : ", &
                             final_length - (dna.strand(i).n_base - pre_pos)
-                        write(k, "(i20, a, i5)"), jj, "-final region5, cutted length : ", &
+                        write(k, "(i20, a, i5)"), jj, "-final region5, cut len : ", &
                             dna.strand(i).n_base - pre_pos
                     end do
                 else
                     do k = 0, 11, 11
-                        write(k, "(i20, a, i5)"), j, "-final region6, cutted length : ", &
+                        write(k, "(i20, a, i5)"), j, "-final region6, cut len : ", &
                             dna.strand(i).n_base - bgn_pos
                     end do
                 end if
@@ -2434,19 +2435,19 @@ subroutine SeqDesign_Build_Sequence_Design(prob, mesh, dna)
         ! Print information on strand and region
         do k = 0, 11, 11
             write(k, "(i, 2(a, i5))"), i, &
-                " - strand, # of total bases : ", dna.strand(i).n_base, &
-                ", # of bases in Tn : ", cn_tn
+                " - strand, # nts : ", dna.strand(i).n_base, &
+                ", # nts in Tn : ", cn_tn
             do j = 1, n_region
-                write(k, "(i20, a$)"), j, "  -  region"
-                write(k, "(a,  i3$ )"), ", type : ",          region(j).types
-                write(k, "(a,  i4$ )"), ", region length : ", region(j).length
-                write(k, "(a,  i4$ )"), ", start pos : ",     region(j).strt_pos
-                write(k, "(a,  i4$ )"), ", center pos : ",    region(j).cntr_pos
-                write(k, "(a,  i4  )"), ", end pos : ",       region(j).end_pos
+                write(k, "(i20, a$)"), j, "  -  regn"
+                write(k, "(a,  i3$ )"), ", type : ",        region(j).types
+                write(k, "(a,  i4$ )"), ", regn len : ", region(j).length
+                write(k, "(a,  i4$ )"), ", start pos : ",   region(j).strt_pos
+                write(k, "(a,  i4$ )"), ", cen pos : ",     region(j).cntr_pos
+                write(k, "(a,  i4  )"), ", end pos : ",     region(j).end_pos
             end do
             write(k, "(a)")
             call Space(k, 19)
-            write(k, "(a)"), "----- Make nick position -----------------------------------------------------------------------------"
+            write(k, "(a)"), "----- Make nick position --------------------------------------------------------------"
         end do
 
         ! ==================================================
@@ -2482,16 +2483,16 @@ subroutine SeqDesign_Build_Sequence_Design(prob, mesh, dna)
                 ! Skip the end iteration
                 if(dna.strand(i).n_base - pre_pos < para_min_cut_stap) then
                     do k = 0, 11, 11
-                        write(k, "(i20, a, i5)"), j, " -final region, cutted length : ", &
+                        write(k, "(i20, a, i5)"), j, " -final regn, cut len : ", &
                             dna.strand(i).n_base - begin_pos
                     end do
                     exit
                 end if
 
                 do k = 0, 11, 11
-                    write(k, "(i20, a, 2(a, i5))"), j, " -> cut region", &
-                        ", cutted length : ",   pre_pos-begin_pos,       &
-                        ", remained length : ", dna.strand(i).n_base - pre_pos
+                    write(k, "(i20, a, 2(a, i5))"), j, " -> cut regn", &
+                        ", cut len : ",   pre_pos-begin_pos,       &
+                        ", remain len : ", dna.strand(i).n_base - pre_pos
                 end do
 
                 ! Add # of staple
@@ -2542,7 +2543,7 @@ subroutine SeqDesign_Build_Sequence_Design(prob, mesh, dna)
                     if(b_ext == .true.) then
                         if(j == n_region) then
                             do k = 0, 11, 11
-                                write(k, "(i20, a, i5)"), j, "-final region1, cutted length : ", &
+                                write(k, "(i20, a, i5)"), j, "-final region1, cut len : ", &
                                     dna.strand(i).n_base - begin_pos
                             end do
                         end if
@@ -2553,10 +2554,10 @@ subroutine SeqDesign_Build_Sequence_Design(prob, mesh, dna)
                     if(pre_pos-begin_pos < para_min_cut_stap) cycle
 
                     do k = 0, 11, 11
-                        write(k, "(i20, a, 3(a, i5))"), jj, " -> cut region", &
-                            ", cutted length : ",   pre_pos-begin_pos,        &
-                            ", cutted pos : ",      pre_pos,                  &
-                            ", remained length : ", dna.strand(i).n_base - pre_pos
+                        write(k, "(i20, a, 3(a, i5))"), jj, " -> cut regn", &
+                            ", cut len : ",   pre_pos-begin_pos,        &
+                            ", cut pos : ",      pre_pos,                  &
+                            ", remain len : ", dna.strand(i).n_base - pre_pos
                     end do
 
                     ! Add # of staple
@@ -2578,7 +2579,7 @@ subroutine SeqDesign_Build_Sequence_Design(prob, mesh, dna)
             if( (para_cut_stap_method == "max" .and. dna.strand(i).n_base-begin_pos < para_max_cut_stap) .or. &
                 (para_cut_stap_method == "mid" .and. dna.strand(i).n_base-begin_pos < para_mid_cut_stap) ) then
                 do k = 0, 11, 11
-                    write(k, "(i20, a, i5)"), j, "-final region2, cutted length : ", &
+                    write(k, "(i20, a, i5)"), j, "-final region2, cut len : ", &
                         dna.strand(i).n_base - begin_pos
                 end do
                 exit
@@ -2620,7 +2621,7 @@ subroutine SeqDesign_Build_Sequence_Design(prob, mesh, dna)
                     if( (final_length - (dna.strand(i).n_base-pre_pos) < para_min_cut_stap) .or. &
                         (dna.strand(i).n_base - pre_pos < para_min_cut_stap) ) then
                         do k = 0, 11, 11
-                            write(k, "(i20, a, i5)"), j, "-final region3, cutted length : ", &
+                            write(k, "(i20, a, i5)"), j, "-final region3, cut len : ", &
                                 dna.strand(i).n_base - begin_pos
                         end do
                         cycle
@@ -2633,14 +2634,14 @@ subroutine SeqDesign_Build_Sequence_Design(prob, mesh, dna)
                     dna.top(up_base).dn  = -1
 
                     do k = 0, 11, 11
-                        write(k, "(i20, a, i5)"), jj, "-final region4, cutted length : ", &
+                        write(k, "(i20, a, i5)"), jj, "-final region4, cut len : ", &
                             final_length - (dna.strand(i).n_base - pre_pos)
-                        write(k, "(i20, a, i5)"), jj, "-final region5, cutted length : ", &
+                        write(k, "(i20, a, i5)"), jj, "-final region5, cut len : ", &
                             dna.strand(i).n_base - pre_pos
                     end do
                 else
                     do k = 0, 11, 11
-                        write(k, "(i20, a, i5)"), j, "-final region6, cutted length : ", &
+                        write(k, "(i20, a, i5)"), j, "-final region6, cut len : ", &
                             dna.strand(i).n_base - begin_pos
                     end do
                 end if
@@ -2929,15 +2930,15 @@ subroutine SeqDesign_Make_Short_Scaf(mesh, dna)
 
         ! Print information on strand and region
         !write(0, "(i, a,i5)"), i, &
-        !    " - strand, # of total bases : ", dna.strand(i).n_base
+        !    " - strand, # nts : ", dna.strand(i).n_base
         !write(0, "(a)")
 
         !do j = 1, n_region
         !    write(0, "(i20, a, 4(a, i5))"), j, " - region", &
-        !        ", region length : ", region(j).length,   &
-        !        ", start pos : ",     region(j).strt_pos, &
-        !        ", centerd pos : ",   region(j).cntr_pos, &
-        !        ", end pos : ",       region(j).end_pos
+        !        ", regn len : ",  region(j).length,   &
+        !        ", start pos : ",    region(j).strt_pos, &
+        !        ", centerd pos : ",  region(j).cntr_pos, &
+        !        ", end pos : ",      region(j).end_pos
         !end do
         !write(0, "(a)")
         !call Space(0, 19)
@@ -2973,9 +2974,9 @@ subroutine SeqDesign_Make_Short_Scaf(mesh, dna)
                 ! Skip the end iteration
                 if(j == n_region) cycle
 
-                write(0, "(i20, a, 2(a, i5))"), j, " -> cut region", &
-                    ", cutted length : ",   pre_pos-begin_pos,       &
-                    ", remained length : ", dna.strand(i).n_base - pre_pos
+                write(0, "(i20, a, 2(a, i5))"), j, " -> cut regn", &
+                    ", cut len : ",   pre_pos-begin_pos,       &
+                    ", remain len : ", dna.strand(i).n_base - pre_pos
 
                 ! Add # of staple
                 dna.n_scaf = dna.n_scaf + 1
@@ -2992,7 +2993,7 @@ subroutine SeqDesign_Make_Short_Scaf(mesh, dna)
 
             ! Print final strand
             if(j == n_region) then
-                write(0, "(i20, a, i4)"), j, " -1 cut region, cutted length : ", &
+                write(0, "(i20, a, i4)"), j, " -1 cut regn, cut len : ", &
                     dna.strand(i).n_base - pre_pos
             end if
         end do
@@ -3743,8 +3744,8 @@ subroutine SeqDesign_Print_14nt_Region_Simple(prob, geom, mesh, dna)
         do k = 0, 11, 11
 
             write(k, "(i$    )"), i
-            write(k, "(a, i4$)"), " - staple, # of total bases : ", dna.strand(i).n_base
-            write(k, "(a, i2$)"), ", # of bases in poly T : ", cn_tn
+            write(k, "(a, i4$)"), " - stap, # nts : ", dna.strand(i).n_base
+            write(k, "(a, i2$)"), ", # nts in Tn : ", cn_tn
             write(k, "(a, l$ )"), ", 14nt region("//trim(adjustl(Int2Str(n_sec_14nt)))//") - ", b_14nt
             write(k, "(a, l  )"), ", 4nt region("//trim(adjustl(Int2Str(n_sec_4nt)))//") - ", b_4nt
 
@@ -4138,8 +4139,8 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
         do k = 0, 11, 11
 
             write(k, "(i$    )"), i
-            write(k, "(a, i4$)"), " - staple, # of total bases : ", dna.strand(i).n_base
-            write(k, "(a, i2$)"), ", # of bases in poly T : ", cn_tn
+            write(k, "(a, i4$)"), " - stap, # nts : ", dna.strand(i).n_base
+            write(k, "(a, i2$)"), ", # nts in Tn : ", cn_tn
             write(k, "(a, l$ )"), ", 14nt region("//trim(adjustl(Int2Str(n_sec_14nt)))//") - ", b_14nt
             write(k, "(a, l  )"), ", 4nt region("//trim(adjustl(Int2Str(n_sec_4nt)))//") - ", b_4nt
 
@@ -4510,8 +4511,10 @@ subroutine SeqDesign_Set_M13mp18(dna)
     type(DNAType), intent(inout) :: dna
 
     integer :: i, j, count, n_base_scaf, base, across
-    integer, parameter :: len_M13 = 7249
+    integer, parameter :: len_M13   = 7249
+    integer, parameter :: len_lamda = 48502
     character(len_M13) :: M13_seq
+    character(len_lamda) :: lamda_seq
 
     ! Check the number of bases in scaffold strands
     n_base_scaf = 0
@@ -4525,8 +4528,13 @@ subroutine SeqDesign_Set_M13mp18(dna)
         stop
     end if
 
-    ! Set M13mp18 sequence
-    M13_seq = SeqDesign_Get_M13mp18(len_M13)
+    ! Set M13mp18 or Lamda sequence
+    if(n_base_scaf <= len_M13) then
+        M13_seq   = SeqDesign_Get_M13mp18(len_M13)
+    else if(n_base_scaf > len_M13 .and. n_base_scaf <= len_Lamda) then
+        lamda_seq = SeqDesign_Get_Lamda(len_Lamda)
+    else
+    end if
 
     ! Set scaffold sequence as full M13 scaffold
     do i = 1, dna.n_strand
@@ -4547,7 +4555,13 @@ subroutine SeqDesign_Set_M13mp18(dna)
             end if
 
             ! Assign M13mp18 sequence
-            dna.top(base).seq = M13_seq(count:count)
+            if(n_base_scaf <= len_M13) then
+                dna.top(base).seq = M13_seq(count:count)
+            else if(n_base_scaf > len_M13 .and. n_base_scaf <= len_Lamda) then
+                dna.top(base).seq = Lamda_seq(count:count)
+            else
+                dna.top(base).seq = SeqDesign_Get_Rand_Sequence()
+            end if
 
             ! Set complementary sequence
             if(across /= -1) then
@@ -4771,6 +4785,727 @@ end function SeqDesign_Get_M13mp18
 
 ! -----------------------------------------------------------------------------
 
+! Get M13mp18 DNA sequence
+function SeqDesign_Get_Lamda(len_Lamda) result(Lamda_seq)
+    integer, intent(in) :: len_Lamda
+
+    character(len_Lamda) :: Lamda_seq
+    integer :: i, count
+
+    ! Initialize Lamda sequence data as "N"
+    do i = 1, len_Lamda
+        Lamda_seq(i:i) = "N"
+    end do
+
+    ! Set scaffold sequence as full Lamda scaffold, 48502 nucleotides
+    ! https://www.neb.com/tools-and-resources/interactive-tools/dna-sequences-and-maps-tool
+    Lamda_seq = &
+        "GGGCGGCGACCTCGCGGGTTTTCGCTATTTATGAAAATTTTCCGGTTTAAGGCGTTTCCGTTCTTCTTCG"//&
+        "TCATAACTTAATGTTTTTATTTAAAATACCCTCTGAAAAGAAAGGAAACGACAGGTGCTGAAAGCGAGGC"//&
+        "TTTTTGGCCTCTGTCGTTTCCTTTCTCTGTTTTTGTCCGTGGAATGAACAATGGAAGTCAACAAAAAGCA"//&
+        "GCTGGCTGACATTTTCGGTGCGAGTATCCGTACCATTCAGAACTGGCAGGAACAGGGAATGCCCGTTCTG"//&
+        "CGAGGCGGTGGCAAGGGTAATGAGGTGCTTTATGACTCTGCCGCCGTCATAAAATGGTATGCCGAAAGGG"//&
+        "ATGCTGAAATTGAGAACGAAAAGCTGCGCCGGGAGGTTGAAGAACTGCGGCAGGCCAGCGAGGCAGATCT"//&
+        "CCAGCCAGGAACTATTGAGTACGAACGCCATCGACTTACGCGTGCGCAGGCCGACGCACAGGAACTGAAG"//&
+        "AATGCCAGAGACTCCGCTGAAGTGGTGGAAACCGCATTCTGTACTTTCGTGCTGTCGCGGATCGCAGGTG"//&
+        "AAATTGCCAGTATTCTCGACGGGCTCCCCCTGTCGGTGCAGCGGCGTTTTCCGGAACTGGAAAACCGACA"//&
+        "TGTTGATTTCCTGAAACGGGATATCATCAAAGCCATGAACAAAGCAGCCGCGCTGGATGAACTGATACCG"//&
+        "GGGTTGCTGAGTGAATATATCGAACAGTCAGGTTAACAGGCTGCGGCATTTTGTCCGCGCCGGGCTTCGC"//&
+        "TCACTGTTCAGGCCGGAGCCACAGACCGCCGTTGAATGGGCGGATGCTAATTACTATCTCCCGAAAGAAT"//&
+        "CCGCATACCAGGAAGGGCGCTGGGAAACACTGCCCTTTCAGCGGGCCATCATGAATGCGATGGGCAGCGA"//&
+        "CTACATCCGTGAGGTGAATGTGGTGAAGTCTGCCCGTGTCGGTTATTCCAAAATGCTGCTGGGTGTTTAT"//&
+        "GCCTACTTTATAGAGCATAAGCAGCGCAACACCCTTATCTGGTTGCCGACGGATGGTGATGCCGAGAACT"//&
+        "TTATGAAAACCCACGTTGAGCCGACTATTCGTGATATTCCGTCGCTGCTGGCGCTGGCCCCGTGGTATGG"//&
+        "CAAAAAGCACCGGGATAACACGCTCACCATGAAGCGTTTCACTAATGGGCGTGGCTTCTGGTGCCTGGGC"//&
+        "GGTAAAGCGGCAAAAAACTACCGTGAAAAGTCGGTGGATGTGGCGGGTTATGATGAACTTGCTGCTTTTG"//&
+        "ATGATGATATTGAACAGGAAGGCTCTCCGACGTTCCTGGGTGACAAGCGTATTGAAGGCTCGGTCTGGCC"//&
+        "AAAGTCCATCCGTGGCTCCACGCCAAAAGTGAGAGGCACCTGTCAGATTGAGCGTGCAGCCAGTGAATCC"//&
+        "CCGCATTTTATGCGTTTTCATGTTGCCTGCCCGCATTGCGGGGAGGAGCAGTATCTTAAATTTGGCGACA"//&
+        "AAGAGACGCCGTTTGGCCTCAAATGGACGCCGGATGACCCCTCCAGCGTGTTTTATCTCTGCGAGCATAA"//&
+        "TGCCTGCGTCATCCGCCAGCAGGAGCTGGACTTTACTGATGCCCGTTATATCTGCGAAAAGACCGGGATC"//&
+        "TGGACCCGTGATGGCATTCTCTGGTTTTCGTCATCCGGTGAAGAGATTGAGCCACCTGACAGTGTGACCT"//&
+        "TTCACATCTGGACAGCGTACAGCCCGTTCACCACCTGGGTGCAGATTGTCAAAGACTGGATGAAAACGAA"//&
+        "AGGGGATACGGGAAAACGTAAAACCTTCGTAAACACCACGCTCGGTGAGACGTGGGAGGCGAAAATTGGC"//&
+        "GAACGTCCGGATGCTGAAGTGATGGCAGAGCGGAAAGAGCATTATTCAGCGCCCGTTCCTGACCGTGTGG"//&
+        "CTTACCTGACCGCCGGTATCGACTCCCAGCTGGACCGCTACGAAATGCGCGTATGGGGATGGGGGCCGGG"//&
+        "TGAGGAAAGCTGGCTGATTGACCGGCAGATTATTATGGGCCGCCACGACGATGAACAGACGCTGCTGCGT"//&
+        "GTGGATGAGGCCATCAATAAAACCTATACCCGCCGGAATGGTGCAGAAATGTCGATATCCCGTATCTGCT"//&
+        "GGGATACTGGCGGGATTGACCCGACCATTGTGTATGAACGCTCGAAAAAACATGGGCTGTTCCGGGTGAT"//&
+        "CCCCATTAAAGGGGCATCCGTCTACGGAAAGCCGGTGGCCAGCATGCCACGTAAGCGAAACAAAAACGGG"//&
+        "GTTTACCTTACCGAAATCGGTACGGATACCGCGAAAGAGCAGATTTATAACCGCTTCACACTGACGCCGG"//&
+        "AAGGGGATGAACCGCTTCCCGGTGCCGTTCACTTCCCGAATAACCCGGATATTTTTGATCTGACCGAAGC"//&
+        "GCAGCAGCTGACTGCTGAAGAGCAGGTCGAAAAATGGGTGGATGGCAGGAAAAAAATACTGTGGGACAGC"//&
+        "AAAAAGCGACGCAATGAGGCACTCGACTGCTTCGTTTATGCGCTGGCGGCGCTGCGCATCAGTATTTCCC"//&
+        "GCTGGCAGCTGGATCTCAGTGCGCTGCTGGCGAGCCTGCAGGAAGAGGATGGTGCAGCAACCAACAAGAA"//&
+        "AACACTGGCAGATTACGCCCGTGCCTTATCCGGAGAGGATGAATGACGCGACAGGAAGAACTTGCCGCTG"//&
+        "CCCGTGCGGCACTGCATGACCTGATGACAGGTAAACGGGTGGCAACAGTACAGAAAGACGGACGAAGGGT"//&
+        "GGAGTTTACGGCCACTTCCGTGTCTGACCTGAAAAAATATATTGCAGAGCTGGAAGTGCAGACCGGCATG"//&
+        "ACACAGCGACGCAGGGGACCTGCAGGATTTTATGTATGAAAACGCCCACCATTCCCACCCTTCTGGGGCC"//&
+        "GGACGGCATGACATCGCTGCGCGAATATGCCGGTTATCACGGCGGTGGCAGCGGATTTGGAGGGCAGTTG"//&
+        "CGGTCGTGGAACCCACCGAGTGAAAGTGTGGATGCAGCCCTGTTGCCCAACTTTACCCGTGGCAATGCCC"//&
+        "GCGCAGACGATCTGGTACGCAATAACGGCTATGCCGCCAACGCCATCCAGCTGCATCAGGATCATATCGT"//&
+        "CGGGTCTTTTTTCCGGCTCAGTCATCGCCCAAGCTGGCGCTATCTGGGCATCGGGGAGGAAGAAGCCCGT"//&
+        "GCCTTTTCCCGCGAGGTTGAAGCGGCATGGAAAGAGTTTGCCGAGGATGACTGCTGCTGCATTGACGTTG"//&
+        "AGCGAAAACGCACGTTTACCATGATGATTCGGGAAGGTGTGGCCATGCACGCCTTTAACGGTGAACTGTT"//&
+        "CGTTCAGGCCACCTGGGATACCAGTTCGTCGCGGCTTTTCCGGACACAGTTCCGGATGGTCAGCCCGAAG"//&
+        "CGCATCAGCAACCCGAACAATACCGGCGACAGCCGGAACTGCCGTGCCGGTGTGCAGATTAATGACAGCG"//&
+        "GTGCGGCGCTGGGATATTACGTCAGCGAGGACGGGTATCCTGGCTGGATGCCGCAGAAATGGACATGGAT"//&
+        "ACCCCGTGAGTTACCCGGCGGGCGCGCCTCGTTCATTCACGTTTTTGAACCCGTGGAGGACGGGCAGACT"//&
+        "CGCGGTGCAAATGTGTTTTACAGCGTGATGGAGCAGATGAAGATGCTCGACACGCTGCAGAACACGCAGC"//&
+        "TGCAGAGCGCCATTGTGAAGGCGATGTATGCCGCCACCATTGAGAGTGAGCTGGATACGCAGTCAGCGAT"//&
+        "GGATTTTATTCTGGGCGCGAACAGTCAGGAGCAGCGGGAAAGGCTGACCGGCTGGATTGGTGAAATTGCC"//&
+        "GCGTATTACGCCGCAGCGCCGGTCCGGCTGGGAGGCGCAAAAGTACCGCACCTGATGCCGGGTGACTCAC"//&
+        "TGAACCTGCAGACGGCTCAGGATACGGATAACGGCTACTCCGTGTTTGAGCAGTCACTGCTGCGGTATAT"//&
+        "CGCTGCCGGGCTGGGTGTCTCGTATGAGCAGCTTTCCCGGAATTACGCCCAGATGAGCTACTCCACGGCA"//&
+        "CGGGCCAGTGCGAACGAGTCGTGGGCGTACTTTATGGGGCGGCGAAAATTCGTCGCATCCCGTCAGGCGA"//&
+        "GCCAGATGTTTCTGTGCTGGCTGGAAGAGGCCATCGTTCGCCGCGTGGTGACGTTACCTTCAAAAGCGCG"//&
+        "CTTCAGTTTTCAGGAAGCCCGCAGTGCCTGGGGGAACTGCGACTGGATAGGCTCCGGTCGTATGGCCATC"//&
+        "GATGGTCTGAAAGAAGTTCAGGAAGCGGTGATGCTGATAGAAGCCGGACTGAGTACCTACGAGAAAGAGT"//&
+        "GCGCAAAACGCGGTGACGACTATCAGGAAATTTTTGCCCAGCAGGTCCGTGAAACGATGGAGCGCCGTGC"//&
+        "AGCCGGTCTTAAACCGCCCGCCTGGGCGGCTGCAGCATTTGAATCCGGGCTGCGACAATCAACAGAGGAG"//&
+        "GAGAAGAGTGACAGCAGAGCTGCGTAATCTCCCGCATATTGCCAGCATGGCCTTTAATGAGCCGCTGATG"//&
+        "CTTGAACCCGCCTATGCGCGGGTTTTCTTTTGTGCGCTTGCAGGCCAGCTTGGGATCAGCAGCCTGACGG"//&
+        "ATGCGGTGTCCGGCGACAGCCTGACTGCCCAGGAGGCACTCGCGACGCTGGCATTATCCGGTGATGATGA"//&
+        "CGGACCACGACAGGCCCGCAGTTATCAGGTCATGAACGGCATCGCCGTGCTGCCGGTGTCCGGCACGCTG"//&
+        "GTCAGCCGGACGCGGGCGCTGCAGCCGTACTCGGGGATGACCGGTTACAACGGCATTATCGCCCGTCTGC"//&
+        "AACAGGCTGCCAGCGATCCGATGGTGGACGGCATTCTGCTCGATATGGACACGCCCGGCGGGATGGTGGC"//&
+        "GGGGGCATTTGACTGCGCTGACATCATCGCCCGTGTGCGTGACATAAAACCGGTATGGGCGCTTGCCAAC"//&
+        "GACATGAACTGCAGTGCAGGTCAGTTGCTTGCCAGTGCCGCCTCCCGGCGTCTGGTCACGCAGACCGCCC"//&
+        "GGACAGGCTCCATCGGCGTCATGATGGCTCACAGTAATTACGGTGCTGCGCTGGAGAAACAGGGTGTGGA"//&
+        "AATCACGCTGATTTACAGCGGCAGCCATAAGGTGGATGGCAACCCCTACAGCCATCTTCCGGATGACGTC"//&
+        "CGGGAGACACTGCAGTCCCGGATGGACGCAACCCGCCAGATGTTTGCGCAGAAGGTGTCGGCATATACCG"//&
+        "GCCTGTCCGTGCAGGTTGTGCTGGATACCGAGGCTGCAGTGTACAGCGGTCAGGAGGCCATTGATGCCGG"//&
+        "ACTGGCTGATGAACTTGTTAACAGCACCGATGCGATCACCGTCATGCGTGATGCACTGGATGCACGTAAA"//&
+        "TCCCGTCTCTCAGGAGGGCGAATGACCAAAGAGACTCAATCAACAACTGTTTCAGCCACTGCTTCGCAGG"//&
+        "CTGACGTTACTGACGTGGTGCCAGCGACGGAGGGCGAGAACGCCAGCGCGGCGCAGCCGGACGTGAACGC"//&
+        "GCAGATCACCGCAGCGGTTGCGGCAGAAAACAGCCGCATTATGGGGATCCTCAACTGTGAGGAGGCTCAC"//&
+        "GGACGCGAAGAACAGGCACGCGTGCTGGCAGAAACCCCCGGTATGACCGTGAAAACGGCCCGCCGCATTC"//&
+        "TGGCCGCAGCACCACAGAGTGCACAGGCGCGCAGTGACACTGCGCTGGATCGTCTGATGCAGGGGGCACC"//&
+        "GGCACCGCTGGCTGCAGGTAACCCGGCATCTGATGCCGTTAACGATTTGCTGAACACACCAGTGTAAGGG"//&
+        "ATGTTTATGACGAGCAAAGAAACCTTTACCCATTACCAGCCGCAGGGCAACAGTGACCCGGCTCATACCG"//&
+        "CAACCGCGCCCGGCGGATTGAGTGCGAAAGCGCCTGCAATGACCCCGCTGATGCTGGACACCTCCAGCCG"//&
+        "TAAGCTGGTTGCGTGGGATGGCACCACCGACGGTGCTGCCGTTGGCATTCTTGCGGTTGCTGCTGACCAG"//&
+        "ACCAGCACCACGCTGACGTTCTACAAGTCCGGCACGTTCCGTTATGAGGATGTGCTCTGGCCGGAGGCTG"//&
+        "CCAGCGACGAGACGAAAAAACGGACCGCGTTTGCCGGAACGGCAATCAGCATCGTTTAACTTTACCCTTC"//&
+        "ATCACTAAAGGCCGCCTGTGCGGCTTTTTTTACGGGATTTTTTTATGTCGATGTACACAACCGCCCAACT"//&
+        "GCTGGCGGCAAATGAGCAGAAATTTAAGTTTGATCCGCTGTTTCTGCGTCTCTTTTTCCGTGAGAGCTAT"//&
+        "CCCTTCACCACGGAGAAAGTCTATCTCTCACAAATTCCGGGACTGGTAAACATGGCGCTGTACGTTTCGC"//&
+        "CGATTGTTTCCGGTGAGGTTATCCGTTCCCGTGGCGGCTCCACCTCTGAATTTACGCCGGGATATGTCAA"//&
+        "GCCGAAGCATGAAGTGAATCCGCAGATGACCCTGCGTCGCCTGCCGGATGAAGATCCGCAGAATCTGGCG"//&
+        "GACCCGGCTTACCGCCGCCGTCGCATCATCATGCAGAACATGCGTGACGAAGAGCTGGCCATTGCTCAGG"//&
+        "TCGAAGAGATGCAGGCAGTTTCTGCCGTGCTTAAGGGCAAATACACCATGACCGGTGAAGCCTTCGATCC"//&
+        "GGTTGAGGTGGATATGGGCCGCAGTGAGGAGAATAACATCACGCAGTCCGGCGGCACGGAGTGGAGCAAG"//&
+        "CGTGACAAGTCCACGTATGACCCGACCGACGATATCGAAGCCTACGCGCTGAACGCCAGCGGTGTGGTGA"//&
+        "ATATCATCGTGTTCGATCCGAAAGGCTGGGCGCTGTTCCGTTCCTTCAAAGCCGTCAAGGAGAAGCTGGA"//&
+        "TACCCGTCGTGGCTCTAATTCCGAGCTGGAGACAGCGGTGAAAGACCTGGGCAAAGCGGTGTCCTATAAG"//&
+        "GGGATGTATGGCGATGTGGCCATCGTCGTGTATTCCGGACAGTACGTGGAAAACGGCGTCAAAAAGAACT"//&
+        "TCCTGCCGGACAACACGATGGTGCTGGGGAACACTCAGGCACGCGGTCTGCGCACCTATGGCTGCATTCA"//&
+        "GGATGCGGACGCACAGCGCGAAGGCATTAACGCCTCTGCCCGTTACCCGAAAAACTGGGTGACCACCGGC"//&
+        "GATCCGGCGCGTGAGTTCACCATGATTCAGTCAGCACCGCTGATGCTGCTGGCTGACCCTGATGAGTTCG"//&
+        "TGTCCGTACAACTGGCGTAATCATGGCCCTTCGGGGCCATTGTTTCTCTGTGGAGGAGTCCATGACGAAA"//&
+        "GATGAACTGATTGCCCGTCTCCGCTCGCTGGGTGAACAACTGAACCGTGATGTCAGCCTGACGGGGACGA"//&
+        "AAGAAGAACTGGCGCTCCGTGTGGCAGAGCTGAAAGAGGAGCTTGATGACACGGATGAAACTGCCGGTCA"//&
+        "GGACACCCCTCTCAGCCGGGAAAATGTGCTGACCGGACATGAAAATGAGGTGGGATCAGCGCAGCCGGAT"//&
+        "ACCGTGATTCTGGATACGTCTGAACTGGTCACGGTCGTGGCACTGGTGAAGCTGCATACTGATGCACTTC"//&
+        "ACGCCACGCGGGATGAACCTGTGGCATTTGTGCTGCCGGGAACGGCGTTTCGTGTCTCTGCCGGTGTGGC"//&
+        "AGCCGAAATGACAGAGCGCGGCCTGGCCAGAATGCAATAACGGGAGGCGCTGTGGCTGATTTCGATAACC"//&
+        "TGTTCGATGCTGCCATTGCCCGCGCCGATGAAACGATACGCGGGTACATGGGAACGTCAGCCACCATTAC"//&
+        "ATCCGGTGAGCAGTCAGGTGCGGTGATACGTGGTGTTTTTGATGACCCTGAAAATATCAGCTATGCCGGA"//&
+        "CAGGGCGTGCGCGTTGAAGGCTCCAGCCCGTCCCTGTTTGTCCGGACTGATGAGGTGCGGCAGCTGCGGC"//&
+        "GTGGAGACACGCTGACCATCGGTGAGGAAAATTTCTGGGTAGATCGGGTTTCGCCGGATGATGGCGGAAG"//&
+        "TTGTCATCTCTGGCTTGGACGGGGCGTACCGCCTGCCGTTAACCGTCGCCGCTGAAAGGGGGATGTATGG"//&
+        "CCATAAAAGGTCTTGAGCAGGCCGTTGAAAACCTCAGCCGTATCAGCAAAACGGCGGTGCCTGGTGCCGC"//&
+        "CGCAATGGCCATTAACCGCGTTGCTTCATCCGCGATATCGCAGTCGGCGTCACAGGTTGCCCGTGAGACA"//&
+        "AAGGTACGCCGGAAACTGGTAAAGGAAAGGGCCAGGCTGAAAAGGGCCACGGTCAAAAATCCGCAGGCCA"//&
+        "GAATCAAAGTTAACCGGGGGGATTTGCCCGTAATCAAGCTGGGTAATGCGCGGGTTGTCCTTTCGCGCCG"//&
+        "CAGGCGTCGTAAAAAGGGGCAGCGTTCATCCCTGAAAGGTGGCGGCAGCGTGCTTGTGGTGGGTAACCGT"//&
+        "CGTATTCCCGGCGCGTTTATTCAGCAACTGAAAAATGGCCGGTGGCATGTCATGCAGCGTGTGGCTGGGA"//&
+        "AAAACCGTTACCCCATTGATGTGGTGAAAATCCCGATGGCGGTGCCGCTGACCACGGCGTTTAAACAAAA"//&
+        "TATTGAGCGGATACGGCGTGAACGTCTTCCGAAAGAGCTGGGCTATGCGCTGCAGCATCAACTGAGGATG"//&
+        "GTAATAAAGCGATGAAACATACTGAACTCCGTGCAGCCGTACTGGATGCACTGGAGAAGCATGACACCGG"//&
+        "GGCGACGTTTTTTGATGGTCGCCCCGCTGTTTTTGATGAGGCGGATTTTCCGGCAGTTGCCGTTTATCTC"//&
+        "ACCGGCGCTGAATACACGGGCGAAGAGCTGGACAGCGATACCTGGCAGGCGGAGCTGCATATCGAAGTTT"//&
+        "TCCTGCCTGCTCAGGTGCCGGATTCAGAGCTGGATGCGTGGATGGAGTCCCGGATTTATCCGGTGATGAG"//&
+        "CGATATCCCGGCACTGTCAGATTTGATCACCAGTATGGTGGCCAGCGGCTATGACTACCGGCGCGACGAT"//&
+        "GATGCGGGCTTGTGGAGTTCAGCCGATCTGACTTATGTCATTACCTATGAAATGTGAGGACGCTATGCCT"//&
+        "GTACCAAATCCTACAATGCCGGTGAAAGGTGCCGGGACCACCCTGTGGGTTTATAAGGGGAGCGGTGACC"//&
+        "CTTACGCGAATCCGCTTTCAGACGTTGACTGGTCGCGTCTGGCAAAAGTTAAAGACCTGACGCCCGGCGA"//&
+        "ACTGACCGCTGAGTCCTATGACGACAGCTATCTCGATGATGAAGATGCAGACTGGACTGCGACCGGGCAG"//&
+        "GGGCAGAAATCTGCCGGAGATACCAGCTTCACGCTGGCGTGGATGCCCGGAGAGCAGGGGCAGCAGGCGC"//&
+        "TGCTGGCGTGGTTTAATGAAGGCGATACCCGTGCCTATAAAATCCGCTTCCCGAACGGCACGGTCGATGT"//&
+        "GTTCCGTGGCTGGGTCAGCAGTATCGGTAAGGCGGTGACGGCGAAGGAAGTGATCACCCGCACGGTGAAA"//&
+        "GTCACCAATGTGGGACGTCCGTCGATGGCAGAAGATCGCAGCACGGTAACAGCGGCAACCGGCATGACCG"//&
+        "TGACGCCTGCCAGCACCTCGGTGGTGAAAGGGCAGAGCACCACGCTGACCGTGGCCTTCCAGCCGGAGGG"//&
+        "CGTAACCGACAAGAGCTTTCGTGCGGTGTCTGCGGATAAAACAAAAGCCACCGTGTCGGTCAGTGGTATG"//&
+        "ACCATCACCGTGAACGGCGTTGCTGCAGGCAAGGTCAACATTCCGGTTGTATCCGGTAATGGTGAGTTTG"//&
+        "CTGCGGTTGCAGAAATTACCGTCACCGCCAGTTAATCCGGAGAGTCAGCGATGTTCCTGAAAACCGAATC"//&
+        "ATTTGAACATAACGGTGTGACCGTCACGCTTTCTGAACTGTCAGCCCTGCAGCGCATTGAGCATCTCGCC"//&
+        "CTGATGAAACGGCAGGCAGAACAGGCGGAGTCAGACAGCAACCGGAAGTTTACTGTGGAAGACGCCATCA"//&
+        "GAACCGGCGCGTTTCTGGTGGCGATGTCCCTGTGGCATAACCATCCGCAGAAGACGCAGATGCCGTCCAT"//&
+        "GAATGAAGCCGTTAAACAGATTGAGCAGGAAGTGCTTACCACCTGGCCCACGGAGGCAATTTCTCATGCT"//&
+        "GAAAACGTGGTGTACCGGCTGTCTGGTATGTATGAGTTTGTGGTGAATAATGCCCCTGAACAGACAGAGG"//&
+        "ACGCCGGGCCCGCAGAGCCTGTTTCTGCGGGAAAGTGTTCGACGGTGAGCTGAGTTTTGCCCTGAAACTG"//&
+        "GCGCGTGAGATGGGGCGACCCGACTGGCGTGCCATGCTTGCCGGGATGTCATCCACGGAGTATGCCGACT"//&
+        "GGCACCGCTTTTACAGTACCCATTATTTTCATGATGTTCTGCTGGATATGCACTTTTCCGGGCTGACGTA"//&
+        "CACCGTGCTCAGCCTGTTTTTCAGCGATCCGGATATGCATCCGCTGGATTTCAGTCTGCTGAACCGGCGC"//&
+        "GAGGCTGACGAAGAGCCTGAAGATGATGTGCTGATGCAGAAAGCGGCAGGGCTTGCCGGAGGTGTCCGCT"//&
+        "TTGGCCCGGACGGGAATGAAGTTATCCCCGCTTCCCCGGATGTGGCGGACATGACGGAGGATGACGTAAT"//&
+        "GCTGATGACAGTATCAGAAGGGATCGCAGGAGGAGTCCGGTATGGCTGAACCGGTAGGCGATCTGGTCGT"//&
+        "TGATTTGAGTCTGGATGCGGCCAGATTTGACGAGCAGATGGCCAGAGTCAGGCGTCATTTTTCTGGTACG"//&
+        "GAAAGTGATGCGAAAAAAACAGCGGCAGTCGTTGAACAGTCGCTGAGCCGACAGGCGCTGGCTGCACAGA"//&
+        "AAGCGGGGATTTCCGTCGGGCAGTATAAAGCCGCCATGCGTATGCTGCCTGCACAGTTCACCGACGTGGC"//&
+        "CACGCAGCTTGCAGGCGGGCAAAGTCCGTGGCTGATCCTGCTGCAACAGGGGGGGCAGGTGAAGGACTCC"//&
+        "TTCGGCGGGATGATCCCCATGTTCAGGGGGCTTGCCGGTGCGATCACCCTGCCGATGGTGGGGGCCACCT"//&
+        "CGCTGGCGGTGGCGACCGGTGCGCTGGCGTATGCCTGGTATCAGGGCAACTCAACCCTGTCCGATTTCAA"//&
+        "CAAAACGCTGGTCCTTTCCGGCAATCAGGCGGGACTGACGGCAGATCGTATGCTGGTCCTGTCCAGAGCC"//&
+        "GGGCAGGCGGCAGGGCTGACGTTTAACCAGACCAGCGAGTCACTCAGCGCACTGGTTAAGGCGGGGGTAA"//&
+        "GCGGTGAGGCTCAGATTGCGTCCATCAGCCAGAGTGTGGCGCGTTTCTCCTCTGCATCCGGCGTGGAGGT"//&
+        "GGACAAGGTCGCTGAAGCCTTCGGGAAGCTGACCACAGACCCGACGTCGGGGCTGACGGCGATGGCTCGC"//&
+        "CAGTTCCATAACGTGTCGGCGGAGCAGATTGCGTATGTTGCTCAGTTGCAGCGTTCCGGCGATGAAGCCG"//&
+        "GGGCATTGCAGGCGGCGAACGAGGCCGCAACGAAAGGGTTTGATGACCAGACCCGCCGCCTGAAAGAGAA"//&
+        "CATGGGCACGCTGGAGACCTGGGCAGACAGGACTGCGCGGGCATTCAAATCCATGTGGGATGCGGTGCTG"//&
+        "GATATTGGTCGTCCTGATACCGCGCAGGAGATGCTGATTAAGGCAGAGGCTGCGTATAAGAAAGCAGACG"//&
+        "ACATCTGGAATCTGCGCAAGGATGATTATTTTGTTAACGATGAAGCGCGGGCGCGTTACTGGGATGATCG"//&
+        "TGAAAAGGCCCGTCTTGCGCTTGAAGCCGCCCGAAAGAAGGCTGAGCAGCAGACTCAACAGGACAAAAAT"//&
+        "GCGCAGCAGCAGAGCGATACCGAAGCGTCACGGCTGAAATATACCGAAGAGGCGCAGAAGGCTTACGAAC"//&
+        "GGCTGCAGACGCCGCTGGAGAAATATACCGCCCGTCAGGAAGAACTGAACAAGGCACTGAAAGACGGGAA"//&
+        "AATCCTGCAGGCGGATTACAACACGCTGATGGCGGCGGCGAAAAAGGATTATGAAGCGACGCTGAAAAAG"//&
+        "CCGAAACAGTCCAGCGTGAAGGTGTCTGCGGGCGATCGTCAGGAAGACAGTGCTCATGCTGCCCTGCTGA"//&
+        "CGCTTCAGGCAGAACTCCGGACGCTGGAGAAGCATGCCGGAGCAAATGAGAAAATCAGCCAGCAGCGCCG"//&
+        "GGATTTGTGGAAGGCGGAGAGTCAGTTCGCGGTACTGGAGGAGGCGGCGCAACGTCGCCAGCTGTCTGCA"//&
+        "CAGGAGAAATCCCTGCTGGCGCATAAAGATGAGACGCTGGAGTACAAACGCCAGCTGGCTGCACTTGGCG"//&
+        "ACAAGGTTACGTATCAGGAGCGCCTGAACGCGCTGGCGCAGCAGGCGGATAAATTCGCACAGCAGCAACG"//&
+        "GGCAAAACGGGCCGCCATTGATGCGAAAAGCCGGGGGCTGACTGACCGGCAGGCAGAACGGGAAGCCACG"//&
+        "GAACAGCGCCTGAAGGAACAGTATGGCGATAATCCGCTGGCGCTGAATAACGTCATGTCAGAGCAGAAAA"//&
+        "AGACCTGGGCGGCTGAAGACCAGCTTCGCGGGAACTGGATGGCAGGCCTGAAGTCCGGCTGGAGTGAGTG"//&
+        "GGAAGAGAGCGCCACGGACAGTATGTCGCAGGTAAAAAGTGCAGCCACGCAGACCTTTGATGGTATTGCA"//&
+        "CAGAATATGGCGGCGATGCTGACCGGCAGTGAGCAGAACTGGCGCAGCTTCACCCGTTCCGTGCTGTCCA"//&
+        "TGATGACAGAAATTCTGCTTAAGCAGGCAATGGTGGGGATTGTCGGGAGTATCGGCAGCGCCATTGGCGG"//&
+        "GGCTGTTGGTGGCGGCGCATCCGCGTCAGGCGGTACAGCCATTCAGGCCGCTGCGGCGAAATTCCATTTT"//&
+        "GCAACCGGAGGATTTACGGGAACCGGCGGCAAATATGAGCCAGCGGGGATTGTTCACCGTGGTGAGTTTG"//&
+        "TCTTCACGAAGGAGGCAACCAGCCGGATTGGCGTGGGGAATCTTTACCGGCTGATGCGCGGCTATGCCAC"//&
+        "CGGCGGTTATGTCGGTACACCGGGCAGCATGGCAGACAGCCGGTCGCAGGCGTCCGGGACGTTTGAGCAG"//&
+        "AATAACCATGTGGTGATTAACAACGACGGCACGAACGGGCAGATAGGTCCGGCTGCTCTGAAGGCGGTGT"//&
+        "ATGACATGGCCCGCAAGGGTGCCCGTGATGAAATTCAGACACAGATGCGTGATGGTGGCCTGTTCTCCGG"//&
+        "AGGTGGACGATGAAGACCTTCCGCTGGAAAGTGAAACCCGGTATGGATGTGGCTTCGGTCCCTTCTGTAA"//&
+        "GAAAGGTGCGCTTTGGTGATGGCTATTCTCAGCGAGCGCCTGCCGGGCTGAATGCCAACCTGAAAACGTA"//&
+        "CAGCGTGACGCTTTCTGTCCCCCGTGAGGAGGCCACGGTACTGGAGTCGTTTCTGGAAGAGCACGGGGGC"//&
+        "TGGAAATCCTTTCTGTGGACGCCGCCTTATGAGTGGCGGCAGATAAAGGTGACCTGCGCAAAATGGTCGT"//&
+        "CGCGGGTCAGTATGCTGCGTGTTGAGTTCAGCGCAGAGTTTGAACAGGTGGTGAACTGATGCAGGATATC"//&
+        "CGGCAGGAAACACTGAATGAATGCACCCGTGCGGAGCAGTCGGCCAGCGTGGTGCTCTGGGAAATCGACC"//&
+        "TGACAGAGGTCGGTGGAGAACGTTATTTTTTCTGTAATGAGCAGAACGAAAAAGGTGAGCCGGTCACCTG"//&
+        "GCAGGGGCGACAGTATCAGCCGTATCCCATTCAGGGGAGCGGTTTTGAACTGAATGGCAAAGGCACCAGT"//&
+        "ACGCGCCCCACGCTGACGGTTTCTAACCTGTACGGTATGGTCACCGGGATGGCGGAAGATATGCAGAGTC"//&
+        "TGGTCGGCGGAACGGTGGTCCGGCGTAAGGTTTACGCCCGTTTTCTGGATGCGGTGAACTTCGTCAACGG"//&
+        "AAACAGTTACGCCGATCCGGAGCAGGAGGTGATCAGCCGCTGGCGCATTGAGCAGTGCAGCGAACTGAGC"//&
+        "GCGGTGAGTGCCTCCTTTGTACTGTCCACGCCGACGGAAACGGATGGCGCTGTTTTTCCGGGACGTATCA"//&
+        "TGCTGGCCAACACCTGCACCTGGACCTATCGCGGTGACGAGTGCGGTTATAGCGGTCCGGCTGTCGCGGA"//&
+        "TGAATATGACCAGCCAACGTCCGATATCACGAAGGATAAATGCAGCAAATGCCTGAGCGGTTGTAAGTTC"//&
+        "CGCAATAACGTCGGCAACTTTGGCGGCTTCCTTTCCATTAACAAACTTTCGCAGTAAATCCCATGACACA"//&
+        "GACAGAATCAGCGATTCTGGCGCACGCCCGGCGATGTGCGCCAGCGGAGTCGTGCGGCTTCGTGGTAAGC"//&
+        "ACGCCGGAGGGGGAAAGATATTTCCCCTGCGTGAATATCTCCGGTGAGCCGGAGGCTATTTCCGTATGTC"//&
+        "GCCGGAAGACTGGCTGCAGGCAGAAATGCAGGGTGAGATTGTGGCGCTGGTCCACAGCCACCCCGGTGGT"//&
+        "CTGCCCTGGCTGAGTGAGGCCGACCGGCGGCTGCAGGTGCAGAGTGATTTGCCGTGGTGGCTGGTCTGCC"//&
+        "GGGGGACGATTCATAAGTTCCGCTGTGTGCCGCATCTCACCGGGCGGCGCTTTGAGCACGGTGTGACGGA"//&
+        "CTGTTACACACTGTTCCGGGATGCTTATCATCTGGCGGGGATTGAGATGCCGGACTTTCATCGTGAGGAT"//&
+        "GACTGGTGGCGTAACGGCCAGAATCTCTATCTGGATAATCTGGAGGCGACGGGGCTGTATCAGGTGCCGT"//&
+        "TGTCAGCGGCACAGCCGGGCGATGTGCTGCTGTGCTGTTTTGGTTCATCAGTGCCGAATCACGCCGCAAT"//&
+        "TTACTGCGGCGACGGCGAGCTGCTGCACCATATTCCTGAACAACTGAGCAAACGAGAGAGGTACACCGAC"//&
+        "AAATGGCAGCGACGCACACACTCCCTCTGGCGTCACCGGGCATGGCGCGCATCTGCCTTTACGGGGATTT"//&
+        "ACAACGATTTGGTCGCCGCATCGACCTTCGTGTGAAAACGGGGGCTGAAGCCATCCGGGCACTGGCCACA"//&
+        "CAGCTCCCGGCGTTTCGTCAGAAACTGAGCGACGGCTGGTATCAGGTACGGATTGCCGGGCGGGACGTCA"//&
+        "GCACGTCCGGGTTAACGGCGCAGTTACATGAGACTCTGCCTGATGGCGCTGTAATTCATATTGTTCCCAG"//&
+        "AGTCGCCGGGGCCAAGTCAGGTGGCGTATTCCAGATTGTCCTGGGGGCTGCCGCCATTGCCGGATCATTC"//&
+        "TTTACCGCCGGAGCCACCCTTGCAGCATGGGGGGCAGCCATTGGGGCCGGTGGTATGACCGGCATCCTGT"//&
+        "TTTCTCTCGGTGCCAGTATGGTGCTCGGTGGTGTGGCGCAGATGCTGGCACCGAAAGCCAGAACTCCCCG"//&
+        "TATACAGACAACGGATAACGGTAAGCAGAACACCTATTTCTCCTCACTGGATAACATGGTTGCCCAGGGC"//&
+        "AATGTTCTGCCTGTTCTGTACGGGGAAATGCGCGTGGGGTCACGCGTGGTTTCTCAGGAGATCAGCACGG"//&
+        "CAGACGAAGGGGACGGTGGTCAGGTTGTGGTGATTGGTCGCTGATGCAAAATGTTTTATGTGAAACCGCC"//&
+        "TGCGGGCGGTTTTGTCATTTATGGAGCGTGAGGAATGGGTAAAGGAAGCAGTAAGGGGCATACCCCGCGC"//&
+        "GAAGCGAAGGACAACCTGAAGTCCACGCAGTTGCTGAGTGTGATCGATGCCATCAGCGAAGGGCCGATTG"//&
+        "AAGGTCCGGTGGATGGCTTAAAAAGCGTGCTGCTGAACAGTACGCCGGTGCTGGACACTGAGGGGAATAC"//&
+        "CAACATATCCGGTGTCACGGTGGTGTTCCGGGCTGGTGAGCAGGAGCAGACTCCGCCGGAGGGATTTGAA"//&
+        "TCCTCCGGCTCCGAGACGGTGCTGGGTACGGAAGTGAAATATGACACGCCGATCACCCGCACCATTACGT"//&
+        "CTGCAAACATCGACCGTCTGCGCTTTACCTTCGGTGTACAGGCACTGGTGGAAACCACCTCAAAGGGTGA"//&
+        "CAGGAATCCGTCGGAAGTCCGCCTGCTGGTTCAGATACAACGTAACGGTGGCTGGGTGACGGAAAAAGAC"//&
+        "ATCACCATTAAGGGCAAAACCACCTCGCAGTATCTGGCCTCGGTGGTGATGGGTAACCTGCCGCCGCGCC"//&
+        "CGTTTAATATCCGGATGCGCAGGATGACGCCGGACAGCACCACAGACCAGCTGCAGAACAAAACGCTCTG"//&
+        "GTCGTCATACACTGAAATCATCGATGTGAAACAGTGCTACCCGAACACGGCACTGGTCGGCGTGCAGGTG"//&
+        "GACTCGGAGCAGTTCGGCAGCCAGCAGGTGAGCCGTAATTATCATCTGCGCGGGCGTATTCTGCAGGTGC"//&
+        "CGTCGAACTATAACCCGCAGACGCGGCAATACAGCGGTATCTGGGACGGAACGTTTAAACCGGCATACAG"//&
+        "CAACAACATGGCCTGGTGTCTGTGGGATATGCTGACCCATCCGCGCTACGGCATGGGGAAACGTCTTGGT"//&
+        "GCGGCGGATGTGGATAAATGGGCGCTGTATGTCATCGGCCAGTACTGCGACCAGTCAGTGCCGGACGGCT"//&
+        "TTGGCGGCACGGAGCCGCGCATCACCTGTAATGCGTACCTGACCACACAGCGTAAGGCGTGGGATGTGCT"//&
+        "CAGCGATTTCTGCTCGGCGATGCGCTGTATGCCGGTATGGAACGGGCAGACGCTGACGTTCGTGCAGGAC"//&
+        "CGACCGTCGGATAAGACGTGGACCTATAACCGCAGTAATGTGGTGATGCCGGATGATGGCGCGCCGTTCC"//&
+        "GCTACAGCTTCAGCGCCCTGAAGGACCGCCATAATGCCGTTGAGGTGAACTGGATTGACCCGAACAACGG"//&
+        "CTGGGAGACGGCGACAGAGCTTGTTGAAGATACGCAGGCCATTGCCCGTTACGGTCGTAATGTTACGAAG"//&
+        "ATGGATGCCTTTGGCTGTACCAGCCGGGGGCAGGCACACCGCGCCGGGCTGTGGCTGATTAAAACAGAAC"//&
+        "TGCTGGAAACGCAGACCGTGGATTTCAGCGTCGGCGCAGAAGGGCTTCGCCATGTACCGGGCGATGTTAT"//&
+        "TGAAATCTGCGATGATGACTATGCCGGTATCAGCACCGGTGGTCGTGTGCTGGCGGTGAACAGCCAGACC"//&
+        "CGGACGCTGACGCTCGACCGTGAAATCACGCTGCCATCCTCCGGTACCGCGCTGATAAGCCTGGTTGACG"//&
+        "GAAGTGGCAATCCGGTCAGCGTGGAGGTTCAGTCCGTCACCGACGGCGTGAAGGTAAAAGTGAGCCGTGT"//&
+        "TCCTGACGGTGTTGCTGAATACAGCGTATGGGAGCTGAAGCTGCCGACGCTGCGCCAGCGACTGTTCCGC"//&
+        "TGCGTGAGTATCCGTGAGAACGACGACGGCACGTATGCCATCACCGCCGTGCAGCATGTGCCGGAAAAAG"//&
+        "AGGCCATCGTGGATAACGGGGCGCACTTTGACGGCGAACAGAGTGGCACGGTGAATGGTGTCACGCCGCC"//&
+        "AGCGGTGCAGCACCTGACCGCAGAAGTCACTGCAGACAGCGGGGAATATCAGGTGCTGGCGCGATGGGAC"//&
+        "ACACCGAAGGTGGTGAAGGGCGTGAGTTTCCTGCTCCGTCTGACCGTAACAGCGGACGACGGCAGTGAGC"//&
+        "GGCTGGTCAGCACGGCCCGGACGACGGAAACCACATACCGCTTCACGCAACTGGCGCTGGGGAACTACAG"//&
+        "GCTGACAGTCCGGGCGGTAAATGCGTGGGGGCAGCAGGGCGATCCGGCGTCGGTATCGTTCCGGATTGCC"//&
+        "GCACCGGCAGCACCGTCGAGGATTGAGCTGACGCCGGGCTATTTTCAGATAACCGCCACGCCGCATCTTG"//&
+        "CCGTTTATGACCCGACGGTACAGTTTGAGTTCTGGTTCTCGGAAAAGCAGATTGCGGATATCAGACAGGT"//&
+        "TGAAACCAGCACGCGTTATCTTGGTACGGCGCTGTACTGGATAGCCGCCAGTATCAATATCAAACCGGGC"//&
+        "CATGATTATTACTTTTATATCCGCAGTGTGAACACCGTTGGCAAATCGGCATTCGTGGAGGCCGTCGGTC"//&
+        "GGGCGAGCGATGATGCGGAAGGTTACCTGGATTTTTTCAAAGGCAAGATAACCGAATCCCATCTCGGCAA"//&
+        "GGAGCTGCTGGAAAAAGTCGAGCTGACGGAGGATAACGCCAGCAGACTGGAGGAGTTTTCGAAAGAGTGG"//&
+        "AAGGATGCCAGTGATAAGTGGAATGCCATGTGGGCTGTCAAAATTGAGCAGACCAAAGACGGCAAACATT"//&
+        "ATGTCGCGGGTATTGGCCTCAGCATGGAGGACACGGAGGAAGGCAAACTGAGCCAGTTTCTGGTTGCCGC"//&
+        "CAATCGTATCGCATTTATTGACCCGGCAAACGGGAATGAAACGCCGATGTTTGTGGCGCAGGGCAACCAG"//&
+        "ATATTCATGAACGACGTGTTCCTGAAGCGCCTGACGGCCCCCACCATTACCAGCGGCGGCAATCCTCCGG"//&
+        "CCTTTTCCCTGACACCGGACGGAAAGCTGACCGCTAAAAATGCGGATATCAGTGGCAGTGTGAATGCGAA"//&
+        "CTCCGGGACGCTCAGTAATGTGACGATAGCTGAAAACTGTACGATAAACGGTACGCTGAGGGCGGAAAAA"//&
+        "ATCGTCGGGGACATTGTAAAGGCGGCGAGCGCGGCTTTTCCGCGCCAGCGTGAAAGCAGTGTGGACTGGC"//&
+        "CGTCAGGTACCCGTACTGTCACCGTGACCGATGACCATCCTTTTGATCGCCAGATAGTGGTGCTTCCGCT"//&
+        "GACGTTTCGCGGAAGTAAGCGTACTGTCAGCGGCAGGACAACGTATTCGATGTGTTATCTGAAAGTACTG"//&
+        "ATGAACGGTGCGGTGATTTATGATGGCGCGGCGAACGAGGCGGTACAGGTGTTCTCCCGTATTGTTGACA"//&
+        "TGCCAGCGGGTCGGGGAAACGTGATCCTGACGTTCACGCTTACGTCCACACGGCATTCGGCAGATATTCC"//&
+        "GCCGTATACGTTTGCCAGCGATGTGCAGGTTATGGTGATTAAGAAACAGGCGCTGGGCATCAGCGTGGTC"//&
+        "TGAGTGTGTTACAGAGGTTCGTCCGGGAACGGGCGTTTTATTATAAAACAGTGAGAGGTGAACGATGCGT"//&
+        "AATGTGTGTATTGCCGTTGCTGTCTTTGCCGCACTTGCGGTGACAGTCACTCCGGCCCGTGCGGAAGGTG"//&
+        "GACATGGTACGTTTACGGTGGGCTATTTTCAAGTGAAACCGGGTACATTGCCGTCGTTGTCGGGCGGGGA"//&
+        "TACCGGTGTGAGTCATCTGAAAGGGATTAACGTGAAGTACCGTTATGAGCTGACGGACAGTGTGGGGGTG"//&
+        "ATGGCTTCCCTGGGGTTCGCCGCGTCGAAAAAGAGCAGCACAGTGATGACCGGGGAGGATACGTTTCACT"//&
+        "ATGAGAGCCTGCGTGGACGTTATGTGAGCGTGATGGCCGGACCGGTTTTACAAATCAGTAAGCAGGTCAG"//&
+        "TGCGTACGCCATGGCCGGAGTGGCTCACAGTCGGTGGTCCGGCAGTACAATGGATTACCGTAAGACGGAA"//&
+        "ATCACTCCCGGGTATATGAAAGAGACGACCACTGCCAGGGACGAAAGTGCAATGCGGCATACCTCAGTGG"//&
+        "CGTGGAGTGCAGGTATACAGATTAATCCGGCAGCGTCCGTCGTTGTTGATATTGCTTATGAAGGCTCCGG"//&
+        "CAGTGGCGACTGGCGTACTGACGGATTCATCGTTGGGGTCGGTTATAAATTCTGATTAGCCAGGTAACAC"//&
+        "AGTGTTATGACAGCCCGCCGGAACCGGTGGGCTTTTTTGTGGGGTGAATATGGCAGTAAAGATTTCAGGA"//&
+        "GTCCTGAAAGACGGCACAGGAAAACCGGTACAGAACTGCACCATTCAGCTGAAAGCCAGACGTAACAGCA"//&
+        "CCACGGTGGTGGTGAACACGGTGGGCTCAGAGAATCCGGATGAAGCCGGGCGTTACAGCATGGATGTGGA"//&
+        "GTACGGTCAGTACAGTGTCATCCTGCAGGTTGACGGTTTTCCACCATCGCACGCCGGGACCATCACCGTG"//&
+        "TATGAAGATTCACAACCGGGGACGCTGAATGATTTTCTCTGTGCCATGACGGAGGATGATGCCCGGCCGG"//&
+        "AGGTGCTGCGTCGTCTTGAACTGATGGTGGAAGAGGTGGCGCGTAACGCGTCCGTGGTGGCACAGAGTAC"//&
+        "GGCAGACGCGAAGAAATCAGCCGGCGATGCCAGTGCATCAGCTGCTCAGGTCGCGGCCCTTGTGACTGAT"//&
+        "GCAACTGACTCAGCACGCGCCGCCAGCACGTCCGCCGGACAGGCTGCATCGTCAGCTCAGGAAGCGTCCT"//&
+        "CCGGCGCAGAAGCGGCATCAGCAAAGGCCACTGAAGCGGAAAAAAGTGCCGCAGCCGCAGAGTCCTCAAA"//&
+        "AAACGCGGCGGCCACCAGTGCCGGTGCGGCGAAAACGTCAGAAACGAATGCTGCAGCGTCACAACAATCA"//&
+        "GCCGCCACGTCTGCCTCCACCGCGGCCACGAAAGCGTCAGAGGCCGCCACTTCAGCACGAGATGCGGTGG"//&
+        "CCTCAAAAGAGGCAGCAAAATCATCAGAAACGAACGCATCATCAAGTGCCGGTCGTGCAGCTTCCTCGGC"//&
+        "AACGGCGGCAGAAAATTCTGCCAGGGCGGCAAAAACGTCCGAGACGAATGCCAGGTCATCTGAAACAGCA"//&
+        "GCGGAACGGAGCGCCTCTGCCGCGGCAGACGCAAAAACAGCGGCGGCGGGGAGTGCGTCAACGGCATCCA"//&
+        "CGAAGGCGACAGAGGCTGCGGGAAGTGCGGTATCAGCATCGCAGAGCAAAAGTGCGGCAGAAGCGGCGGC"//&
+        "AATACGTGCAAAAAATTCGGCAAAACGTGCAGAAGATATAGCTTCAGCTGTCGCGCTTGAGGATGCGGAC"//&
+        "ACAACGAGAAAGGGGATAGTGCAGCTCAGCAGTGCAACCAACAGCACGTCTGAAACGCTTGCTGCAACGC"//&
+        "CAAAGGCGGTTAAGGTGGTAATGGATGAAACGAACAGAAAAGCCCACTGGACAGTCCGGCACTGACCGGA"//&
+        "ACGCCAACAGCACCAACCGCGCTCAGGGGAACAAACAATACCCAGATTGCGAACACCGCTTTTGTACTGG"//&
+        "CCGCGATTGCAGATGTTATCGACGCGTCACCTGACGCACTGAATACGCTGAATGAACTGGCCGCAGCGCT"//&
+        "CGGGAATGATCCAGATTTTGCTACCACCATGACTAACGCGCTTGCGGGTAAACAACCGAAGAATGCGACA"//&
+        "CTGACGGCGCTGGCAGGGCTTTCCACGGCGAAAAATAAATTACCGTATTTTGCGGAAAATGATGCCGCCA"//&
+        "GCCTGACTGAACTGACTCAGGTTGGCAGGGATATTCTGGCAAAAAATTCCGTTGCAGATGTTCTTGAATA"//&
+        "CCTTGGGGCCGGTGAGAATTCGGCCTTTCCGGCAGGTGCGCCGATCCCGTGGCCATCAGATATCGTTCCG"//&
+        "TCTGGCTACGTCCTGATGCAGGGGCAGGCGTTTGACAAATCAGCCTACCCAAAACTTGCTGTCGCGTATC"//&
+        "CATCGGGTGTGCTTCCTGATATGCGAGGCTGGACAATCAAGGGGAAACCCGCCAGCGGTCGTGCTGTATT"//&
+        "GTCTCAGGAACAGGATGGAATTAAGTCGCACACCCACAGTGCCAGTGCATCCGGTACGGATTTGGGGACG"//&
+        "AAAACCACATCGTCGTTTGATTACGGGACGAAAACAACAGGCAGTTTCGATTACGGCACCAAATCGACGA"//&
+        "ATAACACGGGGGCTCATGCTCACAGTCTGAGCGGTTCAACAGGGGCCGCGGGTGCTCATGCCCACACAAG"//&
+        "TGGTTTAAGGATGAACAGTTCTGGCTGGAGTCAGTATGGAACAGCAACCATTACAGGAAGTTTATCCACA"//&
+        "GTTAAAGGAACCAGCACACAGGGTATTGCTTATTTATCGAAAACGGACAGTCAGGGCAGCCACAGTCACT"//&
+        "CATTGTCCGGTACAGCCGTGAGTGCCGGTGCACATGCGCATACAGTTGGTATTGGTGCGCACCAGCATCC"//&
+        "GGTTGTTATCGGTGCTCATGCCCATTCTTTCAGTATTGGTTCACACGGACACACCATCACCGTTAACGCT"//&
+        "GCGGGTAACGCGGAAAACACCGTCAAAAACATTGCATTTAACTATATTGTGAGGCTTGCATAATGGCATT"//&
+        "CAGAATGAGTGAACAACCACGGACCATAAAAATTTATAATCTGCTGGCCGGAACTAATGAATTTATTGGT"//&
+        "GAAGGTGACGCATATATTCCGCCTCATACCGGTCTGCCTGCAAACAGTACCGATATTGCACCGCCAGATA"//&
+        "TTCCGGCTGGCTTTGTGGCTGTTTTCAACAGTGATGAGGCATCGTGGCATCTCGTTGAAGACCATCGGGG"//&
+        "TAAAACCGTCTATGACGTGGCTTCCGGCGACGCGTTATTTATTTCTGAACTCGGTCCGTTACCGGAAAAT"//&
+        "TTTACCTGGTTATCGCCGGGAGGGGAATATCAGAAGTGGAACGGCACAGCCTGGGTGAAGGATACGGAAG"//&
+        "CAGAAAAACTGTTCCGGATCCGGGAGGCGGAAGAAACAAAAAAAAGCCTGATGCAGGTAGCCAGTGAGCA"//&
+        "TATTGCGCCGCTTCAGGATGCTGCAGATCTGGAAATTGCAACGAAGGAAGAAACCTCGTTGCTGGAAGCC"//&
+        "TGGAAGAAGTATCGGGTGTTGCTGAACCGTGTTGATACATCAACTGCACCTGATATTGAGTGGCCTGCTG"//&
+        "TCCCTGTTATGGAGTAATCGTTTTGTGATATGCCGCAGAAACGTTGTATGAAATAACGTTCTGCGGTTAG"//&
+        "TTAGTATATTGTAAAGCTGAGTATTGGTTTATTTGGCGATTATTATCTTCAGGAGAATAATGGAAGTTCT"//&
+        "ATGACTCAATTGTTCATAGTGTTTACATCACCGCCAATTGCTTTTAAGACTGAACGCATGAAATATGGTT"//&
+        "TTTCGTCATGTTTTGAGTCTGCTGTTGATATTTCTAAAGTCGGTTTTTTTTCTTCGTTTTCTCTAACTAT"//&
+        "TTTCCATGAAATACATTTTTGATTATTATTTGAATCAATTCCAATTACCTGAAGTCTTTCATCTATAATT"//&
+        "GGCATTGTATGTATTGGTTTATTGGAGTAGATGCTTGCTTTTCTGAGCCATAGCTCTGATATCCAAATGA"//&
+        "AGCCATAGGCATTTGTTATTTTGGCTCTGTCAGCTGCATAACGCCAAAAAATATATTTATCTGCTTGATC"//&
+        "TTCAAATGTTGTATTGATTAAATCAATTGGATGGAATTGTTTATCATAAAAAATTAATGTTTGAATGTGA"//&
+        "TAACCGTCCTTTAAAAAAGTCGTTTCTGCAAGCTTGGCTGTATAGTCAACTAACTCTTCTGTCGAAGTGA"//&
+        "TATTTTTAGGCTTATCTACCAGTTTTAGACGCTCTTTAATATCTTCAGGAATTATTTTATTGTCATATTG"//&
+        "TATCATGCTAAATGACAATTTGCTTATGGAGTAATCTTTTAATTTTAAATAAGTTATTCTCCTGGCTTCA"//&
+        "TCAAATAAAGAGTCGAATGATGTTGGCGAAATCACATCGTCACCCATTGGATTGTTTATTTGTATGCCAA"//&
+        "GAGAGTTACAGCAGTTATACATTCTGCCATAGATTATAGCTAAGGCATGTAATAATTCGTAATCTTTTAG"//&
+        "CGTATTAGCGACCCATCGTCTTTCTGATTTAATAATAGATGATTCAGTTAAATATGAAGGTAATTTCTTT"//&
+        "TGTGCAAGTCTGACTAACTTTTTTATACCAATGTTTAACATACTTTCATTTGTAATAAACTCAATGTCAT"//&
+        "TTTCTTCAATGTAAGATGAAATAAGAGTAGCCTTTGCCTCGCTATACATTTCTAAATCGCCTTGTTTTTC"//&
+        "TATCGTATTGCGAGAATTTTTAGCCCAAGCCATTAATGGATCATTTTTCCATTTTTCAATAACATTATTG"//&
+        "TTATACCAAATGTCATATCCTATAATCTGGTTTTTGTTTTTTTGAATAATAAATGTTACTGTTCTTGCGG"//&
+        "TTTGGAGGAATTGATTCAAATTCAAGCGAAATAATTCAGGGTCAAAATATGTATCAATGCAGCATTTGAG"//&
+        "CAAGTGCGATAAATCTTTAAGTCTTCTTTCCCATGGTTTTTTAGTCATAAAACTCTCCATTTTGATAGGT"//&
+        "TGCATGCTAGATGCTGATATATTTTAGAGGTGATAAAATTAACTGCTTAACTGTCAATGTAATACAAGTT"//&
+        "GTTTGATCTTTGCAATGATTCTTATCAGAAACCATATAGTAAATTAGTTACACAGGAAATTTTTAATATT"//&
+        "ATTATTATCATTCATTATGTATTAAAATTAGAGTTGTGGCTTGGCTCTGCTAACACGTTGCTCATAGGAG"//&
+        "ATATGGTAGAGCCGCAGACACGTCGTATGCAGGAACGTGCTGCGGCTGGCTGGTGAACTTCCGATAGTGC"//&
+        "GGGTGTTGAATGATTTCCAGTTGCTACCGATTTTACATATTTTTTGCATGAGAGAATTTGTACCACCTCC"//&
+        "CACCGACCATCTATGACTGTACGCCACTGTCCCTAGGACTGCTATGTGCCGGAGCGGACATTACAAACGT"//&
+        "CCTTCTCGGTGCATGCCACTGTTGCCAATGACCTGCCTAGGAATTGGTTAGCAAGTTACTACCGGATTTT"//&
+        "GTAAAAACAGCCCTCCTCATATAAAAAGTATTCGTTCACTTCCGATAAGCGTCGTAATTTTCTATCTTTC"//&
+        "ATCATATTCTAGATCCCTCTGAAAAAATCTTCCGAGTTTGCTAGGCACTGATACATAACTCTTTTCCAAT"//&
+        "AATTGGGGAAGTCATTCAAATCTATAATAGGTTTCAGATTTGCTTCAATAAATTCTGACTGTAGCTGCTG"//&
+        "AAACGTTGCGGTTGAACTATATTTCCTTATAACTTTTACGAAAGAGTTTCTTTGAGTAATCACTTCACTC"//&
+        "AAGTGCTTCCCTGCCTCCAAACGATACCTGTTAGCAATATTTAATAGCTTGAAATGATGAAGAGCTCTGT"//&
+        "GTTTGTCTTCCTGCCTCCAGTTCGCCGGGCATTCAACATAAAAACTGATAGCACCCGGAGTTCCGGAAAC"//&
+        "GAAATTTGCATATACCCATTGCTCACGAAAAAAAATGTCCTTGTCGATATAGGGATGAATCGCTTGGTGT"//&
+        "ACCTCATCTACTGCGAAAACTTGACCTTTCTCTCCCATATTGCAGTCGCGGCACGATGGAACTAAATTAA"//&
+        "TAGGCATCACCGAAAATTCAGGATAATGTGCAATAGGAAGAAAATGATCTATATTTTTTGTCTGTCCTAT"//&
+        "ATCACCACAAAATGGACATTTTTCACCTGATGAAACAAGCATGTCATCGTAATATGTTCTAGCGGGTTTG"//&
+        "TTTTTATCTCGGAGATTATTTTCATAAAGCTTTTCTAATTTAACCTTTGTCAGGTTACCAACTACTAAGG"//&
+        "TTGTAGGCTCAAGAGGGTGTGTCCTGTCGTAGGTAAATAACTGACCTGTCGAGCTTAATATTCTATATTG"//&
+        "TTGTTCTTTCTGCAAAAAAGTGGGGAAGTGAGTAATGAAATTATTTCTAACATTTATCTGCATCATACCT"//&
+        "TCCGAGCATTTATTAAGCATTTCGCTATAAGTTCTCGCTGGAAGAGGTAGTTTTTTCATTGTACTTTACC"//&
+        "TTCATCTCTGTTCATTATCATCGCTTTTAAAACGGTTCGACCTTCTAATCCTATCTGACCATTATAATTT"//&
+        "TTTAGAATGGTTTCATAAGAAAGCTCTGAATCAACGGACTGCGATAATAAGTGGTGGTATCCAGAATTTG"//&
+        "TCACTTCAAGTAAAAACACCTCACGAGTTAAAACACCTAAGTTCTCACCGAATGTCTCAATATCCGGACG"//&
+        "GATAATATTTATTGCTTCTCTTGACCGTAGGACTTTCCACATGCAGGATTTTGGAACCTCTTGCAGTACT"//&
+        "ACTGGGGAATGAGTTGCAATTATTGCTACACCATTGCGTGCATCGAGTAAGTCGCTTAATGTTCGTAAAA"//&
+        "AAGCAGAGAGCAAAGGTGGATGCAGATGAACCTCTGGTTCATCGAATAAAACTAATGACTTTTCGCCAAC"//&
+        "GACATCTACTAATCTTGTGATAGTAAATAAAACAATTGCATGTCCAGAGCTCATTCGAAGCAGATATTTC"//&
+        "TGGATATTGTCATAAAACAATTTAGTGAATTTATCATCGTCCACTTGAATCTGTGGTTCATTACGTCTTA"//&
+        "ACTCTTCATATTTAGAAATGAGGCTGATGAGTTCCATATTTGAAAAGTTTTCATCACTACTTAGTTTTTT"//&
+        "GATAGCTTCAAGCCAGAGTTGTCTTTTTCTATCTACTCTCATACAACCAATAAATGCTGAAATGAATTCT"//&
+        "AAGCGGAGATCGCCTAGTGATTTTAAACTATTGCTGGCAGCATTCTTGAGTCCAATATAAAAGTATTGTG"//&
+        "TACCTTTTGCTGGGTCAGGTTGTTCTTTAGGAGGAGTAAAAGGATCAAATGCACTAAACGAAACTGAAAC"//&
+        "AAGCGATCGAAAATATCCCTTTGGGATTCTTGACTCGATAAGTCTATTATTTTCAGAGAAAAAATATTCA"//&
+        "TTGTTTTCTGGGTTGGTGATTGCACCAATCATTCCATTCAAAATTGTTGTTTTACCACACCCATTCCGCC"//&
+        "CGATAAAAGCATGAATGTTCGTGCTGGGCATAGAATTAACCGTCACCTCAAAAGGTATAGTTAAATCACT"//&
+        "GAATCCGGGAGCACTTTTTCTATTAAATGAAAAGTGGAAATCTGACAATTCTGGCAAACCATTTAACACA"//&
+        "CGTGCGAACTGTCCATGAATTTCTGAAAGAGTTACCCCTCTAAGTAATGAGGTGTTAAGGACGCTTTCAT"//&
+        "TTTCAATGTCGGCTAATCGATTTGGCCATACTACTAAATCCTGAATAGCTTTAAGAAGGTTATGTTTAAA"//&
+        "ACCATCGCTTAATTTGCTGAGATTAACATAGTAGTCAATGCTTTCACCTAAGGAAAAAAACATTTCAGGG"//&
+        "AGTTGACTGAATTTTTTATCTATTAATGAATAAGTGCTTACTTCTTCTTTTTGACCTACAAAACCAATTT"//&
+        "TAACATTTCCGATATCGCATTTTTCACCATGCTCATCAAAGACAGTAAGATAAAACATTGTAACAAAGGA"//&
+        "ATAGTCATTCCAACCATCTGCTCGTAGGAATGCCTTATTTTTTTCTACTGCAGGAATATACCCGCCTCTT"//&
+        "TCAATAACACTAAACTCCAACATATAGTAACCCTTAATTTTATTAAAATAACCGCAATTTATTTGGCGGC"//&
+        "AACACAGGATCTCTCTTTTAAGTTACTCTCTATTACATACGTTTTCCATCTAAAAATTAGTAGTATTGAA"//&
+        "CTTAACGGGGCATCGTATTGTAGTTTTCCATATTTAGCTTTCTGCTTCCTTTTGGATAACCCACTGTTAT"//&
+        "TCATGTTGCATGGTGCACTGTTTATACCAACGATATAGTCTATTAATGCATATATAGTATCGCCGAACGA"//&
+        "TTAGCTCTTCAGGCTTCTGAAGAAGCGTTTCAAGTACTAATAAGCCGATAGATAGCCACGGACTTCGTAG"//&
+        "CCATTTTTCATAAGTGTTAACTTCCGCTCCTCGCTCATAACAGACATTCACTACAGTTATGGCGGAAAGG"//&
+        "TATGCATGCTGGGTGTGGGGAAGTCGTGAAAGAAAAGAAGTCAGCTGCGTCGTTTGACATCACTGCTATC"//&
+        "TTCTTACTGGTTATGCAGGTCGTAGTGGGTGGCACACAAAGCTTTGCACTGGATTGCGAGGCTTTGTGCT"//&
+        "TCTCTGGAGTGCGACAGGTTTGATGACAAAAAATTAGCGCAAGAAGACAAAAATCACCTTGCGCTAATGC"//&
+        "TCTGTTACAGGTCACTAATACCATCTAAGTAGTTGATTCATAGTGACTGCATATGTTGTGTTTTACAGTA"//&
+        "TTATGTAGTCTGTTTTTTATGCAAAATCTAATTTAATATATTGATATTTATATCATTTTACGTTTCTCGT"//&
+        "TCAGCTTTTTTATACTAAGTTGGCATTATAAAAAAGCATTGCTTATCAATTTGTTGCAACGAACAGGTCA"//&
+        "CTATCAGTCAAAATAAAATCATTATTTGATTTCAATTTTGTCCCACTCCCTGCCTCTGTCATCACGATAC"//&
+        "TGTGATGCCATGGTGTCCGACTTATGCCCGAGAAGATGTTGAGCAAACTTATCGCTTATCTGCTTCTCAT"//&
+        "AGAGTCTTGCAGACAAACTGCGCAACTCGTGAAAGGTAGGCGGATCCCCTTCGAAGGAAAGACCTGATGC"//&
+        "TTTTCGTGCGCGCATAAAATACCTTGATACTGTGCCGGATGAAAGCGGTTCGCGACGAGTAGATGCAATT"//&
+        "ATGGTTTCTCCGCCAAGAATCTCTTTGCATTTATCAAGTGTTTCCTTCATTGATATTCCGAGAGCATCAA"//&
+        "TATGCAATGCTGTTGGGATGGCAATTTTTACGCCTGTTTTGCTTTGCTCGACATAAAGATATCCATCTAC"//&
+        "GATATCAGACCACTTCATTTCGCATAAATCACCAACTCGTTGCCCGGTAACAACAGCCAGTTCCATTGCA"//&
+        "AGTCTGAGCCAACATGGTGATGATTCTGCTGCTTGATAAATTTTCAGGTATTCGTCAGCCGTAAGTCTTG"//&
+        "ATCTCCTTACCTCTGATTTTGCTGCGCGAGTGGCAGCGACATGGTTTGTTGTTATATGGCCTTCAGCTAT"//&
+        "TGCCTCTCGGAATGCATCGCTCAGTGTTGATCTGATTAACTTGGCTGACGCCGCCTTGCCCTCGTCTATG"//&
+        "TATCCATTGAGCATTGCCGCAATTTCTTTTGTGGTGATGTCTTCAAGTGGAGCATCAGGCAGACCCCTCC"//&
+        "TTATTGCTTTAATTTTGCTCATGTAATTTATGAGTGTCTTCTGCTTGATTCCTCTGCTGGCCAGGATTTT"//&
+        "TTCGTAGCGATCAAGCCATGAATGTAACGTAACGGAATTATCACTGTTGATTCTCGCTGTCAGAGGCTTG"//&
+        "TGTTTGTGTCCTGAAAATAACTCAATGTTGGCCTGTATAGCTTCAGTGATTGCGATTCGCCTGTCTCTGC"//&
+        "CTAATCCAAACTCTTTACCCGTCCTTGGGTCCCTGTAGCAGTAATATCCATTGTTTCTTATATAAAGGTT"//&
+        "AGGGGGTAAATCCCGGCGCTCATGACTTCGCCTTCTTCCCATTTCTGATCCTCTTCAAAAGGCCACCTGT"//&
+        "TACTGGTCGATTTAAGTCAACCTTTACCGCTGATTCGTGGAACAGATACTCTCTTCCATCCTTAACCGGA"//&
+        "GGTGGGAATATCCTGCATTCCCGAACCCATCGACGAACTGTTTCAAGGCTTCTTGGACGTCGCTGGCGTG"//&
+        "CGTTCCACTCCTGAAGTGTCAAGTACATCGCAAAGTCTCCGCAATTACACGCAAGAAAAAACCGCCATCA"//&
+        "GGCGGCTTGGTGTTCTTTCAGTTCTTCAATTCGAATATTGGTTACGTCTGCATGTGCTATCTGCGCCCAT"//&
+        "ATCATCCAGTGGTCGTAGCAGTCGTTGATGTTCTCCGCTTCGATAACTCTGTTGAATGGCTCTCCATTCC"//&
+        "ATTCTCCTGTGACTCGGAAGTGCATTTATCATCTCCATAAAACAAAACCCGCCGTAGCGAGTTCAGATAA"//&
+        "AATAAATCCCCGCGAGTGCGAGGATTGTTATGTAATATTGGGTTTAATCATCTATATGTTTTGTACAGAG"//&
+        "AGGGCAAGTATCGTTTCCACCGTACTCGTGATAATAATTTTGCACGGTATCAGTCATTTCTCGCACATTG"//&
+        "CAGAATGGGGATTTGTCTTCATTAGACTTATAAACCTTCATGGAATATTTGTATGCCGACTCTATATCTA"//&
+        "TACCTTCATCTACATAAACACCTTCGTGATGTCTGCATGGAGACAAGACACCGGATCTGCACAACATTGA"//&
+        "TAACGCCCAATCTTTTTGCTCAGACTCTAACTCATTGATACTCATTTATAAACTCCTTGCAATGTATGTC"//&
+        "GTTTCAGCTAAACGGTATCAGCAATGTTTATGTAAAGAAACAGTAAGATAATACTCAACCCGATGTTTGA"//&
+        "GTACGGTCATCATCTGACACTACAGACTCTGGCATCGCTGTGAAGACGACGCGAAATTCAGCATTTTCAC"//&
+        "AAGCGTTATCTTTTACAAAACCGATCTCACTCTCCTTTGATGCGAATGCCAGCGTCAGACATCATATGCA"//&
+        "GATACTCACCTGCATCCTGAACCCATTGACCTCCAACCCCGTAATAGCGATGCGTAATGATGTCGATAGT"//&
+        "TACTAACGGGTCTTGTTCGATTAACTGCCGCAGAAACTCTTCCAGGTCACCAGTGCAGTGCTTGATAACA"//&
+        "GGAGTCTTCCCAGGATGGCGAACAACAAGAAACTGGTTTCCGTCTTCACGGACTTCGTTGCTTTCCAGTT"//&
+        "TAGCAATACGCTTACTCCCATCCGAGATAACACCTTCGTAATACTCACGCTGCTCGTTGAGTTTTGATTT"//&
+        "TGCTGTTTCAAGCTCAACACGCAGTTTCCCTACTGTTAGCGCAATATCCTCGTTCTCCTGGTCGCGGCGT"//&
+        "TTGATGTATTGCTGGTTTCTTTCCCGTTCATCCAGCAGTTCCAGCACAATCGATGGTGTTACCAATTCAT"//&
+        "GGAAAAGGTCTGCGTCAAATCCCCAGTCGTCATGCATTGCCTGCTCTGCCGCTTCACGCAGTGCCTGAGA"//&
+        "GTTAATTTCGCTCACTTCGAACCTCTCTGTTTACTGATAAGTTCCAGATCCTCCTGGCAACTTGCACAAG"//&
+        "TCCGACAACCCTGAACGACCAGGCGTCTTCGTTCATCTATCGGATCGCCACACTCACAACAATGAGTGGC"//&
+        "AGATATAGCCTGGTGGTTCAGGCGGCGCATTTTTATTGCTGTGTTGCGCTGTAATTCTTCTATTTCTGAT"//&
+        "GCTGAATCAATGATGTCTGCCATCTTTCATTAATCCCTGAACTGTTGGTTAATACGCTTGAGGGTGAATG"//&
+        "CGAATAATAAAAAAGGAGCCTGTAGCTCCCTGATGATTTTGCTTTTCATGTTCATCGTTCCTTAAAGACG"//&
+        "CCGTTTAACATGCCGATTGCCAGGCTTAAATGAGTCGGTGTGAATCCCATCAGCGTTACCGTTTCGCGGT"//&
+        "GCTTCTTCAGTACGCTACGGCAAATGTCATCGACGTTTTTATCCGGAAACTGCTGTCTGGCTTTTTTTGA"//&
+        "TTTCAGAATTAGCCTGACGGGCAATGCTGCGAAGGGCGTTTTCCTGCTGAGGTGTCATTGAACAAGTCCC"//&
+        "ATGTCGGCAAGCATAAGCACACAGAATATGAAGCCCGCTGCCAGAAAAATGCATTCCGTGGTTGTCATAC"//&
+        "CTGGTTTCTCTCATCTGCTTCTGCTTTCGCCACCATCATTTCCAGCTTTTGTGAAAGGGATGCGGCTAAC"//&
+        "GTATGAAATTCTTCGTCTGTTTCTACTGGTATTGGCACAAACCTGATTCCAATTTGAGCAAGGCTATGTG"//&
+        "CCATCTCGATACTCGTTCTTAACTCAACAGAAGATGCTTTGTGCATACAGCCCCTCGTTTATTATTTATC"//&
+        "TCCTCAGCCAGCCGCTGTGCTTTCAGTGGATTTCGGATAACAGAAAGGCCGGGAAATACCCAGCCTCGCT"//&
+        "TTGTAACGGAGTAGACGAAAGTGATTGCGCCTACCCGGATATTATCGTGAGGATGCGTCATCGCCATTGC"//&
+        "TCCCCAAATACAAAACCAATTTCAGCCAGTGCCTCGTCCATTTTTTCGATGAACTCCGGCACGATCTCGT"//&
+        "CAAAACTCGCCATGTACTTTTCATCCCGCTCAATCACGACATAATGCAGGCCTTCACGCTTCATACGCGG"//&
+        "GTCATAGTTGGCAAAGTACCAGGCATTTTTTCGCGTCACCCACATGCTGTACTGCACCTGGGCCATGTAA"//&
+        "GCTGACTTTATGGCCTCGAAACCACCGAGCCGGAACTTCATGAAATCCCGGGAGGTAAACGGGCATTTCA"//&
+        "GTTCAAGGCCGTTGCCGTCACTGCATAAACCATCGGGAGAGCAGGCGGTACGCATACTTTCGTCGCGATA"//&
+        "GATGATCGGGGATTCAGTAACATTCACGCCGGAAGTGAATTCAAACAGGGTTCTGGCGTCGTTCTCGTAC"//&
+        "TGTTTTCCCCAGGCCAGTGCTTTAGCGTTAACTTCCGGAGCCACACCGGTGCAAACCTCAGCAAGCAGGG"//&
+        "TGTGGAAGTAGGACATTTTCATGTCAGGCCACTTCTTTCCGGAGCGGGGTTTTGCTATCACGTTGTGAAC"//&
+        "TTCTGAAGCGGTGATGACGCCGAGCCGTAATTTGTGCCACGCATCATCCCCCTGTTCGACAGCTCTCACA"//&
+        "TCGATCCCGGTACGCTGCAGGATAATGTCCGGTGTCATGCTGCCACCTTCTGCTCTGCGGCTTTCTGTTT"//&
+        "CAGGAATCCAAGAGCTTTTACTGCTTCGGCCTGTGTCAGTTCTGACGATGCACGAATGTCGCGGCGAAAT"//&
+        "ATCTGGGAACAGAGCGGCAATAAGTCGTCATCCCATGTTTTATCCAGGGCGATCAGCAGAGTGTTAATCT"//&
+        "CCTGCATGGTTTCATCGTTAACCGGAGTGATGTCGCGTTCCGGCTGACGTTCTGCAGTGTATGCAGTATT"//&
+        "TTCGACAATGCGCTCGGCTTCATCCTTGTCATAGATACCAGCAAATCCGAAGGCCAGACGGGCACACTGA"//&
+        "ATCATGGCTTTATGACGTAACATCCGTTTGGGATGCGACTGCCACGGCCCCGTGATTTCTCTGCCTTCGC"//&
+        "GAGTTTTGAATGGTTCGCGGCGGCATTCATCCATCCATTCGGTAACGCAGATCGGATGATTACGGTCCTT"//&
+        "GCGGTAAATCCGGCATGTACAGGATTCATTGTCCTGCTCAAAGTCCATGCCATCAAACTGCTGGTTTTCA"//&
+        "TTGATGATGCGGGACCAGCCATCAACGCCCACCACCGGAACGATGCCATTCTGCTTATCAGGAAAGGCGT"//&
+        "AAATTTCTTTCGTCCACGGATTAAGGCCGTACTGGTTGGCAACGATCAGTAATGCGATGAACTGCGCATC"//&
+        "GCTGGCATCACCTTTAAATGCCGTCTGGCGAAGAGTGGTGATCAGTTCCTGTGGGTCGACAGAATCCATG"//&
+        "CCGACACGTTCAGCCAGCTTCCCAGCCAGCGTTGCGAGTGCAGTACTCATTCGTTTTATACCTCTGAATC"//&
+        "AATATCAACCTGGTGGTGAGCAATGGTTTCAACCATGTACCGGATGTGTTCTGCCATGCGCTCCTGAAAC"//&
+        "TCAACATCGTCATCAAACGCACGGGTAATGGATTTTTTGCTGGCCCCGTGGCGTTGCAAATGATCGATGC"//&
+        "ATAGCGATTCAAACAGGTGCTGGGGCAGGCCTTTTTCCATGTCGTCTGCCAGTTCTGCCTCTTTCTCTTC"//&
+        "ACGGGCGAGCTGCTGGTAGTGACGCGCCCAGCTCTGAGCCTCAAGACGATCCTGAATGTAATAAGCGTTC"//&
+        "ATGGCTGAACTCCTGAAATAGCTGTGAAAATATCGCCCGCGAAATGCCGGGCTGATTAGGAAAACAGGAA"//&
+        "AGGGGGTTAGTGAATGCTTTTGCTTGATCTCAGTTTCAGTATTAATATCCATTTTTTATAAGCGTCGACG"//&
+        "GCTTCACGAAACATCTTTTCATCGCCAATAAAAGTGGCGATAGTGAATTTAGTCTGGATAGCCATAAGTG"//&
+        "TTTGATCCATTCTTTGGGACTCCTGGCTGATTAAGTATGTCGATAAGGCGTTTCCATCCGTCACGTAATT"//&
+        "TACGGGTGATTCGTTCAAGTAAAGATTCGGAAGGGCAGCCAGCAACAGGCCACCCTGCAATGGCATATTG"//&
+        "CATGGTGTGCTCCTTATTTATACATAACGAAAAACGCCTCGAGTGAAGCGTTATTGGTATGCGGTAAAAC"//&
+        "CGCACTCAGGCGGCCTTGATAGTCATATCATCTGAATCAAATATTCCTGATGTATCGATATCGGTAATTC"//&
+        "TTATTCCTTCGCTACCATCCATTGGAGGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACTCACA"//&
+        "CACAACACCATATGCATTTAAGTCGCTTGAAATTGCTATAAGCAGAGCATGTTGCGCCAGCATGATTAAT"//&
+        "ACAGCATTTAATACAGAGCCGTGTTTATTGAGTCGGTATTCAGAGTCTGACCAGAAATTATTAATCTGGT"//&
+        "GAAGTTTTTCCTCTGTCATTACGTCATGGTCGATTTCAATTTCTATTGATGCTTTCCAGTCGTAATCAAT"//&
+        "GATGTATTTTTTGATGTTTGACATCTGTTCATATCCTCACAGATAAAAAATCGCCCTCACACTGGAGGGC"//&
+        "AAAGAAGATTTCCAATAATCAGAACAAGTCGGCTCCTGTTTAGTTACGAGCGACATTGCTCCGTGTATTC"//&
+        "ACTCGTTGGAATGAATACACAGTGCAGTGTTTATTCTGTTATTTATGCCAAAAATAAAGGCCACTATCAG"//&
+        "GCAGCTTTGTTGTTCTGTTTACCAAGTTCTCTGGCAATCATTGCCGTCGTTCGTATTGCCCATTTATCGA"//&
+        "CATATTTCCCATCTTCCATTACAGGAAACATTTCTTCAGGCTTAACCATGCATTCCGATTGCAGCTTGCA"//&
+        "TCCATTGCATCGCTTGAATTGTCCACACCATTGATTTTTATCAATAGTCGTAGTCATACGGATAGTCCTG"//&
+        "GTATTGTTCCATCACATCCTGAGGATGCTCTTCGAACTCTTCAAATTCTTCTTCCATATATCACCTTAAA"//&
+        "TAGTGGATTGCGGTAGTAAAGATTGTGCCTGTCTTTTAACCACATCAGGCTCGGTGGTTCTCGTGTACCC"//&
+        "CTACAGCGAGAAATCGGATAAACTATTACAACCCCTACAGTTTGATGAGTATAGAAATGGATCCACTCGT"//&
+        "TATTCTCGGACGAGTGTTCAGTAATGAACCTCTGGAGAGAACCATGTATATGATCGTTATCTGGGTTGGA"//&
+        "CTTCTGCTTTTAAGCCCAGATAACTGGCCTGAATATGTTAATGAGAGAATCGGTATTCCTCATGTGTGGC"//&
+        "ATGTTTTCGTCTTTGCTCTTGCATTTTCGCTAGCAATTAATGTGCATCGATTATCAGCTATTGCCAGCGC"//&
+        "CAGATATAAGCGATTTAAGCTAAGAAAACGCATTAAGATGCAAAACGATAAAGTGCGATCAGTAATTCAA"//&
+        "AACCTTACAGAAGAGCAATCTATGGTTTTGTGCGCAGCCCTTAATGAAGGCAGGAAGTATGTGGTTACAT"//&
+        "CAAAACAATTCCCATACATTAGTGAGTTGATTGAGCTTGGTGTGTTGAACAAAACTTTTTCCCGATGGAA"//&
+        "TGGAAAGCATATATTATTCCCTATTGAGGATATTTACTGGACTGAATTAGTTGCCAGCTATGATCCATAT"//&
+        "AATATTGAGATAAAGCCAAGGCCAATATCTAAGTAACTAGATAAGAGGAATCGATTTTCCCTTAATTTTC"//&
+        "TGGCGTCCACTGCATGTTATGCCGCGTTCGCCAGGCTTGCTGTACCATGTGCGCTGATTCTTGCGCTCAA"//&
+        "TACGTTGCAGGTTGCTTTCAATCTGTTTGTGGTATTCAGCCAGCACTGTAAGGTCTATCGGATTTAGTGC"//&
+        "GCTTTCTACTCGTGATTTCGGTTTGCGATTCAGCGAGAGAATAGGGCGGTTAACTGGTTTTGCGCTTACC"//&
+        "CCAACCAACAGGGGATTTGCTGCTTTCCATTGAGCCTGTTTCTCTGCGCGACGTTCGCGGCGGCGTGTTT"//&
+        "GTGCATCCATCTGGATTCTCCTGTCAGTTAGCTTTGGTGGTGTGTGGCAGTTGTAGTCCTGAACGAAAAC"//&
+        "CCCCCGCGATTGGCACATTGGCAGCTAATCCGGAATCGCACTTACGGCCAATGCTTCGTTTCGTATCACA"//&
+        "CACCCCAAAGCCTTCTGCTTTGAATGCTGCCCTTCTTCAGGGCTTAATTTTTAAGAGCGTCACCTTCATG"//&
+        "GTGGTCAGTGCGTCCTGCTGATGTGCTCAGTATCACCGCCAGTGGTATTTATGTCAACACCGCCAGAGAT"//&
+        "AATTTATCACCGCAGATGGTTATCTGTATGTTTTTTATATGAATTTATTTTTTGCAGGGGGGCATTGTTT"//&
+        "GGTAGGTGAGAGATCTGAATTGCTATGTTTAGTGAGTTGTATCTATTTATTTTTCAATAAATACAATTGG"//&
+        "TTATGTGTTTTGGGGGCGATCGTGAGGCAAAGAAAACCCGGCGCTGAGGCCGGGTTATTCTTGTTCTCTG"//&
+        "GTCAAATTATATAGTTGGAAAACAAGGATGCATATATGAATGAACGATGCAGAGGCAATGCCGATGGCGA"//&
+        "TAGTGGGTATCATGTAGCCGCTTATGCTGGAAAGAAGCAATAACCCGCAGAAAAACAAAGCTCCAAGCTC"//&
+        "AACAAAACTAAGGGCATAGACAATAACTACCGATGTCATATACCCATACTCTCTAATCTTGGCCAGTCGG"//&
+        "CGCGTTCTGCTTCCGATTAGAAACGTCAAGGCAGCAATCAGGATTGCAATCATGGTTCCTGCATATGATG"//&
+        "ACAATGTCGCCCCAAGACCATCTCTATGAGCTGAAAAAGAAACACCAGGAATGTAGTGGCGGAAAAGGAG"//&
+        "ATAGCAAATGCTTACGATAACGTAAGGAATTATTACTATGTAAACACCAGGCATGATTCTGTTCCGCATA"//&
+        "ATTACTCCTGATAATTAATCCTTAACTTTGCCCACCTGCCTTTTAAAACATTCCAGTATATCACTTTTCA"//&
+        "TTCTTGCGTAGCAATATGCCATCTCTTCAGCTATCTCAGCATTGGTGACCTTGTTCAGAGGCGCTGAGAG"//&
+        "ATGGCCTTTTTCTGATAGATAATGTTCTGTTAAAATATCTCCGGCCTCATCTTTTGCCCGCAGGCTAATG"//&
+        "TCTGAAAATTGAGGTGACGGGTTAAAAATAATATCCTTGGCAACCTTTTTTATATCCCTTTTAAATTTTG"//&
+        "GCTTAATGACTATATCCAATGAGTCAAAAAGCTCCCCTTCAATATCTGTTGCCCCTAAGACCTTTAATAT"//&
+        "ATCGCCAAATACAGGTAGCTTGGCTTCTACCTTCACCGTTGTTCGGCCGATGAAATGCATATGCATAACA"//&
+        "TCGTCTTTGGTGGTTCCCCTCATCAGTGGCTCTATCTGAACGCGCTCTCCACTGCTTAATGACATTCCTT"//&
+        "TCCCGATTAAAAAATCTGTCAGATCGGATGTGGTCGGCCCGAAAACAGTTCTGGCAAAACCAATGGTGTC"//&
+        "GCCTTCAACAAACAAAAAAGATGGGAATCCCAATGATTCGTCATCTGCGAGGCTGTTCTTAATATCTTCA"//&
+        "ACTGAAGCTTTAGAGCGATTTATCTTCTGAACCAGACTCTTGTCATTTGTTTTGGTAAAGAGAAAAGTTT"//&
+        "TTCCATCGATTTTATGAATATACAAATAATTGGAGCCAACCTGCAGGTGATGATTATCAGCCAGCAGAGA"//&
+        "ATTAAGGAAAACAGACAGGTTTATTGAGCGCTTATCTTTCCCTTTATTTTTGCTGCGGTAAGTCGCATAA"//&
+        "AAACCATTCTTCATAATTCAATCCATTTACTATGTTATGTTCTGAGGGGAGTGAAAATTCCCCTAATTCG"//&
+        "ATGAAGATTCTTGCTCAATTGTTATCAGCTATGCGCCGACCAGAACACCTTGCCGATCAGCCAAACGTCT"//&
+        "CTTCAGGCCACTGACTAGCGATAACTTTCCCCACAACGGAACAACTCTCATTGCATGGGATCATTGGGTA"//&
+        "CTGTGGGTTTAGTGGTTGTAAAAACACCTGACCGCTATCCCTGATCAGTTTCTTGAAGGTAAACTCATCA"//&
+        "CCCCCAAGTCTGGCTATGCAGAAATCACCTGGCTCAACAGCCTGCTCAGGGTCAACGAGAATTAACATTC"//&
+        "CGTCAGGAAAGCTTGGCTTGGAGCCTGTTGGTGCGGTCATGGAATTACCTTCAACCTCAAGCCAGAATGC"//&
+        "AGAATCACTGGCTTTTTTGGTTGTGCTTACCCATCTCTCCGCATCACCTTTGGTAAAGGTTCTAAGCTTA"//&
+        "GGTGAGAACATCCCTGCCTGAACATGAGAAAAAACAGGGTACTCATACTCACTTCTAAGTGACGGCTGCA"//&
+        "TACTAACCGCTTCATACATCTCGTAGATTTCTCTGGCGATTGAAGGGCTAAATTCTTCAACGCTAACTTT"//&
+        "GAGAATTTTTGTAAGCAATGCGGCGTTATAAGCATTTAATGCATTGATGCCATTAAATAAAGCACCAACG"//&
+        "CCTGACTGCCCCATCCCCATCTTGTCTGCGACAGATTCCTGGGATAAGCCAAGTTCATTTTTCTTTTTTT"//&
+        "CATAAATTGCTTTAAGGCGACGTGCGTCCTCAAGCTGCTCTTGTGTTAATGGTTTCTTTTTTGTGCTCAT"//&
+        "ACGTTAAATCTATCACCGCAAGGGATAAATATCTAACACCGTGCGTGTTGACTATTTTACCTCTGGCGGT"//&
+        "GATAATGGTTGCATGTACTAAGGAGGTTGTATGGAACAACGCATAACCCTGAAAGATTATGCAATGCGCT"//&
+        "TTGGGCAAACCAAGACAGCTAAAGATCTCGGCGTATATCAAAGCGCGATCAACAAGGCCATTCATGCAGG"//&
+        "CCGAAAGATTTTTTTAACTATAAACGCTGATGGAAGCGTTTATGCGGAAGAGGTAAAGCCCTTCCCGAGT"//&
+        "AACAAAAAAACAACAGCATAAATAACCCCGCTCTTACACATTCCAGCCCTGAAAAAGGGCATCAAATTAA"//&
+        "ACCACACCTATGGTGTATGCATTTATTTGCATACATTCAATCAATTGTTATCTAAGGAAATACTTACATA"//&
+        "TGGTTCGTGCAAACAAACGCAACGAGGCTCTACGAATCGAGAGTGCGTTGCTTAACAAAATCGCAATGCT"//&
+        "TGGAACTGAGAAGACAGCGGAAGCTGTGGGCGTTGATAAGTCGCAGATCAGCAGGTGGAAGAGGGACTGG"//&
+        "ATTCCAAAGTTCTCAATGCTGCTTGCTGTTCTTGAATGGGGGGTCGTTGACGACGACATGGCTCGATTGG"//&
+        "CGCGACAAGTTGCTGCGATTCTCACCAATAAAAAACGCCCGGCGGCAACCGAGCGTTCTGAACAAATCCA"//&
+        "GATGGAGTTCTGAGGTCATTACTGGATCTATCAACAGGAGTCATTATGACAAATACAGCAAAAATACTCA"//&
+        "ACTTCGGCAGAGGTAACTTTGCCGGACAGGAGCGTAATGTGGCAGATCTCGATGATGGTTACGCCAGACT"//&
+        "ATCAAATATGCTGCTTGAGGCTTATTCGGGCGCAGATCTGACCAAGCGACAGTTTAAAGTGCTGCTTGCC"//&
+        "ATTCTGCGTAAAACCTATGGGTGGAATAAACCAATGGACAGAATCACCGATTCTCAACTTAGCGAGATTA"//&
+        "CAAAGTTACCTGTCAAACGGTGCAATGAAGCCAAGTTAGAACTCGTCAGAATGAATATTATCAAGCAGCA"//&
+        "AGGCGGCATGTTTGGACCAAATAAAAACATCTCAGAATGGTGCATCCCTCAAAACGAGGGAAAATCCCCT"//&
+        "AAAACGAGGGATAAAACATCCCTCAAATTGGGGGATTGCTATCCCTCAAAACAGGGGGACACAAAAGACA"//&
+        "CTATTACAAAAGAAAAAAGAAAAGATTATTCGTCAGAGAATTCTGGCGAATCCTCTGACCAGCCAGAAAA"//&
+        "CGACCTTTCTGTGGTGAAACCGGATGCTGCAATTCAGAGCGGCAGCAAGTGGGGGACAGCAGAAGACCTG"//&
+        "ACCGCCGCAGAGTGGATGTTTGACATGGTGAAGACTATCGCACCATCAGCCAGAAAACCGAATTTTGCTG"//&
+        "GGTGGGCTAACGATATCCGCCTGATGCGTGAACGTGACGGACGTAACCACCGCGACATGTGTGTGCTGTT"//&
+        "CCGCTGGGCATGCCAGGACAACTTCTGGTCCGGTAACGTGCTGAGCCCGGCCAAACTCCGCGATAAGTGG"//&
+        "ACCCAACTCGAAATCAACCGTAACAAGCAACAGGCAGGCGTGACAGCCAGCAAACCAAAACTCGACCTGA"//&
+        "CAAACACAGACTGGATTTACGGGGTGGATCTATGAAAAACATCGCCGCACAGATGGTTAACTTTGACCGT"//&
+        "GAGCAGATGCGTCGGATCGCCAACAACATGCCGGAACAGTACGACGAAAAGCCGCAGGTACAGCAGGTAG"//&
+        "CGCAGATCATCAACGGTGTGTTCAGCCAGTTACTGGCAACTTTCCCGGCGAGCCTGGCTAACCGTGACCA"//&
+        "GAACGAAGTGAACGAAATCCGTCGCCAGTGGGTTCTGGCTTTTCGGGAAAACGGGATCACCACGATGGAA"//&
+        "CAGGTTAACGCAGGAATGCGCGTAGCCCGTCGGCAGAATCGACCATTTCTGCCATCACCCGGGCAGTTTG"//&
+        "TTGCATGGTGCCGGGAAGAAGCATCCGTTACCGCCGGACTGCCAAACGTCAGCGAGCTGGTTGATATGGT"//&
+        "TTACGAGTATTGCCGGAAGCGAGGCCTGTATCCGGATGCGGAGTCTTATCCGTGGAAATCAAACGCGCAC"//&
+        "TACTGGCTGGTTACCAACCTGTATCAGAACATGCGGGCCAATGCGCTTACTGATGCGGAATTACGCCGTA"//&
+        "AGGCCGCAGATGAGCTTGTCCATATGACTGCGAGAATTAACCGTGGTGAGGCGATCCCTGAACCAGTAAA"//&
+        "ACAACTTCCTGTCATGGGCGGTAGACCTCTAAATCGTGCACAGGCTCTGGCGAAGATCGCAGAAATCAAA"//&
+        "GCTAAGTTCGGACTGAAAGGAGCAAGTGTATGACGGGCAAAGAGGCAATTATTCATTACCTGGGGACGCA"//&
+        "TAATAGCTTCTGTGCGCCGGACGTTGCCGCGCTAACAGGCGCAACAGTAACCAGCATAAATCAGGCCGCG"//&
+        "GCTAAAATGGCACGGGCAGGTCTTCTGGTTATCGAAGGTAAGGTCTGGCGAACGGTGTATTACCGGTTTG"//&
+        "CTACCAGGGAAGAACGGGAAGGAAAGATGAGCACGAACCTGGTTTTTAAGGAGTGTCGCCAGAGTGCCGC"//&
+        "GATGAAACGGGTATTGGCGGTATATGGAGTTAAAAGATGACCATCTACATTACTGAGCTAATAACAGGCC"//&
+        "TGCTGGTAATCGCAGGCCTTTTTATTTGGGGGAGAGGGAAGTCATGAAAAAACTAACCTTTGAAATTCGA"//&
+        "TCTCCAGCACATCAGCAAAACGCTATTCACGCAGTACAGCAAATCCTTCCAGACCCAACCAAACCAATCG"//&
+        "TAGTAACCATTCAGGAACGCAACCGCAGCTTAGACCAAAACAGGAAGCTATGGGCCTGCTTAGGTGACGT"//&
+        "CTCTCGTCAGGTTGAATGGCATGGTCGCTGGCTGGATGCAGAAAGCTGGAAGTGTGTGTTTACCGCAGCA"//&
+        "TTAAAGCAGCAGGATGTTGTTCCTAACCTTGCCGGGAATGGCTTTGTGGTAATAGGCCAGTCAACCAGCA"//&
+        "GGATGCGTGTAGGCGAATTTGCGGAGCTATTAGAGCTTATACAGGCATTCGGTACAGAGCGTGGCGTTAA"//&
+        "GTGGTCAGACGAAGCGAGACTGGCTCTGGAGTGGAAAGCGAGATGGGGAGACAGGGCTGCATGATAAATG"//&
+        "TCGTTAGTTTCTCCGGTGGCAGGACGTCAGCATATTTGCTCTGGCTAATGGAGCAAAAGCGACGGGCAGG"//&
+        "TAAAGACGTGCATTACGTTTTCATGGATACAGGTTGTGAACATCCAATGACATATCGGTTTGTCAGGGAA"//&
+        "GTTGTGAAGTTCTGGGATATACCGCTCACCGTATTGCAGGTTGATATCAACCCGGAGCTTGGACAGCCAA"//&
+        "ATGGTTATACGGTATGGGAACCAAAGGATATTCAGACGCGAATGCCTGTTCTGAAGCCATTTATCGATAT"//&
+        "GGTAAAGAAATATGGCACTCCATACGTCGGCGGCGCGTTCTGCACTGACAGATTAAAACTCGTTCCCTTC"//&
+        "ACCAAATACTGTGATGACCATTTCGGGCGAGGGAATTACACCACGTGGATTGGCATCAGAGCTGATGAAC"//&
+        "CGAAGCGGCTAAAGCCAAAGCCTGGAATCAGATATCTTGCTGAACTGTCAGACTTTGAGAAGGAAGATAT"//&
+        "CCTCGCATGGTGGAAGCAACAACCATTCGATTTGCAAATACCGGAACATCTCGGTAACTGCATATTCTGC"//&
+        "ATTAAAAAATCAACGCAAAAAATCGGACTTGCCTGCAAAGATGAGGAGGGATTGCAGCGTGTTTTTAATG"//&
+        "AGGTCATCACGGGATCCCATGTGCGTGACGGACATCGGGAAACGCCAAAGGAGATTATGTACCGAGGAAG"//&
+        "AATGTCGCTGGACGGTATCGCGAAAATGTATTCAGAAAATGATTATCAAGCCCTGTATCAGGACATGGTA"//&
+        "CGAGCTAAAAGATTCGATACCGGCTCTTGTTCTGAGTCATGCGAAATATTTGGAGGGCAGCTTGATTTCG"//&
+        "ACTTCGGGAGGGAAGCTGCATGATGCGATGTTATCGGTGCGGTGAATGCAAAGAAGATAACCGCTTCCGA"//&
+        "CCAAATCAACCTTACTGGAATCGATGGTGTCTCCGGTGTGAAAGAACACCAACAGGGGTGTTACCACTAC"//&
+        "CGCAGGAAAAGGAGGACGTGTGGCGAGACAGCGACGAAGTATCACCGACATAATCTGCGAAAACTGCAAA"//&
+        "TACCTTCCAACGAAACGCACCAGAAATAAACCCAAGCCAATCCCAAAAGAATCTGACGTAAAAACCTTCA"//&
+        "ACTACACGGCTCACCTGTGGGATATCCGGTGGCTAAGACGTCGTGCGAGGAAAACAAGGTGATTGACCAA"//&
+        "AATCGAAGTTACGAACAAGAAAGCGTCGAGCGAGCTTTAACGTGCGCTAACTGCGGTCAGAAGCTGCATG"//&
+        "TGCTGGAAGTTCACGTGTGTGAGCACTGCTGCGCAGAACTGATGAGCGATCCGAATAGCTCGATGCACGA"//&
+        "GGAAGAAGATGATGGCTAAACCAGCGCGAAGACGATGTAAAAACGATGAATGCCGGGAATGGTTTCACCC"//&
+        "TGCATTCGCTAATCAGTGGTGGTGCTCTCCAGAGTGTGGAACCAAGATAGCACTCGAACGACGAAGTAAA"//&
+        "GAACGCGAAAAAGCGGAAAAAGCAGCAGAGAAGAAACGACGACGAGAGGAGCAGAAACAGAAAGATAAAC"//&
+        "TTAAGATTCGAAAACTCGCCTTAAAGCCCCGCAGTTACTGGATTAAACAAGCCCAACAAGCCGTAAACGC"//&
+        "CTTCATCAGAGAAAGAGACCGCGACTTACCATGTATCTCGTGCGGAACGCTCACGTCTGCTCAGTGGGAT"//&
+        "GCCGGACATTACCGGACAACTGCTGCGGCACCTCAACTCCGATTTAATGAACGCAATATTCACAAGCAAT"//&
+        "GCGTGGTGTGCAACCAGCACAAAAGCGGAAATCTCGTTCCGTATCGCGTCGAACTGATTAGCCGCATCGG"//&
+        "GCAGGAAGCAGTAGACGAAATCGAATCAAACCATAACCGCCATCGCTGGACTATCGAAGAGTGCAAGGCG"//&
+        "ATCAAGGCAGAGTACCAACAGAAACTCAAAGACCTGCGAAATAGCAGAAGTGAGGCCGCATGACGTTCTC"//&
+        "AGTAAAAACCATTCCAGACATGCTCGTTGAAACATACGGAAATCAGACAGAAGTAGCACGCAGACTGAAA"//&
+        "TGTAGTCGCGGTACGGTCAGAAAATACGTTGATGATAAAGACGGGAAAATGCACGCCATCGTCAACGACG"//&
+        "TTCTCATGGTTCATCGCGGATGGAGTGAAAGAGATGCGCTATTACGAAAAAATTGATGGCAGCAAATACC"//&
+        "GAAATATTTGGGTAGTTGGCGATCTGCACGGATGCTACACGAACCTGATGAACAAACTGGATACGATTGG"//&
+        "ATTCGACAACAAAAAAGACCTGCTTATCTCGGTGGGCGATTTGGTTGATCGTGGTGCAGAGAACGTTGAA"//&
+        "TGCCTGGAATTAATCACATTCCCCTGGTTCAGAGCTGTACGTGGAAACCATGAGCAAATGATGATTGATG"//&
+        "GCTTATCAGAGCGTGGAAACGTTAATCACTGGCTGCTTAATGGCGGTGGCTGGTTCTTTAATCTCGATTA"//&
+        "CGACAAAGAAATTCTGGCTAAAGCTCTTGCCCATAAAGCAGATGAACTTCCGTTAATCATCGAACTGGTG"//&
+        "AGCAAAGATAAAAAATATGTTATCTGCCACGCCGATTATCCCTTTGACGAATACGAGTTTGGAAAGCCAG"//&
+        "TTGATCATCAGCAGGTAATCTGGAACCGCGAACGAATCAGCAACTCACAAAACGGGATCGTGAAAGAAAT"//&
+        "CAAAGGCGCGGACACGTTCATCTTTGGTCATACGCCAGCAGTGAAACCACTCAAGTTTGCCAACCAAATG"//&
+        "TATATCGATACCGGCGCAGTGTTCTGCGGAAACCTAACATTGATTCAGGTACAGGGAGAAGGCGCATGAG"//&
+        "ACTCGAAAGCGTAGCTAAATTTCATTCGCCAAAAAGCCCGATGATGAGCGACTCACCACGGGCCACGGCT"//&
+        "TCTGACTCTCTTTCCGGTACTGATGTGATGGCTGCTATGGGGATGGCGCAATCACAAGCCGGATTCGGTA"//&
+        "TGGCTGCATTCTGCGGTAAGCACGAACTCAGCCAGAACGACAAACAAAAGGCTATCAACTATCTGATGCA"//&
+        "ATTTGCACACAAGGTATCGGGGAAATACCGTGGTGTGGCAAAGCTTGAAGGAAATACTAAGGCAAAGGTA"//&
+        "CTGCAAGTGCTCGCAACATTCGCTTATGCGGATTATTGCCGTAGTGCCGCGACGCCGGGGGCAAGATGCA"//&
+        "GAGATTGCCATGGTACAGGCCGTGCGGTTGATATTGCCAAAACAGAGCTGTGGGGGAGAGTTGTCGAGAA"//&
+        "AGAGTGCGGAAGATGCAAAGGCGTCGGCTATTCAAGGATGCCAGCAAGCGCAGCATATCGCGCTGTGACG"//&
+        "ATGCTAATCCCAAACCTTACCCAACCCACCTGGTCACGCACTGTTAAGCCGCTGTATGACGCTCTGGTGG"//&
+        "TGCAATGCCACAAAGAAGAGTCAATCGCAGACAACATTTTGAATGCGGTCACACGTTAGCAGCATGATTG"//&
+        "CCACGGATGGCAACATATTAACGGCATGATATTGACTTATTGAATAAAATTGGGTAAATTTGACTCAACG"//&
+        "ATGGGTTAATTCGCTCGTTGTGGTAGTGAGATGAAAAGAGGCGGCGCTTACTACCGATTCCGCCTAGTTG"//&
+        "GTCACTTCGACGTATCGTCTGGAACTCCAACCATCGCAGGCAGAGAGGTCTGCAAAATGCAATCCCGAAA"//&
+        "CAGTTCGCAGGTAATAGTTAGAGCCTGCATAACGGTTTCGGGATTTTTTATATCTGCACAACAGGTAAGA"//&
+        "GCATTGAGTCGATAATCGTGAAGAGTCGGCGAGCCTGGTTAGCCAGTGCTCTTTCCGTTGTGCTGAATTA"//&
+        "AGCGAATACCGGAAGCAGAACCGGATCACCAAATGCGTACAGGCGTCATCGCCGCCCAGCAACAGCACAA"//&
+        "CCCAAACTGAGCCGTAGCCACTGTCTGTCCTGAATTCATTAGTAATAGTTACGCTGCGGCCTTTTACACA"//&
+        "TGACCTTCGTGAAAGCGGGTGGCAGGAGGTCGCGCTAACAACCTCCTGCCGTTTTGCCCGTGCATATCGG"//&
+        "TCACGAACAAATCTGATTACTAAACACAGTAGCCTGGATTTGTTCTATCAGTAATCGACCTTATTCCTAA"//&
+        "TTAAATAGAGCAAATCCCCTTATTGGGGGTAAGACATGAAGATGCCAGAAAAACATGACCTGTTGGCCGC"//&
+        "CATTCTCGCGGCAAAGGAACAAGGCATCGGGGCAATCCTTGCGTTTGCAATGGCGTACCTTCGCGGCAGA"//&
+        "TATAATGGCGGTGCGTTTACAAAAACAGTAATCGACGCAACGATGTGCGCCATTATCGCCTAGTTCATTC"//&
+        "GTGACCTTCTCGACTTCGCCGGACTAAGTAGCAATCTCGCTTATATAACGAGCGTGTTTATCGGCTACAT"//&
+        "CGGTACTGACTCGATTGGTTCGCTTATCAAACGCTTCGCTGCTAAAAAAGCCGGAGTAGAAGATGGTAGA"//&
+        "AATCAATAATCAACGTAAGGCGTTCCTCGATATGCTGGCGTGGTCGGAGGGAACTGATAACGGACGTCAG"//&
+        "AAAACCAGAAATCATGGTTATGACGTCATTGTAGGCGGAGAGCTATTTACTGATTACTCCGATCACCCTC"//&
+        "GCAAACTTGTCACGCTAAACCCAAAACTCAAATCAACAGGCGCCGGACGCTACCAGCTTCTTTCCCGTTG"//&
+        "GTGGGATGCCTACCGCAAGCAGCTTGGCCTGAAAGACTTCTCTCCGAAAAGTCAGGACGCTGTGGCATTG"//&
+        "CAGCAGATTAAGGAGCGTGGCGCTTTACCTATGATTGATCGTGGTGATATCCGTCAGGCAATCGACCGTT"//&
+        "GCAGCAATATCTGGGCTTCACTGCCGGGCGCTGGTTATGGTCAGTTCGAGCATAAGGCTGACAGCCTGAT"//&
+        "TGCAAAATTCAAAGAAGCGGGCGGAACGGTCAGAGAGATTGATGTATGAGCAGAGTCACCGCGATTATCT"//&
+        "CCGCTCTGGTTATCTGCATCATCGTCTGCCTGTCATGGGCTGTTAATCATTACCGTGATAACGCCATTAC"//&
+        "CTACAAAGCCCAGCGCGACAAAAATGCCAGAGAACTGAAGCTGGCGAACGCGGCAATTACTGACATGCAG"//&
+        "ATGCGTCAGCGTGATGTTGCTGCGCTCGATGCAAAATACACGAAGGAGTTAGCTGATGCTAAAGCTGAAA"//&
+        "ATGATGCTCTGCGTGATGATGTTGCCGCTGGTCGTCGTCGGTTGCACATCAAAGCAGTCTGTCAGTCAGT"//&
+        "GCGTGAAGCCACCACCGCCTCCGGCGTGGATAATGCAGCCTCCCCCCGACTGGCAGACACCGCTGAACGG"//&
+        "GATTATTTCACCCTCAGAGAGAGGCTGATCACTATGCAAAAACAACTGGAAGGAACCCAGAAGTATATTA"//&
+        "ATGAGCAGTGCAGATAGAGTTGCCCATATCGATGGGCAACTCATGCAATTATTGTGAGCAATACACACGC"//&
+        "GCTTCCAGCGGAGTATAAATGCCTAAAGTAATAAAACCGAGCAATCCATTTACGAATGTTTGCTGGGTTT"//&
+        "CTGTTTTAACAACATTTTCTGCGCCGCCACAAATTTTGGCTGCATCGACAGTTTTCTTCTGCCCAATTCC"//&
+        "AGAAACGAAGAAATGATGGGTGATGGTTTCCTTTGGTGCTACTGCTGCCGGTTTGTTTTGAACAGTAAAC"//&
+        "GTCTGTTGAGCACATCCTGTAATAAGCAGGGCCAGCGCAGTAGCGAGTAGCATTTTTTTCATGGTGTTAT"//&
+        "TCCCGATGCTTTTTGAAGTTCGCAGAATCGTATGTGTAGAAAATTAAACAAACCCTAAACAATGAGTTGA"//&
+        "AATTTCATATTGTTAATATTTATTAATGTATGTCAGGTGCGATGAATCGTCATTGTATTCCCGGATTAAC"//&
+        "TATGTCCACAGCCCTGACGGGGAACTTCTCTGCGGGAGTGTCCGGGAATAATTAAAACGATGCACACAGG"//&
+        "GTTTAGCGCGTACACGTATTGCATTATGCCAACGCCCCGGTGCTGACACGGAAGAAACCGGACGTTATGA"//&
+        "TTTAGCGTGGAAAGATTTGTGTAGTGTTCTGAATGCTCTCAGTAAATAGTAATGAATTATCAAAGGTATA"//&
+        "GTAATATCTTTTATGTTCATGGATATTTGTAACCCATCGGAAAACTCCTGCTTTAGCAAGATTTTCCCTG"//&
+        "TATTGCTGAAATGTGATTTCTCTTGATTTCAACCTATCATAGGACGTTTCTATAAGATGCGTGTTTCTTG"//&
+        "AGAATTTAACATTTACAACCTTTTTAAGTCCTTTTATTAACACGGTGTTATCGTTTTCTAACACGATGTG"//&
+        "AATATTATCTGTGGCTAGATAGTAAATATAATGTGAGACGTTGTGACGTTTTAGTTCAGAATAAAACAAT"//&
+        "TCACAGTCTAAATCTTTTCGCACTTGATCGAATATTTCTTTAAAAATGGCAACCTGAGCCATTGGTAAAA"//&
+        "CCTTCCATGTGATACGAGGGCGCGTAGTTTGCATTATCGTTTTTATCGTTTCAATCTGGTCTGACCTCCT"//&
+        "TGTGTTTTGTTGATGATTTATGTCAAATATTAGGAATGTTTTCACTTAATAGTATTGGTTGCGTAACAAA"//&
+        "GTGCGGTCCTGCTGGCATTCTGGAGGGAAATACAACCGACAGATGTATGTAAGGCCAACGTGCTCAAATC"//&
+        "TTCATACAGAAAGATTTGAAGTAATATTTTAACCGCTAGATGAAGAGCAAGCGCATGGAGCGACAAAATG"//&
+        "AATAAAGAACAATCTGCTGATGATCCCTCCGTGGATCTGATTCGTGTAAAAAATATGCTTAATAGCACCA"//&
+        "TTTCTATGAGTTACCCTGATGTTGTAATTGCATGTATAGAACATAAGGTGTCTCTGGAAGCATTCAGAGC"//&
+        "AATTGAGGCAGCGTTGGTGAAGCACGATAATAATATGAAGGATTATTCCCTGGTGGTTGACTGATCACCA"//&
+        "TAACTGCTAATCATTCAAACTATTTAGTCTGTGACAGAGCCAACACGCAGTCTGTCACTGTCAGGAAAGT"//&
+        "GGTAAAACTGCAACTCAATTACTGCAATGCCCTCGTAATTAAGTGAATTTACAATATCGTCCTGTTCGGA"//&
+        "GGGAAGAACGCGGGATGTTCATTCTTCATCACTTTTAATTGATGTATATGCTCTCTTTTCTGACGTTAGT"//&
+        "CTCCGACGGCAGGCTTCAATGACCCAGGCTGAGAAATTCCCGGACCCTTTTTGCTCAAGAGCGATGTTAA"//&
+        "TTTGTTCAATCATTTGGTTAGGAAAGCGGATGTTGCGGGTTGTTGTTCTGCGGGTTCTGTTCTTCGTTGA"//&
+        "CATGAGGTTGCCCCGTATTCAGTGTCGCTGATTTGTATTGTCTGAAGTTGTTTTTACGTTAAGTTGATGC"//&
+        "AGATCAATTAATACGATACCTGCGTCATAATTGATTATTTGACGTGGTTTGATGGCCTCCACGCACGTTG"//&
+        "TGATATGTAGATGATAATCATTATCACTTTACGGGTCCTTTCCGGTGATCCGACAGGTTACG"
+
+    ! Check Lamda sequence data
+    do i = 1, len_Lamda
+        if(Lamda_seq(i:i) == "N") then
+            write(0, "(a$)"), "Error - Wrong assigned sequence in Lamda : "
+            write(0, "(a )"), "SeqDesign_Get_Lamda"
+            stop
+        end if
+    end do
+end function SeqDesign_Get_Lamda
+
+! -----------------------------------------------------------------------------
+
 ! Import sequence from txt file
 subroutine SeqDesign_Import_Sequence(dna)
     type(DNAType), intent(inout) :: dna
@@ -4793,11 +5528,10 @@ subroutine SeqDesign_Import_Sequence(dna)
     if(len_seq < dna.n_base_scaf) then
         do i = 0, 11, 11
             write(i, "(a)")
-            write(i, "(a)"), "   +====================================================================+"
+            write(i, "(a)"), "   +============================ E R R O R =============================+"
             write(i, "(a)"), "   |                                                                    |"
             write(i, "(a)"), "   |  User-defined scaffold sequence length are shorter than            |"
             write(i, "(a)"), "   |  # of scaffold nucleotides. PERDIX-2L will be terminated.          |"
-            write(i, "(a)"), "   |                                                                    |"
             write(i, "(a)"), "   |                                                                    |"
             write(i, "(a)"), "   +====================================================================+"
             write(i, "(a)")

@@ -172,7 +172,19 @@ subroutine ModGeo_Set_Neighbor_Point(prob, geom)
         geom.iniL(i).neiP(2, 1:2) = nei_poi(2, 1:2)
     end do
 
-    if(prob.type_geo == "closed") stop
+    if(prob.type_geo == "closed") then
+        do i = 0, 11, 11
+            write(i, "(a)")
+            write(i, "(a)"), "   +============================ E R R O R =============================+"
+            write(i, "(a)"), "   |                                                                    |"
+            write(i, "(a)"), "   |   This geometry is not open wireframe.                             |"
+            write(i, "(a)"), "   |   PERDIX-2L only supports the 2D wireframe structure.              |"
+            write(i, "(a)"), "   |                                                                    |"
+            write(i, "(a)"), "   +====================================================================+"
+            write(i, "(a)")
+        end do
+        stop
+    end if
 
     ! Print progress
     do i = 0, 11, 11
