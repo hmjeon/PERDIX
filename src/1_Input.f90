@@ -546,7 +546,7 @@ subroutine Input_Set_Command
     integer :: results
 
     ! Set command environments
-    if(para_platform == "dev") then
+    if(para_platform == "dev" .or. para_platform == "win") then
         results = systemqq('title PERDIX-2L')                   ! cmd title
         results = systemqq('mode con: cols=135 lines=6000')     ! cmd size
         results = systemqq('color')                             ! convert color, 02, f0, f1, f2
