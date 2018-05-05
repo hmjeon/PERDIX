@@ -1,0 +1,1 @@
+pyinstaller.exe -F --onefile spec.spec Shapely.py

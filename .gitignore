@@ -12,7 +12,7 @@
 *.so
 *.dylib
 *.dll
-!make/tools/PyConvertGeo/pyinstaller/geos_c.dll
+!make/tools/Shapely/PyInstaller/geos_c.dll
 
 # Fortran module files
 *.mod
@@ -22,7 +22,7 @@
 *.la
 *.a
 *.lib
-!make/tools/PyConvertGeo/pyinstaller/libgeos.lib
+!make/tools/Shapely/PyInstaller/libgeos.lib
 
 # Executables
 *.exe

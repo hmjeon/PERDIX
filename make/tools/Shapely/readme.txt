@@ -12,10 +12,10 @@ Anaconda 64bit + Python 2.7
 
 Install:
 conda install shapely
-pyinstaller.exe -F Spec_Conv.spec PyConvertGeo.py
+pyinstaller.exe -F Spec_Conv.spec Shapely.py
 
 Etc:
-Unofficial Windows Binaries for Python Extension Packages – whl files
+Unofficial Windows Binaries for Python Extension Packages – wheel files
 https://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely
 conda config --add channels conda-forge
 
