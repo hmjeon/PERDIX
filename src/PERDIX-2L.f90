@@ -560,9 +560,9 @@ subroutine Verify_Solution(mesh, dna)
 
     write(0, "(a)")
     write(0, "(a)"), "[ONLY DEBUG MODE]"
-    write(0, "(a25, a)"), " 3.41299052999253E+07"," - Reference: 1 - 2"
-    write(0, "(a25, a)"), " 3.88022588879539E+07"," - Reference: 2 - 2"
-    write(0, "(a25, a)"), " 2.46203664510504E+07"," - Reference: 9 - 2"
+    write(0, "(a25, a)"), " 3.41299052999253E+07"," - Reference: 1 - 1"
+    write(0, "(a25, a)"), " 3.88022588879539E+07"," - Reference: 2 - 1"
+    write(0, "(a25, a)"), " 2.46203664510504E+07"," - Reference: 9 - 1"
     write(0, "(es25.14)"), verify
 end subroutine Verify_Solution
 
