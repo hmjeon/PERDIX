@@ -1,8 +1,8 @@
 %
 % =============================================================================
 %
-% Module - meshing
-% Last Updated : 04/28/2018, by Hyungmin Jun (hyungminjun@outlook.com)
+% Module - mDistMesh
+% Last Updated : 05/04/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 %
 % =============================================================================
 %
@@ -64,7 +64,7 @@ line(n_point+1,1) = point(face(3)).x(1);
 line(n_point+1,2) = point(face(3)).x(2);
 
 % Scale
-A    = [abs(max(line(1,:))); abs(max(line(2,:))); abs(min(line(1,:))); abs(min(line(1,:)))];
+A    = [abs(min(line(:,1))); abs(min(line(:,2))); abs(max(line(:,1))); abs(max(line(:,2)))];
 A    = max(A);
 line = line / A;
 
@@ -83,7 +83,9 @@ fclose(fid);
 % t(output): a list of node indices forming triangles;
 
 % For deploytool
-n_mesh = str2num(n_mesh)
+if(isnumeric(n_mesh) == 0)
+    n_mesh = str2num(n_mesh)
+end
 
 [p,t]=distmesh2d(@dpoly, @huniform, n_mesh, [min(line(:,1)),min(line(:,2)); max(line(:,1)),max(line(:,2))], line, line);
 

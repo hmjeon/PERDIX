@@ -176,6 +176,7 @@ subroutine Importer_GEO(prob, geom)
 
         ! Convert to face meshes from lines
         !results = systemqq(trim("tools/PyConvertGeo/pyConvertGeo")//" input/"//trim(fullname))
+        !if(para_platform == "dev") results = systemqq(trim("python tools/PyConvertGeo/src/PyConvertGeo.py")//" input/"//trim(fullname))
         if(para_platform == "dev") results = systemqq(trim("python tools/PyConvertGeo/src/PyConvertGeo.py")//" input/"//trim(fullname))
         if(para_platform == "win") results = systemqq(trim("tools\PyConvertGeo.exe")//" input/"//trim(fullname))
         if(para_platform == "mac") results = systemqq(trim("python tools/PyConvertGeo/src/PyConvertGeo.py")//" input/"//trim(fullname))
@@ -193,13 +194,23 @@ subroutine Importer_GEO(prob, geom)
         write(0, "(a)"), "   Type the mesh spacing parameter (0.0 ~ 1.0) [Enter] : "
         read(*, *), p_mesh
 
-        if(p_mesh > 0.0d0) then
+        if(p_mesh > 0.0d0 .and. p_mesh < 1.0) then
             close(unit=1002)
 
             if(para_platform == "dev") then
+                ! MATLAB - DistMesh
+                ! matlab -wait -nodisplay -nosplash -nodesktop -r 
+                ! "addpath tools/DistMesh/src; addpath tools/DistMesh;
+                ! meshing('input/ex_des1_shapely.geo', 0.3)
                 results = systemqq("matlab -wait -nodisplay -nosplash -nodesktop -r "//&
                     '"addpath tools/DistMesh/src; addpath tools/DistMesh; meshing('//&
-                    "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//'); exit"')
+                    "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//')"')
+
+                ! Python - DistMesh
+                ! python tools/PyDistMesh/PyDistMesh.py input/ex_des1_shapely.geo 0.3
+                !results = systemqq(&
+                !trim("python tools/PyDistMesh/PyDistMesh.py input/")&
+                !    //trim(fullname)//' '//trim(Dble2Str(p_mesh)))
             else if(para_platform == "win") then
                 results = systemqq("matlab -wait -nodisplay -nosplash -nodesktop -r "//&
                     '"addpath tools/DistMesh/src; addpath tools/DistMesh; meshing('//&
@@ -208,7 +219,7 @@ subroutine Importer_GEO(prob, geom)
             else if(para_platform == "mac") then
                 results = systemqq(&
                 trim("python tools/PyDistMesh/PyDistMesh.py input/")&
-                //trim(fullname)//'" '//trim(Dble2Str(p_mesh)))
+                //trim(fullname)//' '//trim(Dble2Str(p_mesh)))
             end if
 
             fullname = trim(prob.name_file)//trim("_shapely_distmesh.geo")
@@ -249,15 +260,15 @@ subroutine Importer_GEO(prob, geom)
 
     ! Delete temp file
     if(para_platform == "win" .or. para_platform == "dev") then
-        results = systemqq(trim("del input\")//trim(prob.name_file)//trim("_shapely.geo"))
+        !results = systemqq(trim("del input\")//trim(prob.name_file)//trim("_shapely.geo"))
     else
-        results = systemqq(trim("rm input/")//trim(prob.name_file)//trim("_shapely.geo"))
+        !results = systemqq(trim("rm input/")//trim(prob.name_file)//trim("_shapely.geo"))
     end if
 
     if(para_platform == "win" .or. para_platform == "dev") then
-        results = systemqq(trim("del input\")//trim(prob.name_file)//trim("_shapely_distmesh.geo"))
+        !results = systemqq(trim("del input\")//trim(prob.name_file)//trim("_shapely_distmesh.geo"))
     else
-        results = systemqq(trim("rm input/")//trim(prob.name_file)//trim("_shapely_distmesh.geo"))
+        !results = systemqq(trim("rm input/")//trim(prob.name_file)//trim("_shapely_distmesh.geo"))
     end if
 end subroutine Importer_GEO
 

@@ -2,7 +2,7 @@
 !
 ! =============================================================================
 !
-! Module - PyDistMesh
+! Module - pyDistMesh
 ! Last Updated : 05/04/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
 ! =============================================================================
@@ -45,8 +45,9 @@ if len(sys.argv) is 3:
 # sys.argv[0] - Python runnung file name
 # sys.argv[1] - First inputs
 # sys.argv[2] - Second inputs, mesh spacing parameter
-print '\nFilename: ', filename, '\nFiletype: ', filetype
-print 'Mesh spacing paramter: ', sys.argv[2], '\n'
+print " * File name              -> ", filename
+print " * File type              -> ", filetype
+print " * Mesh spacing parameter -> ", sys.argv[2]
 
 # Open file stream
 str  = fin.readline()
@@ -55,7 +56,9 @@ n_point = int(str[0])
 n_line  = int(str[1])
 n_face  = int(str[2])
 
-print n_point, n_line, n_face
+print " * The number of points   -> ", n_point
+print " * The number of lines    -> ", n_line
+print " * The number of faces    -> ", n_face
 
 point_id = []
 point_x  = []
@@ -75,11 +78,13 @@ for i in range(n_point):
 	face.append((point_x[int(str[i+2])-1], point_y[int(str[i+2])-1]))
 fin.close()
 
+face.append((point_x[int(str[2])-1], point_y[int(str[2])-1]))
+
 pv   = face
 posx = []
 posy = []
 
-for i in range(n_point):
+for i in range(len(pv)):
 	posx.append(pv[i][0])
 	posy.append(pv[i][1])
 
@@ -87,19 +92,19 @@ minx = min(posx)
 miny = min(posy)
 maxx = max(posx)
 maxy = max(posy)
-print "Min_x: ", minx
-print "Min_y: ", miny
-print "Max_x: ", maxx
-print "Max_y: ", maxy
+print " * Min x and y            -> ", minx, ",  ", miny
+print " * Max x and y            -> ", maxx, ",  ", maxy
 
 max = max([abs(minx), abs(miny), abs(maxx), abs(maxy)])
-print max
 
-for i in range(n_point):
+for i in range(len(pv)):
 	pv[i] = (pv[i][0] / max, pv[i][1] / max)
 
 fd = lambda p: distmesh.dpoly(p, pv)
-p, t = distmesh.distmesh2d(fd, distmesh.huniform, float(sys.argv[2]), (minx,miny, maxx,maxy), pv)
+p, t = distmesh.distmesh2d(fd, distmesh.huniform, float(sys.argv[2]), (minx,miny,maxx,maxy), pv)
+
+for i in range(len(p)):
+	print p[i,0], p[i,1]
 
 # Open file stream
 fout = open(filename+'_distmesh.geo', 'w')
@@ -111,7 +116,7 @@ for i in range(len(p)):
     fout.write('%5d %14.5f %14.5f \n' % (i, p[i,0], p[i,1]))
 
 for i in range(len(t)):
-    fout.write('%5d %5d %5d %5d %5d \n' % (i, 3, t[i,0], t[i,1], t[i,2]))
+    fout.write('%5d %5d %5d %5d %5d \n' % (i, 3, t[i,0]+1, t[i,1]+1, t[i,2]+1))
 
 fout.close()
 quit()
