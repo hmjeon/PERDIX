@@ -29,6 +29,7 @@
 !make/tools/sleep.exe
 !make/tools/meshconv.exe
 !release/Win/PERDIX-2L.exe
+!make/tools/DistMesh/DistMesh.exe
 make/Debug
 make/Release
 make/x64
