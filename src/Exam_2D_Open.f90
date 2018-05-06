@@ -1360,7 +1360,7 @@ subroutine Exam_Open2D_6_Sided_Polygon(prob, geom)
     character :: pn
 
     ! Set problem
-    prob.name_file = "18_6_Sided_Polygon"
+    prob.name_prob = "18_6_Sided_Polygon"
     call Mani_Set_Problem(prob, [77, 175, 74], "xy")
 
     ! Set options
