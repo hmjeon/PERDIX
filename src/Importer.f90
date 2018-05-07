@@ -176,7 +176,6 @@ subroutine Importer_GEO(prob, geom)
 
         ! Convert to face meshes from lines
         if(para_platform == "dev") results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
-        !if(para_platform == "win") results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
         if(para_platform == "win") results = systemqq(trim("tools\Shapely\Shapely.exe")//" input/"//trim(fullname))
         if(para_platform == "mac") results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
 
@@ -185,6 +184,18 @@ subroutine Importer_GEO(prob, geom)
 
         ! Read number of points and faces
         read(1002, *), geom.n_iniP, n_line, geom.n_face
+    end if
+
+    ! Exception module
+    if(geom.n_face == 0) then
+        close(1002)
+        write(0, "(a)")
+        write(0, "(a)"), "   +============================ E R R O R =============================+"
+        write(0, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   |   The lines specifying the geometry are not connected.             |"
+        write(0, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   +====================================================================+"
+        write(0, "(a)")
     end if
 
     ! Boundary design
