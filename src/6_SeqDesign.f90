@@ -5539,6 +5539,7 @@ subroutine SeqDesign_Import_Sequence(dna)
             write(i, "(a)"), "      # scaffold nt design by PERDIX: "//trim(adjustl(Int2Str(dna.n_base_scaf)))
             write(i, "(a)")
         end do
+        if(para_platform == "win") pause
         stop
     end if
 

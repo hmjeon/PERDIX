@@ -108,6 +108,7 @@ subroutine Input_Initialize(prob, geom)
                 write(0, "(a)"), "   |                                                                    |"
                 write(0, "(a)"), "   +====================================================================+"
                 write(0, "(a)")
+                if(para_platform == "win") pause
                 stop
             end if
         else
@@ -161,6 +162,7 @@ subroutine Input_Initialize(prob, geom)
                 write(0, "(a)"), "   |                                                                    |"
                 write(0, "(a)"), "   +====================================================================+"
                 write(0, "(a)")
+                if(para_platform == "win") pause
                 stop
             end if
         else
@@ -710,6 +712,8 @@ subroutine Input_Select_File(prob, geom)
         write(0, "(a)"), "   |                                                                    |"
         write(0, "(a)"), "   +====================================================================+"
         write(0, "(a)")
+        if(para_platform == "win") pause
+        stop
     end if
 
     prob.name_prob = prob.name_file
@@ -951,6 +955,7 @@ subroutine Input_Set_Num_BP_Edge(prob, geom)
         write(0, "(a)"), "   |                                                                    |"
         write(0, "(a)"), "   +====================================================================+"
         write(0, "(a)")
+        if(para_platform == "win") pause
         stop
     end if
 

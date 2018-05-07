@@ -183,6 +183,7 @@ subroutine ModGeo_Set_Neighbor_Point(prob, geom)
             write(i, "(a)"), "   +====================================================================+"
             write(i, "(a)")
         end do
+        if(para_platform == "win") pause
         stop
     end if
 

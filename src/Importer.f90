@@ -197,6 +197,8 @@ subroutine Importer_GEO(prob, geom)
         write(0, "(a)"), "   |                                                                    |"
         write(0, "(a)"), "   +====================================================================+"
         write(0, "(a)")
+        if(para_platform == "win") pause
+        stop
     end if
 
     ! Boundary design
