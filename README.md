@@ -19,10 +19,12 @@
 This website offers the free online resource PERDIX that automatically converts any object specified using a simple Computer-Aided Design file into the synthetic DNA sequences that are needed to synthesize the target object.</br></br>
 
 ## Release Packages</br>
-* **[PERDIX-2L-Win](https://github.com/hmjeon/PERDIX-2L/raw/master/release/PERDIX-2L-Win.zip)** for Microsoft Windows</br>
-	* Requirements: MATLAB or [MATLAB Runtime](https://www.mathworks.com/products/compiler/matlab-runtime.html) and Python 2.7 and Python package ([Shapely 1.6.4](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely))</br></br>
+* **[PERDIX-2L-Win-MRC](https://github.com/hmjeon/PERDIX-2L/raw/master/release/PERDIX-2L-Win-MRC.zip)** for Microsoft Windows</br>
+	* Requirements: [MATLAB Runtime 2015](https://www.mathworks.com/products/compiler/matlab-runtime.html) and Python 2.7 and Python package ([Shapely 1.6.4](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely))</br>
+* **[PERDIX-2L-Win-MATLAB](https://github.com/hmjeon/PERDIX-2L/raw/master/release/PERDIX-2L-Win-MATLAB.zip)** for Microsoft Windows</br>
+	* Requirements: MATLAB or and Python 2.7 and Python package ([Shapely 1.6.4](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely))</br>
 * **[PERDIX-2L-Mac](https://github.com/hmjeon/PERDIX-2L/raw/master/release/PERDIX-2L-Mac.zip)** for macOS/Mac OS X</br>
-	* Requirements: Python 2.7 and Python packages ([Shapely 1.6.4](https://pypi.org/project/Shapely/) and [PyDistMesh 1.2](https://pypi.org/project/PyDistMesh/))</br>
+	* Requirements: Python 2.7 and Python packages ([Shapely 1.6.4](https://pypi.org/project/Shapely/) and [PyDistMesh 1.2](https://pypi.org/project/PyDistMesh/))</br></br>
 
 
 ----------
