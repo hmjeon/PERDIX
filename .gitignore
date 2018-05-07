@@ -27,13 +27,12 @@
 # Executables
 *.exe
 
-!release/Win/PERDIX-2L.exe
 !make/tools/DistMesh/DistMesh.exe
 !make/tools/MeshConv/MeshConv.exe
 make/Debug
 make/Release
 make/x64
-make/Output
+make/output
 *.out
 *.app
 *.u2d
