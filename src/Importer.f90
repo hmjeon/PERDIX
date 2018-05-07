@@ -176,7 +176,8 @@ subroutine Importer_GEO(prob, geom)
 
         ! Convert to face meshes from lines
         if(para_platform == "dev") results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
-        if(para_platform == "win") results = systemqq(trim("tools\Shapely\Shapely.exe")//" input/"//trim(fullname))
+        if(para_platform == "win") results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
+        !if(para_platform == "win") results = systemqq(trim("tools\Shapely\Shapely.exe")//" input/"//trim(fullname))
         if(para_platform == "mac") results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
 
         fullname = trim(prob.name_file)//trim("_shapely.geo")
