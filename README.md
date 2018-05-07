@@ -19,9 +19,9 @@
 This website offers the free online resource PERDIX that automatically converts any object specified using a simple Computer-Aided Design file into the synthetic DNA sequences that are needed to synthesize the target object.</br></br>
 
 ## Release Packages</br>
-* **[PERDIX-2L](https://www.dropbox.com/s/nhct8c5u43by3d6/PERDIX-2L-Win.zip?dl=1)** for Microsoft Windows</br>
+* **[PERDIX-2L-Win](https://www.dropbox.com/s/nhct8c5u43by3d6/PERDIX-2L-Win.zip?dl=1)** for Microsoft Windows</br>
 	* Requirements: MATLAB or [MATLAB Runtime](https://www.mathworks.com/products/compiler/matlab-runtime.html)</br></br>
-* **[PERDIX-2L](https://www.dropbox.com/s/gt5vdd1eko25o55/PERDIX-2L-Mac.zip?dl=1)** for macOS/Mac OS X</br>
+* **[PERDIX-2L-Mac](https://www.dropbox.com/s/gt5vdd1eko25o55/PERDIX-2L-Mac.zip?dl=1)** for macOS/Mac OS X</br>
 	* Requirements: Python 2.7 and Python packages([Shapely 1.6.4](https://pypi.org/project/Shapely/) and [PyDistMesh 1.2](https://pypi.org/project/PyDistMesh/))</br>
 
 
