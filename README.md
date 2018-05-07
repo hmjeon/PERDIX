@@ -20,9 +20,9 @@ This website offers the free online resource PERDIX that automatically converts 
 
 ## Release Packages</br>
 * **[PERDIX-2L-Win](https://www.dropbox.com/s/nhct8c5u43by3d6/PERDIX-2L-Win.zip?dl=1)** for Microsoft Windows</br>
-	* Requirements: MATLAB or [MATLAB Runtime](https://www.mathworks.com/products/compiler/matlab-runtime.html)</br></br>
+	* Requirements: MATLAB or [MATLAB Runtime](https://www.mathworks.com/products/compiler/matlab-runtime.html) and Python 2.7 and Python package ([Shapely 1.6.4](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely))</br></br>
 * **[PERDIX-2L-Mac](https://www.dropbox.com/s/gt5vdd1eko25o55/PERDIX-2L-Mac.zip?dl=1)** for macOS/Mac OS X</br>
-	* Requirements: Python 2.7 and Python packages([Shapely 1.6.4](https://pypi.org/project/Shapely/) and [PyDistMesh 1.2](https://pypi.org/project/PyDistMesh/))</br>
+	* Requirements: Python 2.7 and Python packages ([Shapely 1.6.4](https://pypi.org/project/Shapely/) and [PyDistMesh 1.2](https://pypi.org/project/PyDistMesh/))</br>
 
 
 ----------
