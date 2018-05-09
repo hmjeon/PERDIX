@@ -16,7 +16,7 @@
 ## Free Online Resource PERDIX</br>
 [```http://perdix-dna-origami.org/```](http://perdix-dna-origami.org/)</br>
 
-This website offers the free online resource PERDIX that automatically converts any object specified using a simple Computer-Aided Design file into the synthetic DNA sequences that are needed to synthesize the target object.</br></br>
+We also offer the free online resource PERDIX that automatically converts any 2D object specified using a simple Computer-Aided Design file (GEO, IGS/IGES, or PLY) into the synthetic DNA sequences that are needed to synthesize the target object. With the same inputs, the outputs from online resource are exactly the same to those from the compiled PERDIX-2L.</br></br>
 
 ## Release Packages</br>
 * **[PERDIX-2L-Win-MCR](https://github.com/hmjeon/PERDIX-2L/raw/master/release/PERDIX-2L-Win-MCR.zip)** for Microsoft Windows</br>
@@ -48,14 +48,14 @@ The atomic model ([PDB](https://en.wikipedia.org/wiki/Protein_Data_Bank_(file_fo
 - We provide [MakeFile](./make/makefiles/Makefile) which is a simple way to organize code compilation of PERDIX.</br></br>
 
 ## Features</br>
-* Fully automatic procedure for the scaffold routing and sequence design</br>
+* Fully automatic procedure of the sequence design for scaffolded DNA DX-based wireframe lattices</br>
 * Importing GEO, [IGES/IGS](https://en.wikipedia.org/wiki/IGES), or [PLY](https://en.wikipedia.org/wiki/PLY_(file_format)) file formats as an input</br>
 * Exact edge-lengths to design highly asymmetric and irregular shapes</br>
-* [JSON](https://en.wikipedia.org/wiki/JSON) output for editing staples from [caDNAno](https://cadnano.org/)</br>
-* 3D visualization powered by [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/)</br>
-* Pre-defined 24 target geometries</br>
+* [JSON](https://en.wikipedia.org/wiki/JSON) output for editing staple paths and sequences from [caDNAno](https://cadnano.org/)</br>
+* 3D visual outputs by [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/)</br>
+* 24 pre-defined target geometries</br>
 * User-friendly TUI (Text-based User Interface)</br>
-* Online web resources and release package for Microsoft Windows and Mac OS</br>
+* Online web resources and release packages for Microsoft Windows and Mac OS</br>
 * Free and open source ([GNU General Public License, version 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html/))</br></br>
 
 ## Author</br>
