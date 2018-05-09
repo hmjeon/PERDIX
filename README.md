@@ -7,7 +7,7 @@
 **PERDIX:**</br>
 **P**urine / Pyrimidine **E**ngineered **R**ecombinant **D**esign **I**nverse **X** (= as the universal unknown variable for which the software will find the 'solution' as staple sequences)</br>
 
-> The software document can be downloaded [here](https://github.com/hmjeon/PERDIX-2L/raw/master/doc/Software%20Document.pdf).</br>
+> The software document can be downloaded [here](https://github.com/lcbb/PERDIX-2L/raw/master/doc/Software%20Document.pdf).</br>
 
 **Software Variants:**</br>
 * **[PERDIX-6P](https://github.com/lcbb/PERDIX-6P)**: Designer scaffolded DNA 6HB-based wireframe nanoparticles</br>
@@ -19,11 +19,11 @@
 We also offer the free online resource PERDIX that automatically converts any 2D object specified using a simple Computer-Aided Design file (GEO, IGS/IGES, or PLY) into the synthetic DNA sequences that are needed to synthesize the target object. With the same inputs, the outputs from online resource are exactly the same to those from the compiled PERDIX-2L.</br></br>
 
 ## Release Packages</br>
-* **[PERDIX-2L-Win-MCR](https://github.com/hmjeon/PERDIX-2L/raw/master/release/PERDIX-2L-Win-MCR.zip)** for Microsoft Windows</br>
+* **[PERDIX-2L-Win-MCR](https://github.com/lcbb/PERDIX-2L/raw/master/release/PERDIX-2L-Win-MCR.zip)** for Microsoft Windows</br>
 	* Requirements: [MATLAB Compiler Runtime 2015](https://www.mathworks.com/products/compiler/matlab-runtime.html) and Python 2.7 and Python package, [Shapely 1.6.4](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely)</br></br>
-* **[PERDIX-2L-Win-MATLAB](https://github.com/hmjeon/PERDIX-2L/raw/master/release/PERDIX-2L-Win-MATLAB.zip)** for Microsoft Windows</br>
+* **[PERDIX-2L-Win-MATLAB](https://github.com/lcbb/PERDIX-2L/raw/master/release/PERDIX-2L-Win-MATLAB.zip)** for Microsoft Windows</br>
 	* Requirements: MATLAB, Python 2.7 and Python package, [Shapely 1.6.4](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely)</br></br>
-* **[PERDIX-2L-Mac](https://github.com/hmjeon/PERDIX-2L/raw/master/release/PERDIX-2L-Mac.zip)** for macOS/Mac OS X</br>
+* **[PERDIX-2L-Mac](https://github.com/lcbb/PERDIX-2L/raw/master/release/PERDIX-2L-Mac.zip)** for macOS/Mac OS X</br>
 	* Requirements: Python 2.7 and Python packages, [Shapely 1.6.4](https://pypi.org/project/Shapely/) and [PyDistMesh 1.2](https://pypi.org/project/PyDistMesh/)</br></br>
 
 
