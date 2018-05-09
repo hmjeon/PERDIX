@@ -45,9 +45,9 @@ if len(sys.argv) is 3:
 # sys.argv[0] - Python runnung file name
 # sys.argv[1] - First inputs
 # sys.argv[2] - Second inputs, mesh spacing parameter
-print " * File name              -> ", filename
-print " * File type              -> ", filetype
-print " * Mesh spacing parameter -> ", sys.argv[2]
+#print " * File name              -> ", filename
+#print " * File type              -> ", filetype
+#print " * Mesh spacing parameter -> ", sys.argv[2]
 
 # Open file stream
 str  = fin.readline()
@@ -56,9 +56,9 @@ n_point = int(str[0])
 n_line  = int(str[1])
 n_face  = int(str[2])
 
-print " * The number of points   -> ", n_point
-print " * The number of lines    -> ", n_line
-print " * The number of faces    -> ", n_face
+#print " * The number of points   -> ", n_point
+#print " * The number of lines    -> ", n_line
+#print " * The number of faces    -> ", n_face
 
 point_id = []
 point_x  = []
@@ -92,8 +92,8 @@ minx = min(posx)
 miny = min(posy)
 maxx = max(posx)
 maxy = max(posy)
-print " * Min x and y            -> ", minx, ",  ", miny
-print " * Max x and y            -> ", maxx, ",  ", maxy
+#print " * Min x and y            -> ", minx, ",  ", miny
+#print " * Max x and y            -> ", maxx, ",  ", maxy
 
 max = max([abs(minx), abs(miny), abs(maxx), abs(maxy)])
 
@@ -103,8 +103,8 @@ for i in range(len(pv)):
 fd = lambda p: distmesh.dpoly(p, pv)
 p, t = distmesh.distmesh2d(fd, distmesh.huniform, float(sys.argv[2]), (minx,miny,maxx,maxy), pv)
 
-for i in range(len(p)):
-	print p[i,0], p[i,1]
+#for i in range(len(p)):
+#	print p[i,0], p[i,1]
 
 # Open file stream
 fout = open(filename+'_distmesh.geo', 'w')

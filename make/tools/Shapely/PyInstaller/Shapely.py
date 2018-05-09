@@ -41,7 +41,7 @@ if len(sys.argv) is 2:
     fin = open(sys.argv[1], 'r')
     filename, filetype = sys.argv[1].split('.')
 
-print '\nFilename: ', filename, '\nFiletype: ', filetype, '\n'
+#print '\nFilename: ', filename, '\nFiletype: ', filetype, '\n'
 
 # ==================================================
 # Read GEO data
@@ -64,10 +64,10 @@ if filetype == 'geo':
         points.append([float(point[1]), -float(point[2])])
 
     # Print points
-    print 'Points: ', n_point
-    for i in range(n_point):
-        print i+1, ' th points : ', points[i]
-    print '\n'
+    #print 'Points: ', n_point
+    #for i in range(n_point):
+    #    print i+1, ' th points : ', points[i]
+    #print '\n'
 
     # ==================================================
     # Read lines
@@ -79,10 +79,10 @@ if filetype == 'geo':
         lines.append([int(line[1]), int(line[2])])
         
     # Print lines
-    print 'Lines:',  n_line
-    for i in range(n_line):
-        print i+1, ' th lines : ', lines[i]
-    print '\n'
+    #print 'Lines:',  n_line
+    #for i in range(n_line):
+    #    print i+1, ' th lines : ', lines[i]
+    #print '\n'
     
     # ==================================================
     # Make lines with points
@@ -152,10 +152,10 @@ if filetype == 'igs' or filetype == 'iges':
 fin.close()
 
 # Print line list with points
-print 'Lines with points: ', n_line
-for i in range(n_line):
-    print i+1, ' th lines with points : ', linepoints[i]
-print '\n'
+#print 'Lines with points: ', n_line
+#for i in range(n_line):
+#    print i+1, ' th lines with points : ', linepoints[i]
+#print '\n'
 
 # ==================================================
 # Make mutilinestring from line list
@@ -189,10 +189,11 @@ result, dangles, cuts, invalids = polygonize_full(multilines)
 polygon = MultiPolygon(result)
 
 # Print polygon
-print 'Polygons: ', len(polygon)
-for i in range(len(polygon)):
-    print i+1, ' th', polygon[i]
-print '\n'
+#print '\n'
+#print '   # of faces : ', len(polygon)
+#for i in range(len(polygon)):
+#    print i+1, ' th', polygon[i]
+#print '\n'
 
 # ==================================================
 # Extract points
@@ -206,10 +207,10 @@ for i in range(len(polygon)):
             points.extend([(x[0], x[1])])
 
 # Print points
-print 'Points: ', len(points)
-for i in range(len(points)):
-    print i+1, ' th point : ', points[i]
-print '\n'
+print '   # of faces : ', len(polygon), ', # of points: ', len(points)
+#for i in range(len(points)):
+#    print i+1, ' th point : ', points[i]
+#print '\n'
 
 # ==================================================
 # Face connectivity
@@ -226,10 +227,10 @@ for i in range(len(polygon)):
     conns.append(face)
 
 # Print connectivity
-print 'Face connectivity: ', len(conns)
-for i in range(len(conns)):
-    print i+1, ' th connectivity : ', len(conns[i]), ' - ', conns[i]
-print '\n'
+#print 'Face connectivity: ', len(conns)
+#for i in range(len(conns)):
+#    print i+1, ' th connectivity : ', len(conns[i]), ' - ', conns[i]
+#print '\n'
 
 # ==================================================
 # Write file
