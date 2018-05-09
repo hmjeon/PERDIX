@@ -44,6 +44,7 @@ The atomic model ([PDB](https://en.wikipedia.org/wiki/Protein_Data_Bank_(file_fo
 5. [DistMesh](http://persson.berkeley.edu/distmesh/) or [PyDistMesh 1.2](https://pypi.org/project/PyDistMesh/): DistMesh (MATLAB version) or PyDistMesh (Python version) is used to generate internal triangular meshes</br>
 
 - Compiling the PERDIX sources require [Intel Fortran](https://software.intel.com/en-us/fortran-compilers). Free Intel (R) Software Development Tools are available for qualified students, educators, academic researchers and open source contributors, see the [details](https://software.intel.com/en-us/qualify-for-free-software/).</br>
+- The Intel Fortran compiler supports all of the features of the Fortran 90, Fortran 95, Fortran 2003 standards and most of Fortran 2008. It also supports some draft Fortran 2018 features.
 - We provide [MakeFile](./make/makefiles/Makefile) which is a simple way to organize code compilation of PERDIX.</br></br>
 
 ## Features</br>
