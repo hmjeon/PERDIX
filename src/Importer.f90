@@ -172,7 +172,8 @@ subroutine Importer_GEO(prob, geom)
     if(geom.n_face == 0) then
         if(prob.type_file == 'geo') close(unit=1002)
 
-        write(0, "(a)"), "Converting geometry with faced mesh"
+        write(0, "(a)"), "   * Converting lines to meshes by Shapely"
+        write(0, "(a)")
 
         ! Convert to face meshes from lines
         if(para_platform == "dev") results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
@@ -204,10 +205,25 @@ subroutine Importer_GEO(prob, geom)
     ! Boundary design
     if(geom.n_face == 1) then
         write(0, "(a)")
-        write(0, "(a)"), "   Type the mesh spacing parameter (0.0 ~ 1.0) [Enter] : "
+        write(0, "(a)"), "   Type the value (0.0 ~ 1.0) for the mesh spacing parameter [Enter]"
+        write(0, "(a)"), "   * The small value generates finer meshes"
         read(*, *), p_mesh
 
-        if(p_mesh > 0.0d0 .and. p_mesh < 1.0) then
+        if(p_mesh > 1.0d0) then
+            close(1002)
+            write(0, "(a)")
+            write(0, "(a)"), "   +============================ E R R O R =============================+"
+            write(0, "(a)"), "   |                                                                    |"
+            write(0, "(a)"), "   |   The mesh spacing parameter should be from 0.0 to 1.0             |"
+            write(0, "(a)"), "   |                                                                    |"
+            write(0, "(a)"), "   +====================================================================+"
+            write(0, "(a)")
+            if(para_platform == "win") pause
+            stop
+        end if
+
+        if(p_mesh >= 0.0d0 .and. p_mesh < 1.0) then
+            p_mesh = 0.3d0 + (0.7d0 - 0.3d0) * 1.0d0 * (p_mesh)
             close(unit=1002)
 
             if(para_platform == "dev") then
@@ -230,6 +246,10 @@ subroutine Importer_GEO(prob, geom)
                 ! tools\DistMesh\DistMesh.exe input\ex_des1_shapely.geo 0.3
                 results = systemqq('tools\DistMesh\DistMesh.exe input\'&
                     //trim(fullname)//' '//trim(Dble2Str(p_mesh)))
+
+                !results = systemqq("matlab -wait -nodisplay -nosplash -nodesktop -r "//&
+                !    '"addpath tools/DistMesh/src; addpath tools/DistMesh; DistMesh('//&
+                !    "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//')"')
             else if(para_platform == "mac") then
 
                 ! Python - DistMesh

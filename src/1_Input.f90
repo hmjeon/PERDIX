@@ -668,7 +668,7 @@ subroutine Input_Set_Vertex_Design(prob)
         para_vertex_design = "mitered"
     end if
 
-    print *, para_vertex_design
+    !print *, para_vertex_design
 end subroutine Input_Set_Vertex_Design
 
 ! -----------------------------------------------------------------------------
@@ -775,8 +775,15 @@ subroutine Input_Select_Problem(prob, geom)
         case (24); call Exam_Open2D_Curved_Arm_Mix  (prob, geom)
 
         case default
-            write(0, "(a$)"), "Error - Not defined problem : "
-            write(0, "(a )"), "Input_Select_Problem"
+        write(0, "(a)")
+        write(0, "(a)"), "   +============================ E R R O R =============================+"
+        write(0, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   |   The pre-defined geometries does not exist.                       |"
+        write(0, "(a)"), "   |   Select the number from 1 to 24, or type geometry file            |"
+        write(0, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   +====================================================================+"
+        write(0, "(a)")
+        if(para_platform == "win") pause
         stop
     end select
 end subroutine Input_Select_Problem
