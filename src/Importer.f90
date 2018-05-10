@@ -264,6 +264,7 @@ subroutine Importer_GEO(prob, geom)
 
                 ! MATLAB - DistMesh
                 results = systemqq(&
+                    !"/usr/local/matlab/R2017a/bin/matlab wait -nodisplay -nosplash -nodesktop -noawt -r "//&
                     "matlab wait -nodisplay -nosplash -nodesktop -noawt -r "//&
                     '"addpath tools/DistMesh/src; addpath tools/DistMesh; DistMesh('//&
                     "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//')"')
