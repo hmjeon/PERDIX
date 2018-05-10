@@ -176,10 +176,11 @@ subroutine Importer_GEO(prob, geom)
         write(0, "(a)")
 
         ! Convert to face meshes from lines
-        if(para_platform == "dev") results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
-        if(para_platform == "win") results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
-        !if(para_platform == "win") results = systemqq(trim("tools\Shapely\Shapely.exe")//" input/"//trim(fullname))
-        if(para_platform == "mac") results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
+        if(para_platform == "dev")   results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
+        if(para_platform == "win")   results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
+        !if(para_platform == "win")   results = systemqq(trim("tools\Shapely\Shapely.exe")//" input/"//trim(fullname))
+        if(para_platform == "mac")   results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
+        if(para_platform == "linux") results = systemqq(trim("python tools/Shapely/Shapely.py")//" input/"//trim(fullname))
 
         fullname = trim(prob.name_file)//trim("_shapely.geo")
         open(unit=1002, file="input/"//trim(fullname), form="formatted")
@@ -223,7 +224,9 @@ subroutine Importer_GEO(prob, geom)
         end if
 
         if(p_mesh >= 0.0d0 .and. p_mesh < 1.0) then
-            p_mesh = 0.3d0 + (0.7d0 - 0.3d0) * 1.0d0 * (p_mesh)
+            ! 0.0          x          1.0
+            ! 0.2          y          0.7
+            p_mesh = 0.2d0 + (0.7d0 - 0.2d0) * 1.0d0 * (p_mesh)
             close(unit=1002)
 
             if(para_platform == "dev") then
@@ -257,6 +260,13 @@ subroutine Importer_GEO(prob, geom)
                 results = systemqq(&
                     trim("python tools/PyDistMesh/PyDistMesh.py input/")&
                     //trim(fullname)//' '//trim(Dble2Str(p_mesh)))
+            else if(para_platform == "linux") then
+
+                ! MATLAB - DistMesh
+                results = systemqq(&
+                    "matlab wait -nodisplay -nosplash -nodesktop -noawt -r "//&
+                    '"addpath tools/DistMesh/src; addpath tools/DistMesh; DistMesh('//&
+                    "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//')"')
             end if
 
             fullname = trim(prob.name_file)//trim("_shapely_distmesh.geo")
