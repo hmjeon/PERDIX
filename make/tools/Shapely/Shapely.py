@@ -139,10 +139,10 @@ if filetype == 'igs' or filetype == 'iges':
                 points[0] = 0.0
             if abs(points[1]) < 0.0000001:
                 points[1] = 0.0
-            if abs(points[2]) < 0.0000001:
-                points[2] = 0.0
             if abs(points[3]) < 0.0000001:
                 points[3] = 0.0
+            if abs(points[4]) < 0.0000001:
+                points[4] = 0.0
 
             linepoint = [((points[0], points[1]), (points[3], points[4]))]
             linepoints.extend(linepoint)
