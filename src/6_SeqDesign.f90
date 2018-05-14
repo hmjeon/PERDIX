@@ -3852,7 +3852,7 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
     integer :: n_nt_14nt, n_nt_4nt, cn_tn, n_win, n_14nt, n_4nt, n_only_4nt, n_sec_14nt, n_sec_4nt
     integer :: len_ave_stap, one_14nt, two_14nt, three_14nt, other_14nt, n_count(30)
     integer :: i, j, k, base, n_region, n_edge, tot_14nt, tot_4nt
-    integer :: across1, across2, node, iniL
+    integer :: across1, across2, node, iniL, inc
     integer :: cir_rgb(3), cir_size
     logical :: b_14nt, b_4nt
     character(200) :: path
@@ -4304,7 +4304,7 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
         if(graph.node(base) == 15) cir_rgb(:) = [   0, 148,  68 ]
 
         if(graph.node(base) == 16) cir_rgb(:) = [  38,  34,  98 ]
-        if(graph.node(base) == 17) cir_rgb(:) = [ 117,  76,  41 ] 
+        if(graph.node(base) == 17) cir_rgb(:) = [ 117,  76,  41 ]
         if(graph.node(base) == 18) cir_rgb(:) = [ 241,  90,  41 ]
         if(graph.node(base) == 19) cir_rgb(:) = [  43, 182, 115 ]
         if(graph.node(base) == 20) cir_rgb(:) = [ 146,  39, 143 ]
@@ -4316,6 +4316,36 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
         if(graph.node(base) == 26) cir_rgb(:) = [ 188, 190, 192 ]
         if(graph.node(base) == 27) cir_rgb(:) = [ 169, 124,  80 ]
         if(graph.node(base) == 28) cir_rgb(:) = [ 239,  65,  54 ]
+
+        inc = 50
+        if(graph.node(base) == 29) cir_rgb(:) = [ mod(218+inc, 255), 111, mod(171+inc, 255) ]
+        if(graph.node(base) == 30) cir_rgb(:) = [ mod(247+inc, 255), 148, mod( 29+inc, 255) ]
+        if(graph.node(base) == 31) cir_rgb(:) = [ mod(  0+inc, 255), 185, mod(242+inc, 255) ]
+        if(graph.node(base) == 32) cir_rgb(:) = [ mod(  0+inc, 255), 168, mod(117+inc, 255) ]
+        if(graph.node(base) == 33) cir_rgb(:) = [ mod(236+inc, 255), 222, mod( 56+inc, 255) ]
+        if(graph.node(base) == 34) cir_rgb(:) = [ mod(241+inc, 255),  90, mod( 34+inc, 255) ]
+        if(graph.node(base) == 35) cir_rgb(:) = [ mod( 35+inc, 255),  31, mod( 32+inc, 255) ]
+        if(graph.node(base) == 36) cir_rgb(:) = [ mod(194+inc, 255), 181, mod(155+inc, 255) ]
+        if(graph.node(base) == 37) cir_rgb(:) = [ mod(190+inc, 255),  30, mod( 45+inc, 255) ]
+        if(graph.node(base) == 38) cir_rgb(:) = [ mod( 46+inc, 255),  49, mod(146+inc, 255) ]
+        if(graph.node(base) == 39) cir_rgb(:) = [ mod(139+inc, 255),  94, mod( 60+inc, 255) ]
+        if(graph.node(base) == 40) cir_rgb(:) = [ mod(126+inc, 255),  84, mod(163+inc, 255) ]
+        if(graph.node(base) == 41) cir_rgb(:) = [ mod(147+inc, 255), 149, mod(152+inc, 255) ]
+        if(graph.node(base) == 42) cir_rgb(:) = [ mod( 65+inc, 255),  64, mod( 66+inc, 255) ]
+        if(graph.node(base) == 43) cir_rgb(:) = [ mod(  0+inc, 255), 148, mod( 68+inc, 255) ]
+        if(graph.node(base) == 44) cir_rgb(:) = [ mod( 38+inc, 255),  34, mod( 98+inc, 255) ]
+        if(graph.node(base) == 45) cir_rgb(:) = [ mod(117+inc, 255),  76, mod( 41+inc, 255) ]
+        if(graph.node(base) == 46) cir_rgb(:) = [ mod(241+inc, 255),  90, mod( 41+inc, 255) ]
+        if(graph.node(base) == 47) cir_rgb(:) = [ mod( 43+inc, 255), 182, mod(115+inc, 255) ]
+        if(graph.node(base) == 48) cir_rgb(:) = [ mod(146+inc, 255),  39, mod(143+inc, 255) ]
+        if(graph.node(base) == 49) cir_rgb(:) = [ mod(215+inc, 255), 223, mod( 35+inc, 255) ]
+        if(graph.node(base) == 50) cir_rgb(:) = [ mod(155+inc, 255), 133, mod(121+inc, 255) ]
+        if(graph.node(base) == 51) cir_rgb(:) = [ mod( 33+inc, 255),  64, mod(154+inc, 255) ]
+        if(graph.node(base) == 52) cir_rgb(:) = [ mod(237+inc, 255),  28, mod( 36+inc, 255) ]
+        if(graph.node(base) == 53) cir_rgb(:) = [ mod( 89+inc, 255),  74, mod( 66+inc, 255) ]
+        if(graph.node(base) == 54) cir_rgb(:) = [ mod(188+inc, 255), 190, mod(192+inc, 255) ]
+        if(graph.node(base) == 55) cir_rgb(:) = [ mod(169+inc, 255), 124, mod( 80+inc, 255) ]
+        if(graph.node(base) == 56) cir_rgb(:) = [ mod(239+inc, 255),  65, mod( 54+inc, 255) ]
 
         cir_size = 100
         !if(dna.top(base).node == -1) then
