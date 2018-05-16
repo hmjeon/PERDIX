@@ -190,9 +190,9 @@ function Is_Same_Vector(pos_1, pos_2) result(flag)
     if( dabs(dabs(pos_1(1)) - dabs(pos_2(1))) < 0.00001d0 .and. &
         dabs(dabs(pos_1(2)) - dabs(pos_2(2))) < 0.00001d0 .and. &
         dabs(dabs(pos_1(3)) - dabs(pos_2(3))) < 0.00001d0 .and. &
-        pos_1(1) * pos_2(1) > 0 .and. &
-        pos_1(2) * pos_2(2) > 0 .and. &
-        pos_1(3) * pos_2(3) > 0 ) then
+        pos_1(1) * pos_2(1) >= 0.0 .and. &
+        pos_1(2) * pos_2(2) >= 0.0 .and. &
+        pos_1(3) * pos_2(3) >= 0.0 ) then
 
     flag = .true.
     end if
