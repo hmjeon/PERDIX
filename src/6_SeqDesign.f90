@@ -6014,8 +6014,8 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
 
     ! File open for route step
     path = trim(prob.path_work)//"/"//trim(prob.name_file)
-    open(unit=703, file=trim(path)//"_10_route_scaf.bild", form="formatted")
-    open(unit=704, file=trim(path)//"_11_route_stap.bild", form="formatted")
+    open(unit=703, file=trim(path)//"_10_routing_scaf.bild", form="formatted")
+    open(unit=704, file=trim(path)//"_11_routing_stap.bild", form="formatted")
 
     ! ==================================================
     ! For scaffold strand
@@ -6231,8 +6231,8 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
     end if
 
     path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
-    open(unit=703, file=trim(path)//"_10_route_scaf.dat", form="formatted")
-    open(unit=704, file=trim(path)//"_11_route_stap.dat", form="formatted")
+    open(unit=703, file=trim(path)//"_10_routing_scaf.dat", form="formatted")
+    open(unit=704, file=trim(path)//"_11_routing_stap.dat", form="formatted")
 
     ! For scaffold bases
     write(703, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
@@ -6304,7 +6304,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
 
     ! File open for sequence design
     path = trim(prob.path_work)//"/"//trim(prob.name_file)
-    open(unit=705, file=trim(path)//"_12_route_all.bild", form="formatted")
+    open(unit=705, file=trim(path)//"_12_routing_all.bild", form="formatted")
 
     if(para_output_Tecplot == "on") then
         allocate(base_scaf(dna.n_base_scaf*2, 3))
@@ -6591,7 +6591,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
-    open(unit=705, file=trim(path)//"_12_route_all.dat", form="formatted")
+    open(unit=705, file=trim(path)//"_12_routing_all.dat", form="formatted")
     open(unit=706, file=trim(path)//"_15_sep_line.dat", form="formatted")
 
     ! For scaffold bases

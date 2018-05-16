@@ -93,10 +93,10 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
     call Basepair_Set_Conn_Junction(geom, bound, mesh)
 
     ! Write cylindrial model with orientation
-    call Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, "cylinder_1")
+    call Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, "cylindrical_model_1")
 
     ! Write cylindrial model, cylinder 1
-    call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cylinder_1")
+    call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cylindrical_model_1")
 
     ! Modify the length of the duplex at the junction
     call Basepair_Modify_Junction(prob, geom, bound, mesh)
@@ -108,10 +108,10 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
     call Basepair_Make_Sticky_End(geom, bound, mesh)
 
     ! Write cylindrial model with orientation
-    call Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, "cylinder_2")
+    call Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, "cylindrical_model_2")
 
     ! Write cylindrial model, cylinder 2
-    call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cylinder_2")
+    call Basepair_Chimera_Cylinder(prob, geom, bound, mesh, "cylindrical_model_2")
 
     ! Write Chimera file for base pairs
     call Basepair_Chimera_Mesh(prob, geom, mesh)
@@ -752,15 +752,15 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     f_ori     = para_chimera_502_ori
     f_mitered = .true.
 
-    if(mode == "cylinder_1") path = trim(prob.path_work)//"/"//trim(prob.name_file)//"_04_"
-    if(mode == "cylinder_2") path = trim(prob.path_work)//"/"//trim(prob.name_file)//"_05_"
+    if(mode == "cylindrical_model_1") path = trim(prob.path_work)//"/"//trim(prob.name_file)//"_05_"
+    if(mode == "cylindrical_model_2") path = trim(prob.path_work)//"/"//trim(prob.name_file)//"_06_"
     open(unit=502, file=trim(path)//trim(mode)//".bild", form="formatted")
 
     ! Cylinder radius
     radius = para_rad_helix + para_gap_helix / 2.0d0
 
     ! Write cylinder model base on edges
-    if(mode == "cylinder_1" .or. (mode == "cylinder_2" .and. f_mitered == .false.)) then
+    if(mode == "cylindrical_model_1" .or. (mode == "cylindrical_2" .and. f_mitered == .false.)) then
 
         write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
 
@@ -866,7 +866,7 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     end do
 
     ! Print initial geometry with cylindrical model 1
-    if(mode == "cylinder_1") then
+    if(mode == "cylindrical_model_1") then
 
         ! Write initial points
         write(502, "(a)"), ".color red"
@@ -2379,7 +2379,7 @@ subroutine Basepair_Chimera_Cross_Geometry(prob, geom)
     f_info = para_chimera_504_info
 
     path = trim(prob.path_work)//"/"//trim(prob.name_file)
-    open(unit=504, file=trim(path)//"_06_multi_line.bild", form="formatted")
+    open(unit=504, file=trim(path)//"_04_doubled_lines.bild", form="formatted")
 
     ! Write cross-sectional points
     write(504, "(a)"), ".color red"
@@ -2501,7 +2501,7 @@ subroutine Basepair_Chimera_Cross_Geometry(prob, geom)
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
-    open(unit=504, file=trim(path)//"_06_multi_line.dat", form="formatted")
+    open(unit=504, file=trim(path)//"_04_doubled_lines.dat", form="formatted")
 
     write(504, "(a )"), 'TITLE = "'//trim(prob.name_file)//'"'
     write(504, "(a )"), 'VARIABLES = "X", "Y", "Z", "weight"'

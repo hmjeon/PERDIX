@@ -436,7 +436,7 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         write(i, "(a)")
         write(i, "(a)"), "   +======================= C O M P L E T E D ==========================+"
         write(i, "(a)"), "   |                                                                    |"
-        write(i, "(a)"), "   |   PERDIX generated 22 output files in the output folder.           |"
+        write(i, "(a)"), "   |   PERDIX generated 20 output files in the output folder.           |"
         write(i, "(a)"), "   |                                                                    |"
         write(i, "(a)"), "   +====================================================================+"
         write(i, "(a)")
