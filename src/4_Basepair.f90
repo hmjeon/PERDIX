@@ -760,7 +760,7 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     radius = para_rad_helix + para_gap_helix / 2.0d0
 
     ! Write cylinder model base on edges
-    if(mode == "cylindrical_model_1" .or. (mode == "cylindrical_2" .and. f_mitered == .false.)) then
+    if(mode == "cylindrical_model_1" .or. (mode == "cylindrical_model_2" .and. f_mitered == .false.)) then
 
         write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
 
@@ -774,7 +774,7 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
             write(502, "(3f9.3$)"), pos_2(1:3)
             write(502, "(1f9.3 )"), radius
         end do
-    else if(mode == "cylinder_2" .and. f_mitered == .true.) then
+    else if(mode == "cylindrical_model_2" .and. f_mitered == .true.) then
 
         do i = 1, geom.n_croL
 
