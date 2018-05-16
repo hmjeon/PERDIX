@@ -247,12 +247,12 @@ subroutine Importer_GEO(prob, geom)
 
                 ! MATLAB exe - DistMesh
                 ! tools\DistMesh\DistMesh.exe input\ex_des1_shapely.geo 0.3
-                !results = systemqq('tools\DistMesh\DistMesh.exe input\'&
-                !    //trim(fullname)//' '//trim(Dble2Str(p_mesh)))
+                results = systemqq('tools\DistMesh\DistMesh.exe input\'&
+                    //trim(fullname)//' '//trim(Dble2Str(p_mesh)))
 
-                results = systemqq("matlab -wait -nodisplay -nosplash -nodesktop -r "//&
-                    '"addpath tools/DistMesh/src; addpath tools/DistMesh; DistMesh('//&
-                    "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//')"')
+                !results = systemqq("matlab -wait -nodisplay -nosplash -nodesktop -r "//&
+                !    '"addpath tools/DistMesh/src; addpath tools/DistMesh; DistMesh('//&
+                !    "'input/"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//')"')
             else if(para_platform == "mac") then
 
                 ! Python - DistMesh
