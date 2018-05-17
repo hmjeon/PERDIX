@@ -6,7 +6,7 @@
 
 **Documentation and Tutorials:**</br>
 
-The full software documention can be downloaded [here](https://github.com/lcbb/PERDIX-2L/raw/master/doc/Software%20Documentation.pdf).</br>
+The full software documention can be downloaded [here](https://github.com/hmjeon/PERDIX-2L/raw/master/doc/Software%20Documentation.pdf).</br>
 
 Please find below 3 tutorial movies on how to use PERDIX to generate computer aided design files, automate meshing, generate sequences, and review atomic models.
 
