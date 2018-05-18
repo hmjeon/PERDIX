@@ -954,11 +954,11 @@ subroutine Input_Set_Num_BP_Edge(prob, geom)
     if(prob.sel_bp_edge == 8) prob.n_bp_edge = 115     ! 10.5bp/turn * 11 turn
     if(prob.sel_bp_edge == 9) prob.n_bp_edge = 126     ! 10.5bp/turn * 12 turn
 
-    if(prob.sel_bp_edge >= 10 .and. prob.sel_bp_edge <= 36) then
+    if(prob.sel_bp_edge >= 10 .and. prob.sel_bp_edge <= 37) then
         write(0, "(a)")
         write(0, "(a)"), "   +============================ E R R O R =============================+"
         write(0, "(a)"), "   |                                                                    |"
-        write(0, "(a)"), "   |  The minimum edge length should be over 37-bp.                     |"
+        write(0, "(a)"), "   |  The minimum edge length should be over 38-bp.                     |"
         write(0, "(a)"), "   |                                                                    |"
         write(0, "(a)"), "   +====================================================================+"
         write(0, "(a)")
