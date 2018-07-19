@@ -349,6 +349,29 @@ subroutine Importer_SVG(prob, geom)
     ! Read number of points and faces
     i = 0
     if(prob.type_file == 'svg') then
+        
+        ! Check the number of lines
+        open(unit=1002, file=path, action="read")
+        do
+            ! Read line into character variable
+            read(1002, "(a)", iostat = ierr) text
+
+            if(ierr /= 0) exit
+
+            ! Read word line
+            read(text, *) word
+
+            ! Found search string at beginning of line
+            if(word == search_str) then
+                i = i + 1
+            end if
+        end do
+        close(unit=1002)
+
+        open(unit=1003, file=trim(path)//".geo", form="formatted")
+        write(1003, "(3i)"), i * 2, i, 0
+
+        i = 0
         open(unit=1002, file=path, action="read")
         do
             ! Read line into character variable
@@ -368,15 +391,23 @@ subroutine Importer_SVG(prob, geom)
                 length = len_trim(cy1); xx = cy1(5:length-1); read(xx,*), y1
                 length = len_trim(cx2); xx = cx2(5:length-1); read(xx,*), x2
                 length = len_trim(cy2); xx = cy2(5:length-1); read(xx,*), y2
+
+                print *, x1, y1
+                write(1003, "(i, 2f)"), 2*i-1, x1, y1
+                write(1003, "(i, 2f)"), 2*i,   x2, y2
             end if
         end do
     end if
 
-    ! Make GEO file
-    
-    ! Read GEO file
+    do j = 1, i
+        write(1003, "(3i)"), j, 2*j-1, 2*j
+    end do
 
-    stop
+    close(unit=1003)
+stop
+    ! Make GEO file
+
+    ! Read GEO file
 
     ! Boundary & internal mesh design
     if(geom.n_face == 0) then
