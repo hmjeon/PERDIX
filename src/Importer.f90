@@ -328,10 +328,12 @@ subroutine Importer_SVG(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: p_mesh
-    integer :: i, j, n_poi, n_line, temp
+    double precision :: p_mesh, x1
+    integer :: i, j, n_poi, n_line, temp, ierr, length
     logical :: results
-    character(200) :: path, fullname
+    character(200) :: path, fullname, xx1, xx2, xx3, xx4, xx5, xx6
+    character (len=100) :: text, word
+    character (len=*), parameter :: search_str = "<line "
 
     ! Data structure for meshing
     type :: MeshType
@@ -345,11 +347,34 @@ subroutine Importer_SVG(prob, geom)
     path     = "input/"//fullname
 
     ! Read number of points and faces
-    if(prob.type_file == 'geo') then
-        open(unit=1002, file=path, form="formatted")
-        read(1002, *), geom.n_iniP, n_line, geom.n_face
+    i = 0
+    if(prob.type_file == 'svg') then
+        open(unit=1002, file=path, action="read")
+        do
+            ! Read line into character variable
+            read(1002, "(a)", iostat = ierr) text
+
+            if(ierr /= 0) exit
+
+            ! Read word line
+            read(text, *) word
+
+            ! Found search string at beginning of line
+            if(word == search_str) then
+                i = i + 1
+                read(text, *), xx1, xx2, xx3, xx4, xx5, xx6
+                length = len_trim(xx3)
+                xx1 = xx3(5:9)
+                read(xx1,*) x1
+                print *, i, x1, trim(xx1)
+            end if
+        end do
     end if
 
+
+    stop
+    
+    
     ! Boundary & internal mesh design
     if(geom.n_face == 0) then
         if(prob.type_file == 'geo') close(unit=1002)
