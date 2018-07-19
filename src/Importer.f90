@@ -328,12 +328,12 @@ subroutine Importer_SVG(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: p_mesh, x1
+    double precision :: p_mesh, x1, y1, x2, y2
     integer :: i, j, n_poi, n_line, temp, ierr, length
     logical :: results
-    character(200) :: path, fullname, xx1, xx2, xx3, xx4, xx5, xx6
-    character (len=100) :: text, word
-    character (len=*), parameter :: search_str = "<line "
+    character(200) :: path, fullname
+    character(len=100) :: text, word, xx, cx1, cx2, cy1, cy2
+    character(len=*), parameter :: search_str = "<line "
 
     ! Data structure for meshing
     type :: MeshType
@@ -362,19 +362,22 @@ subroutine Importer_SVG(prob, geom)
             ! Found search string at beginning of line
             if(word == search_str) then
                 i = i + 1
-                read(text, *), xx1, xx2, xx3, xx4, xx5, xx6
-                length = len_trim(xx3)
-                xx1 = xx3(5:9)
-                read(xx1,*) x1
-                print *, i, x1, trim(xx1)
+                read(text, *), xx, xx, cx1, cy1, cx2, cy2
+
+                length = len_trim(cx1); xx = cx1(5:length-1); read(xx,*), x1
+                length = len_trim(cy1); xx = cy1(5:length-1); read(xx,*), y1
+                length = len_trim(cx2); xx = cx2(5:length-1); read(xx,*), x2
+                length = len_trim(cy2); xx = cy2(5:length-1); read(xx,*), y2
             end if
         end do
     end if
 
+    ! Make GEO file
+    
+    ! Read GEO file
 
     stop
-    
-    
+
     ! Boundary & internal mesh design
     if(geom.n_face == 0) then
         if(prob.type_file == 'geo') close(unit=1002)
