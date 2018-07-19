@@ -63,7 +63,7 @@
 		<Filter Name="Input">
 		<File RelativePath="..\src\Exam_2D_Open.f90"/>
 		<File RelativePath="..\src\Importer.f90"/></Filter>
-		<Filter Name="PERDIX-2L">
+		<Filter Name="PERDIX">
 		<File RelativePath="..\src\1_Input.f90"/>
 		<File RelativePath="..\src\2_ModGeo.f90"/>
 		<File RelativePath="..\src\3_Section.f90"/>
@@ -72,5 +72,5 @@
 		<File RelativePath="..\src\6_SeqDesign.f90"/>
 		<File RelativePath="..\src\7_Output.f90"/></Filter>
 		<File RelativePath=".\env.txt"/>
-		<File RelativePath="..\src\PERDIX-2L.f90"/></Filter></Files>
+		<File RelativePath="..\src\PERDIX.f90"/></Filter></Files>
 	<Globals/></VisualStudioProject>
