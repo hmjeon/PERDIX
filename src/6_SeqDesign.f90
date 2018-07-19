@@ -6,15 +6,15 @@
 !
 ! =============================================================================
 !
-! This is part of PERDIX-2L, which allows scientists to build and solve
+! This is part of PERDIX, which allows scientists to build and solve
 ! the sequence design of complex DNAnanostructures.
 ! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
 ! License - GPL version 3
-! PERDIX-2L is free software: you can redistribute it and/or modify it under
+! PERDIX is free software: you can redistribute it and/or modify it under
 ! the terms of the GNU General Public License as published by the Free Software
 ! Foundation, either version 3 of the License, or any later version.
-! PERDIX-2L is distributed in the hope that it will be useful, but WITHOUT
+! PERDIX is distributed in the hope that it will be useful, but WITHOUT
 ! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 ! FOR A PARTICULAR PURPOSE. See the GNU General Public License
 ! for more details.
@@ -5561,7 +5561,7 @@ subroutine SeqDesign_Import_Sequence(dna)
             write(i, "(a)"), "   +============================ E R R O R =============================+"
             write(i, "(a)"), "   |                                                                    |"
             write(i, "(a)"), "   |  User-defined scaffold sequence length are shorter than            |"
-            write(i, "(a)"), "   |  # of scaffold nucleotides. PERDIX-2L will be terminated.          |"
+            write(i, "(a)"), "   |  # of scaffold nucleotides. PERDIX will be terminated.             |"
             write(i, "(a)"), "   |                                                                    |"
             write(i, "(a)"), "   +====================================================================+"
             write(i, "(a)")

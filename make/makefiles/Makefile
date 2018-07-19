@@ -1,5 +1,5 @@
 #
-# Makefiles for PERDIX-2L, written by Hyungmin Jun
+# Makefiles for PERDIX, written by Hyungmin Jun
 #
 #	-fast
 #	Maximizes speed across the entire program.
@@ -20,13 +20,13 @@ objects = Data_Bound.o Data_DNA.o Data_Geom.o Data_Mesh.o Data_Prob.o \
 	Para.o List.o Math.o Mani.o SpanTree.o Importer.o \
 	Exam_2D_Open.o \
 	3_Section.o 1_Input.o 2_ModGeo.o 4_Basepair.o 5_Route.o \
-	6_SeqDesign.o 7_Output.o PERDIX-2L.o
+	6_SeqDesign.o 7_Output.o PERDIX.o
 
 f90comp = ifort
 
 # Makefile
-PERDIX-2L: $(objects)
-	$(f90comp) -o PERDIX-2L $(objects)
+PERDIX: $(objects)
+	$(f90comp) -o PERDIX $(objects)
 
 Data_Bound.mod: Data_Bound.o Data_Bound.f90
 	$(f90comp) -c Data_Bound.f90
@@ -123,10 +123,10 @@ Exam_2D_Open.o: Exam_2D_Open.f90
 7_Output.o : 7_Output.f90
 	$(f90comp) -c 7_Output.f90
 
-PERDIX-2L.mod : PERDIX-2L.o PERDIX-2L.f90
-	$(f90comp) -c PERDIX-2L.f90
-PERDIX-2L.o : PERDIX-2L.f90
-	$(f90comp) -c PERDIX-2L.f90
+PERDIX.mod : PERDIX.o PERDIX.f90
+	$(f90comp) -c PERDIX.f90
+PERDIX.o : PERDIX.f90
+	$(f90comp) -c PERDIX.f90
 
 # Cleaning everything
 clean :

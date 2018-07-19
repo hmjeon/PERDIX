@@ -6,15 +6,15 @@
 !
 ! =============================================================================
 !
-! This is part of PERDIX-2L, which allows scientists to build and solve
+! This is part of PERDIX, which allows scientists to build and solve
 ! the sequence design of complex DNAnanostructures.
 ! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
 ! License - GPL version 3
-! PERDIX-2L is free software: you can redistribute it and/or modify it under
+! PERDIX is free software: you can redistribute it and/or modify it under
 ! the terms of the GNU General Public License as published by the Free Software
 ! Foundation, either version 3 of the License, or any later version.
-! PERDIX-2L is distributed in the hope that it will be useful, but WITHOUT
+! PERDIX is distributed in the hope that it will be useful, but WITHOUT
 ! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 ! FOR A PARTICULAR PURPOSE. See the GNU General Public License
 ! for more details.
@@ -575,7 +575,7 @@ subroutine Input_Set_Command
 
     ! Set command environments
     if(para_platform == "dev" .or. para_platform == "win") then
-        results = systemqq('title PERDIX-2L')                   ! cmd title
+        results = systemqq('title PERDIX')                   ! cmd title
         results = systemqq('mode con: cols=135 lines=6000')     ! cmd size
         results = systemqq('color')                             ! convert color, 02, f0, f1, f2
         results = systemqq('date /t')                           ! display time
@@ -591,7 +591,7 @@ subroutine Input_Print_Problem
     write(0, "(a)")
     write(0, "(a)"), "   +============================================================================+"
     write(0, "(a)"), "   |                                                                            |"
-    write(0, "(a)"), "   |    PERDIX-2L by Hyungmin Jun (hyungminjun@outlook.com), Bathe Lab, MIT     |"
+    write(0, "(a)"), "   |     PERDIXL by Hyungmin Jun (hyungminjun@outlook.com), Bathe Lab, MIT      |"
     write(0, "(a)"), "   |                                                                            |"
     write(0, "(a)"), "   +============================================================================+"
     write(0, "(a)")

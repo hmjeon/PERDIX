@@ -1,12 +1,12 @@
 !
 ! =============================================================================
 !
-! PERDIX-2L v1.0
+! PERDIX v1.0
 ! Last Updated : 05/09/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
 ! =============================================================================
 !
-! PERDIX-2L is an open-source software, which allows scientists to build and
+! PERDIX is an open-source software, which allows scientists to build and
 ! solve the sequence design of complex 2D DNA wireframe lattice.
 ! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
@@ -23,7 +23,7 @@
 !
 ! -----------------------------------------------------------------------------
 !
-program PERDIX_2L
+program PERDIX
 
     use Data_Prob       ! Data structure for problem definition
     use Data_Geom       ! Data strucutre for face, edge, point and section
@@ -573,4 +573,4 @@ end subroutine Verify_Solution
 
 ! -----------------------------------------------------------------------------
 
-end program PERDIX_2L
+end program PERDIX

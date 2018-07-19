@@ -70,12 +70,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "CompanyName", "Hyungmin Jun (hyungminjun@outlook.com)"
-            VALUE "FileDescription", "PERDIX-2L"
+            VALUE "FileDescription", "PERDIX"
             VALUE "FileVersion", "1.0.0.0"
             VALUE "InternalName", "TODO: <Internal name>"
             VALUE "LegalCopyright", "Copyright Hyungmin Jun 2015-2016. All Rights Reserved."
-            VALUE "OriginalFilename", "PERDIX-2L"
-            VALUE "ProductName", "PERDIX-2L"
+            VALUE "OriginalFilename", "PERDIX"
+            VALUE "ProductName", "PERDIX"
             VALUE "ProductVersion", "1.0.0.0"
         END
     END

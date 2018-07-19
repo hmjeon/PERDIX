@@ -6,15 +6,15 @@
 !
 ! =============================================================================
 !
-! This is part of PERDIX-2L, which allows scientists to build and solve
+! This is part of PERDIX, which allows scientists to build and solve
 ! the sequence design of complex DNAnanostructures.
 ! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
 ! License - GPL version 3
-! PERDIX-2L is free software: you can redistribute it and/or modify it under
+! PERDIX is free software: you can redistribute it and/or modify it under
 ! the terms of the GNU General Public License as published by the Free Software
 ! Foundation, either version 3 of the License, or any later version.
-! PERDIX-2L is distributed in the hope that it will be useful, but WITHOUT
+! PERDIX is distributed in the hope that it will be useful, but WITHOUT
 ! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 ! FOR A PARTICULAR PURPOSE. See the GNU General Public License
 ! for more details.
@@ -178,7 +178,7 @@ subroutine ModGeo_Set_Neighbor_Point(prob, geom)
             write(i, "(a)"), "   +============================ E R R O R =============================+"
             write(i, "(a)"), "   |                                                                    |"
             write(i, "(a)"), "   |   This geometry is not open wireframe.                             |"
-            write(i, "(a)"), "   |   PERDIX-2L only supports the 2D wireframe structure.              |"
+            write(i, "(a)"), "   |   PERDIX only supports the 2D wireframe structure.                 |"
             write(i, "(a)"), "   |                                                                    |"
             write(i, "(a)"), "   +====================================================================+"
             write(i, "(a)")
