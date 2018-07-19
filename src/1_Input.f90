@@ -615,7 +615,7 @@ subroutine Input_Print_Problem
     write(0, "(a)"), "      19. L-Shape [42-bp],     20. L-Shape [63-bp],         21. L-Shape [84-bp]"
     write(0, "(a)"), "      22. Curved Arm [Quad],   23. Curved Arm [Tri],        24. Curved Arm [Mixed]"
     write(0, "(a)")
-    write(0, "(a)"), "   Select the number or type geometry file (*.geo, *.igs, *.iges, *.ply) [Enter]: "
+    write(0, "(a)"), "   Select the number or type geometry file (*.geo, *.igs, *.iges, *.svg, *.ply) [Enter]: "
     write(0, "(a)")
 end subroutine Input_Print_Problem
 
@@ -704,6 +704,8 @@ subroutine Input_Select_File(prob, geom)
         call Importer_PLY(prob, geom)
     else if(prob.type_file == "geo" .or. prob.type_file == "igs" .or. prob.type_file == "iges") then
         call Importer_GEO(prob, geom)
+    else if(prob.type_file == "svg") then
+        call Importer_SVG(prob, geom)
     else
         write(0, "(a)")
         write(0, "(a)"), "   +============================ E R R O R =============================+"
