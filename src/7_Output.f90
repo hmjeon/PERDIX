@@ -76,9 +76,7 @@ subroutine Output_Generation(prob, geom, bound, mesh, dna)
     do i = 0, 11, 11
         write(i, "(a)")
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
-        write(i, "(a)"), "   |                                                                    |"
         write(i, "(a)"), "   |                            7. Outputs                              |"
-        write(i, "(a)"), "   |                                                                    |"
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
         write(i, "(a)")
         call Space(i, 6)

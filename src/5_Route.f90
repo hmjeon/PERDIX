@@ -99,9 +99,7 @@ subroutine Route_Generation(prob, geom, bound, mesh, dna)
     do i = 0, 11, 11
         write(i, "(a)")
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
-        write(i, "(a)"), "   |                                                                    |"
         write(i, "(a)"), "   |              5. Build B-form DNA and scaffold route                |"
-        write(i, "(a)"), "   |                                                                    |"
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
         write(i, "(a)")
     end do

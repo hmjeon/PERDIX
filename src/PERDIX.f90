@@ -250,9 +250,7 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
     do i = 0, 11, 11
         write(i, "(a)")
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
-        write(i, "(a)"), "   |                                                                    |"
-        write(i, "(a)"), "   |   8. Summary of DNA Nanostructures with Arbitrary Cross-section    |"
-        write(i, "(a)"), "   |                                                                    |"
+        write(i, "(a)"), "   |              8. Summary of DNA wireframe lattice                   |"
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
         write(i, "(a)")
 

@@ -76,9 +76,7 @@ subroutine Basepair_Discretize(prob, geom, bound, mesh)
     do i = 0, 11, 11
         write(i, "(a)")
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
-        write(i, "(a)"), "   |                                                                    |"
         write(i, "(a)"), "   |                    4. Build the basepair model                     |"
-        write(i, "(a)"), "   |                                                                    |"
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
         write(i, "(a)")
     end do

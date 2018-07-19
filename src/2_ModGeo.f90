@@ -75,9 +75,7 @@ subroutine ModGeo_Modification(prob, geom, bound)
     do i = 0, 11, 11
         write(i, "(a)")
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
-        write(i, "(a)"), "   |                                                                    |"
         write(i, "(a)"), "   |                2. Build modified edges and points                  |"
-        write(i, "(a)"), "   |                                                                    |"
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
         write(i, "(a)")
     end do

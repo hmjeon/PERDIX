@@ -66,9 +66,7 @@ subroutine Section_Generation(prob, geom, bound)
     do i = 0, 11, 11
         write(i, "(a)")
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
-        write(i, "(a)"), "   |                                                                    |"
         write(i, "(a)"), "   |                 3. Build cross-sectional edges                     |"
-        write(i, "(a)"), "   |                                                                    |"
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
         write(i, "(a)")
     end do
