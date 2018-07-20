@@ -43,7 +43,6 @@ program PERDIX
     implicit none
 
     call Main           ! Main module
-    !call Report         ! Main module for auto run
 
 contains
 
@@ -98,142 +97,6 @@ subroutine Main()
 
     !if(para_external == .true.) pause
 end subroutine Main
-
-! -----------------------------------------------------------------------------
-
-! Autorun to calculate design parameters
-subroutine Report()
-
-    ! Declare variables
-    type(ProbType)  :: prob     ! Problem data
-    type(GeomType)  :: geom     ! Geometry data
-    type(BoundType) :: bound    ! Boundary data
-    type(MeshType)  :: mesh     ! Basepaire data
-    type(DNAType)   :: dna      ! B-form DNA data
-
-    character(10) :: char_sec, char_edge, char_cut, char_vert
-    integer :: i, results, sec, edge_in, edge, max_stap, min_stap
-
-    sec       = 1           ! Section number
-    edge_in   = 42          ! Edge length
-    char_vert = "mitered"   ! Flat or mitered vertex
-    char_cut  = "max"       ! Staple-break rule
-
-    ! Open file
-    open(unit = 90, file = "Report_2D_Lattice_"//trim(char_cut)//".txt", form="formatted")
-
-    ! Remove the directory and files
-    results = systemqq("rd "//trim("output")//' /s /q')
-
-    ! Infomation
-    write(90, "(a)"), "==========================================="
-    write(90, "(a)"), "Sec 1: DX tile defined on honeycomb lattice"
-    write(90, "(a)"), "Edge 1: 31bp, 2: 42bp , 3: 52bp, 4: 63bp"
-    write(90, "(a)"), "Staple cutting: "//trim(adjustl(char_cut))
-    write(90, "(a)"), "==========================================="
-    write(90, "(a)")
-
-    call space (90, 30)
-    write(90, "(a)"), "|=========================================================================================================================================================================|"
-    call space (90, 30)
-    write(90, "(a)"), "|=========|==================== TOTAL LENGTH ==================|======== STAPLE =======|===== SEED ====|== STRAND RATIO =|= NU RATIO=|= PARA=|=== CROSSOVER ===|=UNPAIRED=|"
-    call space (90, 30)
-    write(90, "(a)"), " Sec| Edge| L_Scaf| L_Stap|   L_BP|L_Mitered(ratio)| MinE| MaxE| nStap| Min| Max|   ave| 14nt| S14| 4nt| 14nt|  S14|  4nt| 14nt|  4nt| p1| p2| scaf|  stap| one| scaf| stap"
-    write(90, "(a$)"), "----------------------------  "
-    write(90, "(a )"), "----|-----|-------|-------|-------|----------------|-----|-----|------|----|----|------|-----|----|----|-----|-----|-----|-----|-----|---|---|-----|------|----|-----|----|"
-
-    min_stap = 10000
-    max_stap =-10000
-
-    ! Problem
-    do i = 1, 24
-
-        ! Edge length
-        edge = edge_in
-        if(i ==  5) edge = 31
-        if(i == 10) edge = 39
-        if(i == 12) edge = 36
-
-        if(i == 19) edge = 59
-        if(i == 20) edge = 39
-        if(i == 21) edge = 49
-
-        if(i == 23) edge = 63
-        if(i ==  6 .or. i == 16 .or. i == 17 .or. i == 18 .or. i == 24) then
-            edge = 84
-        end if
-
-        ! Initialize input
-        call Input_Initialize_Report(prob, geom, mesh, i, sec, edge, char_vert, char_cut)
-
-        ! 2nd step : Modified geometry seperated from vertex
-        call ModGeo_Modification(prob, geom, bound)
-
-        ! 3rd step : Cross-sectional geometry
-        call Section_Generation(prob, geom, bound)
-
-        ! 4th step : Basepair generation from cross-sectional geometry
-        call Basepair_Discretize(prob, geom, bound, mesh)
-
-        ! 5th step : B-form DNA and scaffold route
-        call Route_Generation(prob, geom, bound, mesh, dna)
-
-        ! 6th step : Sequence design
-        call SeqDesign_Design(prob, geom, mesh, dna)
-
-        ! 7th step : Generate outputs and run post-processing tools
-        call Output_Generation(prob, geom, bound, mesh, dna)
-
-        ! Print information
-        call Print_Information(prob, geom, bound, mesh, dna)
-
-        ! Deallocate global dynamic array
-        call Deallocate_Variables(geom, bound, mesh, dna)
-
-        ! Print problem
-        write(90, "(a4, a24, a$)"), trim(adjustl(Int2Str(i)))//". ", trim(prob.name_prob), ","
-
-        ! Print information
-        write(90, "(a6$)"), trim(adjustl(Int2Str(sec)))//"|"
-        write(90, "(a6$)"), trim(adjustl(Int2Str(edge)))//"|"
-        write(90, "(a8$)"), trim(adjustl(Int2Str(dna.n_base_scaf)))//"|"
-        write(90, "(a8$)"), trim(adjustl(Int2Str(dna.n_base_stap)))//"|"
-        write(90, "(a8$)"), trim(adjustl(Int2Str(mesh.n_node)))//"|"
-        write(90, "(a8$)"), trim(adjustl(Int2Str(mesh.n_mitered)))//"("
-        write(90, "(a9$)"), trim(adjustl(Dble2Str(dble(mesh.n_mitered)/dble(mesh.n_node)*100.0d0)))//"%)|"
-        write(90, "(a6$)"), trim(adjustl(Int2Str(geom.min_edge_length)))//"|"
-        write(90, "(a6$)"), trim(adjustl(Int2Str(geom.max_edge_length)))//"|"
-        write(90, "(a7$)"), trim(adjustl(Int2Str(dna.n_stap)))//"|"
-        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.len_min_stap)))//"|"
-        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.len_max_stap)))//"|"
-        write(90, "(a7$)"), trim(adjustl(Dble2Str2(dna.len_ave_stap)))//"|"
-        write(90, "(a6$)"), trim(adjustl(Int2Str(dna.n_14nt)))//"|"
-        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.n_s14nt)))//"|"
-        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.n_4nt)))//"|"
-        write(90, "(a6$)"), trim(adjustl(Dble2Str(dble(dna.n_14nt)/dble(dna.n_stap))))//"|"
-        write(90, "(a6$)"), trim(adjustl(Dble2Str(dble(dna.n_s14nt)/dble(dna.n_stap))))//"|"
-        write(90, "(a6$)"), trim(adjustl(Dble2Str(dble(dna.n_4nt)/dble(dna.n_stap))))//"|"
-        write(90, "(a6$)"), trim(adjustl(Dble2Str(dble(dna.n_nt_14nt)/dble(dna.n_base_stap))))//"|"
-        write(90, "(a6$)"), trim(adjustl(Dble2Str(dble(dna.n_nt_4nt)/dble(dna.n_base_stap))))//"|"
-        write(90, "(a4$)"), trim(adjustl(Int2Str(prob.n_cng_min_stap)))//"|"
-        write(90, "(a4$)"), trim(adjustl(Int2Str(prob.n_cng_max_stap)))//"|"
-        write(90, "(a6$)"), trim(adjustl(Int2Str(dna.n_xover_scaf)))//"|"
-        write(90, "(a7$)"), trim(adjustl(Int2Str(dna.n_xover_stap)))//"|"
-        write(90, "(a5$)"), trim(adjustl(Int2Str(dna.n_sxover_stap)))//"|"
-        write(90, "(a6$)"), trim(adjustl(Int2Str(dna.n_nt_unpaired_scaf)))//"|"
-        write(90, "(a5 )"), trim(adjustl(Int2Str(dna.n_nt_unpaired_stap)))
-
-        if(max_stap < dna.len_max_stap) max_stap = dna.len_max_stap
-        if(min_stap > dna.len_min_stap) min_stap = dna.len_min_stap
-    end do
-
-    write(90, "(a)")
-    write(90, "(a)"), "Minimum staple length   : "//trim(adjustl(Int2Str(min_stap)))
-    write(90, "(a)"), "Maximum staple length   : "//trim(adjustl(Int2Str(max_stap)))
-
-    ! Close file
-    close(unit = 90)
-end subroutine Report
 
 ! -----------------------------------------------------------------------------
 
@@ -432,10 +295,8 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         !write(i, "(a)"), "* # of total 4nt dsDNA domains  : "//trim(adjustl(Int2Str(dna.n_tot_4nt)))
         write(i, "(a)")
         write(i, "(a)")
-        write(i, "(a)"), "   +======================= C O M P L E T E D ==========================+"
-        write(i, "(a)"), "   |                                                                    |"
-        write(i, "(a)"), "   |   PERDIX generated 20 output files in the output folder.           |"
-        write(i, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   +=== completed ======================================================+"
+        write(i, "(a)"), "   |   PERDIX generated output files in the output folder.              |"
         write(i, "(a)"), "   +====================================================================+"
         write(i, "(a)")
     end do
@@ -542,14 +403,18 @@ subroutine Verify_Solution(mesh, dna)
             verify = verify + dna.top(i).pos(1)
             verify = verify + dna.top(i).pos(2)
             verify = verify + dna.top(i).pos(3)
-            verify = verify + dble(dna.top(i).strand) + dble(dna.top(i).address)
+            verify = verify + (dble(dna.top(i).strand) + dble(dna.top(i).address))/dble(dna.n_top)
          end if
+        verify = verify + (dble(dna.top(i).strand) + dble(dna.top(i).address))/dble(dna.n_top)
 
-        verify = verify + dble(dna.top(i).strand) + dble(dna.top(i).address)
+        if(dna.top(i).seq == "A") verify = verify + 1.0d0
+        if(dna.top(i).seq == "T") verify = verify + 2.0d0
+        if(dna.top(i).seq == "C") verify = verify + 3.0d0
+        if(dna.top(i).seq == "G") verify = verify + 4.0d0
     end do
 
-    verify = verify + dble(dna.n_nt_14nt)/dble(dna.n_base_stap)*100.0d0
-    verify = verify + dble(dna.n_nt_4nt) /dble(dna.n_base_stap)*100.0d0
+    verify = verify + dble(dna.n_nt_14nt)/dble(dna.n_base_stap)
+    verify = verify + dble(dna.n_nt_4nt) /dble(dna.n_base_stap)
     verify = verify + dble(dna.len_ave_stap + dna.n_14nt + dna.n_s14nt + dna.n_4nt + dna.n_only_4nt)
     verify = verify + dble(dna.n_nt_14nt + dna.n_nt_4nt + dna.n_tot_region + dna.n_tot_14nt + dna.n_tot_4nt)
     verify = verify + dble(dna.len_min_stap + dna.len_max_stap + dna.n_unpaired_scaf + dna.n_nt_unpaired_scaf)
@@ -562,10 +427,9 @@ subroutine Verify_Solution(mesh, dna)
     end do
 
     write(0, "(a)")
-    write(0, "(a)"), "[ONLY DEBUG MODE]"
-    write(0, "(a25, a)"), " 3.41299052999253E+07"," - Reference: 1 - 1"
-    write(0, "(a25, a)"), " 3.88022588879539E+07"," - Reference: 2 - 1"
-    write(0, "(a25, a)"), " 2.46203664510504E+07"," - Reference: 9 - 1"
+    write(0, "(a)"), "[ Check the algorithm - Debug mode only ]"
+    write(0, "(a25, a)"), " 3.41395107452898E+04"," - Reference: 1 - 1"
+    write(0, "(a25, a)"), " 1.35568076299989E+05"," - Reference: 7 - 1"
     write(0, "(es25.14)"), verify
 end subroutine Verify_Solution
 

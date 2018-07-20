@@ -38,11 +38,9 @@ module Input
     implicit none
 
     public  Input_Initialize
-    public  Input_Initialize_Report
 
     private Input_Print_Parameters
     private Input_Read_Parameter
-    private Input_Reset_Para_Report
     private Input_Set_Command
     private Input_Print_Problem
     private Input_Print_Num_BP_Edge
@@ -198,9 +196,9 @@ subroutine Input_Initialize(prob, geom)
     ! Set problem
     call Input_Set_Problem(prob, geom)
 
-    ! ==================================================
-    ! Prepair geometry - line generation and scaling
-    ! ==================================================
+    ! --------------------------------------------------
+    ! Prepare geometry - line generation and scaling
+    ! --------------------------------------------------
     ! Convert surface to line connectivity
     call Input_Convert_Face_To_Line(geom)
 
@@ -231,135 +229,6 @@ subroutine Input_Initialize(prob, geom)
     ! Print progress
     call Input_Print_Parameters(prob, geom)
 end subroutine Input_Initialize
-
-! -----------------------------------------------------------------------------
-
-! Initialize all parameters
-subroutine Input_Initialize_Report(prob, geom, mesh, i, sec, edge, char_vert, char_cut)
-    type(ProbType), intent(inout) :: prob
-    type(GeomType), intent(inout) :: geom
-    type(MeshType), intent(inout) :: mesh
-    integer,        intent(inout) :: sec
-    integer,        intent(in)    :: i, edge
-    character(10),  intent(in)    :: char_vert, char_cut
-
-    ! Reset parameters
-    call Input_Reset_Para_Report
-    para_platform        = "dev"
-    para_vertex_design   = char_vert    ! Flat or mitered vertex
-    para_cut_stap_method = char_cut     ! Staple-break
-
-    ! Reset data structures
-    prob.n_cng_min_stap = 0
-    prob.n_cng_max_stap = 0
-    mesh.n_node         = 0
-    mesh.n_ele          = 0
-
-    ! Set command environment
-    call Input_Set_Command
-
-    ! Set parameters of problem
-    prob.sel_prob    = i
-    prob.sel_sec     = sec
-    prob.sel_bp_edge = edge
-
-    ! Set UCSF Chimera output control
-    para_write_101   = .false.       !  GEO file
-    para_write_102   = .true.        ! *Initial geometry
-    para_write_103   = .false.       !  Faced initial geometry
-    para_write_104   = .false.       !  Schlegel diagram
-    para_write_301   = .false.       !  Initial geometry with face orientation
-    para_write_302   = .true.        ! *Initial geometry with local vector
-    para_write_303   = .true.        ! *Modified geometry seperated from vertex
-    para_write_401   = .false.       !  Cross-sectional geometry
-    para_write_501   = .false.       !  Cylindrical model with orientation
-    para_write_502   = .true.        ! *Cylindrical model
-    para_write_503   = .false.       !  Basepair mode,
-    para_write_504   = .true.        ! *Multiple lines
-    para_write_505   = .true.        ! *Txt file on edge length
-    para_write_601_1 = .false.       !  Route 1, seperated edges
-    para_write_601_2 = .false.       !  Route 2, contruction closed loop
-    para_write_601_3 = .false.       !  Route 3, centered crossovers
-    para_write_601_4 = .false.       !  Route 4, modified centered crossovers
-    para_write_601_5 = .false.       !  Route 5, scaffold route
-    para_write_606   = .true.        ! *Sapnning tree for dual-graph
-    para_write_607   = .true.        ! *Crossovers based on basepair model
-    para_write_608   = .false.       !  3-orientation vectors
-    para_write_609   = .false.       !  Atomic model without sequence design
-    para_write_610   = .false.       !  Possible centered scaffold crossovers
-    para_write_701   = .true.        ! *Txt on sequence design data
-    para_write_711   = .false.       !  Csv file for sequence data
-    para_write_702   = .true.        ! *Atomic model with sequence design
-    para_write_703   = .true.        ! *Route 6, strand route with nick
-    para_write_705   = .true.        ! *Route design
-    para_write_706   = .false.       !  Atomic model bases on strands/sequence
-    para_write_710   = .false.       !  Edge-based sequence design
-    para_write_801   = .false.       !  Txt on basepair based data
-    para_write_802   = .false.       !  Txt on nucleotide based data
-    para_write_803   = .true.        ! *CanDo input file
-    para_write_804   = .false.       !  Tecplot input file
-    para_write_805   = .false.       !  ADINA input file
-    para_write_808   = .false.       !  Txt on sectional edges based sequence
-
-    ! UCSF Chimera output option
-    para_chimera_axis     = .false.  !  Plot with axis at the ceneter of geometry
-    para_chimera_102_info = .true.   ! *Plot with edge and point number
-    para_chimera_301_info = .false.  !  Plot with edge and point number
-    para_chimera_302_info = .true.   ! *Plot with edge and point number
-    para_chimera_303_info = .true.   ! *Plot with edge and point number
-    para_chimera_401_info = .false.  !  Plot with edge and point number
-    para_chimera_502_ori  = .false.  !  Plot with helix z-direction
-    para_chimera_503_mod  = .false.  !  Plot with modified edges
-    para_chimera_504_info = .true.   ! *Plot with edge and point number
-    para_chimera_601_dir  = .false.  !  Plot with strand direction
-    para_chimera_609_cyl  = .false.  !  Plot with cylinderical representation)
-    para_chimera_609_dir  = .false.  !  Plot with strand direction
-
-    ! ==================================================
-    ! Set problem, cross-section and edge length
-    ! ==================================================
-    ! Set cross-section
-    call Input_Set_Section(prob, geom)
-
-    ! Set the minimum edge length
-    call Input_Set_Num_BP_Edge(prob, geom)
-
-    ! Set problem
-    call Input_Set_Problem(prob, geom)
-
-    ! ==================================================
-    ! Prepair geometry - line generation and scaling
-    ! ==================================================
-    ! Convert surface to line connectivity
-    call Input_Convert_Face_To_Line(geom)
-
-    ! Set geometric scale with initial minimum length
-    call Input_Scale_Init_Geometry(geom)
-
-    ! ==================================================
-    ! Set environment and write initial geometry
-    ! ==================================================
-    ! Set working and Chimera path
-    call Input_Set_Path(prob)
-
-    ! Remove previous working directory and make new one
-    call Input_Set_Workplace(prob)
-
-    ! Write *.geo file
-    call Input_Write_GEO_File(prob, geom)
-
-    ! Write initial geometry
-    call Input_Chimera_Init_Geometry(prob, geom)
-
-    ! Write initial geometry for Tecplot
-    call Input_Tecplot_Init_Geometry(prob, geom)
-
-    ! Generate Schlegel diagram
-    call Input_Generate_Schlegel_Diagram(prob, geom)
-
-    ! Print progress
-    call Input_Print_Parameters(prob, geom)
-end subroutine Input_Initialize_Report
 
 ! -----------------------------------------------------------------------------
 
@@ -509,63 +378,6 @@ subroutine Input_Read_Parameter
 
     close(unit=1)
 end subroutine Input_Read_Parameter
-
-! -----------------------------------------------------------------------------
-
-! Reset paramters as default values
-subroutine Input_Reset_Para_Report
-
-    ! Program parameters
-    para_preset          = "on"       ! [on, off], Preset parameter defined in pre-defined examples
-    para_output_Tecplot  = "on"       ! [on, off], Output files for Tecplot(http://www.tecplot.com/) to draw vector image
-    para_fig_view        = "xy"       ! [xy, xz, xyz, all], Viewpoint for figures from UCSF Chimera
-    para_type_cndo       = 2          ! [1, 2], CanDo file option, 1 : original format, 2 : updated format
-
-    ! Parameters for junction modification
-    para_junc_ang        = "opt"      ! [opt, max, ave, min], Junction gap modification for different arm angle
-    para_const_edge_mesh = "off"      ! [off, on], Constant edge length from polyhedra mesh
-    para_sticky_self     = "off"      ! [off, on], Sticky-end for self connection on henycomb cross-section
-    para_unpaired_scaf   = "on"       ! [on, off], Unpaired scaffold nucleotides
-    para_vertex_modify   = "const"    ! [const, mod], Vertex modification to avoid clash
-    !para_vertex_design   = "flat"     ! [flat, mitered], Vertex design
-
-    ! Paramters for B-from DNA generation
-    para_dist_pp       = 0.42d0     ! [0.42, 0.6], distance between adjacent phosphate groups, nm
-    para_dist_bp       = 0.34d0     ! [0.34 ], Axial rise distance, nm
-    para_rad_helix     = 1.0d0      ! [1.0  ], The radius of the DNA helix, nm
-    para_gap_helix     = 0.25d0     ! [0.25 ], The gap between two helixes, nm
-    para_ang_minor     = 150.0d0    ! [150.0], An angle of minor groove, degree
-    para_ang_correct   = 0.0d0      ! [0.0  ], Correction factor to adjust orientation, degree
-    para_n_base_tn     = -1         ! [-1   ], The number of nucleotides in poly T loop, -1 : depending on distance
-    para_start_bp_ID   = -1         ! [-1   ], Starting base pair ID for the reference, -1 : pre-defined starting BP
-
-    ! Paramters for scaffold route
-    para_weight_edge   = "on"       ! [on, off], Assign weight factor into edges of dual graph
-    para_method_MST    = "prim"     ! [prim, kruskal, greedy], Minimum spanning tree algorithm
-    para_method_sort   = "quick"    ! [none, quick, shell], Sorting algorithm to find MST for Prim or Kruskal
-    para_adjacent_list = "off"      ! [off, on], Output for adjacent list for Prim or Kruskal
-    para_all_spanning  = "off"      ! [off, on], All possible spanning trees when # of edges is less than 12 for Prim or Kruskal
-
-    ! Parameter for sequence design
-    !para_cut_stap_method  = "max"   ! [max, mix, opt, min, mid], Cutting method to make short staple strand, opt - 14nt seeds
-    para_set_stap_sxover  = "off"   ! [off, on], To make non-circular staple by single crossover (when para_set_stap_sxover is "on")
-    para_output_design    = "arrow" ! [arrow, seq, strand], Graphical output type for sequence design
-    para_set_xover_scaf   = "split" ! [split, center], Setting possible scaffold strand
-
-    para_gap_xover_two_scaf   = 3   ! [3 ], The minimum gap between two scaffold crossovers
-    para_gap_xover_bound_scaf = 7   ! [7 ], The mimimum gap between scaffold crossover and vertex boundary
-    para_gap_xover_bound_stap = 6   ! [6 ], The mimimum gap between staple crossover and vertex boundary
-    para_gap_xover_two        = 6   ! [6 ], The minimum gap between scaffold and staple crossovers
-    para_gap_xover_nick1      = 10  ! [10], The minimum gap between xover(scaf/stap)/Tn and first nick
-    para_gap_xover_nick       = 3   ! [3 ], The minimum gap between xover and nick, if staple length exceeds 60, redesign with num - 1
-
-    para_max_cut_scaf         = 0   ! [0, 7249], Scaffold break - 0 : not breaking, num : breaking over num
-    para_min_cut_stap         = 20  ! [20], The minimum number of nucleotides for one staple strand
-    para_mid_cut_stap         = 40  ! [40], The optimal number of nucleotides for one staple strand
-    para_max_cut_stap         = 60  ! [60], The maximum number of nucleotides for one staple strand
-    para_set_seq_scaf         = 0   ! [0, 1, 2], Scaffold sequence, 0 - M13mp18(7249nt), 1 - import sequence from env.txt, 2 - random
-    para_set_start_scaf       = 1   ! [1], Starting nucleotide position of scaffold strand
-end subroutine Input_Reset_Para_Report
 
 ! -----------------------------------------------------------------------------
 

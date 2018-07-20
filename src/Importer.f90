@@ -194,10 +194,8 @@ subroutine Importer_GEO(prob, geom)
     if(geom.n_face == 0) then
         close(1002)
         write(0, "(a)")
-        write(0, "(a)"), "   +============================ E R R O R =============================+"
-        write(0, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   +=== err = 5 ========================================================+"
         write(0, "(a)"), "   |   The lines specifying the geometry are not connected.             |"
-        write(0, "(a)"), "   |                                                                    |"
         write(0, "(a)"), "   +====================================================================+"
         write(0, "(a)")
         if(para_platform == "win") pause
@@ -214,10 +212,8 @@ subroutine Importer_GEO(prob, geom)
         if(p_mesh > 1.0d0) then
             close(1002)
             write(0, "(a)")
-            write(0, "(a)"), "   +============================ E R R O R =============================+"
-            write(0, "(a)"), "   |                                                                    |"
+            write(0, "(a)"), "   +=== err = 5 ========================================================+"
             write(0, "(a)"), "   |   The mesh spacing parameter should be from 0.0 to 1.0             |"
-            write(0, "(a)"), "   |                                                                    |"
             write(0, "(a)"), "   +====================================================================+"
             write(0, "(a)")
             if(para_platform == "win") pause
@@ -323,25 +319,16 @@ end subroutine Importer_GEO
 
 ! -----------------------------------------------------------------------------
 
-! Import .svg format to convert polygon meshes
+! Import .svg format to convert .geo file
 subroutine Importer_SVG(prob, geom)
     type(ProbType), intent(inout) :: prob
     type(GeomType), intent(inout) :: geom
 
-    double precision :: p_mesh, x1, y1, x2, y2
-    integer :: i, j, n_poi, n_line, temp, ierr, length
-    logical :: results
-    character(200) :: path, fullname
-    character(len=100) :: text, word, xx, cx1, cx2, cy1, cy2, c_line, c_point
+    double precision :: x1, y1, x2, y2
+    integer :: i, j, n_line, temp, ierr, length
+    character(len=200) :: path, fullname
+    character(len=100) :: text, word, xx, cx1, cx2, cy1, cy2
     character(len=*), parameter :: search_str = "<line "
-
-    ! Data structure for meshing
-    type :: MeshType
-        integer :: cn(100)   ! Maximum connectivity
-    end type MeshType
-
-    ! 1st: # of meshes, 2nd: points
-    type(MeshType), allocatable :: face_con(:)
 
     fullname = trim(prob.name_file)//"."//trim(prob.type_file)
     path     = "input/"//fullname
@@ -369,8 +356,6 @@ subroutine Importer_SVG(prob, geom)
         close(unit=1002)
 
         open(unit=1003, file="input/"//trim(prob.name_file)//".geo", form="formatted")
-        write(c_point, '(i)'), n_line * 2
-        write(c_line,  '(i)'), n_line
         write(1003, "(3i)"), n_line * 2, n_line, 0
 
         n_line = 0
@@ -404,9 +389,11 @@ subroutine Importer_SVG(prob, geom)
     do i = 1, n_line
         write(1003, "(3i)"), i, 2*i-1, 2*i
     end do
+
+    close(unit=1002)
     close(unit=1003)
 
-    prob.type_file = 'geo'
+    prob.type_file = "geo"
     call Importer_GEO(prob, geom)
 end subroutine Importer_SVG
 
