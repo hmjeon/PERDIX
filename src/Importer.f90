@@ -371,8 +371,8 @@ subroutine Importer_SVG(prob, geom)
         open(unit=1003, file="input/"//trim(prob.name_file)//".geo", form="formatted")
         write(c_point, '(i)'), n_line * 2
         write(c_line,  '(i)'), n_line
-        write(1003, "(a)"), adjustl(trim(c_point))//adjustl(trim(c_line))//adjustl(trim("0"))
-stop
+        write(1003, "(3i)"), n_line * 2, n_line, 0
+
         n_line = 0
         open(unit=1002, file=path, action="read")
         do
@@ -406,6 +406,7 @@ stop
     end do
     close(unit=1003)
 
+    prob.type_file = 'geo'
     call Importer_GEO(prob, geom)
 end subroutine Importer_SVG
 

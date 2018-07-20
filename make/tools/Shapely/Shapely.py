@@ -47,12 +47,12 @@ if len(sys.argv) is 2:
 # Read GEO data
 # ==================================================
 if filetype == 'geo':
-    str = fin.readline()
-    str = str.split("\t")
+    str  = fin.readline()
+    info = str.split()
 
-    n_point = int(str[0])
-    n_line  = int(str[1])
-    n_face  = int(str[2])
+    n_point = int(info[0])
+    n_line  = int(info[1])
+    n_face  = int(info[2])
 
     # ==================================================
     # Read points
@@ -74,7 +74,7 @@ if filetype == 'geo':
     # ==================================================
     lines = []
     for i in range(n_line):
-        str = fin.readline()
+        str  = fin.readline()
         line = str.split()
         lines.append([int(line[1]), int(line[2])])
         
