@@ -94,8 +94,6 @@ subroutine Main()
 
     ! Check time consuming
     call Print_TimeConsuming(time)
-
-    !if(para_external == .true.) pause
 end subroutine Main
 
 ! -----------------------------------------------------------------------------
@@ -117,55 +115,31 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         write(i, "(a)"), "   +--------------------------------------------------------------------+"
         write(i, "(a)")
 
-        call Space(i, 6)
-        write(i, "(a)"), "8.1. Geometry, cross-section and problem description"
-        call Space(i, 11)
-        write(i, "(a)"), "* Full geometric name               : "//trim(prob.name_file)
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of initial faces       : "//trim(adjustl(Int2Str(geom.n_face)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of initial points      : "//trim(adjustl(Int2Str(geom.n_iniP)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of initial edges       : "//trim(adjustl(Int2Str(geom.n_iniL)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of modified points     : "//trim(adjustl(Int2Str(geom.n_modP)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of modified edges      : "//trim(adjustl(Int2Str(geom.n_iniL)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of sectional points    : "//trim(adjustl(Int2Str(geom.n_croP)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of sectional edges     : "//trim(adjustl(Int2Str(geom.n_croL)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Section type                      : "//trim(geom.sec.types)//" lattice"
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of duplexes            : "//trim(adjustl(Int2Str(geom.n_sec)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of rows                : "//trim(adjustl(Int2Str(geom.sec.maxR-geom.sec.minR+1)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of columns             : "//trim(adjustl(Int2Str(geom.sec.maxC-geom.sec.minC+1)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Reference row                     : "//trim(adjustl(Int2Str(geom.sec.ref_row)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Reference min/max column          : "&
+        call Space(i,  6); write(i, "(a)"), "8.1. Geometry, cross-section and problem description"
+        call Space(i, 11); write(i, "(a)"), "* Full geometric name               : "//trim(prob.name_file)
+        call Space(i, 11); write(i, "(a)"), "* The number of initial faces       : "//trim(adjustl(Int2Str(geom.n_face)))
+        call Space(i, 11); write(i, "(a)"), "* The number of initial points      : "//trim(adjustl(Int2Str(geom.n_iniP)))
+        call Space(i, 11); write(i, "(a)"), "* The number of initial edges       : "//trim(adjustl(Int2Str(geom.n_iniL)))
+        call Space(i, 11); write(i, "(a)"), "* The number of modified points     : "//trim(adjustl(Int2Str(geom.n_modP)))
+        call Space(i, 11); write(i, "(a)"), "* The number of modified edges      : "//trim(adjustl(Int2Str(geom.n_iniL)))
+        call Space(i, 11); write(i, "(a)"), "* The number of sectional points    : "//trim(adjustl(Int2Str(geom.n_croP)))
+        call Space(i, 11); write(i, "(a)"), "* The number of sectional edges     : "//trim(adjustl(Int2Str(geom.n_croL)))
+        call Space(i, 11); write(i, "(a)"), "* Section type                      : "//trim(geom.sec.types)//" lattice"
+        call Space(i, 11); write(i, "(a)"), "* The number of duplexes            : "//trim(adjustl(Int2Str(geom.n_sec)))
+        call Space(i, 11); write(i, "(a)"), "* The number of rows                : "//trim(adjustl(Int2Str(geom.sec.maxR-geom.sec.minR+1)))
+        call Space(i, 11); write(i, "(a)"), "* The number of columns             : "//trim(adjustl(Int2Str(geom.sec.maxC-geom.sec.minC+1)))
+        call Space(i, 11); write(i, "(a)"), "* Reference row                     : "//trim(adjustl(Int2Str(geom.sec.ref_row)))
+        call Space(i, 11); write(i, "(a)"), "* Reference min/max column          : "&
             //trim(adjustl(Int2Str(geom.sec.ref_minC)))//" / "//trim(adjustl(Int2Str(geom.sec.ref_maxC)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The minimum edge-length           : "//trim(adjustl(Int2Str(prob.n_bp_edge)))// "bp"
-        call Space(i, 11)
-        write(i, "(a)"), "* Junction modification             : "//trim(para_junc_ang)
-        call Space(i, 11)
-        write(i, "(a)"), "* Constant edge length from mesh    : "//trim(para_const_edge_mesh)
-        call Space(i, 11)
-        write(i, "(a)"), "* Gap between two scaf xovers       : "//trim(adjustl(Int2Str(para_gap_xover_two_scaf)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Gap between xover(stap) and bound : "//trim(adjustl(Int2Str(para_gap_xover_bound_stap)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Gap between stap and scaf xovers  : "//trim(adjustl(Int2Str(para_gap_xover_two)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Gap between xover and first nick  : "//trim(adjustl(Int2Str(para_gap_xover_nick1)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Gap between xover and nick        : "//trim(adjustl(Int2Str(para_gap_xover_nick)))
-        call Space(i, 11)
-        write(i, "(a$)"), "* Maximum # of bases in scaf strand : "
+        call Space(i, 11); write(i, "(a)"), "* The minimum edge-length           : "//trim(adjustl(Int2Str(prob.n_bp_edge)))// "bp"
+        call Space(i, 11); write(i, "(a)"), "* Junction modification             : "//trim(para_junc_ang)
+        call Space(i, 11); write(i, "(a)"), "* Constant edge length from mesh    : "//trim(para_const_edge_mesh)
+        call Space(i, 11); write(i, "(a)"), "* Gap between two scaf xovers       : "//trim(adjustl(Int2Str(para_gap_xover_two_scaf)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between xover(stap) and bound : "//trim(adjustl(Int2Str(para_gap_xover_bound_stap)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between stap and scaf xovers  : "//trim(adjustl(Int2Str(para_gap_xover_two)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between xover and first nick  : "//trim(adjustl(Int2Str(para_gap_xover_nick1)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between xover and nick        : "//trim(adjustl(Int2Str(para_gap_xover_nick)))
+        call Space(i, 11); write(i, "(a$)"), "* Maximum # of bases in scaf strand : "
         if(para_max_cut_scaf == 0) then
             write(i, "(a)"), "infinite"
         else
