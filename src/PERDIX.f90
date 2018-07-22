@@ -189,9 +189,9 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         call Space(i, 11); write(i, "(a)"), "* # of changing for max staple      : "//trim(adjustl(Int2Str(prob.n_cng_max_stap)))
         write(i, "(a)")
 
-        ! ------------------------------------------------------------
+        ! --------------------------------------------------
         ! Base pair information
-        ! ------------------------------------------------------------
+        ! --------------------------------------------------
         call Space(i, 11); write(i, "(a)"), "[ BASE PAIR ]"
         call Space(i, 16); write(i, "(a)"), "* # of basepairs            : "&
             //trim(adjustl(Int2Str(mesh.n_node)))
@@ -207,9 +207,9 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
             trim(adjustl(Int2Str(dna.min_xover_stap)))//"]"
         write(i, "(a)")
 
-        ! ------------------------------------------------------------
+        ! --------------------------------------------------
         ! Scaffold information
-        ! ------------------------------------------------------------
+        ! --------------------------------------------------
         call Space(i, 11); write(i, "(a)"), "[ SCAFFOLD ]"
         call Space(i, 16); write(i, "(a)"), "* # of scaffold strands     : "//trim(adjustl(Int2Str(dna.n_scaf)))
         call Space(i, 16); write(i, "(a)"), "* # of total nucleotides    : "//trim(adjustl(Int2Str(dna.n_base_scaf)))
@@ -218,9 +218,9 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         call Space(i, 16); write(i, "(a)"), "* # of double-crossovers    : "//trim(adjustl(Int2Str(dna.n_xover_scaf/2)))
         write(i, "(a)")
 
-        ! ------------------------------------------------------------
+        ! --------------------------------------------------
         ! Staple information
-        ! ------------------------------------------------------------
+        ! --------------------------------------------------
         call Space(i, 11); write(i, "(a)"), "[ STAPLE ]"
         call Space(i, 16); write(i, "(a)"), "* # of staples              : "//trim(adjustl(Int2Str(dna.n_stap)))
         call Space(i, 25); write(i, "(a)"), "@ with the 4nt dsDNA domain  - "//&
@@ -251,7 +251,7 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         !call Space(i, 16); write(i, "(a)"), "* # of total 4nt dsDNA domains  : "//trim(adjustl(Int2Str(dna.n_tot_4nt)))
         write(i, "(a)")
         write(i, "(a)")
-        write(0, "(a)"), "   +=== completed ======================================================+"
+        write(i, "(a)"), "   +=== completed ======================================================+"
         write(i, "(a)"), "   |   PERDIX generated output files in the output folder.              |"
         write(i, "(a)"), "   +====================================================================+"
         write(i, "(a)")

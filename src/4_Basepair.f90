@@ -271,9 +271,9 @@ subroutine Basepair_Generate_Basepair(geom, bound, mesh)
             mesh.ele(n_conn).cn(2) = n_node
         end do
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Set junction connectivity
-        ! ==================================================
+        ! --------------------------------------------------
         poi_1 = geom.croL(i).poi(1)   ! Start point
         poi_2 = geom.croL(i).poi(2)   ! End point
         do j = 1, bound.n_junc
@@ -439,11 +439,9 @@ subroutine Basepair_Set_Conn_Junction(geom, bound, mesh)
         end do
     end do
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Internal node connection for self connection route
-    !
-    ! ==================================================
+    ! --------------------------------------------------
     ! Loop for junction
     do i = 1, bound.n_junc
         do j = 1, bound.junc(i).n_arm
@@ -712,19 +710,7 @@ subroutine Basepair_Chimera_Cylinder_Ori(prob, geom, bound, mesh, mode)
     end do
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(501, "(a)"), ".translate 0.0 0.0 0.0"
-        write(501, "(a)"), ".scale 0.5"
-        write(501, "(a)"), ".color grey"
-        write(501, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(501, "(a)"), ".color red"             ! x-axis
-        write(501, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(501, "(a)"), ".color blue"            ! y-axis
-        write(501, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(501, "(a)"), ".color yellow"          ! z-axis
-        write(501, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
-
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(501)
     close(unit=501)
 end subroutine Basepair_Chimera_Cylinder_Ori
 
@@ -912,19 +898,7 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     end if
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(502, "(a)"), ".translate 0.0 0.0 0.0"
-        write(502, "(a)"), ".scale 0.5"
-        write(502, "(a)"), ".color grey"
-        write(502, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(502, "(a)"), ".color red"             ! x-axis
-        write(502, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(502, "(a)"), ".color blue"            ! y-axis
-        write(502, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(502, "(a)"), ".color yellow"          ! z-axis
-        write(502, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
-
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(502)
     close(unit=502)
 end subroutine Basepair_Chimera_Cylinder
 
@@ -1015,9 +989,9 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
             ! Modify junction depending on connection type
             if(type_conn(j) == 2) then
 
-                ! ============================================================
+                ! --------------------------------------------------
                 ! Self-connection modification
-                ! ============================================================
+                ! --------------------------------------------------
                 ! Assign node from node connection data
                 node_cur = conn(j, 1)
                 node_com = conn(j, 2)
@@ -1025,9 +999,9 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
                 ! Vertex modification - 1: constant length, 2: decreased length, 3: closet crossover
                 if(para_vertex_modify == "const") then
 
-                    ! ------------------------------------------------------------
+                    ! --------------------------------------------------
                     ! Self-connectin #1 - constant edge length
-                    ! ------------------------------------------------------------
+                    ! --------------------------------------------------
                     ! Set node connection as self-connection
                     mesh.node(node_cur).conn = 2
                     mesh.node(node_com).conn = 2
@@ -1049,9 +1023,9 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
 
                 else if(para_vertex_modify == "mod1") then
 
-                    ! ------------------------------------------------------------
+                    ! --------------------------------------------------
                     ! Self-connectin #2 - Decrease edge length to avoid crash
-                    ! ------------------------------------------------------------
+                    ! --------------------------------------------------
                     sec = mesh.node(node_cur).sec
                     row = geom.sec.posR(sec + 1)
                     col = geom.sec.posC(sec + 1)
@@ -1070,9 +1044,9 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
 
                 else if(para_vertex_modify == "mod2") then
 
-                    ! ------------------------------------------------------------
+                    ! --------------------------------------------------
                     ! Self-connectin #3 - modification using closet crossover
-                    ! ------------------------------------------------------------
+                    ! --------------------------------------------------
                     ! Find closet crossovers nearby
                     n_move = Basepair_Find_Xover_Nearby(geom, bound, mesh, node_cur, node_com)
 
@@ -1094,10 +1068,10 @@ subroutine Basepair_Modify_Junction(prob, geom, bound, mesh)
                 end if
             else if(type_conn(j) == 1) then
 
-                ! ============================================================
+                ! --------------------------------------------------
                 ! BEVELED vertex design
                 ! For neighbor-connection, increase edge legnth to fill hole
-                ! ============================================================
+                ! --------------------------------------------------
                 ! Node and sectional information
                 node_cur = conn(j, 1)
                 node_com = conn(j, 2)
@@ -1378,13 +1352,13 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
     integer :: node_in, node_out, node_in_dn, node_out_up
     integer :: i, count, n_col_bottom, poi_1, poi_2
 
-    ! ==================================================
+    ! --------------------------------------------------
     !
     !     vertex                     vertex
     ! *---->#---->*      or      *<----#<----*
     ! node_cur   node_com        node_cur   node_com
     !
-    ! ==================================================
+    ! --------------------------------------------------
     ! Set direction of node_in and node_out
     if(mesh.node(node_cur).up == -1) then
 
@@ -1476,7 +1450,7 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
     length = dsqrt(((b-a)/2.0d0)**2.0d0 / (1.0d0-((y**2.0d0-((c-b)/2.0d0)**2.0d0)/y**2.0d0)))
     count  = floor(length / dble(para_dist_bp))
 
-    ! ============================================================
+    ! --------------------------------------------------
     line_a = mesh.node(node_in).croL
     line_b = mesh.node(node_out).croL
 
@@ -1514,7 +1488,7 @@ subroutine Basepair_Increase_Edge(prob, geom, bound, mesh, node_cur, node_com)
         count_in  = count
         count_out = count
     end if
-    ! ============================================================
+    ! --------------------------------------------------
 
     ! Loop for adding new nodes
     do i = 1, count_in
@@ -1594,9 +1568,9 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     ! Copy data from 't_node' to 'mesh.node'
     call Mani_Copy_NodeType(t_node, mesh.node, mesh.n_node - 1)
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! Set up new added node information
-    ! ==================================================
+    ! --------------------------------------------------
     ! Set node id
     mesh.node(mesh.n_node).id = mesh.n_node
 
@@ -1666,9 +1640,9 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     ! Deallocate temporal node data
     deallocate(t_node)
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! Set element connectivity
-    ! ==================================================
+    ! --------------------------------------------------
     ! Allocate temporal element data
     allocate(t_ele(mesh.n_ele))
 
@@ -1694,9 +1668,9 @@ subroutine Basepair_Add_Basepair(geom, bound, mesh, node, vec)
     ! Deallocate temporal element data
     deallocate(t_ele)
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! Update junction information
-    ! ==================================================
+    ! --------------------------------------------------
     do i = 1, bound.n_junc
         do j = 1, geom.n_sec
             do k = 1, bound.junc(i).n_arm
@@ -1778,10 +1752,8 @@ subroutine Basepair_Delete_Ghost_Node(geom, bound, mesh)
                     end if
 
                     ! --------------------------------------------------
-                    !
                     ! Find next ghost node depending on direction
                     ! Find min and max node ID to be deleted
-                    !
                     ! --------------------------------------------------
                     do
 
@@ -1863,9 +1835,7 @@ subroutine Basepair_Delete_Ghost_Node(geom, bound, mesh)
                     end do
 
                     ! --------------------------------------------------
-                    !
                     ! Delete nodes from min ID to max ID
-                    !
                     ! --------------------------------------------------
 
                     if(str_node > end_node) then
@@ -1934,9 +1904,7 @@ subroutine Basepair_Delete_Nodes(mesh, min, max)
     n_delete = max - min + 1
 
     ! --------------------------------------------------
-    !
     ! Modify node data
-    !
     ! --------------------------------------------------
     ! Allocate temporal node data to store previous data
     allocate(t_node(mesh.n_node))
@@ -1999,9 +1967,7 @@ subroutine Basepair_Delete_Nodes(mesh, min, max)
     deallocate(t_node)
 
     ! --------------------------------------------------
-    !
     ! Modify element connectivity
-    !
     ! --------------------------------------------------
     allocate(t_ele(mesh.n_ele))
 
@@ -2199,11 +2165,9 @@ subroutine Basepair_Make_Sticky_End(geom, bound, mesh)
                 deallocate(t_node)
                 deallocate(t_ele)
 
-                ! -------------------------------------------------------
-                !
+                ! --------------------------------------------------
                 ! Update all junction connectivity
-                !
-                ! -------------------------------------------------------
+                ! --------------------------------------------------
                 ! Update junction node connectivity
                 bound.junc(i).node(j, k) = mesh.n_node
 
@@ -2477,18 +2441,7 @@ subroutine Basepair_Chimera_Cross_Geometry(prob, geom)
     end if
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(504, "(a)"), ".translate 0.0 0.0 0.0"
-        write(504, "(a)"), ".scale 0.5"
-        write(504, "(a)"), ".color grey"
-        write(504, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(504, "(a)"), ".color red"             ! x-axis
-        write(504, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(504, "(a)"), ".color blue"            ! y-axis
-        write(504, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(504, "(a)"), ".color yellow"          ! z-axis
-        write(504, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(504)
     close(unit=504)
 
     ! ---------------------------------------------

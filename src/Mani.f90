@@ -39,6 +39,7 @@ module Mani
     public Mani_Set_Geo_Ori
     public Space
     public Mani_To_Upper
+    public Mani_Set_Chimera_Axis
     public Mani_Progress_Bar
 
     ! Manipulate data structure
@@ -148,8 +149,26 @@ function Mani_To_Upper(strIn) result(strOut)
     end do
 end function Mani_To_Upper
 
-! -----------------------------------------------------------------------------   
-    
+! -----------------------------------------------------------------------------
+
+! Set Chimera axis
+subroutine Mani_Set_Chimera_Axis(fout)
+    integer, intent(in) :: fout
+
+    write(fout, "(a)"), ".translate 0.0 0.0 0.0"
+    write(fout, "(a)"), ".scale 0.5"
+    write(fout, "(a)"), ".color grey"
+    write(fout, "(a)"), ".sphere 0 0 0 0.5"      ! Center
+    write(fout, "(a)"), ".color red"             ! x-axis
+    write(fout, "(a)"), ".arrow 0 0 0 4 0 0 "
+    write(fout, "(a)"), ".color blue"            ! y-axis
+    write(fout, "(a)"), ".arrow 0 0 0 0 4 0 "
+    write(fout, "(a)"), ".color yellow"          ! z-axis
+    write(fout, "(a)"), ".arrow 0 0 0 0 0 4 "
+end subroutine Mani_Set_Chimera_Axis
+
+! -----------------------------------------------------------------------------
+
 ! Print progress bar
 subroutine Mani_Progress_Bar(index, max)
     integer, intent(in) :: index, max

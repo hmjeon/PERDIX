@@ -340,19 +340,7 @@ subroutine Output_Write_Cylinder_Xover(prob, geom, bound, mesh, dna)
     end do
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(701, "(a)"), ".translate 0.0 0.0 0.0"
-        write(701, "(a)"), ".scale 0.5"
-        write(701, "(a)"), ".color grey"
-        write(701, "(a)"), ".sphere 0 0 0 0.5"
-        write(701, "(a)"), ".color red"
-        write(701, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(701, "(a)"), ".color blue"
-        write(701, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(701, "(a)"), ".color yellow"
-        write(701, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
-
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(701)
     close(unit=701)
 end subroutine Output_Write_Cylinder_Xover
 
@@ -930,9 +918,9 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
             !write(unit, "(a)"); write(unit, "(a)")
         end if
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Scaffold strand
-        ! ==================================================
+        ! --------------------------------------------------
         n_conn_scaf = 0
         do j = 1, edge(i).n_sec
 
@@ -1346,9 +1334,9 @@ subroutine Output_Write_Out_Graphics(prob, geom, mesh, dna, unit)
             write(unit, "(a)")
         end do
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Staple strand
-        ! ==================================================
+        ! --------------------------------------------------
         n_conn_stap = 0
         b_sec       = .true.
         do j = 1, edge(i).n_sec
@@ -2104,18 +2092,7 @@ subroutine Output_Write_Out_Guide_JSON(prob, geom, bound, mesh)
     end do
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(998, "(a)"), ".translate 0.0 0.0 0.0"
-        write(998, "(a)"), ".scale 0.5"
-        write(998, "(a)"), ".color grey"
-        write(998, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(998, "(a)"), ".color red"             ! x-axis
-        write(998, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(998, "(a)"), ".color blue"            ! y-axis
-        write(998, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(998, "(a)"), ".color yellow"          ! z-axis
-        write(998, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(998)
     close(unit=998)
 
     ! =============================================
@@ -2212,7 +2189,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
         type(ConnType), allocatable :: stap(:)
 
         integer :: n_stap_col
-        integer :: stap_col(20,2)
+        integer :: stap_col(40,2)
         integer :: n_xover_stap
         integer :: n_xover_scaf
     end type SecType
@@ -2341,7 +2318,7 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
                 ! Set color
                 edge(c_edge).sec(c_sec+1).n_stap_col = edge(c_edge).sec(c_sec+1).n_stap_col + 1
                 num = edge(c_edge).sec(c_sec+1).n_stap_col
-                if(num >= 21) then
+                if(num >= 41) then
                     write(0, "(a)"), "Error: Check the number of crossovers per edge"
                     stop
                 end if

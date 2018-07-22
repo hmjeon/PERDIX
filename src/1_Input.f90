@@ -83,9 +83,9 @@ subroutine Input_Initialize(prob, geom)
 
     if(iargc() == 0) then
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Running from Win32 console interface menu
-        ! ==================================================
+        ! --------------------------------------------------
         ! Print pre-defined problems
         call Input_Print_Problem
         read(*, *), c_prob
@@ -137,9 +137,9 @@ subroutine Input_Initialize(prob, geom)
         if(prob.sel_bp_edge < 0) stop
     else
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Running from a command shell with options
-        ! ==================================================
+        ! --------------------------------------------------
         arg = 1; call getarg(arg, c_prob)       ! 1st argument, problem
         arg = 2; call getarg(arg, c_edge)       ! 2nd argument, edge
         arg = 3; call getarg(arg, c_edge_len)   ! 3rd argument, edge length
@@ -181,9 +181,9 @@ subroutine Input_Initialize(prob, geom)
     prob.sel_sec    = 1
     prob.sel_vertex = 2
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! Set problem, section, edge length and vertex design
-    ! ==================================================
+    ! --------------------------------------------------
     ! Set vertex design
     call Input_Set_Vertex_Design(prob)
 
@@ -205,9 +205,9 @@ subroutine Input_Initialize(prob, geom)
     ! Set geometric scale with initial minimum length
     call Input_Scale_Init_Geometry(geom)
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! Set environment and write initial geometry
-    ! ==================================================
+    ! --------------------------------------------------
     ! Set working and Chimera path
     call Input_Set_Path(prob)
 
@@ -1223,23 +1223,12 @@ subroutine Input_Chimera_Init_Geometry(prob, geom)
     end if
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(102, "(a)"), ".translate 0.0 0.0 0.0"
-        write(102, "(a)"), ".scale 0.5"
-        write(102, "(a)"), ".color grey"
-        write(102, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(102, "(a)"), ".color red"             ! x-axis
-        write(102, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(102, "(a)"), ".color blue"            ! y-axis
-        write(102, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(102, "(a)"), ".color yellow"          ! z-axis
-        write(102, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(102)
     close(unit=102)
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! Write the FE format output
-    ! ==================================================
+    ! --------------------------------------------------
     !open(unit=102, file=trim(path)//"_19_FE_Format.txt", form="formatted")
     !write(102, "(i)"), geom.n_iniP
     !do i = 1, geom.n_iniP
@@ -1252,9 +1241,9 @@ subroutine Input_Chimera_Init_Geometry(prob, geom)
     !end do
     !close(unit=102)
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! Write the file for Tecplot
-    ! ==================================================
+    ! --------------------------------------------------
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
@@ -1528,18 +1517,7 @@ subroutine Input_Chimera_Schlegel_Diagram(prob, geom, pos_xy)
     end do
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(104, "(a)"), ".translate 0.0 0.0 0.0"
-        write(104, "(a)"), ".scale 0.5"
-        write(104, "(a)"), ".color grey"
-        write(104, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(104, "(a)"), ".color red"             ! x-axis
-        write(104, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(104, "(a)"), ".color blue"            ! y-axis
-        write(104, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(104, "(a)"), ".color yellow"          ! z-axis
-        write(104, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(104)
     close(unit=104)
 
     ! ---------------------------------------------

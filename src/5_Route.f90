@@ -667,20 +667,8 @@ subroutine Route_Chimera_Route(prob, geom, mesh, dna, step_route)
     !write(601, "(2f8.2 )"), 0.16d0, 0.4d0
 
     ! Write global axis
-    if(f_axis == .true.) then
-        do i = 0, 1
-            write(601+i, "(a)"), ".translate 0.0 0.0 0.0"
-            write(601+i, "(a)"), ".scale 0.5"
-            write(601+i, "(a)"), ".color grey"
-            write(601+i, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-            write(601+i, "(a)"), ".color red"             ! x-axis
-            write(601+i, "(a)"), ".arrow 0 0 0 4 0 0 "
-            write(601+i, "(a)"), ".color blue"            ! y-axis
-            write(601+i, "(a)"), ".arrow 0 0 0 0 4 0 "
-            write(601+i, "(a)"), ".color yellow"          ! z-axis
-            write(601+i, "(a)"), ".arrow 0 0 0 0 0 4 "
-        end do
-    end if
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(601)
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(602)
     close(unit=601)
     close(unit=602)
 
@@ -830,9 +818,9 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
             write(11, "(i7, a  )"), conn(j, 2), " node"
         end do
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Build join without any duplicate data
-        ! ==================================================
+        ! --------------------------------------------------
         ! Allocate join
         allocate(join(geom.n_sec*bound.junc(i).n_arm/2, 2))
 
@@ -862,11 +850,9 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
         end do
         deallocate(conn)
 
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         ! Connect join1 with join2 - neighbor connection
-        !
-        ! ==================================================
+        ! --------------------------------------------------
         do j = 1, geom.n_sec * bound.junc(i).n_arm / 2
 
             ! Set current and comparing node to be joined
@@ -894,12 +880,10 @@ subroutine Route_Reconnect_Junction(geom, bound, mesh, dna)
         deallocate(join)
     end do
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Self connection
     ! Scaffold strand - connection in the same section
-    !
-    ! ==================================================
+    ! --------------------------------------------------
     ! Loop for junction
     do i = 1, bound.n_junc
         do j = 1, bound.junc(i).n_arm
@@ -1023,13 +1007,11 @@ function Route_Connect_Scaf(mesh, dna, node_cur, node_com) result(count)
 
     ! Connect scaffolds acrossing vertex
     if(dna.base_scaf(cur).up == -1 .and. dna.base_scaf(com).dn == -1) then
-        !
+
         ! --------------------------------------------------
-        !
         ! If the current node is inward to the junction
         ! ------->*====+====>*-------->
         !        cur  junc  com
-        !
         ! --------------------------------------------------
         ! Set base connectivity of the scaffold strand
         dna.base_scaf(cur).up = dna.base_scaf(com).id
@@ -1056,14 +1038,11 @@ function Route_Connect_Scaf(mesh, dna, node_cur, node_com) result(count)
             cur = ttt
         end do
     else if(dna.base_scaf(cur).dn == -1 .and. dna.base_scaf(com).up == -1) then
-        !
-        !
+
         ! --------------------------------------------------
-        !
         ! If the current node is inward to the junction
         ! <-------*<====+====*<--------
         !        cur  junc   com
-        !
         ! --------------------------------------------------
         ! Set base connectivity of the scaffold strand
         dna.base_scaf(cur).dn = dna.base_scaf(com).id
@@ -1135,13 +1114,11 @@ function Route_Connect_Stap(mesh, dna, node_cur, node_com) result(n_poly_Tn)
     end if
 
     if(dna.base_stap(cur).up == -1 .and. dna.base_stap(com).dn == -1) then
-        !
+
         ! --------------------------------------------------
-        !
         ! If the current node is inward to the junction
         ! ------->*====+====>*-------->
         !        cur  junc  com
-        !
         ! --------------------------------------------------
         ! Set base connectivity of the staple strand
         dna.base_stap(cur).up = dna.base_stap(com).id
@@ -1168,14 +1145,11 @@ function Route_Connect_Stap(mesh, dna, node_cur, node_com) result(n_poly_Tn)
             cur = ttt
         end do
     else if(dna.base_stap(cur).dn == -1 .and. dna.base_stap(com).up == -1) then
-        !
-        !
+
         ! --------------------------------------------------
-        !
         ! If the current node is inward to the junction
         ! <-------*<====+====*<--------
         !        cur  junc   com
-        !
         ! --------------------------------------------------
         ! Set base connectivity of the staple strand
         dna.base_stap(cur).dn = dna.base_stap(com).id
@@ -1416,11 +1390,9 @@ subroutine Route_Find_Centered_Scaf_Xover(prob, geom, mesh, dna)
             node_cur = mesh.node(i).id
             node_com = mesh.node(j).id
 
-            ! ==================================================
-            !
+            ! --------------------------------------------------
             ! Build spllited crossover
-            !
-            ! ==================================================
+            ! --------------------------------------------------
             max_gap   = n_gap
             max_cur   = node_cur
             max_com   = node_com
@@ -1435,11 +1407,8 @@ subroutine Route_Find_Centered_Scaf_Xover(prob, geom, mesh, dna)
                 ! Consistent pre-defined scaffold crossover for first connection, 0-5
                 if((prob.sel_sec /= 1) .and. (sec_cur /= 0 .or. sec_com /= 5)) cycle
 
-                !
                 ! --------------------------------------------------
-                !
                 ! First crossover at each edge
-                !
                 ! --------------------------------------------------
                 pre_iniL = iniL
 
@@ -1469,11 +1438,9 @@ subroutine Route_Find_Centered_Scaf_Xover(prob, geom, mesh, dna)
                 node_cur = split_cur
                 node_com = split_com
             else
-                !
+
                 ! --------------------------------------------------
-                !
                 ! Split crossover from center
-                !
                 ! --------------------------------------------------
                 do k = 1, 5
 
@@ -1703,11 +1670,9 @@ function Route_Split_Centered_Scaf_Xover(geom, mesh, cur, com, min_bp1, max_bp1,
     select case (direction)
 
     case ("down")
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         ! Going down
-        !
-        ! ==================================================
+        ! --------------------------------------------------
         ! To avoid current crossover
 
         ! Exception
@@ -1753,11 +1718,9 @@ function Route_Split_Centered_Scaf_Xover(geom, mesh, cur, com, min_bp1, max_bp1,
             id_bp2 = mesh.node(node2).bp
         end do
     case ("up")
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         ! Going up
-        !
-        ! ==================================================
+        ! --------------------------------------------------
         ! To avoid current crossover
 
         ! Exception
@@ -1803,11 +1766,9 @@ function Route_Split_Centered_Scaf_Xover(geom, mesh, cur, com, min_bp1, max_bp1,
             id_bp2 = mesh.node(node2).bp
         end do
     case ("center")
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         ! Reamin at center
-        !
-        ! ==================================================
+        ! --------------------------------------------------
         b_fail = .false.
     end select
 
@@ -2603,18 +2564,7 @@ subroutine Route_Graph_Chimera_All_Spanning_Tree(prob, pos_node, tail, head, idx
         end do
 
         ! Write global axis
-        if(f_axis == .true.) then
-            write(604, "(a)"), ".translate 0.0 0.0 0.0"
-            write(604, "(a)"), ".scale 0.5"
-            write(604, "(a)"), ".color grey"
-            write(604, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-            write(604, "(a)"), ".color red"             ! x-axis
-            write(604, "(a)"), ".arrow 0 0 0 4 0 0 "
-            write(604, "(a)"), ".color blue"            ! y-axis
-            write(604, "(a)"), ".arrow 0 0 0 0 4 0 "
-            write(604, "(a)"), ".color yellow"          ! z-axis
-            write(604, "(a)"), ".arrow 0 0 0 0 0 4 "
-        end if
+        if(f_axis == .true.) call Mani_Set_Chimera_Axis(604)
         close(unit=604)
 
         ! ---------------------------------------------
@@ -2813,19 +2763,7 @@ subroutine Route_Graph_Chimera_Spanning_Tree(prob, pos_node, tail, head, tree)
     end do
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(606, "(a)"), ".translate 0.0 0.0 0.0"
-        write(606, "(a)"), ".scale 0.5"
-        write(606, "(a)"), ".color grey"
-        write(606, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(606, "(a)"), ".color red"             ! x-axis
-        write(606, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(606, "(a)"), ".color blue"            ! y-axis
-        write(606, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(606, "(a)"), ".color yellow"          ! z-axis
-        write(606, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
-
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(606)
     close(unit=606)
 
     ! ---------------------------------------------
@@ -3534,18 +3472,7 @@ subroutine Route_Chimera_Crossovers(prob, geom, bound, mesh, dna)
     end do
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(607, "(a)"), ".translate 0.0 0.0 0.0"
-        write(607, "(a)"), ".scale 0.5"
-        write(607, "(a)"), ".color grey"
-        write(607, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(607, "(a)"), ".color red"             ! x-axis
-        write(607, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(607, "(a)"), ".color blue"            ! y-axis
-        write(607, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(607, "(a)"), ".color yellow"          ! z-axis
-        write(607, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(607)
     close(unit=607)
 
     ! ---------------------------------------------
@@ -3687,18 +3614,7 @@ subroutine Route_Chimera_Orientation(prob, mesh, dna)
     end do
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(608, "(a)"), ".translate 0.0 0.0 0.0"
-        write(608, "(a)"), ".scale 0.5"
-        write(608, "(a)"), ".color grey"
-        write(608, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(608, "(a)"), ".color red"             ! x-axis
-        write(608, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(608, "(a)"), ".color blue"            ! y-axis
-        write(608, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(608, "(a)"), ".color yellow"          ! z-axis
-        write(608, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(608)
     close(unit=608)
 
     ! ---------------------------------------------
@@ -3809,9 +3725,7 @@ subroutine Route_Chimera_Atom(prob, geom, dna)
     open(unit=609, file=trim(path)//"_atom.bild", form="formatted")
 
     ! --------------------------------------------------
-    !
     ! For the nucleotide of scaffold strand
-    !
     ! --------------------------------------------------
     write(609, "(a)"), ".color steel blue"
     do i = 1, dna.n_base_scaf
@@ -3834,9 +3748,7 @@ subroutine Route_Chimera_Atom(prob, geom, dna)
     end do
 
     ! --------------------------------------------------
-    !
     ! For the nucleotide of staple strand
-    !
     ! --------------------------------------------------
     write(609, "(a)"), ".color orange"
     do i = 1, dna.n_base_stap
@@ -3859,9 +3771,7 @@ subroutine Route_Chimera_Atom(prob, geom, dna)
     end do
 
     ! --------------------------------------------------
-    !
     ! Write crossovers of the scaffold and staple strand
-    !
     ! --------------------------------------------------
     write(609, "(a)"), ".color blue"
     do i = 1, dna.n_base_scaf
@@ -3890,9 +3800,7 @@ subroutine Route_Chimera_Atom(prob, geom, dna)
     end do
 
     ! --------------------------------------------------
-    !
     ! Write cylinder or Watson-Crick base pair connections
-    !
     ! --------------------------------------------------
     if(f_cyn == .true.) then
 
@@ -3944,19 +3852,7 @@ subroutine Route_Chimera_Atom(prob, geom, dna)
     end if
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(609, "(a)"), ".translate 0.0 0.0 0.0"
-        write(609, "(a)"), ".scale 0.5"
-        write(609, "(a)"), ".color grey"
-        write(609, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(609, "(a)"), ".color red"             ! x-axis
-        write(609, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(609, "(a)"), ".color blue"            ! y-axis
-        write(609, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(609, "(a)"), ".color yellow"          ! z-axis
-        write(609, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
-
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(609)
     close(unit=609)
 end subroutine Route_Chimera_Atom
 

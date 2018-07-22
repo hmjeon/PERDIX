@@ -30,6 +30,8 @@ module Math
     double precision, parameter :: pi  = 3.141592653589793d0
     double precision, parameter :: eps = 0.0000001d0
 
+    public Math_Plygon_Center
+    public Math_Polygon_Contains_Point
     public Find_Intersection
     public Check_Intersection
     public Find_Cloest_Point
@@ -63,6 +65,78 @@ module Math
     public Math_Set_Entity_One
 
 contains
+
+! -----------------------------------------------------------------------------
+
+! To compute the centroid of a polygon
+function Math_Plygon_Center(n, v) result(centroid)
+    integer, intent(in) :: n
+    double precision, intent(in) :: v(:,:)
+
+    double precision :: centroid(2), area, temp
+    integer :: i, ip1
+
+    area = 0.0d0
+    centroid(1:2) = 0.0d0
+
+    do i = 1, n
+
+        if(i < n) then
+            ip1 = i + 1
+        else
+            ip1 = 1
+        end if
+
+        temp          = (v(1,i) * v(2, ip1) - v(1, ip1) * v(2,i))
+        area          = area + temp
+        centroid(1:2) = centroid(1:2) + (v(1:2, ip1) + v(1:2,i)) * temp
+    end do
+    area = area / 2.0D+00
+
+    if(area == 0.0d0) then
+        centroid(1:2) = v(1:2,1)
+    else
+        centroid(1:2) = centroid(1:2) / (6.0d0 * area)
+    end if
+end function Math_Plygon_Center
+
+! -----------------------------------------------------------------------------
+
+! Find if a point is inside a polygon
+function Math_Polygon_Contains_Point(n, v, p) result(inside)
+    integer, intent(in) :: n
+    double precision, intent(in) :: v(:,:), p(2)
+
+    double precision :: px1, px2, py1, py2, xints
+    integer :: i, ip1
+    logical :: inside
+
+    inside = .false.
+    px1    = v(1,1)
+    py1    = v(2,1)
+    xints  = p(1) - 1.0d0
+
+    do i = 1, n
+        px2 = v(1,mod(i,n)+1)
+        py2 = v(2,mod(i,n)+1)
+
+        if(min(py1, py2) < p(2)) then
+            if(p(2) <= max (py1,py2)) then
+                if(p(1) <= max(px1, px2)) then
+                    if(py1 /= py2) then
+                        xints = (p(2) - py1) * (px2 - px1) / (py2 - py1) + px1
+                    end if
+                    if(px1 == px2 .or. p(1) <= xints) then
+                        inside = .not. inside
+                    end if
+                end if
+            end if
+        end if
+
+        px1 = px2
+        py1 = py2
+    end do
+end function Math_Polygon_Contains_Point
 
 ! -----------------------------------------------------------------------------
 

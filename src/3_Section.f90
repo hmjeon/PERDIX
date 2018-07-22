@@ -120,9 +120,7 @@ function Section_Connection_Scaf(geom, sec_cur, sec_com, bp_id) result(b_connect
     if(geom.sec.types == "square") then
 
         ! --------------------------------------------------
-        !
         ! for square lattice, possible crossovers in scaffold
-        !
         ! --------------------------------------------------
         if(row_cur == row_com .and. col_cur == col_com - 1) then
 
@@ -220,9 +218,7 @@ function Section_Connection_Scaf(geom, sec_cur, sec_com, bp_id) result(b_connect
     else if(geom.sec.types == "honeycomb") then
 
         ! --------------------------------------------------
-        !
         ! For honeycomb lattice, possible crossovers in scaffold
-        !
         ! --------------------------------------------------
         if(row_cur == row_com .and. col_cur == col_com - 1) then
 
@@ -420,9 +416,7 @@ function Section_Connection_Stap(geom, sec_cur, sec_com, bp_id) result(b_connect
     if(geom.sec.types == "square") then
 
         ! --------------------------------------------------
-        !
         ! for square lattice, possible crossovers in staple
-        !
         ! --------------------------------------------------
         if(row_cur == row_com .and. col_cur == col_com - 1) then
 
@@ -512,9 +506,7 @@ function Section_Connection_Stap(geom, sec_cur, sec_com, bp_id) result(b_connect
     else if(geom.sec.types == "honeycomb") then
 
         ! --------------------------------------------------
-        !
         ! for honeycomb lattice, possible crossovers in staple
-        !
         ! --------------------------------------------------
         if(row_cur == row_com .and. col_cur == col_com - 1) then
 
@@ -1231,18 +1223,7 @@ subroutine Section_Chimera_Cro_Geometry(prob, geom)
     end if
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(401, "(a)"), ".translate 0.0 0.0 0.0"
-        write(401, "(a)"), ".scale 0.5"
-        write(401, "(a)"), ".color grey"
-        write(401, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(401, "(a)"), ".color red"             ! x-axis
-        write(401, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(401, "(a)"), ".color blue"            ! y-axis
-        write(401, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(401, "(a)"), ".color yellow"          ! z-axis
-        write(401, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(401)
     close(unit=401)
 
     ! ---------------------------------------------

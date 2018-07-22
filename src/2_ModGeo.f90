@@ -80,11 +80,9 @@ subroutine ModGeo_Modification(prob, geom, bound)
         write(i, "(a)")
     end do
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Set local coordinate system
-    !
-    ! ==================================================
+    ! --------------------------------------------------
     ! Set neighbor point
     call ModGeo_Set_Neighbor_Point(prob, geom)
 
@@ -103,11 +101,9 @@ subroutine ModGeo_Modification(prob, geom, bound)
     ! Write initial geometry with local coordinate system
     call ModGeo_Chimera_Init_Geometry_Local(prob, geom)
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Seperated lines from the vertex
-    !
-    ! ==================================================
+    ! --------------------------------------------------
     ! Seperate the line from the vertex without off-set distance
     call ModGeo_Seperate_Line(geom, bound)
 
@@ -416,15 +412,16 @@ end subroutine ModGeo_Find_Neighbor_Line
 
 ! -----------------------------------------------------------------------------
 
-! Write Chimera check geometry
+! Write the BILD file for checking the face orientation
 subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
     type(ProbType), intent(in) :: prob
     type(GeomType), intent(in) :: geom
 
+    double precision, allocatable :: v_poly(:,:)
     double precision :: pos_1(3), pos_2(3), pos_c(3), pos_c1(3), pos_c2(3)
     double precision :: vec_a(3), vec_b(3), vec_c(3), vec(3)
-    integer :: i, j, point_1, point_2
-    logical :: f_axis, f_info
+    integer :: i, j, k, point_1, point_2
+    logical :: f_axis, f_info, inside
     character(200) :: path
 
     if(para_write_301 == .false.) return
@@ -463,12 +460,35 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
     ! Write outward vector
     do i = 1, geom.n_face
 
-        ! Find center position in mesh
+        ! Find the center point of the given polygon
         pos_c(1:3) = 0.0d0
+        allocate(v_poly(2, geom.face(i).n_poi))
         do j = 1, geom.face(i).n_poi
-            pos_c(1:3) = pos_c + geom.iniP(geom.face(i).poi(j)).pos
+            v_poly(1:2, j) = geom.iniP(geom.face(i).poi(j)).pos(1:2)
         end do
-        pos_c(1:3) = pos_c / dble(geom.face(i).n_poi)
+        pos_c(1:2) = Math_Plygon_Center(geom.face(i).n_poi, v_poly)
+
+        ! Check whether the point is inside or not
+        inside = Math_Polygon_Contains_Point(geom.face(i).n_poi, v_poly, pos_c(1:2))
+        if(inside == .false.) then
+            do j = 1, geom.face(i).n_poi
+
+                pos_c(1:3) = 0.0d0
+                if(2 + j == geom.face(i).n_poi + 1) then
+                    do k = 1, 11, 11
+                        write(k, "(a)"), "   +=== err = x ========================================================+"
+                        write(k, "(a)"), "   |   The polygon is the concave, please check the face orientation.   |"
+                        write(k, "(a)"), "   +====================================================================+"
+                    end do
+                    stop
+                end if
+
+                pos_c  = 0.5d0 * (geom.iniP(geom.face(i).poi(1)).pos + geom.iniP(geom.face(i).poi(2+j)).pos)
+                inside = Math_Polygon_Contains_Point( geom.face(i).n_poi, v_poly, pos_c(1:2))
+                if(inside == .true.) exit
+            end do
+        end if
+        deallocate(v_poly)
 
         ! Find orientation
         vec_a(1:3) = geom.iniP(geom.face(i).poi(1)).pos - pos_c
@@ -494,11 +514,9 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
         write(301, "(3f8.2 )"), 0.2d0, 0.5d0, 0.6d0
     end do
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Write information on line and neighbor numbers
-    !
-    ! ==================================================
+    ! --------------------------------------------------
     if (f_info == .true.) then
 
         ! For lines
@@ -590,19 +608,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
     end if
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(301, "(a)"), ".translate 0.0 0.0 0.0"
-        write(301, "(a)"), ".scale 0.5"
-        write(301, "(a)"), ".color grey"
-        write(301, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(301, "(a)"), ".color red"             ! x-axis
-        write(301, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(301, "(a)"), ".color blue"            ! y-axis
-        write(301, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(301, "(a)"), ".color yellow"          ! z-axis
-        write(301, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
-
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(301)
     close(unit=301)
 end subroutine ModGeo_Chimera_Check_Geometry
 
@@ -754,35 +760,56 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
     type(GeomType), intent(in) :: geom
     integer,        intent(in) :: line
 
+    double precision, allocatable :: v_poly(:,:)
     double precision :: local(3, 3), pos_1(3), pos_2(3), vec_face1(3), vec_face2(3)
     double precision :: vec_a(3), vec_b(3), pos_c(3), vec_c(3)
-    integer :: i, poi_1, poi_2, face1, face2
+    integer :: i, j, k, poi_1, poi_2, face1, face2
+    logical :: inside
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Set first local vector, t1 - along the direction of the connectivity
-    !
-    ! ==================================================
+    ! --------------------------------------------------
     poi_1 = geom.iniL(line).poi(1)
     poi_2 = geom.iniL(line).poi(2)
     pos_1(1:3) = geom.iniP(poi_1).pos(1:3)
     pos_2(1:3) = geom.iniP(poi_2).pos(1:3)
     local(1,:) = Normalize(pos_2 - pos_1)
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Set second local vector, t2
-    !
-    ! ==================================================
+    ! --------------------------------------------------
     face1 = geom.iniL(line).neiF(1)
     if(face1 /= -1) then
 
-        ! Find the center point of the face1 -> the centroid point is more reasonable
+        ! Find the center point of the face1
         pos_c(:) = 0.0d0
+        allocate(v_poly(2, geom.face(face1).n_poi))
         do i = 1, geom.face(face1).n_poi
-            pos_c(:) = pos_c(:) + geom.iniP(geom.face(face1).poi(i)).pos
+            v_poly(1:2, i) = geom.iniP(geom.face(face1).poi(i)).pos(1:2)
         end do
-        pos_c(1:3) = pos_c / dble(geom.face(face1).n_poi)
+        pos_c(1:2) = Math_Plygon_Center(geom.face(face1).n_poi, v_poly)
+
+        ! Check whether the point is inside or not
+        inside = Math_Polygon_Contains_Point(geom.face(face1).n_poi, v_poly, pos_c(1:2))
+        if(inside == .false.) then
+            do j = 1, geom.face(face1).n_poi
+
+                pos_c(1:3) = 0.0d0
+                if(2+j == geom.face(face1).n_poi + 1) then
+                    do k = 1, 11, 11
+                        write(k, "(a)"), "   +=== err = x ========================================================+"
+                        write(k, "(a)"), "   |   The polygon is the concave, please check the face orientation.   |"
+                        write(k, "(a)"), "   +====================================================================+"
+                    end do
+                    stop
+                end if
+
+                pos_c  = 0.5d0 * (geom.iniP(geom.face(face1).poi(1)).pos + geom.iniP(geom.face(face1).poi(2+j)).pos)
+                inside = Math_Polygon_Contains_Point(geom.face(face1).n_poi, v_poly, pos_c(1:2))
+                if(inside == .true.) exit
+            end do
+        end if
+        deallocate(v_poly)
 
         ! Find outward vector of the face 1
         vec_a(1:3) = geom.iniP(geom.face(face1).poi(1)).pos - pos_c
@@ -810,12 +837,34 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
     face2 = geom.iniL(line).neiF(2)
     if(face2 /= -1) then
 
-        ! Find the center point of the face1 -> the centroid point is more reasonable
+        ! Find the center point of the face2
         pos_c(:) = 0.0d0
+        allocate(v_poly(2, geom.face(face2).n_poi))
         do i = 1, geom.face(face2).n_poi
-            pos_c(:) = pos_c(:) + geom.iniP(geom.face(face2).poi(i)).pos
+            v_poly(1:2, i) = geom.iniP(geom.face(face2).poi(i)).pos(1:2)
         end do
-        pos_c(1:3) = pos_c / dble(geom.face(face2).n_poi)
+        pos_c(1:2) = Math_Plygon_Center(geom.face(face2).n_poi, v_poly)
+
+        ! Check whether the point is inside or not
+        inside = Math_Polygon_Contains_Point(geom.face(face2).n_poi, v_poly, pos_c(1:2))
+        if(inside == .false.) then
+            do j = 1, geom.face(face2).n_poi
+                pos_c(1:3) = 0.0d0
+                if(2 + j == geom.face(face2).n_poi + 1) then
+                    do k = 1, 11, 11
+                        write(k, "(a)"), "   +=== err = x ========================================================+"
+                        write(k, "(a)"), "   |   The polygon is the concave, please check the face orientation.   |"
+                        write(k, "(a)"), "   +====================================================================+"
+                    end do
+                    stop
+                end if
+
+                pos_c  = 0.5d0 * (geom.iniP(geom.face(face2).poi(1)).pos + geom.iniP(geom.face(face2).poi(2+j)).pos)
+                inside = Math_Polygon_Contains_Point(geom.face(face2).n_poi, v_poly, pos_c(1:2))
+                if(inside == .true.) exit
+            end do
+        end if
+        deallocate(v_poly)
 
         ! Find outward vector of the face 2
         vec_a(1:3) = geom.iniP(geom.face(face2).poi(1)).pos - pos_c
@@ -849,11 +898,9 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
     local(2,:) = Normalize(local(2,:))
     !write(*, "(2i, 9f)"), face1, face2, local(2,:), vec_face1, vec_face2
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Set third local vector, t3
-    !
-    ! ==================================================
+    ! --------------------------------------------------
     local(3,:) = Cross(local(1,:), local(2,:))
     local(3,:) = Normalize(local(3,:))
 
@@ -965,25 +1012,12 @@ subroutine ModGeo_Chimera_Init_Geometry_Local(prob, geom)
     end if
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(302, "(a)"), ".translate 0.0 0.0 0.0"
-        write(302, "(a)"), ".scale 0.5"
-        write(302, "(a)"), ".color grey"
-        write(302, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(302, "(a)"), ".color red"             ! x-axis
-        write(302, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(302, "(a)"), ".color blue"            ! y-axis
-        write(302, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(302, "(a)"), ".color yellow"          ! z-axis
-        write(302, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(302)
     close(unit=302)
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Write the file for Tecplot
-    !
-    ! ==================================================
+    ! --------------------------------------------------
     if(para_output_Tecplot == "off") return
 
     path = trim(prob.path_work)//"/tecplot/"//trim(prob.name_file)
@@ -1555,18 +1589,7 @@ subroutine ModGeo_Chimera_Sep_Geometry(prob, geom, mode)
     end if
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(303, "(a)"), ".translate 0.0 0.0 0.0"
-        write(303, "(a)"), ".scale 0.5"
-        write(303, "(a)"), ".color grey"
-        write(303, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(303, "(a)"), ".color red"             ! x-axis
-        write(303, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(303, "(a)"), ".color blue"            ! y-axis
-        write(303, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(303, "(a)"), ".color yellow"          ! z-axis
-        write(303, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(303)
     close(unit=303)
 
     ! ---------------------------------------------

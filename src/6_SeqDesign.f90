@@ -927,11 +927,9 @@ subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
         ! For vertex in case of DX tile design
         !if(cn_tn > 0 .and. prob.sel_sec == 1 .and. dna.strand(i).n_base < 80) cycle
 
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         ! Build region of staple strands
-        !
-        ! ==================================================
+        ! --------------------------------------------------
         ! Tn loop |<----->| : 7 nt poly T loop
         !     ~~~~~=======*===========*=====*~~~~~~~
         !                 |<--------->|<--->|
@@ -958,11 +956,9 @@ subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
             write(k, "(a)"), "----- Make nick position --------------------------------------------------------------"
         end do
 
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         ! Cut staples to make short multi staples with 14nt seeds
-        !
-        ! ==================================================
+        ! --------------------------------------------------
         bgn_pos = 0
         pre_reg = 0
         b_cut   = .false.
@@ -996,13 +992,10 @@ subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
             end if
 
             if(b_cut == .true. .and. b_14nt == .true. .and. length <= para_max_cut_stap) then
-                !
-                ! ==================================================
-                !
+
+                ! --------------------------------------------------
                 ! Optimal cutting to have 14nt seeds
-                !
-                ! ==================================================
-                !
+                ! --------------------------------------------------
                 ! Centered base ID and position
                 cen_base = region(j).cen_base
                 cen_pos  = region(j).cen_pos
@@ -1035,13 +1028,10 @@ subroutine SeqDesign_Build_Sequence_Design_Mix(prob, mesh, dna)
                 b_cut   = .false.
                 b_14nt  = .false.
             else if(b_cut == .true. .and. length > para_max_cut_stap) then
-                !
-                ! ==================================================
-                !
+
+                ! --------------------------------------------------
                 ! If the length exceeds the maximum cutting length
-                !
-                ! ==================================================
-                !
+                ! --------------------------------------------------
                 ! To avoid small region in previous region
                 jj       = j
                 b_ext    = .false.
@@ -1309,11 +1299,9 @@ subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
         ! For vertex in case of DX tile design
         !if(cn_tn > 0 .and. prob.sel_sec == 1 .and. dna.strand(i).n_base < 80) cycle
 
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         ! Build region of staple strands
-        !
-        ! ==================================================
+        ! --------------------------------------------------
         ! Tn loop |<----->| : 7 nt poly T loop
         !     ~~~~~=======*===========*=====*~~~~~~~
         !                 |<--------->|<--->|
@@ -1340,11 +1328,9 @@ subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
             write(k, "(a)"), "----- Make nick position ---------------------------------------------------------------"
         end do
 
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         ! Cut staples to make short multi staples with 14nt seeds
-        !
-        ! ==================================================
+        ! --------------------------------------------------
         bgn_pos = 0
         pre_reg = 0
         b_cut   = .false.
@@ -1378,13 +1364,10 @@ subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
             end if
 
             if(b_cut == .true. .and. b_14nt == .true. .and. length <= para_max_cut_stap) then
-                !
-                ! ==================================================
-                !
+
+                ! --------------------------------------------------
                 ! Optimal cutting to have 14nt seeds
-                !
-                ! ==================================================
-                !
+                ! --------------------------------------------------
                 ! Centered base ID and position
                 cen_base = region(j).cen_base
                 cen_pos  = region(j).cen_pos
@@ -1447,13 +1430,10 @@ subroutine SeqDesign_Break_Staples_Seeds(prob, mesh, dna)
                 b_cut   = .false.
                 b_14nt  = .false.
             else if(b_cut == .true. .and. length > para_max_cut_stap) then
-                !
-                ! ==================================================
-                !
+
+                ! --------------------------------------------------
                 ! If the length exceeds the maximum cutting length
-                !
-                ! ==================================================
-                !
+                ! --------------------------------------------------
                 ! To avoid small region in previous region
                 jj       = j
                 b_ext    = .false.
@@ -1717,11 +1697,9 @@ subroutine SeqDesign_Break_Staples_Length(prob, mesh, dna)
         if(cn_tn > 0 .and. prob.sel_sec == 1 .and. dna.strand(i).n_base < 80) cycle
         if(cn_tn > 0 .and. prob.sel_sec == 3 .and. dna.strand(i).n_base < 70) cycle
 
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         ! Build region of staple strands
-        !
-        ! ==================================================
+        ! --------------------------------------------------
         ! Tn loop |<----->| : 7 nt poly T loop
         !     ~~~~~=======*===========*=====*~~~~~~~
         !                 |<--------->|<--->|
@@ -1747,11 +1725,9 @@ subroutine SeqDesign_Break_Staples_Length(prob, mesh, dna)
             write(k, "(a)"), "----- Make nick position --------------------------------------------------------------"
         end do
 
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         ! Cut staple strand to make short multi staples
-        !
-        ! ==================================================
+        ! --------------------------------------------------
         bgn_pos    = 0
         pre_region = 0
         b_cut      = .false.
@@ -2239,9 +2215,9 @@ subroutine SeqDesign_Build_Region_Staple_1(dna, i, region, n_region)
         ! Set end position
         region(j).end_pos = region(j).sta_pos + (region(j).length - 1)
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Set nucleotide of 14nt seeds
-        ! ==================================================
+        ! --------------------------------------------------
         if( (region(j).types == 1 .and. region(j).length + 1 >= 14) .or. &
             (region(j).types == 2 .and. region(j).length + 2 >= 14)) then
 
@@ -2263,9 +2239,9 @@ subroutine SeqDesign_Build_Region_Staple_1(dna, i, region, n_region)
         end if
             end if
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Set nucleotide of 4nt dsDNA domain
-        ! ==================================================
+        ! --------------------------------------------------
         if( (region(j).types == 1 .and. region(j).length + 1 <= 4) .or. &
             (region(j).types == 2 .and. region(j).length + 2 <= 4)) then
 
@@ -2327,20 +2303,16 @@ subroutine SeqDesign_Build_Sequence_Design(prob, mesh, dna)
             if(dna.top(base).across == -1) cn_tn = cn_tn + 1
         end do
 
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         ! For vertex for DX tile
-        !
-        ! ==================================================
+        ! --------------------------------------------------
         !if(cn_tn > 0 .and. prob.sel_sec == 1 .and. dna.strand(i).n_base < 80) cycle
 
         ! Find the starting point (down == -1)
         base = Mani_Go_Start_Base(dna, i)
 
         ! --------------------------------------------------
-        !
         ! Build region array
-        !
         ! --------------------------------------------------
         ! Tn loop |<---------->| 12 bp
         !     ~~~~~============*===========*=====*  : base pair
@@ -2448,11 +2420,9 @@ subroutine SeqDesign_Build_Sequence_Design(prob, mesh, dna)
             write(k, "(a)"), "----- Make nick position --------------------------------------------------------------"
         end do
 
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         ! Cut staple strand to make it short
-        !
-        ! ==================================================
+        ! --------------------------------------------------
         begin_pos  = 0
         pre_region = 0
         b_cut      = .false.
@@ -2853,9 +2823,7 @@ subroutine SeqDesign_Make_Short_Scaf(mesh, dna)
         base = Mani_Go_Start_Base(dna, i)
 
         ! --------------------------------------------------
-        !
         ! Build region array
-        !
         ! --------------------------------------------------
         ! Tn loop |<---------->| 12 bp
         !     ~~~~~============*===========*=====*  : base pair
@@ -2944,9 +2912,7 @@ subroutine SeqDesign_Make_Short_Scaf(mesh, dna)
         !write(0, "(a)")
 
         ! --------------------------------------------------
-        !
         ! Cut strand to make it short
-        !
         ! --------------------------------------------------
         begin_pos  = 0
         b_cut      = .false.
@@ -3511,12 +3477,9 @@ subroutine SeqDesign_Print_14nt_Region_Simple(prob, geom, mesh, dna)
     logical :: b_14nt, b_4nt
     character(200) :: path
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Intialize and setup the data structures
-    !
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     n_14nt   = 0; n_4nt    = 0; n_only_4nt = 0
     one_14nt = 0; two_14nt = 0; three_14nt = 0; other_14nt = 0
 
@@ -3570,19 +3533,17 @@ subroutine SeqDesign_Print_14nt_Region_Simple(prob, geom, mesh, dna)
         write(i, "(a)")
     end do
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Calculate regions and # of staples
-    !
-    ! ==================================================
+    ! --------------------------------------------------
     n_edge = 0
     do i = 1, dna.n_strand
 
         ! Only for staple strand
         if(dna.strand(i).type1 == "scaf") then
-            ! ==================================================
+            ! --------------------------------------------------
             ! For scaffold strand in bar graph - Graph #3
-            ! ==================================================
+            ! --------------------------------------------------
             dna.strand(i).type2 = "vertex"
             do j = 1, dna.strand(i).n_base
                 base = dna.strand(i).base(j)
@@ -3610,9 +3571,9 @@ subroutine SeqDesign_Print_14nt_Region_Simple(prob, geom, mesh, dna)
         allocate(region(dna.strand(i).n_base))
         call SeqDesign_Build_Region_Staple_1(dna, i, region, n_region)
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Count 14nt regions - Graph #2
-        ! ==================================================
+        ! --------------------------------------------------
         n_sec_14nt = 0;   n_sec_4nt  = 0
         b_14nt = .false.; b_4nt= .false.
 
@@ -3683,9 +3644,9 @@ subroutine SeqDesign_Print_14nt_Region_Simple(prob, geom, mesh, dna)
         if(n_sec_4nt  == 3) region_4nt(i)  = 3
         if(n_sec_4nt  == 4) region_4nt(i)  = 4
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! For staple strand in bar graph - Graph #3
-        ! ==================================================
+        ! --------------------------------------------------
         ! Find the starting point (down == -1)
         base = Mani_Go_Start_Base(dna, i)
         do j = 1, dna.strand(i).n_base
@@ -3693,10 +3654,9 @@ subroutine SeqDesign_Print_14nt_Region_Simple(prob, geom, mesh, dna)
             base = dna.top(base).up
         end do
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Build node and edge for circular graph - Graph #4
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         n_sec_14nt = 0
         do j = 1, n_region
 
@@ -3770,10 +3730,9 @@ subroutine SeqDesign_Print_14nt_Region_Simple(prob, geom, mesh, dna)
     dna.n_nt_14nt = n_nt_14nt
     dna.n_nt_4nt  = n_nt_4nt
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! Print 14nt regions - Graph #2
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     tot_4nt  = 0
     tot_14nt = 0
     do i = 1, dna.n_strand
@@ -3855,12 +3814,9 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
     logical :: b_14nt, b_4nt
     character(200) :: path
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Intialize and setup the data structures
-    !
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     n_14nt   = 0; n_4nt    = 0; n_only_4nt = 0
     one_14nt = 0; two_14nt = 0; three_14nt = 0; other_14nt = 0
 
@@ -3920,20 +3876,18 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
         write(i, "(a)")
     end do
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Calculate regions and # of staples
-    !
-    ! ==================================================
+    ! --------------------------------------------------
     n_edge = 0
     do i = 1, dna.n_strand
 
         ! Only for staple strand
         if(dna.strand(i).type1 == "scaf") then
 
-            ! ==================================================
+            ! --------------------------------------------------
             ! For scaffold strand in bar graph - Graph #3
-            ! ==================================================
+            ! --------------------------------------------------
             dna.strand(i).type2 = "vertex"
             do j = 1, dna.strand(i).n_base
                 base = dna.strand(i).base(j)
@@ -3965,9 +3919,9 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
         allocate(region(dna.strand(i).n_base))
         call SeqDesign_Build_Region_Staple_1(dna, i, region, n_region)
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Count strand length - Graph #1
-        ! ==================================================
+        ! --------------------------------------------------
         write(791, "(3i$)"), i - 1, dna.strand(i).n_base, i - 1
         if(n_region > 20) stop
         do j = 1, 20
@@ -3989,9 +3943,9 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
         end do
         write(791, "(a$)")
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Count 14nt regions - Graph #2
-        ! ==================================================
+        ! --------------------------------------------------
         n_sec_14nt = 0;   n_sec_4nt  = 0
         b_14nt = .false.; b_4nt= .false.
 
@@ -4062,9 +4016,9 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
         if(n_sec_4nt  == 3) region_4nt(i)  = 3
         if(n_sec_4nt  == 4) region_4nt(i)  = 4
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! For staple strand in bar graph - Graph #3
-        ! ==================================================
+        ! --------------------------------------------------
         ! Find the starting point (down == -1)
         base = Mani_Go_Start_Base(dna, i)
         do j = 1, dna.strand(i).n_base
@@ -4088,10 +4042,9 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
             base = dna.top(base).up
         end do
 
-        ! ==================================================
+        ! --------------------------------------------------
         ! Build node and edge for circular graph - Graph #4
-        ! ==================================================
-        !
+        ! --------------------------------------------------
         n_sec_14nt = 0
         do j = 1, n_region
 
@@ -4165,10 +4118,9 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
     dna.n_nt_14nt = n_nt_14nt
     dna.n_nt_4nt  = n_nt_4nt
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! Print 14nt regions - Graph #2
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     tot_4nt  = 0
     tot_14nt = 0
     do i = 1, dna.n_strand
@@ -4232,10 +4184,9 @@ subroutine SeqDesign_Print_14nt_Region(prob, geom, mesh, dna)
         end if
     end do
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! Print circle graph - Graph #4
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! Write Graphml Format
     write(794, "(a)"), '<?xml version="1.0" encoding="UTF-8"?>'
     write(794, "(a)"), '<graphml xmlns="http://graphml.graphdrawing.org/xmlns">'
@@ -5762,18 +5713,7 @@ subroutine SeqDesign_Chimera_Atom(prob, dna)
     end do
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(702, "(a)"), ".translate 0.0 0.0 0.0"
-        write(702, "(a)"), ".scale 0.5"
-        write(702, "(a)"), ".color grey"
-        write(702, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(702, "(a)"), ".color red"             ! x-axis
-        write(702, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(702, "(a)"), ".color blue"            ! y-axis
-        write(702, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(702, "(a)"), ".color yellow"          ! z-axis
-        write(702, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(702)
     close(unit=702)
 
     ! ---------------------------------------------
@@ -5935,18 +5875,7 @@ subroutine SeqDesign_Chimera_Curved_Cylinder(prob, mesh, dna)
     end do
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(702, "(a)"), ".translate 0.0 0.0 0.0"
-        write(702, "(a)"), ".scale 0.5"
-        write(702, "(a)"), ".color grey"
-        write(702, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(702, "(a)"), ".color red"             ! x-axis
-        write(702, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(702, "(a)"), ".color blue"            ! y-axis
-        write(702, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(702, "(a)"), ".color yellow"          ! z-axis
-        write(702, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(702)
     close(unit=702)
 
     ! Chemera output
@@ -6015,9 +5944,9 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
     open(unit=703, file=trim(path)//"_10_routing_scaf.bild", form="formatted")
     open(unit=704, file=trim(path)//"_11_routing_stap.bild", form="formatted")
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! For scaffold strand
-    ! ==================================================
+    ! --------------------------------------------------
     do i = 1, dna.n_strand
 
         ! Only for the scaffold
@@ -6107,9 +6036,9 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
         end do
     end do
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! For bases in the staple strand
-    ! ==================================================
+    ! --------------------------------------------------
     do i = 1, dna.n_strand
 
         ! For staple strand
@@ -6199,29 +6128,14 @@ subroutine SeqDesign_Chimera_Route(prob, mesh, dna)
     end do
 
     ! Write global axis
-    if(f_axis == .true.) then
-        do i = 0, 1
-            write(703+i, "(a)"), ".translate 0.0 0.0 0.0"
-            write(703+i, "(a)"), ".scale 0.5"
-            write(703+i, "(a)"), ".color grey"
-            write(703+i, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-            write(703+i, "(a)"), ".color red"             ! x-axis
-            write(703+i, "(a)"), ".arrow 0 0 0 4 0 0 "
-            write(703+i, "(a)"), ".color blue"            ! y-axis
-            write(703+i, "(a)"), ".arrow 0 0 0 0 4 0 "
-            write(703+i, "(a)"), ".color yellow"          ! z-axis
-            write(703+i, "(a)"), ".arrow 0 0 0 0 0 4 "
-        end do
-    end if
-
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(703)
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(704)
     close(unit=703)
     close(unit=704)
 
-    ! ==================================================
-    !
+    ! --------------------------------------------------
     ! For Tecplot
-    !
-    ! ==================================================
+    ! --------------------------------------------------
     if(para_output_Tecplot == "off") then
         if(allocated(base_scaf)) deallocate(base_scaf)
         if(allocated(base_stap)) deallocate(base_stap)
@@ -6313,9 +6227,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     end if
 
     ! --------------------------------------------------
-    !
     ! Nucleotides of staples
-    !
     ! --------------------------------------------------
     do i = 1, geom.n_iniL
         geom.iniL(i).n_xover = 0
@@ -6328,9 +6240,9 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
         end if
     end do
 
-    ! ==================================================
+    ! --------------------------------------------------
     ! For bases of the scaffold strand
-    ! ==================================================
+    ! --------------------------------------------------
     do i = 1, dna.n_strand
 
         ! Only for scaffold strand
@@ -6442,9 +6354,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     end do
 
     ! --------------------------------------------------
-    !
     ! For bases of the staple strand
-    !
     ! --------------------------------------------------
     vec_jt1(1:3) = 0.0d0
     vec_jt2(1:3) = 0.0d0
@@ -6568,19 +6478,7 @@ subroutine SeqDesign_Chimera_Sequence_Design(prob, geom, mesh, dna)
     end do
 
     ! Write global axis
-    if(f_axis == .true.) then
-        write(705, "(a)"), ".translate 0.0 0.0 0.0"
-        write(705, "(a)"), ".scale 0.5"
-        write(705, "(a)"), ".color grey"
-        write(705, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-        write(705, "(a)"), ".color red"             ! x-axis
-        write(705, "(a)"), ".arrow 0 0 0 4 0 0 "
-        write(705, "(a)"), ".color blue"            ! y-axis
-        write(705, "(a)"), ".arrow 0 0 0 0 4 0 "
-        write(705, "(a)"), ".color yellow"          ! z-axis
-        write(705, "(a)"), ".arrow 0 0 0 0 0 4 "
-    end if
-
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(705)
     close(unit=705)
 
     ! ---------------------------------------------
@@ -6786,21 +6684,8 @@ subroutine SeqDesign_Chimera_Strand(prob, dna)
     end do
 
     ! Write global axis
-    if(f_axis == .true.) then
-        do i = 0, 1
-            write(706+i, "(a)"), ".translate 0.0 0.0 0.0"
-            write(706+i, "(a)"), ".scale 0.5"
-            write(706+i, "(a)"), ".color grey"
-            write(706+i, "(a)"), ".sphere 0 0 0 0.5"      ! Center
-            write(706+i, "(a)"), ".color red"             ! x-axis
-            write(706+i, "(a)"), ".arrow 0 0 0 4 0 0 "
-            write(706+i, "(a)"), ".color blue"            ! y-axis
-            write(706+i, "(a)"), ".arrow 0 0 0 0 4 0 "
-            write(706+i, "(a)"), ".color yellow"          ! z-axis
-            write(706+i, "(a)"), ".arrow 0 0 0 0 0 4 "
-        end do
-    end if
-
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(706)
+    if(f_axis == .true.) call Mani_Set_Chimera_Axis(707)
     close(unit=706)
     close(unit=707)
 end subroutine SeqDesign_Chimera_Strand
