@@ -724,8 +724,8 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
     type(MeshType),  intent(in) :: mesh
     character(*),    intent(in) :: mode
 
-    double precision :: pos_1(3), pos_2(3), radius
-    integer :: i, j, node, node_1, node_2
+    double precision :: pos_1(3), pos_2(3), radius, length, min_length
+    integer :: i, j, node, node_1, node_2, min_croL
     logical :: f_axis, f_ori, f_mitered
     character(200) :: path
 
@@ -748,16 +748,31 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
 
         write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
 
+        min_length = 100000.0d0
         do i = 1, geom.n_croL
 
             pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
             pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).pos(1:3)
+            length     = Norm(pos_1 - pos_2)
+            if(min_length >= length) then
+                min_length = length
+                min_croL   = i
+            end if
 
-            write(502, "(a$    )"), ".cylinder "
-            write(502, "(3f9.3$)"), pos_1(1:3)
-            write(502, "(3f9.3$)"), pos_2(1:3)
-            write(502, "(1f9.3 )"), radius
+            write(502, "(a$     )"), ".cylinder "
+            write(502, "(3f10.3$)"), pos_1(1:3)
+            write(502, "(3f10.3$)"), pos_2(1:3)
+            write(502, "(1f10.3 )"), radius
         end do
+
+        ! Draw the min length cylinder
+        pos_1(1:3) = geom.croP(geom.croL(min_croL).poi(1)).pos(1:3)
+        pos_2(1:3) = geom.croP(geom.croL(min_croL).poi(2)).pos(1:3)
+        write(502, "(a      )"), ".color red"
+        write(502, "(a$     )"), ".cylinder "
+        write(502, "(3f10.3$)"), pos_1(1:3)
+        write(502, "(3f10.3$)"), pos_2(1:3)
+        write(502, "(1f10.3 )"), radius * 4.0d0
     else if(mode == "cylindrical_model_2" .and. f_mitered == .true.) then
 
         do i = 1, geom.n_croL
@@ -767,10 +782,10 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
             pos_2(1:3) = geom.croP(geom.croL(i).poi(2)).ori_pos(1:3)
 
             write(502, "(a, 3f9.4)"), ".color ", dble(prob.color(1:3))/255.0d0
-            write(502, "(a$    )"), ".cylinder "
-            write(502, "(3f9.3$)"), pos_1(1:3)
-            write(502, "(3f9.3$)"), pos_2(1:3)
-            write(502, "(1f9.3 )"), radius
+            write(502, "(a$      )"), ".cylinder "
+            write(502, "(3f10.3$ )"), pos_1(1:3)
+            write(502, "(3f10.3$ )"), pos_2(1:3)
+            write(502, "(1f10.3  )"), radius
 
             ! Draw cylinder for the mitered parts
             pos_1(1:3) = geom.croP(geom.croL(i).poi(1)).pos(1:3)
@@ -833,19 +848,19 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
                 cycle
             end if
 
-            write(502, "(a$    )"), ".cylinder "
-            write(502, "(3f9.3$)"), pos_1(1:3)
-            write(502, "(3f9.3$)"), pos_2(1:3)
-            write(502, "(1f9.3 )"), radius*0.1d0
+            write(502, "(a$     )"), ".cylinder "
+            write(502, "(3f10.3$)"), pos_1(1:3)
+            write(502, "(3f10.3$)"), pos_2(1:3)
+            write(502, "(1f10.3 )"), radius*0.1d0
 
             ! Write sphere to represent start and end edge
-            write(502, "(a     )"), ".color steel blue"
-            write(502, "(a$    )"), ".sphere "
-            write(502, "(3f9.3$)"), pos_1(1:3)
-            write(502, "(1f9.3 )"), 0.2d0
-            write(502, "(a$    )"), ".sphere "
-            write(502, "(3f9.3$)"), pos_2(1:3)
-            write(502, "(1f9.3 )"), 0.2d0
+            write(502, "(a      )"), ".color steel blue"
+            write(502, "(a$     )"), ".sphere "
+            write(502, "(3f10.3$)"), pos_1(1:3)
+            write(502, "(1f10.3 )"), 0.2d0
+            write(502, "(a$     )"), ".sphere "
+            write(502, "(3f10.3$)"), pos_2(1:3)
+            write(502, "(1f10.3 )"), 0.2d0
         end do
     end do
 
@@ -891,9 +906,9 @@ subroutine Basepair_Chimera_Cylinder(prob, geom, bound, mesh, mode)
                 pos_1(1:3) = mesh.node(i).pos(1:3)
             end if
 
-            write(502, "(a$    )"), ".sphere "
-            write(502, "(3f9.3$)"), pos_1(1:3)
-            write(502, "(1f9.3 )"), 0.25d0
+            write(502, "(a$     )"), ".sphere "
+            write(502, "(3f10.3$)"), pos_1(1:3)
+            write(502, "(1f10.3 )"), 0.25d0
         end do
     end if
 
