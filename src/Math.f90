@@ -30,7 +30,7 @@ module Math
     double precision, parameter :: pi  = 3.141592653589793d0
     double precision, parameter :: eps = 0.0000001d0
 
-    public Math_Plygon_Center
+    public Math_Polygon_Center
     public Math_Polygon_Contains_Point
     public Find_Intersection
     public Check_Intersection
@@ -69,7 +69,7 @@ contains
 ! -----------------------------------------------------------------------------
 
 ! To compute the centroid of a polygon
-function Math_Plygon_Center(n, v) result(centroid)
+function Math_Polygon_Center(n, v) result(centroid)
     integer, intent(in) :: n
     double precision, intent(in) :: v(:,:)
 
@@ -91,14 +91,14 @@ function Math_Plygon_Center(n, v) result(centroid)
         area          = area + temp
         centroid(1:2) = centroid(1:2) + (v(1:2, ip1) + v(1:2,i)) * temp
     end do
-    area = area / 2.0D+00
+    area = area / 2.0d0
 
     if(area == 0.0d0) then
         centroid(1:2) = v(1:2,1)
     else
         centroid(1:2) = centroid(1:2) / (6.0d0 * area)
     end if
-end function Math_Plygon_Center
+end function Math_Polygon_Center
 
 ! -----------------------------------------------------------------------------
 

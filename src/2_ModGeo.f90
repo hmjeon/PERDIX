@@ -466,7 +466,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
         do j = 1, geom.face(i).n_poi
             v_poly(1:2, j) = geom.iniP(geom.face(i).poi(j)).pos(1:2)
         end do
-        pos_c(1:2) = Math_Plygon_Center(geom.face(i).n_poi, v_poly)
+        pos_c(1:2) = Math_Polygon_Center(geom.face(i).n_poi, v_poly)
 
         ! Check whether the point is inside or not
         inside = Math_Polygon_Contains_Point(geom.face(i).n_poi, v_poly, pos_c(1:2))
@@ -787,7 +787,7 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
         do i = 1, geom.face(face1).n_poi
             v_poly(1:2, i) = geom.iniP(geom.face(face1).poi(i)).pos(1:2)
         end do
-        pos_c(1:2) = Math_Plygon_Center(geom.face(face1).n_poi, v_poly)
+        pos_c(1:2) = Math_Polygon_Center(geom.face(face1).n_poi, v_poly)
 
         ! Check whether the point is inside or not
         inside = Math_Polygon_Contains_Point(geom.face(face1).n_poi, v_poly, pos_c(1:2))
@@ -843,7 +843,7 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
         do i = 1, geom.face(face2).n_poi
             v_poly(1:2, i) = geom.iniP(geom.face(face2).poi(i)).pos(1:2)
         end do
-        pos_c(1:2) = Math_Plygon_Center(geom.face(face2).n_poi, v_poly)
+        pos_c(1:2) = Math_Polygon_Center(geom.face(face2).n_poi, v_poly)
 
         ! Check whether the point is inside or not
         inside = Math_Polygon_Contains_Point(geom.face(face2).n_poi, v_poly, pos_c(1:2))

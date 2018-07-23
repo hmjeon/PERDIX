@@ -244,9 +244,7 @@ subroutine Input_Print_Parameters(prob, geom)
 
     do i = 0, 11, 11
         write(i, "(a )"), "   +--------------------------------------------------------------------+"
-        write(i, "(a )"), "   |                                                                    |"
         write(i, "(a )"), "   |          1. Inputs - geometry, cross-section, edge length          |"
-        write(i, "(a )"), "   |                                                                    |"
         write(i, "(a )"), "   +--------------------------------------------------------------------+"
         write(i, "(a )")
         call Space(i, 6)
