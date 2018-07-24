@@ -2210,6 +2210,8 @@ subroutine Output_Write_Out_JSON(prob, geom, mesh, dna, max_unpaired)
     logical :: b_stap_json = .true.
     character(200) :: path
 
+    if(dna.n_base_scaf > 10000) return
+
     path = trim(prob.path_work)//"/"//trim(prob.name_file)
     open(unit=999, file=trim(path)//"_15_json_caDNAno.json", form="formatted")
 

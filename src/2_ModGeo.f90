@@ -2,7 +2,7 @@
 ! =============================================================================
 !
 ! Module - ModGeo
-! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
+! Last Updated : 07/24/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
 ! =============================================================================
 !
@@ -53,7 +53,7 @@ module ModGeo
     private ModGeo_Find_Scale_Factor
     private ModGeo_Set_Angle_Junction
     private ModGeo_Set_Width_Section
-    private ModGeo_Set_Scale_Geometry
+    private ModGeo_Scale_Geometry
     private ModGeo_Set_Gap_Junction
     private ModGeo_Chimera_Sep_Geometry
     private ModGeo_Set_Const_Geometric_Ratio
@@ -110,8 +110,8 @@ subroutine ModGeo_Modification(prob, geom, bound)
     ! Find the factor to scale the geometry
     scale = ModGeo_Find_Scale_Factor(prob, geom, bound)
 
-    ! Scale the geometry with the factor
-    call ModGeo_Set_Scale_Geometry(geom, scale)
+    ! Scale the geometry with the scale factor
+    call ModGeo_Scale_Geometry(geom, scale)
 
     ! Write seperated geometry
     !call ModGeo_Chimera_Sep_Geometry(prob, geom, "sep0")
@@ -1474,8 +1474,8 @@ end function ModGeo_Set_Width_Section
 
 ! -----------------------------------------------------------------------------
 
-! Set the geometric size with the scale factor
-subroutine ModGeo_Set_Scale_Geometry(geom, scale)
+! Scale the geometry with the scale factor
+subroutine ModGeo_Scale_Geometry(geom, scale)
     type(GeomType),   intent(inout) :: geom
     double precision, intent(in)    :: scale
 
@@ -1491,7 +1491,7 @@ subroutine ModGeo_Set_Scale_Geometry(geom, scale)
     do i = 1, geom.n_iniP
         geom.iniP(i).pos(1:3) = geom.iniP(i).pos(1:3) * scale
     end do
-end subroutine ModGeo_Set_Scale_Geometry
+end subroutine ModGeo_Scale_Geometry
 
 ! -----------------------------------------------------------------------------
 
