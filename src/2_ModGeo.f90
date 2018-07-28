@@ -169,11 +169,9 @@ subroutine ModGeo_Set_Neighbor_Point(prob, geom)
     if(prob.type_geo == "closed") then
         do i = 0, 11, 11
             write(i, "(a)")
-            write(i, "(a)"), "   +============================ E R R O R =============================+"
-            write(i, "(a)"), "   |                                                                    |"
+            write(i, "(a)"), "   +=== err = 7 ========================================================+"
             write(i, "(a)"), "   |   This geometry is not open wireframe.                             |"
             write(i, "(a)"), "   |   PERDIX only supports the 2D wireframe structure.                 |"
-            write(i, "(a)"), "   |                                                                    |"
             write(i, "(a)"), "   +====================================================================+"
             write(i, "(a)")
         end do
@@ -476,7 +474,7 @@ subroutine ModGeo_Chimera_Check_Geometry(prob, geom)
                 pos_c(1:3) = 0.0d0
                 if(2 + j == geom.face(i).n_poi + 1) then
                     do k = 1, 11, 11
-                        write(k, "(a)"), "   +=== err = x ========================================================+"
+                        write(k, "(a)"), "   +=== err = 8 ========================================================+"
                         write(k, "(a)"), "   |   The polygon is the concave, please check the face orientation.   |"
                         write(k, "(a)"), "   +====================================================================+"
                     end do
@@ -797,7 +795,7 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
                 pos_c(1:3) = 0.0d0
                 if(2+j == geom.face(face1).n_poi + 1) then
                     do k = 1, 11, 11
-                        write(k, "(a)"), "   +=== err = x ========================================================+"
+                        write(k, "(a)"), "   +=== err = 9 ========================================================+"
                         write(k, "(a)"), "   |   The polygon is the concave, please check the face orientation.   |"
                         write(k, "(a)"), "   +====================================================================+"
                     end do
@@ -852,7 +850,7 @@ function ModGeo_Set_Local_Vectors(geom, line) result(local)
                 pos_c(1:3) = 0.0d0
                 if(2 + j == geom.face(face2).n_poi + 1) then
                     do k = 1, 11, 11
-                        write(k, "(a)"), "   +=== err = x ========================================================+"
+                        write(k, "(a)"), "   +=== err = 10 =======================================================+"
                         write(k, "(a)"), "   |   The polygon is the concave, please check the face orientation.   |"
                         write(k, "(a)"), "   +====================================================================+"
                     end do

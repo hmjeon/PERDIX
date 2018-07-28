@@ -499,8 +499,11 @@ function SeqDesign_Get_Comp_Sequence(seq) result(com_seq)
     else if(seq == "G") then
         com_seq = "C"
     else
-        write(0, "(a$)"), "Error - Not defined sequence : "
-        write(0, "(a )"), "SeqDesign_Get_Comp_Sequence"
+        write(0, "(a)")
+        write(0, "(a)"), "   +=== err = 11 =======================================================+"
+        write(0, "(a)"), "   |   The sequences are not assigned.                                  |"
+        write(0, "(a)"), "   +====================================================================+"
+        write(0, "(a)")
         stop
     end if
 end function SeqDesign_Get_Comp_Sequence
@@ -5507,11 +5510,9 @@ subroutine SeqDesign_Import_Sequence(dna)
     if(len_seq < dna.n_base_scaf) then
         do i = 0, 11, 11
             write(i, "(a)")
-            write(i, "(a)"), "   +============================ E R R O R =============================+"
-            write(i, "(a)"), "   |                                                                    |"
+            write(i, "(a)"), "   +=== err = 12 =======================================================+"
             write(i, "(a)"), "   |  User-defined scaffold sequence length are shorter than            |"
             write(i, "(a)"), "   |  # of scaffold nucleotides. PERDIX will be terminated.             |"
-            write(i, "(a)"), "   |                                                                    |"
             write(i, "(a)"), "   +====================================================================+"
             write(i, "(a)")
             write(i, "(a)"), "      The length of the scaffold sequences: "//trim(adjustl(Int2Str(len_seq)))

@@ -2,7 +2,7 @@
 ! =============================================================================
 !
 ! PERDIX v1.0
-! Last Updated : 05/09/2018, by Hyungmin Jun (hyungminjun@outlook.com)
+! Last Updated : 07/28/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
 ! =============================================================================
 !
@@ -116,50 +116,51 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         write(i, "(a)")
 
         call Space(i,  6); write(i, "(a)"), "8.1. Geometry, cross-section and problem description"
-        call Space(i, 11); write(i, "(a)"), "* Full geometric name               : "&
-            //trim(prob.name_file)
-        call Space(i, 11); write(i, "(a)"), "* The number of initial faces       : "&
-            //trim(adjustl(Int2Str(geom.n_face)))
-        call Space(i, 11); write(i, "(a)"), "* The number of initial points      : "&
-            //trim(adjustl(Int2Str(geom.n_iniP)))
-        call Space(i, 11); write(i, "(a)"), "* The number of initial edges       : "&
-            //trim(adjustl(Int2Str(geom.n_iniL)))
-        call Space(i, 11); write(i, "(a)"), "* The number of modified points     : "&
-            //trim(adjustl(Int2Str(geom.n_modP)))
-        call Space(i, 11); write(i, "(a)"), "* The number of modified edges      : "&
-            //trim(adjustl(Int2Str(geom.n_iniL)))
-        call Space(i, 11); write(i, "(a)"), "* The number of sectional points    : "&
-            //trim(adjustl(Int2Str(geom.n_croP)))
-        call Space(i, 11); write(i, "(a)"), "* The number of sectional edges     : "&
-            //trim(adjustl(Int2Str(geom.n_croL)))
-        call Space(i, 11); write(i, "(a)"), "* Section type                      : "&
-            //trim(geom.sec.types)//" lattice"
-        call Space(i, 11); write(i, "(a)"), "* The number of duplexes            : "&
-            //trim(adjustl(Int2Str(geom.n_sec)))
-        call Space(i, 11); write(i, "(a)"), "* The number of rows                : "&
-            //trim(adjustl(Int2Str(geom.sec.maxR-geom.sec.minR+1)))
-        call Space(i, 11); write(i, "(a)"), "* The number of columns             : "&
-            //trim(adjustl(Int2Str(geom.sec.maxC-geom.sec.minC+1)))
-        call Space(i, 11); write(i, "(a)"), "* Reference row                     : "&
-            //trim(adjustl(Int2Str(geom.sec.ref_row)))
-        call Space(i, 11); write(i, "(a)"), "* Reference min/max column          : "&
-            //trim(adjustl(Int2Str(geom.sec.ref_minC)))//" / "//trim(adjustl(Int2Str(geom.sec.ref_maxC)))
-        call Space(i, 11); write(i, "(a)"), "* The minimum edge-length           : "&
-            //trim(adjustl(Int2Str(prob.n_bp_edge)))// "bp"
-        call Space(i, 11); write(i, "(a)"), "* Junction modification             : "&
-            //trim(para_junc_ang)
-        call Space(i, 11); write(i, "(a)"), "* Constant edge length from mesh    : "&
-            //trim(para_const_edge_mesh)
-        call Space(i, 11); write(i, "(a)"), "* Gap between two scaf xovers       : "&
-            //trim(adjustl(Int2Str(para_gap_xover_two_scaf)))
-        call Space(i, 11); write(i, "(a)"), "* Gap between xover(stap) and bound : "&
-            //trim(adjustl(Int2Str(para_gap_xover_bound_stap)))
-        call Space(i, 11); write(i, "(a)"), "* Gap between stap and scaf xovers  : "&
-            //trim(adjustl(Int2Str(para_gap_xover_two)))
-        call Space(i, 11); write(i, "(a)"), "* Gap between xover and first nick  : "&
-            //trim(adjustl(Int2Str(para_gap_xover_nick1)))
-        call Space(i, 11); write(i, "(a)"), "* Gap between xover and nick        : "&
-            //trim(adjustl(Int2Str(para_gap_xover_nick)))
+        call Space(i, 11); write(i, "(a)"), "* Full geometric name               : "//&
+            trim(prob.name_file)
+        call Space(i, 11); write(i, "(a)"), "* The number of initial faces       : "//&
+            trim(adjustl(Int2Str(geom.n_face)))
+        call Space(i, 11); write(i, "(a)"), "* The number of initial points      : "//&
+            trim(adjustl(Int2Str(geom.n_iniP)))
+        call Space(i, 11); write(i, "(a)"), "* The number of initial edges       : "//&
+            trim(adjustl(Int2Str(geom.n_iniL)))
+        call Space(i, 11); write(i, "(a)"), "* The number of modified points     : "//&
+            trim(adjustl(Int2Str(geom.n_modP)))
+        call Space(i, 11); write(i, "(a)"), "* The number of modified edges      : "//&
+            trim(adjustl(Int2Str(geom.n_iniL)))
+        call Space(i, 11); write(i, "(a)"), "* The number of sectional points    : "//&
+            trim(adjustl(Int2Str(geom.n_croP)))
+        call Space(i, 11); write(i, "(a)"), "* The number of sectional edges     : "//&
+            trim(adjustl(Int2Str(geom.n_croL)))
+        call Space(i, 11); write(i, "(a)"), "* Section type                      : "//&
+            trim(geom.sec.types)//" lattice"
+        call Space(i, 11); write(i, "(a)"), "* The number of duplexes            : "//&
+            trim(adjustl(Int2Str(geom.n_sec)))
+        call Space(i, 11); write(i, "(a)"), "* The number of rows                : "//&
+            trim(adjustl(Int2Str(geom.sec.maxR-geom.sec.minR+1)))
+        call Space(i, 11); write(i, "(a)"), "* The number of columns             : "//&
+            trim(adjustl(Int2Str(geom.sec.maxC-geom.sec.minC+1)))
+        call Space(i, 11); write(i, "(a)"), "* Reference row                     : "//&
+            trim(adjustl(Int2Str(geom.sec.ref_row)))
+        call Space(i, 11); write(i, "(a)"), "* Reference min/max column          : "//&
+            trim(adjustl(Int2Str(geom.sec.ref_minC)))//" / "//&
+            trim(adjustl(Int2Str(geom.sec.ref_maxC)))
+        call Space(i, 11); write(i, "(a)"), "* The minimum edge-length           : "//&
+            trim(adjustl(Int2Str(prob.n_bp_edge)))// "bp"
+        call Space(i, 11); write(i, "(a)"), "* Junction modification             : "//&
+            trim(para_junc_ang)
+        call Space(i, 11); write(i, "(a)"), "* Constant edge length from mesh    : "//&
+            trim(para_const_edge_mesh)
+        call Space(i, 11); write(i, "(a)"), "* Gap between two scaf xovers       : "//&
+            trim(adjustl(Int2Str(para_gap_xover_two_scaf)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between xover(stap) and bound : "//&
+            trim(adjustl(Int2Str(para_gap_xover_bound_stap)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between stap and scaf xovers  : "//&
+            trim(adjustl(Int2Str(para_gap_xover_two)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between xover and first nick  : "//&
+            trim(adjustl(Int2Str(para_gap_xover_nick1)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between xover and nick        : "//&
+            trim(adjustl(Int2Str(para_gap_xover_nick)))
         call Space(i, 11); write(i, "(a$)"), "* Maximum # of bases in scaf strand : "
         if(para_max_cut_scaf == 0) then
             write(i, "(a)"), "infinite"
@@ -177,33 +178,43 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         else if(para_set_seq_scaf == 2) then
             write(i, "(a)"), "random sequence"
         end if
-        call Space(i, 11); write(i, "(a)"), "* Vertex design method              : "//trim(para_vertex_design)//" vertex"
-        call Space(i, 11); write(i, "(a)"), "* Vertex design to avoid clash      : "//trim(para_vertex_modify)
-        call Space(i, 11); write(i, "(a)"), "* Cutting method for short staples  : "//trim(para_cut_stap_method)
-        call Space(i, 11); write(i, "(a)"), "* Non-circular stap by single xover : "//trim(para_set_stap_sxover)
-        call Space(i, 11); write(i, "(a)"), "* Unpaired scaffold nucleotides     : "//trim(para_unpaired_scaf)
-        call Space(i, 11); write(i, "(a)"), "* Start position of scaffold strand : "//trim(adjustl(Int2Str(para_set_start_scaf)))
-        call Space(i, 11); write(i, "(a)"), "* Gap btw xover and nick [staple]   : "//trim(adjustl(Int2Str(para_gap_xover_nick)))
-        call Space(i, 11); write(i, "(a)"), "* Gap btw xover and vertex [staple] : "//trim(adjustl(Int2Str(para_gap_xover_bound_stap)))
-        call Space(i, 11); write(i, "(a)"), "* # of changing for min staple      : "//trim(adjustl(Int2Str(prob.n_cng_min_stap)))
-        call Space(i, 11); write(i, "(a)"), "* # of changing for max staple      : "//trim(adjustl(Int2Str(prob.n_cng_max_stap)))
+        call Space(i, 11); write(i, "(a)"), "* Vertex design method              : "//&
+            trim(para_vertex_design)//" vertex"
+        call Space(i, 11); write(i, "(a)"), "* Vertex design to avoid clash      : "//&
+            trim(para_vertex_modify)
+        call Space(i, 11); write(i, "(a)"), "* Cutting method for short staples  : "//&
+            trim(para_cut_stap_method)
+        call Space(i, 11); write(i, "(a)"), "* Non-circular stap by single xover : "//&
+            trim(para_set_stap_sxover)
+        call Space(i, 11); write(i, "(a)"), "* Unpaired scaffold nucleotides     : "//&
+            trim(para_unpaired_scaf)
+        call Space(i, 11); write(i, "(a)"), "* Start position of scaffold strand : "//&
+            trim(adjustl(Int2Str(para_set_start_scaf)))
+        call Space(i, 11); write(i, "(a)"), "* Gap btw xover and nick [staple]   : "//&
+            trim(adjustl(Int2Str(para_gap_xover_nick)))
+        call Space(i, 11); write(i, "(a)"), "* Gap btw xover and vertex [staple] : "//&
+            trim(adjustl(Int2Str(para_gap_xover_bound_stap)))
+        call Space(i, 11); write(i, "(a)"), "* # of changing for min staple      : "//&
+            trim(adjustl(Int2Str(prob.n_cng_min_stap)))
+        call Space(i, 11); write(i, "(a)"), "* # of changing for max staple      : "//&
+            trim(adjustl(Int2Str(prob.n_cng_max_stap)))
         write(i, "(a)")
 
         ! --------------------------------------------------
         ! Base pair information
         ! --------------------------------------------------
         call Space(i, 11); write(i, "(a)"), "[ BASE PAIR ]"
-        call Space(i, 16); write(i, "(a)"), "* # of basepairs            : "&
-            //trim(adjustl(Int2Str(mesh.n_node)))
-        call Space(i, 16); write(i, "(a)"), "* # of mitered nucleotides  : "&
-            //trim(adjustl(Int2Str(mesh.n_mitered)))//" ["&
-            //trim(adjustl(Dble2Str(dble(mesh.n_mitered)/dble(mesh.n_node)*100.0d0)))//" %]"
-        call Space(i, 16); write(i, "(a)"), "* Edge length [ min - max ] : ["&
-            //trim(adjustl(Int2Str(geom.min_edge_length)))//" - "&
-            //trim(adjustl(Int2Str(geom.max_edge_length)))//"]"
+        call Space(i, 16); write(i, "(a)"), "* # of basepairs            : "//&
+            trim(adjustl(Int2Str(mesh.n_node)))
+        call Space(i, 16); write(i, "(a)"), "* # of mitered nucleotides  : "//&
+            trim(adjustl(Int2Str(mesh.n_mitered)))//" ["//&
+            trim(adjustl(Dble2Str(dble(mesh.n_mitered)/dble(mesh.n_node)*100.0d0)))//" %]"
+        call Space(i, 16); write(i, "(a)"), "* Edge length [ min - max ] : ["//&
+            trim(adjustl(Int2Str(geom.min_edge_length)))//" - "//&
+            trim(adjustl(Int2Str(geom.max_edge_length)))//"]"
         call Space(i, 16); write(i, "(a)"), "* Min # xovers [scaf, stap] : "//&
-            trim(adjustl(Int2Str(dna.min_xover_scaf+dna.min_xover_stap)))//" ["// &
-            trim(adjustl(Int2Str(dna.min_xover_scaf)))//", "// &
+            trim(adjustl(Int2Str(dna.min_xover_scaf+dna.min_xover_stap)))//" ["//&
+            trim(adjustl(Int2Str(dna.min_xover_scaf)))//", "//&
             trim(adjustl(Int2Str(dna.min_xover_stap)))//"]"
         write(i, "(a)")
 
@@ -211,44 +222,48 @@ subroutine Print_Information(prob, geom, bound, mesh, dna)
         ! Scaffold information
         ! --------------------------------------------------
         call Space(i, 11); write(i, "(a)"), "[ SCAFFOLD ]"
-        call Space(i, 16); write(i, "(a)"), "* # of scaffold strands     : "//trim(adjustl(Int2Str(dna.n_scaf)))
-        call Space(i, 16); write(i, "(a)"), "* # of total nucleotides    : "//trim(adjustl(Int2Str(dna.n_base_scaf)))
-        !call Space(i, 16); write(i, "(a)"), "* # of unpaired regions     : "//trim(adjustl(Int2Str(dna.n_unpaired_scaf)))
-        call Space(i, 16); write(i, "(a)"), "* # of unpaired nucleotides : "//trim(adjustl(Int2Str(dna.n_nt_unpaired_scaf)))
-        call Space(i, 16); write(i, "(a)"), "* # of double-crossovers    : "//trim(adjustl(Int2Str(dna.n_xover_scaf/2)))
+        call Space(i, 16); write(i, "(a)"), "* # of scaffold strands     : "//&
+            trim(adjustl(Int2Str(dna.n_scaf)))
+        call Space(i, 16); write(i, "(a)"), "* # of total nucleotides    : "//&
+            trim(adjustl(Int2Str(dna.n_base_scaf)))
+        call Space(i, 16); write(i, "(a)"), "* # of unpaired nucleotides : "//&
+            trim(adjustl(Int2Str(dna.n_nt_unpaired_scaf)))
+        call Space(i, 16); write(i, "(a)"), "* # of double-crossovers    : "//&
+            trim(adjustl(Int2Str(dna.n_xover_scaf/2)))
         write(i, "(a)")
 
         ! --------------------------------------------------
         ! Staple information
         ! --------------------------------------------------
         call Space(i, 11); write(i, "(a)"), "[ STAPLE ]"
-        call Space(i, 16); write(i, "(a)"), "* # of staples              : "//trim(adjustl(Int2Str(dna.n_stap)))
+        call Space(i, 16); write(i, "(a)"), "* # of staples              : "//&
+            trim(adjustl(Int2Str(dna.n_stap)))
         call Space(i, 25); write(i, "(a)"), "@ with the 4nt dsDNA domain  - "//&
             trim(adjustl(Int2Str(dna.n_4nt)))//" ["//&
             trim(adjustl(Dble2Str(dble(dna.n_4nt)/dble(dna.n_stap)*100.0d0)))//" %]"
         call Space(i, 25); write(i, "(a)"), "@ with the 14nt dsDNA domain - "//&
             trim(adjustl(Int2Str(dna.n_14nt)))//" ["//&
             trim(adjustl(Dble2Str(dble(dna.n_14nt)/dble(dna.n_stap)*100.0d0)))//" %]"
-        call Space(i, 16); write(i, "(a)"), "* # of nucleotides          : "//trim(adjustl(Int2Str(dna.n_base_stap)))
+        call Space(i, 16); write(i, "(a)"), "* # of nucleotides          : "//&
+            trim(adjustl(Int2Str(dna.n_base_stap)))
         call Space(i, 25); write(i, "(a)"), "@ in 4nt dsDNA domains       - "//&
             trim(adjustl(Int2Str(dna.n_nt_4nt)))//" ["//&
             trim(adjustl(Dble2Str(dble(dna.n_nt_4nt)/dble(dna.n_base_stap)*100.0d0)))//" %]"
         call Space(i, 25); write(i, "(a)"), "@ in 14nt dsDNA domains      - "//&
             trim(adjustl(Int2Str(dna.n_nt_14nt)))//" ["//&
             trim(adjustl(Dble2Str(dble(dna.n_nt_14nt)/dble(dna.n_base_stap)*100.0d0)))//" %]"
-
-        !call Space(i, 16); write(i, "(a)"), "* # of unpaired regions     : "//trim(adjustl(Int2Str(dna.n_unpaired_stap)))
-        call Space(i, 16); write(i, "(a)"), "* # of unpaired nucleotides : "//trim(adjustl(Int2Str(dna.n_nt_unpaired_stap)))
-        call Space(i, 16); write(i, "(a)"), "* # of total crossovers     : "//trim(adjustl(Int2Str(dna.n_xover_stap)))
-        call Space(i, 16); write(i, "(a)"), "* # of single-crossovers    : "//trim(adjustl(Int2Str(dna.n_sxover_stap)))
-        call Space(i, 16); write(i, "(a)"), "* # of double-crossovers    : "//trim(adjustl(Int2Str((dna.n_xover_stap-dna.n_sxover_stap)/2)))
+        call Space(i, 16); write(i, "(a)"), "* # of unpaired nucleotides : "//&
+            trim(adjustl(Int2Str(dna.n_nt_unpaired_stap)))
+        call Space(i, 16); write(i, "(a)"), "* # of total crossovers     : "//&
+            trim(adjustl(Int2Str(dna.n_xover_stap)))
+        call Space(i, 16); write(i, "(a)"), "* # of single-crossovers    : "//&
+            trim(adjustl(Int2Str(dna.n_sxover_stap)))
+        call Space(i, 16); write(i, "(a)"), "* # of double-crossovers    : "//&
+            trim(adjustl(Int2Str((dna.n_xover_stap-dna.n_sxover_stap)/2)))
         call Space(i, 16); write(i, "(a)"), "* Length [min - max- ave]   : ["//&
             trim(adjustl(Int2Str(dna.len_min_stap)))//" - "//&
             trim(adjustl(Int2Str(dna.len_max_stap)))//" - "//&
             trim(adjustl(Dble2Str(dna.len_ave_stap)))//"]"
-        !call Space(i, 16); write(i, "(a)"), "* # of total regions            : "//trim(adjustl(Int2Str(dna.n_tot_region)))
-        !call Space(i, 16); write(i, "(a)"), "* # of total 14nt dsDNA domains : "//trim(adjustl(Int2Str(dna.n_tot_14nt)))
-        !call Space(i, 16); write(i, "(a)"), "* # of total 4nt dsDNA domains  : "//trim(adjustl(Int2Str(dna.n_tot_4nt)))
         write(i, "(a)")
         write(i, "(a)")
         write(i, "(a)"), "   +=== completed ======================================================+"
@@ -334,8 +349,7 @@ subroutine Print_TimeConsuming(time_start)
     write(0, "(f6.2, a$)"), time, " [sec], "
     write(0, "(f6.2, a )"), time/60.0d0, " [min]"
     write(0, "(a       )"), " --------------------------------------------------"
-
-    write(0, "(a)")
+    write(0, "(a       )")
 end subroutine Print_TimeConsuming
 
 ! -----------------------------------------------------------------------------
@@ -382,10 +396,9 @@ subroutine Verify_Solution(mesh, dna)
         verify = verify + mesh.node(i).pos(3)
     end do
 
-    write(0, "(a)")
-    write(0, "(a)"), "[ Check the algorithm - Debug mode only ]"
-    write(0, "(a25, a)"), " 3.41395107452898E+04"," - Reference: 1 - 1"
-    write(0, "(a25, a)"), " 1.35568076299989E+05"," - Reference: 7 - 1"
+    write(0, "(a      )"), "[ Check the algorithm - Debug mode only ]"
+    write(0, "(a25,  a)"), " 3.41395107452898E+04"," - Reference: 1 - 1"
+    write(0, "(a25,  a)"), " 1.35568076299989E+05"," - Reference: 7 - 1"
     write(0, "(es25.14)"), verify
 end subroutine Verify_Solution
 

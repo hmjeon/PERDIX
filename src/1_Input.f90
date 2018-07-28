@@ -100,10 +100,8 @@ subroutine Input_Initialize(prob, geom)
             inquire(file="input/"//trim(prob.name_file)//"."//trim(prob.type_file), EXIST=here)
             if(here == .false.) then
                 write(0, "(a)")
-                write(0, "(a)"), "   +============================ E R R O R =============================+"
-                write(0, "(a)"), "   |                                                                    |"
+                write(0, "(a)"), "   +=== err = 1 ========================================================+"
                 write(0, "(a)"), "   |   The file does not exist.                                         |"
-                write(0, "(a)"), "   |                                                                    |"
                 write(0, "(a)"), "   +====================================================================+"
                 write(0, "(a)")
                 if(para_platform == "win") pause
@@ -154,10 +152,8 @@ subroutine Input_Initialize(prob, geom)
             inquire(file="input/"//trim(prob.name_file)//"."//trim(prob.type_file), EXIST=here)
             if(here == .false.) then
                 write(0, "(a)")
-                write(0, "(a)"), "   +============================ E R R O R =============================+"
-                write(0, "(a)"), "   |                                                                    |"
+                write(0, "(a)"), "   +=== err = 2 ========================================================+"
                 write(0, "(a)"), "   |   The file does not exist.                                         |"
-                write(0, "(a)"), "   |                                                                    |"
                 write(0, "(a)"), "   +====================================================================+"
                 write(0, "(a)")
                 if(para_platform == "win") pause
@@ -490,25 +486,6 @@ subroutine Input_Select_File(prob, geom)
 
     integer :: i, len_char
 
-    ! Read geometric file
-    !write(0, "(a)")
-    !write(0, "(a)"), " Write the file name (*.PLY, *.IGES, *.GEO), [Enter] : "
-    !read(*, *), prob.name_file
-
-    !len_char = LEN_TRIM(prob.name_file)
-    !if(prob.name_file(len_char-3:len_char-3) == '.') then
-    !
-    !    prob.type_file = prob.name_file(len_char-2:len_char)
-    !    prob.name_file = prob.name_file(1:len_char-4)
-    !
-    !else if(prob.name_file(len_char-4:len_char-4) == '.') then
-    !    prob.type_file = prob.name_file(len_char-3:len_char)
-    !    prob.name_file = prob.name_file(1:len_char-5)
-    !else
-    !    write(0, "(a)"), "Wrong file type"
-    !    stop
-    !end if
-
     ! Select file format
     if(prob.type_file == "ply") then
         call Importer_PLY(prob, geom)
@@ -518,10 +495,8 @@ subroutine Input_Select_File(prob, geom)
         call Importer_SVG(prob, geom)
     else
         write(0, "(a)")
-        write(0, "(a)"), "   +============================ E R R O R =============================+"
-        write(0, "(a)"), "   |                                                                    |"
-        write(0, "(a)"), "   |   The file extension is not supported.                             |"
-        write(0, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   +=== err = 3 ========================================================+"
+        write(0, "(a)"), "   |   PERDIX does not support this file extension.                     |"
         write(0, "(a)"), "   +====================================================================+"
         write(0, "(a)")
         if(para_platform == "win") pause
@@ -588,11 +563,9 @@ subroutine Input_Select_Problem(prob, geom)
 
         case default
         write(0, "(a)")
-        write(0, "(a)"), "   +============================ E R R O R =============================+"
-        write(0, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   +=== err = 4 ========================================================+"
         write(0, "(a)"), "   |   The pre-defined geometries does not exist.                       |"
         write(0, "(a)"), "   |   Select the number from 1 to 24, or type geometry file            |"
-        write(0, "(a)"), "   |                                                                    |"
         write(0, "(a)"), "   +====================================================================+"
         write(0, "(a)")
         if(para_platform == "win") pause
@@ -636,8 +609,11 @@ subroutine Input_Set_Section(prob, geom)
         geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
     else
 
-        write(0, "(a$)"), "Error - Not defined cross-section : "
-        write(0, "(a )"), "Input_Set_Section"
+        write(0, "(a)")
+        write(0, "(a)"), "   +=== err = 5 ========================================================+"
+        write(0, "(a)"), "   |   The cross-section is not defined.                                |"
+        write(0, "(a)"), "   +====================================================================+"
+        write(0, "(a)")
         stop
     end if
 
@@ -768,10 +744,8 @@ subroutine Input_Set_Num_BP_Edge(prob, geom)
 
     if(prob.sel_bp_edge >= 10 .and. prob.sel_bp_edge <= 37) then
         write(0, "(a)")
-        write(0, "(a)"), "   +============================ E R R O R =============================+"
-        write(0, "(a)"), "   |                                                                    |"
+        write(0, "(a)"), "   +=== err = 6 ========================================================+"
         write(0, "(a)"), "   |  The minimum edge length should be over 38-bp.                     |"
-        write(0, "(a)"), "   |                                                                    |"
         write(0, "(a)"), "   +====================================================================+"
         write(0, "(a)")
         if(para_platform == "win") pause

@@ -87,7 +87,7 @@ module Para
     logical :: para_write_102   = .true.        ! *Initial geometry,                       "_01_target_geometry.bild"
     logical :: para_write_103   = .false.       !  Faced initial geometry,                 "init_geo_face.bild"
     logical :: para_write_104   = .false.       !  Schlegel diagram,                       "_schlegel.bild"
-    logical :: para_write_301   = .true.       !  Initial geometry with face orientation, "_check_geo.bild"
+    logical :: para_write_301   = .false.       !  Initial geometry with face orientation, "_check_geo.bild"
     logical :: para_write_302   = .true.        ! *Initial geometry with local vector,     "_02_target_geometry.bild"
     logical :: para_write_303   = .true.        ! *Seperated lines from vertex,            "_03_seperated_lines.bild"
     logical :: para_write_401   = .false.       !  Cross-sectional geometry,               "_cro_geo.bild"
