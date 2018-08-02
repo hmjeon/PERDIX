@@ -243,105 +243,98 @@ subroutine Input_Print_Parameters(prob, geom)
         write(i, "(a )"), "   |          1. Inputs - geometry, cross-section, edge length          |"
         write(i, "(a )"), "   +--------------------------------------------------------------------+"
         write(i, "(a )")
-        call Space(i, 6)
-        write(i, "(a)"), "1.1. Geometry"
-        call Space(i, 11)
-        write(i, "(a)"), "* Geometric name                    : "//trim(prob.name_prob)
-        call Space(i, 11)
-        write(i, "(a)"), "* Geometric file type               : "//trim(prob.type_file)
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of faces               : "//trim(adjustl(Int2Str(geom.n_face)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of points              : "//trim(adjustl(Int2Str(geom.n_iniP)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of edges               : "//trim(adjustl(Int2Str(geom.n_iniL)))
+        call Space(i,  6); write(i, "(a)"), "1.1. Geometry"
+        call Space(i, 11); write(i, "(a)"), "* Geometric name                    : "//&
+            trim(prob.name_prob)
+        call Space(i, 11); write(i, "(a)"), "* Geometric file type               : "//&
+            trim(prob.type_file)
+        call Space(i, 11); write(i, "(a)"), "* The number of faces               : "//&
+            trim(adjustl(Int2Str(geom.n_face)))
+        call Space(i, 11); write(i, "(a)"), "* The number of points              : "//&
+            trim(adjustl(Int2Str(geom.n_iniP)))
+        call Space(i, 11); write(i, "(a)"), "* The number of edges               : "//&
+            trim(adjustl(Int2Str(geom.n_iniL)))
         write(i, "(a)")
 
-        call Space(i, 6)
-        write(i, "(a)"), "1.2. Cross-section information"
-        call Space(i, 11)
-        write(i, "(a)"), "* Section type                      : "//trim(geom.sec.types)//" lattice"
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of duplexes            : "//trim(adjustl(Int2Str(geom.n_sec)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of rows                : "//trim(adjustl(Int2Str(geom.sec.maxR-geom.sec.minR+1)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The number of columns             : "//trim(adjustl(Int2Str(geom.sec.maxC-geom.sec.minC+1)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Reference row                     : "//trim(adjustl(Int2Str(geom.sec.ref_row)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Reference min/max column          : "&
-            //trim(adjustl(Int2Str(geom.sec.ref_minC)))//" / "//trim(adjustl(Int2Str(geom.sec.ref_maxC)))
+        call Space(i,  6); write(i, "(a)"), "1.2. Cross-section information"
+        call Space(i, 11); write(i, "(a)"), "* Section type                      : "//&
+            trim(geom.sec.types)//" lattice"
+        call Space(i, 11); write(i, "(a)"), "* The number of duplexes            : "//&
+            trim(adjustl(Int2Str(geom.n_sec)))
+        call Space(i, 11); write(i, "(a)"), "* The number of rows                : "//&
+            trim(adjustl(Int2Str(geom.sec.maxR-geom.sec.minR+1)))
+        call Space(i, 11); write(i, "(a)"), "* The number of columns             : "//&
+            trim(adjustl(Int2Str(geom.sec.maxC-geom.sec.minC+1)))
+        call Space(i, 11); write(i, "(a)"), "* Reference row                     : "//&
+            trim(adjustl(Int2Str(geom.sec.ref_row)))
+        call Space(i, 11); write(i, "(a)"), "* Reference min/max column          : "//&
+            trim(adjustl(Int2Str(geom.sec.ref_minC)))//" / "//&
+            trim(adjustl(Int2Str(geom.sec.ref_maxC)))
         write(i, "(a)")
 
-        call Space(i, 6)
-        write(i, "(a)"), "1.3. Edge length"
-        call Space(i, 11)
-        write(i, "(a)"), "* The minimum edge length           : "//trim(adjustl(Int2Str(prob.n_bp_edge)))
+        call Space(i,  6); write(i, "(a)"), "1.3. Edge length"
+        call Space(i, 11); write(i, "(a)"), "* The minimum edge length           : "//&
+            trim(adjustl(Int2Str(prob.n_bp_edge)))
         write(i, "(a)")
-        call Space(i, 6)
 
-        write(i, "(a)"), "1.4. Design parameters"
-        call Space(i, 11)
-        write(i, "(a)"), "* Junction modification             : "//trim(para_junc_ang)
-        call Space(i, 11)
-        write(i, "(a)"), "* Vertex design                     : "//trim(para_vertex_design)//" vertex"
-        call Space(i, 11)
-        write(i, "(a)"), "* Vertex modification               : "//trim(para_vertex_modify)
-        call Space(i, 11)
-        write(i, "(a)"), "* Sticky-end for self connection    : "//trim(para_sticky_self)
-        call Space(i, 11)
-        write(i, "(a)"), "* Unpaired scffold nucleotides      : "//trim(para_unpaired_scaf)
-        call Space(i, 11)
-        write(i, "(a$)"), "* The number of bases in Tn         : "
+        call Space(i,  6); write(i, "(a)"), "1.4. Design parameters"
+        call Space(i, 11); write(i, "(a)"), "* Junction modification             : "//&
+            trim(para_junc_ang)
+        call Space(i, 11); write(i, "(a)"), "* Vertex design                     : "//&
+            trim(para_vertex_design)//" vertex"
+        call Space(i, 11); write(i, "(a)"), "* Vertex modification               : "//&
+            trim(para_vertex_modify)
+        call Space(i, 11); write(i, "(a)"), "* Sticky-end for self connection    : "//&
+            trim(para_sticky_self)
+        call Space(i, 11); write(i, "(a)"), "* Unpaired scffold nucleotides      : "//&
+            trim(para_unpaired_scaf)
+        call Space(i, 11); write(i,"(a$)"), "* The number of bases in Tn         : "
         if(para_n_base_tn == -1) then
             write(i, "(a)"), "depending on distance"
         else
             write(i, "(a)"), trim(adjustl(Int2Str(para_n_base_tn)))
         end if
-        call Space(i, 11)
-        write(i, "(a)"), "* Distance btw phosphate groups     : "//trim(adjustl(Dble2Str(para_dist_pp)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Starting base pair ID             : "//trim(adjustl(Int2Str(para_start_bp_ID)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Axial rise distance [nm]          : "//trim(adjustl(Dble2Str(para_dist_bp)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Radius of helix [nm]              : "//trim(adjustl(Dble2Str(para_rad_helix)))
-        call Space(i, 11)
-        write(i, "(a)"), "* The Gap between helixes           : "//trim(adjustl(Dble2Str(para_gap_helix)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Angle of minor groove             : "//trim(adjustl(Dble2Str(para_ang_minor)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Angle correction factor           : "//trim(adjustl(Dble2Str(para_ang_correct)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Gap between two scaf xovers       : "//trim(adjustl(Int2Str(para_gap_xover_two_scaf)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Gap between xover(stap) and bound : "//trim(adjustl(Int2Str(para_gap_xover_bound_stap)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Gap between stap and scaf xovers  : "//trim(adjustl(Int2Str(para_gap_xover_two)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Gap between xover and first nick  : "//trim(adjustl(Int2Str(para_gap_xover_nick1)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Gap between xover and nick        : "//trim(adjustl(Int2Str(para_gap_xover_nick)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Staple cutting method             : "//trim(para_cut_stap_method)
-        call Space(i, 11)
-        write(i, "(a)"), "* Non-circular stap by single xover : "//trim(para_set_stap_sxover)
-        call Space(i, 11)
-        write(i, "(a$)"), "* Minimum # of bases in scaf strand : "
+        call Space(i, 11); write(i, "(a)"), "* Distance btw phosphate groups     : "//&
+            trim(adjustl(Dble2Str(para_dist_pp)))
+        call Space(i, 11); write(i, "(a)"), "* Starting base pair ID             : "//&
+            trim(adjustl(Int2Str(para_start_bp_ID)))
+        call Space(i, 11); write(i, "(a)"), "* Axial rise distance [nm]          : "//&
+            trim(adjustl(Dble2Str(para_dist_bp)))
+        call Space(i, 11); write(i, "(a)"), "* Radius of helix [nm]              : "//&
+            trim(adjustl(Dble2Str(para_rad_helix)))
+        call Space(i, 11); write(i, "(a)"), "* The Gap between helixes           : "//&
+            trim(adjustl(Dble2Str(para_gap_helix)))
+        call Space(i, 11); write(i, "(a)"), "* Angle of minor groove             : "//&
+            trim(adjustl(Dble2Str(para_ang_minor)))
+        call Space(i, 11); write(i, "(a)"), "* Angle correction factor           : "//&
+            trim(adjustl(Dble2Str(para_ang_correct)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between two scaf xovers       : "//&
+            trim(adjustl(Int2Str(para_gap_xover_two_scaf)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between xover(stap) and bound : "//&
+            trim(adjustl(Int2Str(para_gap_xover_bound_stap)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between stap and scaf xovers  : "//&
+            trim(adjustl(Int2Str(para_gap_xover_two)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between xover and first nick  : "//&
+            trim(adjustl(Int2Str(para_gap_xover_nick1)))
+        call Space(i, 11); write(i, "(a)"), "* Gap between xover and nick        : "//&
+            trim(adjustl(Int2Str(para_gap_xover_nick)))
+        call Space(i, 11); write(i, "(a)"), "* Staple cutting method             : "//&
+            trim(para_cut_stap_method)
+        call Space(i, 11); write(i, "(a)"), "* Non-circular stap by single xover : "//&
+            trim(para_set_stap_sxover)
+        call Space(i, 11); write(i, "(a$)"), "* Minimum # of bases in scaf strand : "
         if(para_max_cut_scaf == 0) then
             write(i, "(a)"), "infinite"
         else
             write(i, "(a)"), trim(adjustl(Int2Str(para_max_cut_scaf)))
         end if
-        call Space(i, 11)
-        write(i, "(a)"), "* Minimum # of bases in stap strand : "//trim(adjustl(Int2Str(para_min_cut_stap)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Midium # of bases in stap strand  : "//trim(adjustl(Int2Str(para_mid_cut_stap)))
-        call Space(i, 11)
-        write(i, "(a)"), "* Maximum # of bases in stap strand : "//trim(adjustl(Int2Str(para_max_cut_stap)))
-        call Space(i, 11)
-        write(i, "(a$)"), "* Scaffold sequence                 : "
+        call Space(i, 11); write(i, "(a)"), "* Minimum # of bases in stap strand : "//&
+            trim(adjustl(Int2Str(para_min_cut_stap)))
+        call Space(i, 11); write(i, "(a)"), "* Midium # of bases in stap strand  : "//&
+            trim(adjustl(Int2Str(para_mid_cut_stap)))
+        call Space(i, 11); write(i, "(a)"), "* Maximum # of bases in stap strand : "//&
+            trim(adjustl(Int2Str(para_max_cut_stap)))
+        call Space(i, 11); write(i, "(a$)"), "* Scaffold sequence                 : "
         if(para_set_seq_scaf == 0) then
             write(i, "(a)"), "M13mp18 sequence"
         else if(para_set_seq_scaf == 1) then
