@@ -42,7 +42,8 @@ program PERDIX
 
     implicit none
 
-    call Main           ! Main module
+    ! Main module
+    call Main
 
 contains
 
