@@ -2,7 +2,7 @@
 ! =============================================================================
 !
 ! PERDIX v1.0
-! Last Updated : 07/28/2018, by Hyungmin Jun (hyungminjun@outlook.com)
+! Last Updated : 08/02/2018, by Hyungmin Jun (hyungminjun@outlook.com)
 !
 ! =============================================================================
 !
