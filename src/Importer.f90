@@ -368,7 +368,7 @@ subroutine Importer_GEO(prob, geom)
             !DEC$ ELSEIF DEFINED(__linux)
 
             ! MATLAB - DistMesh
-            results = systemqq("/usr/local/MATLAB/R2018b/bin/matlab wait -nodisplay -nosplash -nodesktop -noawt -r "//&
+            results = systemqq("/usr/local/matlab/R2017a/bin/matlab wait -nodisplay -nosplash -nodesktop -noawt -r "//&
                 '"addpath /home/polyhedra/PERDIX/make/tools/DistMesh/src; addpath /home/polyhedra/PERDIX/make/tools/DistMesh; DistMesh_linux('&
                 //"'"//trim(fullname)//"',"//trim(Dble2Str(p_mesh))//')"')
             !results = systemqq("matlab wait -nodisplay -nosplash -nodesktop -noawt -r "//&
