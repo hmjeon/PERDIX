@@ -113,7 +113,7 @@ module Para
     logical :: para_write_802   = .false.   !  base.txt
     logical :: para_write_803   = .true.    ! *CanDo.cndo
     logical :: para_write_804   = .false.   !  tecplot.dat
-    logical :: para_write_805   = .false.   !  adina.in
+    logical :: para_write_805   = .false.   !  ADINA.in
     logical :: para_write_808   = .false.   !  seq_line.tx
 
     ! BILD option

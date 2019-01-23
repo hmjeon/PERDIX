@@ -7,7 +7,7 @@
 ! =============================================================================
 !
 ! PERDIX is an open-source software, which allows scientists to build and
-! solve the sequence design of complex 2D DNA wireframe with 6HB edges.
+! solve the sequence design of complex 2D DNA wireframe with DX edges.
 ! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
 ! License - GPL version 3

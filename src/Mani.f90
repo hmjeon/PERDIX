@@ -66,19 +66,12 @@ subroutine Mani_Set_Prob(prob, color)
     type(ProbType), intent(inout) :: prob
     integer,        intent(in)    :: color(3)
 
-    character(10) :: char_sec, char_bp
+    character(10) :: char_bp
 
     write(unit = char_bp, fmt = "(i10)"), prob.n_edge_len
 
-    if(prob.sel_edge_sec == 1) char_sec = "DX"
-    if(prob.sel_edge_sec == 2) char_sec = "6HB"
-    if(prob.sel_edge_sec == 3) char_sec = "10HB"
-    if(prob.sel_edge_sec == 4) char_sec = "12HB"
-    if(prob.sel_edge_sec == 5) char_sec = "16HB"
-
     prob.name_file = &
-        trim(prob.name_prob)//"_"//trim(char_sec)//"_"//&
-        trim(adjustl(trim(char_bp)))//"bp"
+        trim(prob.name_prob)//"_DX_"//trim(adjustl(trim(char_bp)))//"bp"
 
     prob.color = color
 end subroutine Mani_Set_Prob
@@ -177,7 +170,7 @@ subroutine Mani_Progress_Bar(index, max)
     character(len=48) :: bar = "   * Progressing.... [                    ] ???%"
 
     if(p_redir /= 0) return
-    if(iargc() == 7) return
+    if(iargc() == 6) return
 
     step = index * 10 / max
 

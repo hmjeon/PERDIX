@@ -69,7 +69,7 @@ subroutine Input_Initialize(prob, geom)
     type(GeomType), intent(inout) :: geom
 
     character(200) :: c_prob, c_seq
-    character(30)  :: c_edge_sec, c_edge_ref, c_edge_len, c_mesh_spacing, c_run_mode
+    character(30)  :: c_edge_ref, c_edge_len, c_mesh_spacing, c_run_mode
     integer :: arg, len_char, ppos, ioerr
     logical :: results, here
 
@@ -111,9 +111,6 @@ subroutine Input_Initialize(prob, geom)
             if(prob.sel_prob <= 0) stop
         end if
 
-        ! Print and read the edge section
-        call Input_Print_Edge_Sec; read(*, *) prob.sel_edge_sec; if(prob.sel_edge_sec <= 0) stop
-
         ! Print and read the edge length
         call Input_Print_Edge_Len; read(*, *) prob.sel_edge_len; if(prob.sel_edge_len < 0) stop
 
@@ -133,15 +130,14 @@ subroutine Input_Initialize(prob, geom)
             ! Stop if the the negative value
             if(prob.sel_edge_len <= 0) stop
         end if
-    else if(iargc() == 7) then
+    else if(iargc() == 6) then
 
         arg = 1; call getarg(arg, c_prob)           ! 1st argument, problem
         arg = 2; call getarg(arg, c_seq)            ! 2nd argument, scaf sequence
-        arg = 3; call getarg(arg, c_edge_sec)       ! 3rd argument, edge section
-        arg = 4; call getarg(arg, c_edge_ref)       ! 4th argument, edge
-        arg = 5; call getarg(arg, c_edge_len)       ! 5th argument, edge length
-        arg = 6; call getarg(arg, c_mesh_spacing)   ! 6th argument, meshing spacing
-        arg = 7; call getarg(arg, c_run_mode)       ! 7th argument, run mode
+        arg = 3; call getarg(arg, c_edge_ref)       ! 3rd argument, edge
+        arg = 4; call getarg(arg, c_edge_len)       ! 4th argument, edge length
+        arg = 5; call getarg(arg, c_mesh_spacing)   ! 5th argument, meshing spacing
+        arg = 6; call getarg(arg, c_run_mode)       ! 6th argument, run mode
 
         ppos = scan(trim(c_prob), ".", BACK = .true.)
         if(ppos > 0) then
@@ -166,9 +162,6 @@ subroutine Input_Initialize(prob, geom)
             if(prob.sel_prob <= 0) stop
         end if
 
-        ! Edge section
-        read(c_edge_sec, *), prob.sel_edge_sec
-
         ! Edge reference
         read(c_edge_ref, *), prob.sel_edge_ref
 
@@ -187,7 +180,8 @@ subroutine Input_Initialize(prob, geom)
     end if
 
     ! Set vertex design, PERDIX should be always mitered vertex
-    prob.sel_vertex = 2
+    prob.sel_edge_sec = 1
+    prob.sel_vertex   = 2
     call Input_Set_Vertex_Design(prob)
 
     ! Set edge section
@@ -297,7 +291,7 @@ subroutine Input_Set_Init(prob)
             end if
             close(unit = 1)
         end if
-    else if(iargc() == 7) then
+    else if(iargc() == 6) then
 
         ! 1st argument, problem
         call getarg(1, c_prob)
@@ -413,39 +407,13 @@ subroutine Input_Print_Prob
     write(0, "(a)")
 end subroutine Input_Print_Prob
 
-! ---------------------------------------------------------------------------------------
-
-! Print pre-defined edge sections
-subroutine Input_Print_Edge_Sec
-    write(0, "(a)")
-    write(0, "(a)"), "   B. Edge Section - Pre-defined edge section"
-    write(0, "(a)"), "   =========================================="
-    write(0, "(a)")
-    write(0, "(a)"), "    1.            2.  @-@        3.  @-@    "
-    write(0, "(a)"), "      =@ @=         =@   @=        =@   @=  "
-    write(0, "(a)"), "                      @-@            @-@    "
-    write(0, "(a)"), "                                   =@   @=  "
-    write(0, "(a)"), "                                     @-@    "
-    write(0, "(a)"), "      [DX]           [6HB]         [10HB]   "
-    write(0, "(a)")
-    write(0, "(a)")
-    write(0, "(a)"), "      4.                    5.   @-@        "
-    write(0, "(a)"), "          @-@   @-@           @-@   @-@     "
-    write(0, "(a)"), "        =@   @=@   @=       =@   @=@   @=   "
-    write(0, "(a)"), "          @-@   @-@           @-@   @-@     "
-    write(0, "(a)"), "                                 @-@        "
-    write(0, "(a)"), "           [12HB]              [16HB]       "
-    write(0, "(a)")
-    write(0, "(a)"), "   Select the number [Enter] : "
-end subroutine Input_Print_Edge_Sec
-
 ! -----------------------------------------------------------------------------
 
 ! Print pre-defined minimum edge lengths
 subroutine Input_Print_Edge_Len
 
     write(0, "(a)")
-    write(0, "(a)"), "   C. Second input - Pre-defined minimum edge lengths"
+    write(0, "(a)"), "   B. Second input - Pre-defined minimum edge lengths"
     write(0, "(a)"), "   =================================================="
     write(0, "(a)")
     write(0, "(a)"), "   * 1.  42 bp =  4 turn * 10.5 bp/turn ->  42 bp * 0.34nm/bp = 14.28nm"
@@ -593,168 +561,24 @@ subroutine Input_Set_Edge_Sec(prob, geom)
     !     ---|------¡æ t3
     !        |
     ! The number of columns of the crosssection should be even
-    if(prob.sel_edge_sec == 1) then
 
-        !if(para_start_bp_ID == -1) para_start_bp_ID = 13 + 1
-        if(para_start_bp_ID == -1) para_start_bp_ID = 3 + 1
-        bp_id = mod(para_start_bp_ID, 21)
+    !if(para_start_bp_ID == -1) para_start_bp_ID = 13 + 1
+    if(para_start_bp_ID == -1) para_start_bp_ID = 3 + 1
+    bp_id = mod(para_start_bp_ID, 21)
 
-        ! Starting BP - 3, 13
-        !     ¡Ü¡Ü     .00   01.  <------- reference axis
-        geom.sec.dir      = 90
-        geom.n_sec        = 2
-        geom.sec.ref_row  = 1
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
+    ! Starting BP - 3, 13
+    !     ¡Ü¡Ü     .00   01.  <------- reference axis
+    geom.sec.dir      = 90
+    geom.n_sec        = 2
+    geom.sec.ref_row  = 1
+    geom.sec.ref_minC = 1
+    geom.sec.ref_maxC = 2
 
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
+    call Mani_Allocate_SecType(geom.sec, geom.n_sec)
+    call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
 
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
-    else if(prob.sel_edge_sec == 2) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 11 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        ! Starting BP - 1 / 11              | caDNAno   02    (CW)
-        !      ¡Ü¡Ü        05=04              |         03  01
-        !     ¡Ü  ¡Ü     .00   03.  <--- ref  |         04  00
-        !      ¡Ü¡Ü        01=02              |           05
-        geom.sec.dir      = 150
-        geom.n_sec        = 6
-        geom.sec.ref_row  = 2
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id(1) = 0; geom.sec.posR(1) = 2; geom.sec.posC(1) = 1
-        geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 1
-        geom.sec.id(3) = 2; geom.sec.posR(3) = 1; geom.sec.posC(3) = 2
-        geom.sec.id(4) = 3; geom.sec.posR(4) = 2; geom.sec.posC(4) = 2
-        geom.sec.id(5) = 4; geom.sec.posR(5) = 3; geom.sec.posC(5) = 2
-        geom.sec.id(6) = 5; geom.sec.posR(6) = 3; geom.sec.posC(6) = 1
-
-        ! Vertex crash
-        if(para_vertex_crash == "mod") para_vertex_crash = "mod1"
-    else if(prob.sel_edge_sec == 3) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 11 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        ! Starting BP - 1 / 11
-        !      ¡Ü¡Ü        07 06
-        !     ¡Ü  ¡Ü      08   05             | caDNAno   04  02    (CW)
-        !      ¡Ü¡Ü        09=04              |         05  03  01
-        !     ¡Ü  ¡Ü     .00   03.  <--- ref  |         06  08  00
-        !      ¡Ü¡Ü        01=02              |           07  09
-        geom.sec.dir      = 150
-        geom.n_sec        = 10
-        geom.sec.ref_row  = 2
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 2
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id( 1) = 0; geom.sec.posR( 1) = 2; geom.sec.posC( 1) = 1
-        geom.sec.id( 2) = 1; geom.sec.posR( 2) = 1; geom.sec.posC( 2) = 1
-        geom.sec.id( 3) = 2; geom.sec.posR( 3) = 1; geom.sec.posC( 3) = 2
-        geom.sec.id( 4) = 3; geom.sec.posR( 4) = 2; geom.sec.posC( 4) = 2
-        geom.sec.id( 5) = 4; geom.sec.posR( 5) = 3; geom.sec.posC( 5) = 2
-        geom.sec.id( 6) = 5; geom.sec.posR( 6) = 4; geom.sec.posC( 6) = 2
-        geom.sec.id( 7) = 6; geom.sec.posR( 7) = 5; geom.sec.posC( 7) = 2
-        geom.sec.id( 8) = 7; geom.sec.posR( 8) = 5; geom.sec.posC( 8) = 1
-        geom.sec.id( 9) = 8; geom.sec.posR( 9) = 4; geom.sec.posC( 9) = 1
-        geom.sec.id(10) = 9; geom.sec.posR(10) = 3; geom.sec.posC(10) = 1
-
-        ! Vertex crash
-        if(para_vertex_crash == "mod") para_vertex_crash = "mod1"
-    else if(prob.sel_edge_sec == 4) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 11 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        !                                              |     08
-        !                                              |   09  07
-        ! Starting BP - 1 / 11                         |   10  06  02    (CW)
-        !      ¡Ü¡Ü  ¡Ü¡Ü        05=04   11=10             |     11  03  01
-        !     ¡Ü  ¡Ü¡Ü  ¡Ü     .00   03=06   09. <--- ref  |         04  00
-        !      ¡Ü¡Ü  ¡Ü¡Ü        01=02   07=08             | caDNAno   05
-        geom.sec.dir      = 150
-        geom.n_sec        = 12
-        geom.sec.ref_row  = 2
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id( 1) =  0; geom.sec.posR( 1) = 2; geom.sec.posC( 1) = 1
-        geom.sec.id( 2) =  1; geom.sec.posR( 2) = 1; geom.sec.posC( 2) = 1
-        geom.sec.id( 3) =  2; geom.sec.posR( 3) = 1; geom.sec.posC( 3) = 2
-        geom.sec.id( 4) =  3; geom.sec.posR( 4) = 2; geom.sec.posC( 4) = 2
-        geom.sec.id( 5) =  4; geom.sec.posR( 5) = 3; geom.sec.posC( 5) = 2
-        geom.sec.id( 6) =  5; geom.sec.posR( 6) = 3; geom.sec.posC( 6) = 1
-        geom.sec.id( 7) =  6; geom.sec.posR( 7) = 2; geom.sec.posC( 7) = 1+2
-        geom.sec.id( 8) =  7; geom.sec.posR( 8) = 1; geom.sec.posC( 8) = 1+2
-        geom.sec.id( 9) =  8; geom.sec.posR( 9) = 1; geom.sec.posC( 9) = 2+2
-        geom.sec.id(10) =  9; geom.sec.posR(10) = 2; geom.sec.posC(10) = 2+2
-        geom.sec.id(11) = 10; geom.sec.posR(11) = 3; geom.sec.posC(11) = 2+2
-        geom.sec.id(12) = 11; geom.sec.posR(12) = 3; geom.sec.posC(12) = 1+2
-
-        ! Vertex crash
-        if(para_vertex_crash == "mod") para_vertex_crash = "mod1"
-    else if(prob.sel_edge_sec == 5) then
-
-        if(para_start_bp_ID == -1) para_start_bp_ID = 11 + 1
-        bp_id = mod(para_start_bp_ID, 21)
-
-        !                                              |       08  12
-        ! Starting BP - 1 / 11                         |     09  07  13
-        !        ¡Ü¡Ü              15=14                 |     10  06  02    (CW)
-        !      ¡Ü¡Ü  ¡Ü¡Ü        05=04   11=10             |       11  03  01
-        !     ¡Ü  ¡Ü¡Ü  ¡Ü     .00   03=06   09. <--- ref  |       14  04  00
-        !      ¡Ü¡Ü  ¡Ü¡Ü        01=02   07=08             | caDNAno 15   05
-        !        ¡Ü¡Ü              13=12
-        geom.sec.dir      = 150
-        geom.n_sec        = 16
-        geom.sec.ref_row  = 2
-        geom.sec.ref_minC = 1
-        geom.sec.ref_maxC = 4
-
-        call Mani_Allocate_SecType(geom.sec, geom.n_sec)
-        call Mani_Init_SecType    (geom.sec, geom.n_sec, "honeycomb")
-
-        geom.sec.id( 1) =  0; geom.sec.posR( 1) = 2+2; geom.sec.posC( 1) = 1
-        geom.sec.id( 2) =  1; geom.sec.posR( 2) = 1+2; geom.sec.posC( 2) = 1
-        geom.sec.id( 3) =  2; geom.sec.posR( 3) = 1+2; geom.sec.posC( 3) = 2
-        geom.sec.id( 4) =  3; geom.sec.posR( 4) = 2+2; geom.sec.posC( 4) = 2
-        geom.sec.id( 5) =  4; geom.sec.posR( 5) = 3+2; geom.sec.posC( 5) = 2
-        geom.sec.id( 6) =  5; geom.sec.posR( 6) = 3+2; geom.sec.posC( 6) = 1
-        geom.sec.id( 7) =  6; geom.sec.posR( 7) = 2+2; geom.sec.posC( 7) = 1+2
-        geom.sec.id( 8) =  7; geom.sec.posR( 8) = 1+2; geom.sec.posC( 8) = 1+2
-        geom.sec.id( 9) =  8; geom.sec.posR( 9) = 1+2; geom.sec.posC( 9) = 2+2
-        geom.sec.id(10) =  9; geom.sec.posR(10) = 2+2; geom.sec.posC(10) = 2+2
-        geom.sec.id(11) = 10; geom.sec.posR(11) = 3+2; geom.sec.posC(11) = 2+2
-        geom.sec.id(12) = 11; geom.sec.posR(12) = 3+2; geom.sec.posC(12) = 1+2
-        geom.sec.id(13) = 12; geom.sec.posR(13) = 0+2; geom.sec.posC(13) = 3
-        geom.sec.id(14) = 13; geom.sec.posR(14) = 0+2; geom.sec.posC(14) = 2
-        geom.sec.id(15) = 14; geom.sec.posR(15) = 4+2; geom.sec.posC(15) = 3
-        geom.sec.id(16) = 15; geom.sec.posR(16) = 4+2; geom.sec.posC(16) = 2
-
-        ! Vertex crash
-        if(para_vertex_crash == "mod") para_vertex_crash = "mod1"
-    else
-
-        write(p_redir, "(a)")
-        write(p_redir, "(a)"), " +=== error ========================================+"
-        write(p_redir, "(a)"), " | The cross-section is not defined.                |"
-        write(p_redir, "(a)"), " +==================================================+"
-        stop
-    end if
+    geom.sec.id(1) = 0; geom.sec.posR(1) = 1; geom.sec.posC(1) = 1
+    geom.sec.id(2) = 1; geom.sec.posR(2) = 1; geom.sec.posC(2) = 2
 
     !! Set section connectivity in the defined initial section
     call Input_Set_Section_Connectivity(prob, geom)

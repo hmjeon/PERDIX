@@ -2313,25 +2313,9 @@ subroutine Route_Graph_Set_Data(prob, mesh, dna, pos_node, tail, head, cost)
                 sec2  = mesh.node(node2).sec
 
                 ! Set priority
-                if(prob.sel_edge_sec == 1) then
-
-                    ! DX edge section
-                    con_pri1(:) = [0, 1]    ! Connection priority 1
-                    con_pri2(:) = [0, 1]    ! Connection priority 2
-                    con_span(:) = [0, 1]    ! Connection for spanning tree
-                else if(prob.sel_edge_sec == 2) then
-
-                    ! 6HB bottom connection
-                    con_pri1(:) = [0, 5]    ! Connection priority 1
-                    con_pri2(:) = [3, 4]    ! Connection priority 2
-                    con_span(:) = [0, 1]    ! Connection for spanning tree
-
-                else
-
-                    con_pri1(:) = [0, 5]    ! Connection priority 1
-                    con_pri2(:) = [3, 4]    ! Connection priority 2
-                    con_span(:) = [0, 1]    ! Connection for spanning tree
-                end if
+                con_pri1(:) = [0, 1]    ! Connection priority 1
+                con_pri2(:) = [0, 1]    ! Connection priority 2
+                con_span(:) = [0, 1]    ! Connection for spanning tree
 
                 if(para_weight_edge == "on") then
                     if( (sec1 == con_pri1(1) .and. sec2 == con_pri1(2)) .or. (sec1 == con_pri1(2) .and. sec2 == con_pri1(1)) ) then
