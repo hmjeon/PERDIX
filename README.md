@@ -1,3 +1,4 @@
+
 ## PERDIX</br>
 
 **PERDIX** (**P**rogrammed **E**ulerian **R**outing for **D**NA Des**i**gn using **X**-overs) is a new, free and open-source software package written in FORTRAN 90/95 that enables the automated convertion of 2D computer-generated design files into DNA sequences. These DNA sequences can be subsequently synthesized and mixed to fold DNA DX-based wireframe 2D lattices with high fidelity.</br>
@@ -22,7 +23,7 @@ The atomic model ([PDB](https://en.wikipedia.org/wiki/Protein_Data_Bank_(file_fo
 ## PERDIX Online</br>
 [```http://perdix-dna-origami.org/```](http://perdix-dna-origami.org/)</br>
 
-In addition to the source code and pre-compiled binaries available here, we also offer an online web application with all the functionality found in the downloaded version. By submitting the same inputs (PLY, GEO, IGES, or IGS input CAD files), the web service will return the same file output as the downloaded version. </br></br>
+In addition to the source code and pre-compiled binaries available here, we also offer an online web application with all the functionality found in the downloaded version. By submitting the same inputs (PLY, GEO, IGS, or SVG input CAD files), the web service will return the same file output as the downloaded version. </br></br>
 
 ## Available pre-compiled binaries</br>
 * **[PERDIX-Win-MCR](https://github.com/lcbb/PERDIX/raw/master/release/PERDIX-Win-MCR.zip)** for Microsoft Windows</br>
@@ -48,7 +49,7 @@ In addition to the source code and pre-compiled binaries available here, we also
 
 ## Features</br>
 * Fully automatic procedure of the sequence design for scaffolded DNA DX-based wireframe lattices</br>
-* Importing GEO, [IGES/IGS](https://en.wikipedia.org/wiki/IGES), or [PLY](https://en.wikipedia.org/wiki/PLY_(file_format)) file formats as an input</br>
+* Importing GEO, [IGS](https://en.wikipedia.org/wiki/IGES), SVG, or [PLY](https://en.wikipedia.org/wiki/PLY_(file_format)) file formats as an input</br>
 * Exact edge-lengths to design highly asymmetric and irregular shapes</br>
 * [JSON](https://en.wikipedia.org/wiki/JSON) output for editing staple paths and sequences from [caDNAno](https://cadnano.org/)</br>
 * 3D visual outputs by [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/)</br>
