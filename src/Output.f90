@@ -2633,7 +2633,7 @@ subroutine Output_Write_CanDo(prob, mesh, dna)
 
     ! Open files
     path = trim(prob.path_work)//"/"//trim(prob.name_file)
-    open(unit = 803, file = trim(prob.path_work)//"/CanDo.cndo", form = "formatted")
+    open(unit = 803, file = trim(prob.path_work)//"/cndo_PDB.cndo", form = "formatted")
 
     write(803, "(a)"), '"CanDo (.cndo) file format version 1.0"'
     write(803, "(a)")
@@ -2793,7 +2793,7 @@ subroutine Output_Write_CanDo_New(prob, mesh, dna)
 
     ! Open files
     path = trim(prob.path_work)//"/"//trim(prob.name_file)
-    open(unit = 803, file = trim(prob.path_work)//"/CanDo.cndo", form = "formatted")
+    open(unit = 803, file = trim(prob.path_work)//"/cndo_PDB.cndo", form = "formatted")
 
     ! For dnatoop data that is defined by bases
     write(803, "(i10)"), dna.n_top
