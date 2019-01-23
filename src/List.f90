@@ -2,12 +2,12 @@
 ! =============================================================================
 !
 ! Module - List
-! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
+! Last Updated : 01/09/2019, by Hyungmin Jun (hyungminjun@outlook.com)
 !
 ! =============================================================================
 !
 ! This is part of PERDIX, which allows scientists to build and solve
-! the sequence design of complex DNAnanostructures.
+! the sequence design of complex DNA nanostructures.
 ! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
 ! License - GPL version 3

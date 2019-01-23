@@ -11,27 +11,21 @@
 #	- On OS X* systems: -ipo, -mdynamic-no-pic, -O3, -no-prec-div, and -xHost
 #	- On Windows*  systems:  /O3,  /Qipo,  /Qprec-div-,  and /QxHost
 #
-#	NOTE: Option fast sets some aggressive optimizations that may not be appropriate for all
-#	applications. The resulting executable may not run on processor types different from the
-#	one on which you compile. You should make sure that you understand the individual optimi-
-#	zation options that are enabled by option fast.
+#	NOTE: Option fast sets some aggressive optimizations that may not be
+#   appropriate for all applications. The resulting executable may not run on
+#   processor types different from the one on which you compile. You should
+#   make sure that you understand the individual optimization options
+#   that are enabled by option fast.
 
-objects = Data_Bound.o Data_DNA.o Data_Geom.o Data_Mesh.o Data_Prob.o \
-	Para.o List.o Math.o Mani.o SpanTree.o Importer.o \
-	Exam_2D_Open.o \
-	3_Section.o 1_Input.o 2_ModGeo.o 4_Basepair.o 5_Route.o \
-	6_SeqDesign.o 7_Output.o PERDIX.o
+objects = Data_DNA.o Data_Geom.o Data_Mesh.o Data_Prob.o \
+	Para.o List.o Math.o Mani.o SpanTree.o Importer.o Exam_PERDIX.o \
+	Section.o Input.o ModGeo.o Basepair.o Route.o SeqDesign.o Output.o PERDIX.o
 
 f90comp = ifort
 
 # Makefile
 PERDIX: $(objects)
 	$(f90comp) -o PERDIX $(objects)
-
-Data_Bound.mod: Data_Bound.o Data_Bound.f90
-	$(f90comp) -c Data_Bound.f90
-Data_Bound.o: Data_Bound.f90
-	$(f90comp) -c Data_Bound.f90
 
 Data_DNA.mod: Data_DNA.o Data_DNA.f90
 	$(f90comp) -c Data_DNA.f90
@@ -83,45 +77,45 @@ Importer.mod: Importer.o Importer.f90
 Importer.o: Importer.f90
 	$(f90comp) -c Importer.f90
 
-Exam_2D_Open.mod: Exam_2D_Open.o Exam_2D_Open.f90
-	$(f90comp) -c Exam_2D_Open.f90
-Exam_2D_Open.o: Exam_2D_Open.f90
-	$(f90comp) -c Exam_2D_Open.f90
+Exam_PERDIX.mod: Exam_PERDIX.o Exam_PERDIX.f90
+	$(f90comp) -c Exam_PERDIX.f90
+Exam_PERDIX.o: Exam_PERDIX.f90
+	$(f90comp) -c Exam_PERDIX.f90
 
-3_Section.mod : 3_Section.o 3_Section.f90
-	$(f90comp) -c 3_Section.f90
-3_Section.o : 3_Section.f90
-	$(f90comp) -c 3_Section.f90
+Section.mod : Section.o Section.f90
+	$(f90comp) -c Section.f90
+Section.o : Section.f90
+	$(f90comp) -c Section.f90
 
-1_Input.mod : 1_Input.o 1_Input.f90
-	$(f90comp) -c 1_Input.f90
-1_Input.o : 1_Input.f90
-	$(f90comp) -c 1_Input.f90
+Input.mod : Input.o Input.f90
+	$(f90comp) -c Input.f90
+Input.o : Input.f90
+	$(f90comp) -c Input.f90
 
-2_ModGeo.mod : 2_ModGeo.o 2_ModGeo.f90
-	$(f90comp) -c 2_ModGeo.f90
-2_ModGeo.o : 2_ModGeo.f90
-	$(f90comp) -c 2_ModGeo.f90
+ModGeo.mod : ModGeo.o ModGeo.f90
+	$(f90comp) -c ModGeo.f90
+ModGeo.o : ModGeo.f90
+	$(f90comp) -c ModGeo.f90
 
-4_Basepair.mod : 4_Basepair.o 4_Basepair.f90
-	$(f90comp) -c 4_Basepair.f90
-4_Basepair.o : 4_Basepair.f90
-	$(f90comp) -c 4_Basepair.f90
+Basepair.mod : Basepair.o Basepair.f90
+	$(f90comp) -c Basepair.f90
+Basepair.o : Basepair.f90
+	$(f90comp) -c Basepair.f90
 
-5_Route.mod : 5_Route.o 5_Route.f90
-	$(f90comp) -c 5_Route.f90
-5_Route.o : 5_Route.f90
-	$(f90comp) -c 5_Route.f90
+Route.mod : Route.o Route.f90
+	$(f90comp) -c Route.f90
+Route.o : Route.f90
+	$(f90comp) -c Route.f90
 
-6_SeqDesign.mod : 6_SeqDesign.o 6_SeqDesign.f90
-	$(f90comp) -c 6_SeqDesign.f90
-6_SeqDesign.o : 6_SeqDesign.f90
-	$(f90comp) -c 6_SeqDesign.f90
+SeqDesign.mod : SeqDesign.o SeqDesign.f90
+	$(f90comp) -c SeqDesign.f90
+SeqDesign.o : SeqDesign.f90
+	$(f90comp) -c SeqDesign.f90
 
-7_Output.mod : 7_Output.o 7_Output.f90
-	$(f90comp) -c 7_Output.f90
-7_Output.o : 7_Output.f90
-	$(f90comp) -c 7_Output.f90
+Output.mod : Output.o Output.f90
+	$(f90comp) -c Output.f90
+Output.o : Output.f90
+	$(f90comp) -c Output.f90
 
 PERDIX.mod : PERDIX.o PERDIX.f90
 	$(f90comp) -c PERDIX.f90

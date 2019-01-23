@@ -2,12 +2,12 @@
 ! =============================================================================
 !
 ! Module - Data_Geom
-! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
+! Last Updated : 01/09/2019, by Hyungmin Jun (hyungminjun@outlook.com)
 !
 ! =============================================================================
 !
 ! This is part of PERDIX, which allows scientists to build and solve
-! the sequence design of complex DNAnanostructures.
+! the sequence design of complex DNA nanostructures.
 ! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
 ! License - GPL version 3
@@ -79,17 +79,40 @@ module Data_Geom
         integer :: n_poi                ! The number of points
         integer, allocatable :: poi(:)  ! Connectivity
     end type FaceType
+    
+    ! -----------------------------------------------------------------------------
+
+    ! Junction data structure
+    type :: JuncType
+        integer :: n_arm                ! The number of arms
+        integer :: poi_c                ! Center position
+
+        integer :: n_un_scaf = 0        ! # of unpaired nucleotide in scaf
+        integer :: n_un_stap = 0        ! # of unpaired nucleotide in stap
+
+        double precision :: ref_ang     ! Reference angle between two neighboring edges
+        double precision :: tot_ang     ! Total angle at the junction
+        double precision :: gap         ! Gap distance between junction and end of edges
+
+        integer, allocatable :: iniL(:)         ! Initial line
+        integer, allocatable :: modP(:)         ! Modified point
+        integer, allocatable :: croP(:,:)       ! Sectional point (# of arms, # of sections)
+        integer, allocatable :: node(:,:)       ! Nodes (# of arms, # of sections)
+        integer, allocatable :: conn(:,:)       ! Node connectivity (node #, node # to be connected))
+        integer, allocatable :: type_conn(:)    ! Section connection type, negihbor(1) and self(2)
+    end type JuncType
 
 ! -----------------------------------------------------------------------------
 
     ! Geometry data type to manage section, point, line and face data
-    type :: Geomtype
+    type :: GeomType
         integer :: n_sec                    ! The number of sections
         integer :: n_iniP, n_modP, n_croP   ! The number of initial, modified and sectional points
         integer :: n_iniL, n_croL           ! The number of initial, sectional lines
         integer :: n_face                   ! The number of faces
         integer :: min_edge_length
         integer :: max_edge_length
+        integer :: n_junc                   ! The number of juncs
 
         type(SecType) :: sec                        ! Section
         type(PointType), allocatable :: iniP(:)     ! Initial points
@@ -98,7 +121,8 @@ module Data_Geom
         type(LineType),  allocatable :: iniL(:)     ! Initial lines
         type(LineType),  allocatable :: croL(:)     ! Cross-sectional lines
         type(FaceType),  allocatable :: face(:)     ! Face
-    end type Geomtype
+        type(JuncType),  allocatable :: junc(:)
+    end type GeomType
 
 ! -----------------------------------------------------------------------------
 

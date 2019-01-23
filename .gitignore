@@ -32,7 +32,8 @@
 make/Debug
 make/Release
 make/x64
-make/output
+make/outputs
+make/My Advisor Results - PERDIX
 *.out
 *.app
 *.u2d

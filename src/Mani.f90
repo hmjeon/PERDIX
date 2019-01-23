@@ -2,12 +2,12 @@
 ! =============================================================================
 !
 ! Module - Mani
-! Last Updated : 04/10/2018, by Hyungmin Jun (hyungminjun@outlook.com)
+! Last Updated : 01/09/2019, by Hyungmin Jun (hyungminjun@outlook.com)
 !
 ! =============================================================================
 !
 ! This is part of PERDIX, which allows scientists to build and solve
-! the sequence design of complex DNAnanostructures.
+! the sequence design of complex DNA nanostructures.
 ! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
 ! License - GPL version 3
@@ -35,7 +35,7 @@ module Mani
 
     implicit none
 
-    public Mani_Set_Problem
+    public Mani_Set_Prob
     public Mani_Set_Geo_Ori
     public Space
     public Mani_To_Upper
@@ -62,26 +62,26 @@ contains
 ! -----------------------------------------------------------------------------
 
 ! Set problem
-subroutine Mani_Set_Problem(prob, color, view)
+subroutine Mani_Set_Prob(prob, color)
     type(ProbType), intent(inout) :: prob
-    character(len=*), intent(in)  :: view
-    integer, intent(in) :: color(3)
+    integer,        intent(in)    :: color(3)
 
-    character(10) :: char_bp
+    character(10) :: char_sec, char_bp
 
-    write(unit=char_bp, fmt = "(i10)"), prob.n_bp_edge
+    write(unit = char_bp, fmt = "(i10)"), prob.n_edge_len
 
-    prob.name_file = trim(prob.name_prob)//"_DX_"//trim(adjustl(trim(char_bp)))//"bp"
+    if(prob.sel_edge_sec == 1) char_sec = "DX"
+    if(prob.sel_edge_sec == 2) char_sec = "6HB"
+    if(prob.sel_edge_sec == 3) char_sec = "10HB"
+    if(prob.sel_edge_sec == 4) char_sec = "12HB"
+    if(prob.sel_edge_sec == 5) char_sec = "16HB"
 
-    prob.color  = color
-    prob.scale  = 1.0d0     ! Atomic model
-    prob.size   = 1.0d0     ! Cylindrical model
-    prob.move_x = 0.0d0     ! Cylindrical model
-    prob.move_y = 0.0d0     ! Cylindrical model
+    prob.name_file = &
+        trim(prob.name_prob)//"_"//trim(char_sec)//"_"//&
+        trim(adjustl(trim(char_bp)))//"bp"
 
-    ! Set view points
-    para_fig_view = trim(adjustl(view))
-end subroutine Mani_Set_Problem
+    prob.color = color
+end subroutine Mani_Set_Prob
 
 ! -----------------------------------------------------------------------------
 
@@ -173,39 +173,42 @@ end subroutine Mani_Set_Chimera_Axis
 subroutine Mani_Progress_Bar(index, max)
     integer, intent(in) :: index, max
 
-    integer :: i, step
+    integer :: i, step, arg
+    character(len=48) :: bar = "   * Progressing.... [                    ] ???%"
 
-    character(len=56) :: bar = "           * Progressing.... [                    ] ???%"
+    if(p_redir /= 0) return
+    if(iargc() == 7) return
+
     step = index * 10 / max
 
-    write(unit=bar(53:55), fmt = "(i3)"), 10*step
+    write(unit = bar(45:47), fmt = "(i3)"), 10*step
 
     ! Initialize progress bar
     if(index == 1) then
         do i = 1, 10
-            bar(30+2*i  :30+2*i  ) = " "
-            bar(30+2*i-1:30+2*i-1) = " "
+            bar(22+2*i  :22+2*i  ) = " "
+            bar(22+2*i-1:22+2*i-1) = " "
         end do
     end if
 
     ! Print star
     do i = 1, step
         if(i == step .and. i /= 10) then
-            bar(30+2*i  :30+2*i  ) = ">"
-            bar(30+2*i-1:30+2*i-1) = "-"
+            bar(22+2*i  :22+2*i  ) = ">"
+            bar(22+2*i-1:22+2*i-1) = "-"
         else
-            bar(30+2*i  :30+2*i  ) = "-"
-            bar(30+2*i-1:30+2*i-1) = "-"
+            bar(22+2*i  :22+2*i  ) = "-"
+            bar(22+2*i-1:22+2*i-1) = "-"
         end if
     end do
 
     ! Print the progress bar, char(13) - "\n"
-    write(unit=0, fmt="(a1, a56, $)"), char(13), bar
+    write(unit = p_redir, fmt="(a1, a48, $)"), char(13), bar
 
     if(step /= 10) then
-        flush(unit=0)
+        flush(unit = p_redir)
     else
-        write(unit=0, fmt=*)
+        write(unit = p_redir, fmt=*)
     end if
 end subroutine Mani_Progress_Bar
 

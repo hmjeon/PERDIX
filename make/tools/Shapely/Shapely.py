@@ -39,7 +39,11 @@ if len(sys.argv) is 1:
     filetype = 'igs'
 if len(sys.argv) is 2:
     fin = open(sys.argv[1], 'r')
-    filename, filetype = sys.argv[1].split('.')
+    #filename, filetype = sys.argv[1].split('.')
+    fullname = sys.argv[1]
+    length   = len(fullname)
+    filename = fullname[0:length-4]
+    filetype = fullname[length-3:length]
 
 #print '\nFilename: ', filename, '\nFiletype: ', filetype, '\n'
 

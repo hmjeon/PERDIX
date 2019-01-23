@@ -7,7 +7,7 @@
 ! =============================================================================
 !
 ! This is part of PERDIX, which allows scientists to build and solve
-! the sequence design of complex DNAnanostructures.
+! the sequence design of complex DNA nanostructures.
 ! Copyright 2018 Hyungmin Jun. All rights reserved.
 !
 ! License - GPL version 3
@@ -879,16 +879,20 @@ subroutine SpanTree_Check_Undirected_Graph(adj)
     isize = ubound(adj, 1)
     jsize = ubound(adj, 2)
     if(isize /= jsize) then
-        write(0, "(a$)"), "Error - Adjacency matrix must be square : "
-        write(0, "(a )"), "SpanTree_Check_Undirected_Graph"
+        write(p_redir, "(a)")
+        write(p_redir, "(a)"), " +=== error ========================================+"
+        write(p_redir, "(a)"), " | Adjacency matrix must be square.                 |"
+        write(p_redir, "(a)"), " +==================================================+"
         stop
     end if
 
     ! 2. Graph must not contain self-loops
     do i = 1, isize
         if(adj(i,i) /= 0) then
-            write(0, "(a$)"), "Error - Graph must not contain self-loops : "
-            write(0, "(a )"), "SpanTree_Check_Undirected_Graph"
+            write(p_redir, "(a)")
+            write(p_redir, "(a)"), " +=== error ========================================+"
+            write(p_redir, "(a)"), " | Graph must not contain self-loops.               |"
+            write(p_redir, "(a)"), " +==================================================+"
             stop
         end if
     end do
@@ -899,8 +903,10 @@ subroutine SpanTree_Check_Undirected_Graph(adj)
         do j = 1, jsize
             if(i == j) cycle
             if(adj(i,j) /= adj(j,i)) then
-                write(0, "(a$)"), "Error - Adjacency matrix is symmetric : "
-                write(0, "(a )"), "SpanTree_Check_Undirected_Graph"
+                write(p_redir, "(a)")
+                write(p_redir, "(a)"), " +=== error ========================================+"
+                write(p_redir, "(a)"), " | Adjacency matrix is symmetric.                   |"
+                write(p_redir, "(a)"), " +==================================================+"
                 stop
             end if
         end do
@@ -908,8 +914,10 @@ subroutine SpanTree_Check_Undirected_Graph(adj)
 
     ! 4. Graph must have two or more vertices
     if(isize <= 1 .or. jsize <= 1) then
-        write(0, "(a$)"), "Error - Graph must have two or more vertices : "
-        write(0, "(a )"), "SpanTree_Check_Undirected_Graph"
+        write(p_redir, "(a)")
+        write(p_redir, "(a)"), " +=== error ========================================+"
+        write(p_redir, "(a)"), " | Graph must have two or more vertices.            |"
+        write(p_redir, "(a)"), " +==================================================+"
         stop
     end if
 end subroutine SpanTree_Check_Undirected_Graph
@@ -941,7 +949,7 @@ subroutine SpanTree_Generate_Graph_Data(adj, n_vert, n_edge, d, t, n, p, mate, s
     ! Find index if there is entity
     call SpanTree_Find_Index(mat, dst, src)
 
-    n_vert = size(mat, 1)  ! Number of vertices (in TAOCP: n)
+    n_vert = size(mat, 1)   ! Number of vertices (in TAOCP: n)
     n_edge = size(src)      ! Number of edges
     !write(0, "(2(a, i5))"), " # of vertices : ", n_vert, ", # of edges : ", n_edge
     !write(0, "(a)")
@@ -1172,7 +1180,10 @@ subroutine SpanTree_Get_Spanning_Tree(n_vert, t, n, a)
 
         ! We were not able to visit all n_vert vertices by following edges
         if(w == 1) then
-            write(0, "(a)"), "Graph must be connected."
+            write(p_redir, "(a)")
+            write(p_redir, "(a)"), " +=== error ========================================+"
+            write(p_redir, "(a)"), " | Graph must be connected.                         |"
+            write(p_redir, "(a)"), " +==================================================+"
             stop
         end if
 
@@ -1293,8 +1304,10 @@ function SpanTree_Factor_Matrix(mat, piv, n) result(info)
         ! If the pivot index is zero, the algorithm has failed
         if(mat(l,k) == 0.0d0) then
             info = k
-            write(0, "(a)")
-            write(0, "(a, i8)"), "Error - Zero pivot on step ", info
+            write(p_redir, "(a)")
+            write(p_redir, "(a)"), " +=== error ========================================+"
+            write(p_redir, "(a)"), " | Zero pivot on step                               |"
+            write(p_redir, "(a)"), " +==================================================+"
             stop
         end if
 
@@ -1315,8 +1328,10 @@ function SpanTree_Factor_Matrix(mat, piv, n) result(info)
 
     if(mat(n,n) == 0.0d0) then
         info = n
-        write(0, "(a)")
-        write(0, "(a,i8)"), "Error : Zero pivot on step ", info
+        write(p_redir, "(a)")
+        write(p_redir, "(a)"), " +=== error ========================================+"
+        write(p_redir, "(a)"), " | Zero pivot on step                               |"
+        write(p_redir, "(a)"), " +==================================================+"
         stop
     end if
 end function SpanTree_Factor_Matrix
