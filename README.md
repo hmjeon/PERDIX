@@ -11,7 +11,7 @@
 <center><img src ="./fig_github.jpg" width = "100%"></center>
 -->
 
-[![IMAGE ALT TEXT HERE](https://github.com/hmjeon/PERDIX/blob/master/fig_github.jpg)](https://www.youtube.com/watch?time_continue=2&v=ss_5rmMNMhE)
+[![IMAGE ALT TEXT HERE](https://github.com/hmjeon/PERDIX/blob/master/fig_github.jpg)](https://youtu.be/ss_5rmMNMhE)
 
 + Pure Fortran library for modern Fortran project
 + Free and open source ([GNU General Public License, version 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html/))
