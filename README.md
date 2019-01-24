@@ -8,7 +8,9 @@
 **PERDIX** (**P**rogrammed **E**ulerian **R**outing for **D**NA Des**i**gn using **X**-overs) is a new, free and open-source software package written in FORTRAN 90/95 that enables the automated convertion of 2D computer-generated design files into DNA sequences. These DNA sequences can be subsequently synthesized and mixed to fold DNA DX-based wireframe 2D lattices with high fidelity.
 PERDIX video [here](https://youtu.be/ss_5rmMNMhE).
 
-<center><img src ="./PERDIX.jpg" width = "80%"></center>
+<p align="center">
+  <img src ="./PERDIX.jpg" width = "70%">
+</p>
 
 + Pure Fortran library for modern Fortran project
 + Free and open source ([GNU General Public License, version 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html/))
