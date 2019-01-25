@@ -4,6 +4,12 @@
 
 [![License](https://img.shields.io/badge/license-GNU%20GeneraL%20Public%20License%20v3,%20GPLv3-blue.svg)]() <br>
 ![](https://img.shields.io/github/languages/count/hmjeon/PERDIX.svg)
+![](https://img.shields.io/github/languages/top/hmjeon/PERDIX.svg)
+![](https://img.shields.io/github/languages/code-size/hmjeon/PERDIX.svg)
+![](https://img.shields.io/github/tag/hmjeon/PERDIX.svg)
+[![](https://img.shields.io/website-up-down-green-red/https/shields.io.svg?label=perdix)](http://perdix-dna-origami.org)
+![](https://img.shields.io/github/last-commit/hmjeon/PERDIX.svg)
+
 [![Compiler](https://img.shields.io/badge/GNU-v5.3.0+-orange.svg)]()
 [![Compiler](https://img.shields.io/badge/Intel-v16.x+-brightgreen.svg)]()
 [![Compiler](https://img.shields.io/badge/IBM%20XL-not%20tested-yellow.svg)]()
