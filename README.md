@@ -8,6 +8,9 @@ PERDIX video [here](https://youtu.be/ss_5rmMNMhE).
 
 <p align="center"><img src ="./PERDIX.jpg" width = "90%"></p>
 
+*H. Jun, F. Zhang, T. Shepherd, S. Ratanalert, X. Qi, H. Yan, M. Bathe*, [Autonomously
+designed free-form 2D DNA origami.](http://advances.sciencemag.org/content/5/1/eaav0655) *Sci. Adv*. **5**, eaav0655 (2019).
+
 + Pure Fortran library for modern Fortran project
 + Free and open source ([GNU General Public License, version 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html/))
 + Fully automatic procedure of the sequence design for scaffolded DNA DX-based wireframe lattices
@@ -42,7 +45,7 @@ In addition to the source code and pre-compiled binaries available here, we also
 
 ## Documentation
 
-The full software documention can be downloaded [here](https://github.com/hmjeon/PERDIX/raw/master/doc/Software%20Documentation.pdf).
+The full software documention for PERDIX v1.0 can be downloaded [here](http://advances.sciencemag.org/content/advances/suppl/2018/12/21/5.1.eaav0655.DC1/aav0655_Data_file_S2.pdf).
 
 Please find below 3 tutorial movies on how to use PERDIX to generate computer aided design files, automate meshing, generate sequences, and review atomic models.
 
@@ -55,11 +58,11 @@ Please find below 3 tutorial movies on how to use PERDIX to generate computer ai
 
 ## Pre-compiled Binaries
 
-+ **[PERDIX-Win-MCR](https://github.com/lcbb/PERDIX/raw/master/release/PERDIX-Win-MCR.zip)** for Microsoft Windows
++ **[PERDIX-Win-MCR](http://advances.sciencemag.org/highwire/filestream/209945/field_highwire_adjunct_files/0/aav0655_Data_file_S1.zip)** for Microsoft Windows
   + Requirements: [MATLAB Compiler Runtime 2015](https://www.mathworks.com/products/compiler/matlab-runtime.html) and Python 2.7 and Python package, [Shapely 1.6.4](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely)
-+ **[PERDIX-Win-MATLAB](https://github.com/lcbb/PERDIX/raw/master/release/PERDIX-Win-MATLAB.zip)** for Microsoft Windows
++ **[PERDIX-Win-MATLAB](http://advances.sciencemag.org/highwire/filestream/209945/field_highwire_adjunct_files/0/aav0655_Data_file_S1.zip)** for Microsoft Windows
   + Requirements: MATLAB, Python 2.7 and Python package, [Shapely 1.6.4](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely)
-+ **[PERDIX-Mac](https://github.com/lcbb/PERDIX/raw/master/release/PERDIX-Mac.zip)** for macOS/Mac OS X
++ **[PERDIX-Mac](http://advances.sciencemag.org/highwire/filestream/209945/field_highwire_adjunct_files/0/aav0655_Data_file_S1.zip)** for macOS/Mac OS X
   + Requirements: Python 2.7 and Python packages, [Shapely 1.6.4](https://pypi.org/project/Shapely/) and [PyDistMesh 1.2](https://pypi.org/project/PyDistMesh/)
 
 ## Compiling Code
