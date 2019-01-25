@@ -2,7 +2,7 @@
 
 # PERDIX
 
-![License](https://img.shields.io/badge/license-GNU%20GeneraL%20Public%20License%20v3,%20GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) <br>
+[![License](https://img.shields.io/badge/license-GNU%20GeneraL%20Public%20License%20v3,%20GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) <br>
 ![](https://img.shields.io/github/languages/count/hmjeon/PERDIX.svg)
 ![](https://img.shields.io/github/languages/top/hmjeon/PERDIX.svg)
 ![](https://img.shields.io/github/tag/hmjeon/PERDIX.svg)
