@@ -2,20 +2,11 @@
 
 # PERDIX
 
-[![License](https://img.shields.io/badge/license-GNU%20GeneraL%20Public%20License%20v3,%20GPLv3-blue.svg)]() <br>
+![License](https://img.shields.io/badge/license-GNU%20GeneraL%20Public%20License%20v3,%20GPLv3-blue.svg) <br>
 ![](https://img.shields.io/github/languages/count/hmjeon/PERDIX.svg)
 ![](https://img.shields.io/github/languages/top/hmjeon/PERDIX.svg)
-![](https://img.shields.io/github/languages/code-size/hmjeon/PERDIX.svg)
 ![](https://img.shields.io/github/tag/hmjeon/PERDIX.svg)
-[![](https://img.shields.io/website-up-down-green-red/https/shields.io.svg?label=perdix)](http://perdix-dna-origami.org)
 ![](https://img.shields.io/github/last-commit/hmjeon/PERDIX.svg)
-
-[![Compiler](https://img.shields.io/badge/GNU-v5.3.0+-orange.svg)]()
-[![Compiler](https://img.shields.io/badge/Intel-v16.x+-brightgreen.svg)]()
-[![Compiler](https://img.shields.io/badge/IBM%20XL-not%20tested-yellow.svg)]()
-[![Compiler](https://img.shields.io/badge/g95-not%20tested-yellow.svg)]()
-[![Compiler](https://img.shields.io/badge/NAG-not%20tested-yellow.svg)]()
-[![Compiler](https://img.shields.io/badge/PGI-not%20tested-yellow.svg)]()
 
 **PERDIX** (**P**rogrammed **E**ulerian **R**outing for **D**NA Des**i**gn using **X**-overs) is a new, free and open-source software package written in FORTRAN 90/95 that enables the automated convertion of 2D computer-generated design files into DNA sequences. These DNA sequences can be subsequently synthesized and mixed to fold DNA DX-based wireframe 2D lattices with high fidelity.
 PERDIX video [here](https://youtu.be/ss_5rmMNMhE).
@@ -43,7 +34,7 @@ designed free-form 2D DNA origami.](http://advances.sciencemag.org/content/5/1/e
 ---
 
 ## Online Portal
-
+[![](https://img.shields.io/website-up-down-green-red/https/shields.io.svg?label=perdix)](http://perdix-dna-origami.org)<br>
 [```http://perdix-dna-origami.org/```](http://perdix-dna-origami.org/)
 
 In addition to the source code and pre-compiled binaries available here, we also offer an online web application with all the functionality found in the downloaded version. By submitting the same inputs (PLY, GEO, IGS, or SVG input CAD files), the web service will return the same file output as the downloaded version.
@@ -71,6 +62,11 @@ Please find below 3 tutorial movies on how to use PERDIX to generate computer ai
   + Requirements: Python 2.7 and Python packages, [Shapely 1.6.4](https://pypi.org/project/Shapely/) and [PyDistMesh 1.2](https://pypi.org/project/PyDistMesh/)
 
 ## Compiling Code
+
+![](https://img.shields.io/badge/GNU-v5.3.0+-orange.svg)
+![](https://img.shields.io/badge/Intel-v16.x+-brightgreen.svg)
+![](https://img.shields.io/badge/PGI-not%20tested-yellow.svg)
+![](https://img.shields.io/github/languages/code-size/hmjeon/PERDIX.svg)
 
 ```git clone https://github.com/hmjeon/PERDIX.git```
 
