@@ -2,11 +2,11 @@
 
 # PERDIX
 
-![License](https://img.shields.io/badge/license-GNU%20GeneraL%20Public%20License%20v3,%20GPLv3-blue.svg) <br>
+![License](https://img.shields.io/badge/license-GNU%20GeneraL%20Public%20License%20v3,%20GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) <br>
 ![](https://img.shields.io/github/languages/count/hmjeon/PERDIX.svg)
 ![](https://img.shields.io/github/languages/top/hmjeon/PERDIX.svg)
 ![](https://img.shields.io/github/tag/hmjeon/PERDIX.svg)
-![](https://img.shields.io/github/last-commit/hmjeon/PERDIX.svg)
+![Last Commit](https://img.shields.io/github/last-commit/hmjeon/PERDIX.svg)
 
 **PERDIX** (**P**rogrammed **E**ulerian **R**outing for **D**NA Des**i**gn using **X**-overs) is a new, free and open-source software package written in FORTRAN 90/95 that enables the automated convertion of 2D computer-generated design files into DNA sequences. These DNA sequences can be subsequently synthesized and mixed to fold DNA DX-based wireframe 2D lattices with high fidelity.
 PERDIX video [here](https://youtu.be/ss_5rmMNMhE).
