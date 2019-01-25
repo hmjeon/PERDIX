@@ -4,15 +4,15 @@
 [![License](https://img.shields.io/badge/license-GNU%20GeneraL%20Public%20License%20v3,%20GPLv3-blue.svg)]()
 
 **PERDIX** (**P**rogrammed **E**ulerian **R**outing for **D**NA Des**i**gn using **X**-overs) is a new, free and open-source software package written in FORTRAN 90/95 that enables the automated convertion of 2D computer-generated design files into DNA sequences. These DNA sequences can be subsequently synthesized and mixed to fold DNA DX-based wireframe 2D lattices with high fidelity.
-PERDIX video [here](https://youtu.be/ss_5rmMNMhE).
+PERDIX video <a href="https://youtu.be/ss_5rmMNMhE" target="_blank">here</a>.
 
 <p align="center"><img src ="./PERDIX.jpg" width = "90%"></p>
 
-*H. Jun, F. Zhang, T. Shepherd, S. Ratanalert, X. Qi, H. Yan, M. Bathe*, [Autonomously
-designed free-form 2D DNA origami.](http://advances.sciencemag.org/content/5/1/eaav0655) *Sci. Adv*. **5**, eaav0655 (2019).
+*H. Jun, F. Zhang, T. Shepherd, S. Ratanalert, X. Qi, H. Yan, M. Bathe*, <a href="http://advances.sciencemag.org/content/5/1/eaav0655" target="_blank">Autonomously
+designed free-form 2D DNA origami.</a> *Sci. Adv*. **5**, eaav0655 (2019).
 
 + Pure Fortran library for modern Fortran project
-+ Free and open source ([GNU General Public License, version 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html/))
++ Free and open source ([GNU General Public License, version 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html))
 + Fully automatic procedure of the sequence design for scaffolded DNA DX-based wireframe lattices
 + Importing GEO, [IGS](https://en.wikipedia.org/wiki/IGES), SVG, or [PLY](https://en.wikipedia.org/wiki/PLY_(file_format)) file formats as an input
 + Exact edge-lengths to design highly asymmetric and irregular shapes
