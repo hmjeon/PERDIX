@@ -1,29 +1,6 @@
 <a name="top"></a>
-# PERDIX
 
-[![License](https://img.shields.io/badge/license-GNU%20GeneraL%20Public%20License%20v3,%20GPLv3-blue.svg)]()
-
-**PERDIX** (**P**rogrammed **E**ulerian **R**outing for **D**NA Des**i**gn using **X**-overs) is a new, free and open-source software package written in FORTRAN 90/95 that enables the automated convertion of 2D computer-generated design files into DNA sequences. These DNA sequences can be subsequently synthesized and mixed to fold DNA DX-based wireframe 2D lattices with high fidelity.
-PERDIX video <a href="https://youtu.be/ss_5rmMNMhE" target="_blank">here</a>.
-
-<p align="center"><img src ="./PERDIX.jpg" width = "90%"></p>
-
-*H. Jun, F. Zhang, T. Shepherd, S. Ratanalert, X. Qi, H. Yan, M. Bathe*, <a href="http://advances.sciencemag.org/content/5/1/eaav0655" target="_blank">Autonomously
-designed free-form 2D DNA origami.</a> *Sci. Adv*. **5**, eaav0655 (2019).
-
-+ Pure Fortran library for modern Fortran project
-+ Free and open source ([GNU General Public License, version 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html))
-+ Fully automatic procedure of the sequence design for scaffolded DNA DX-based wireframe lattices
-+ Importing GEO, [IGS](https://en.wikipedia.org/wiki/IGES), SVG, or [PLY](https://en.wikipedia.org/wiki/PLY_(file_format)) file formats as an input
-+ Exact edge-lengths to design highly asymmetric and irregular shapes
-+ [JSON](https://en.wikipedia.org/wiki/JSON) output for editing staple paths and sequences from [caDNAno](https://cadnano.org/)
-+ 3D visual outputs by [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/)
-+ 24 pre-defined target geometries
-+ User-friendly TUI (Text-based User Interface)
-+ Online web resources and release packages for Microsoft Windows and Mac OS
-
-#### Compiler Support
-
+[![License](https://img.shields.io/badge/license-GNU%20GeneraL%20Public%20License%20v3,%20GPLv3-blue.svg)]() <br>
 [![Compiler](https://img.shields.io/badge/GNU-v5.3.0+-orange.svg)]()
 [![Compiler](https://img.shields.io/badge/Intel-v16.x+-brightgreen.svg)]()
 [![Compiler](https://img.shields.io/badge/IBM%20XL-not%20tested-yellow.svg)]()
@@ -31,13 +8,34 @@ designed free-form 2D DNA origami.</a> *Sci. Adv*. **5**, eaav0655 (2019).
 [![Compiler](https://img.shields.io/badge/NAG-not%20tested-yellow.svg)]()
 [![Compiler](https://img.shields.io/badge/PGI-not%20tested-yellow.svg)]()
 
+# PERDIX
+
+**PERDIX** (**P**rogrammed **E**ulerian **R**outing for **D**NA Des**i**gn using **X**-overs) is a new, free and open-source software package written in FORTRAN 90/95 that enables the automated convertion of 2D computer-generated design files into DNA sequences. These DNA sequences can be subsequently synthesized and mixed to fold DNA DX-based wireframe 2D lattices with high fidelity.
+PERDIX video [here](https://youtu.be/ss_5rmMNMhE).
+
+<p align="center"><img src ="./PERDIX.jpg" width = "90%"></p>
+
+*H. Jun, F. Zhang, T. Shepherd, S. Ratanalert, X. Qi, H. Yan, M. Bathe*, [Autonomously
+designed free-form 2D DNA origami.](http://advances.sciencemag.org/content/5/1/eaav0655) *Sci. Adv*. **5**, eaav0655 (2019).
+
++ Pure Fortran library for modern Fortran project
++ Free and open source ([GNU General Public License, version 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html))
++ Fully automatic procedure of the sequence design for scaffolded DNA DX-based wireframe lattices
++ Importing GEO (geometry file format for PERDIX), [IGS](https://en.wikipedia.org/wiki/IGES), [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics), or [PLY](https://en.wikipedia.org/wiki/PLY_(file_format)) file formats as an input
++ Exact edge-lengths to design highly asymmetric and irregular shapes
++ [JSON](https://en.wikipedia.org/wiki/JSON) output for editing staple paths and sequences from [caDNAno](https://cadnano.org/)
++ 3D visual outputs by [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/)
++ 24 pre-defined target geometries
++ User-friendly TUI (Text-based User Interface)
++ Online web resources and release packages for Microsoft Windows and Mac OS
+
 ---
 
-[PERDIX Online](#PERDIX-Online) | [Documentation](#Documentation) | [Pre-compiled Binaries](#Pre-compiled-Binaries) | [Compiling Code](#Compiling-Code) | [Copyrights](#copyrights)
+[Online Portal](#Online-Portal) | [Documentation](#Documentation) | [Pre-compiled Binaries](#Pre-compiled-Binaries) | [Compiling Code](#Compiling-Code) | [Copyrights](#copyrights)
 
 ---
 
-## PERDIX Online
+## Online Portal
 
 [```http://perdix-dna-origami.org/```](http://perdix-dna-origami.org/)
 
@@ -58,11 +56,11 @@ Please find below 3 tutorial movies on how to use PERDIX to generate computer ai
 
 ## Pre-compiled Binaries
 
-+ **[PERDIX-Win-MCR](http://advances.sciencemag.org/highwire/filestream/209945/field_highwire_adjunct_files/0/aav0655_Data_file_S1.zip)** for Microsoft Windows
++ [PERDIX-Win-MCR](http://advances.sciencemag.org/highwire/filestream/209945/field_highwire_adjunct_files/0/aav0655_Data_file_S1.zip) for Microsoft Windows
   + Requirements: [MATLAB Compiler Runtime 2015](https://www.mathworks.com/products/compiler/matlab-runtime.html) and Python 2.7 and Python package, [Shapely 1.6.4](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely)
-+ **[PERDIX-Win-MATLAB](http://advances.sciencemag.org/highwire/filestream/209945/field_highwire_adjunct_files/0/aav0655_Data_file_S1.zip)** for Microsoft Windows
++ [PERDIX-Win-MATLAB](http://advances.sciencemag.org/highwire/filestream/209945/field_highwire_adjunct_files/0/aav0655_Data_file_S1.zip) for Microsoft Windows
   + Requirements: MATLAB, Python 2.7 and Python package, [Shapely 1.6.4](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely)
-+ **[PERDIX-Mac](http://advances.sciencemag.org/highwire/filestream/209945/field_highwire_adjunct_files/0/aav0655_Data_file_S1.zip)** for macOS/Mac OS X
++ [PERDIX-Mac](http://advances.sciencemag.org/highwire/filestream/209945/field_highwire_adjunct_files/0/aav0655_Data_file_S1.zip) for macOS/Mac OS X
   + Requirements: Python 2.7 and Python packages, [Shapely 1.6.4](https://pypi.org/project/Shapely/) and [PyDistMesh 1.2](https://pypi.org/project/PyDistMesh/)
 
 ## Compiling Code
@@ -75,18 +73,19 @@ Please find below 3 tutorial movies on how to use PERDIX to generate computer ai
 + [Python 2.7](https://www.python.org/): Not compatible with Python 3
 + [Shapely 1.6.4](https://pypi.org/project/Shapely/): Python package, Shapely is used to convert a set of lines to polygon meshes
 + [DistMesh](http://persson.berkeley.edu/distmesh/) or [PyDistMesh 1.2](https://pypi.org/project/PyDistMesh/): DistMesh (MATLAB version) or PyDistMesh (Python version) is used to generate internal triangular meshes
-  + Compiling the PERDIX sources require [Intel Fortran](https://software.intel.com/en-us/fortran-compilers). Free Intel (R) Software Development Tools are available for qualified students, educators, academic researchers and open source contributors, see the [details](https://software.intel.com/en-us/qualify-for-free-software/).
-  + The Intel Fortran compiler supports all of the features of the Fortran 90, Fortran 95, Fortran 2003 standards and most of Fortran 2008. It also supports some draft Fortran 2018 features.
-  + We provide [MakeFile](./make/makefiles/Makefile) which is a simple way to organize code compilation of PERDIX.
++ Compiling the PERDIX sources require [Intel Fortran](https://software.intel.com/en-us/fortran-compilers). Free Intel (R) Software Development Tools are available for qualified students, educators, academic researchers and open source contributors, see the [details](https://software.intel.com/en-us/qualify-for-free-software/).
++ The Intel Fortran compiler supports all of the features of the Fortran 90, Fortran 95, Fortran 2003 standards and most of Fortran 2008. It also supports some draft Fortran 2018 features.
++ We provide [MakeFile](./make/makefiles/Makefile) which is a simple way to organize code compilation of PERDIX.
+
 
 ## Copyrights
 
 *Author*<br>
-Dr. Hyungmin Jun ([hyungminjun@outlook.com](mailto:hyungminjun@outlook.com)), [LCBB](http://lcbb.mit.edu) (Laboratory for Computational Biology and Biophysics), [MIT](http://mit.edu)
+Dr. Hyungmin Jun ( [Personal web](http://hyungminjun.com) | [e-mail](mailto:hyungminjun@outlook.com) )
 
 *License*<br>
 PERDIX is an open-source software distributed under the [GPL license, version 3](https://www.gnu.org/licenses/gpl-3.0.en.html/)
 
-Anyone is interest to use, to develop or to contribute to PERDIX is welcome!
+Anyone is interest to use, to develop or to contribute to PERDIX is always welcome!
 
 Go to [Top](#top)
