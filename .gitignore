@@ -27,8 +27,13 @@
 # Executables
 *.exe
 
+# From Hyungmin
+!make/tools/Shapely/PyInstaller/libgeos.lib
+!make/tools/Shapely/PyInstaller/geos_c.dll
 !make/tools/DistMesh/DistMesh.exe
 !make/tools/MeshConv/MeshConv.exe
+!release/autorun.cmd
+
 make/Debug
 make/Release
 make/x64
@@ -37,7 +42,8 @@ make/My Advisor Results - PERDIX
 *.out
 *.app
 *.u2d
-.vs
 *.11
 *.101
+*.log
+.vs
 fort.*
