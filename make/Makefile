@@ -18,7 +18,8 @@
 #   that are enabled by option fast.
 
 objects = Data_DNA.o Data_Geom.o Data_Mesh.o Data_Prob.o \
-	Para.o List.o Math.o Mani.o SpanTree.o Importer.o Exam_PERDIX.o \
+	Para.o List.o Math.o Mani.o SpanTree.o Importer.o \
+	Exam_PERDIX.o Exam_PERDIX.o \
 	Section.o Input.o ModGeo.o Basepair.o Route.o SeqDesign.o Output.o PERDIX.o
 
 f90comp = ifort
@@ -76,6 +77,11 @@ Importer.mod: Importer.o Importer.f90
 	$(f90comp) -c Importer.f90
 Importer.o: Importer.f90
 	$(f90comp) -c Importer.f90
+
+Exam_PERDIX.mod: Exam_PERDIX.o Exam_PERDIX.f90
+	$(f90comp) -c Exam_PERDIX.f90
+Exam_PERDIX.o: Exam_PERDIX.f90
+	$(f90comp) -c Exam_PERDIX.f90
 
 Exam_PERDIX.mod: Exam_PERDIX.o Exam_PERDIX.f90
 	$(f90comp) -c Exam_PERDIX.f90

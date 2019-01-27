@@ -12,7 +12,6 @@
 *.so
 *.dylib
 *.dll
-!make/tools/Shapely/PyInstaller/geos_c.dll
 
 # Fortran module files
 *.mod
@@ -22,23 +21,21 @@
 *.la
 *.a
 *.lib
-!make/tools/Shapely/PyInstaller/libgeos.lib
 
 # Executables
 *.exe
 
 # From Hyungmin
-!make/tools/Shapely/PyInstaller/libgeos.lib
-!make/tools/Shapely/PyInstaller/geos_c.dll
-!make/tools/DistMesh/DistMesh.exe
-!make/tools/MeshConv/MeshConv.exe
-!release/autorun.cmd
+!build/tools/Shapely/PyInstaller/libgeos.lib
+!build/tools/Shapely/PyInstaller/geos_c.dll
+!build/tools/DistMesh/DistMesh.exe
+!build/tools/MeshConv/MeshConv.exe
 
-make/Debug
-make/Release
-make/x64
-make/outputs
-make/My Advisor Results - PERDIX
+build/Debug
+build/Release
+build/x64
+build/outputs
+build/My Advisor Results - PERDIX
 *.out
 *.app
 *.u2d
